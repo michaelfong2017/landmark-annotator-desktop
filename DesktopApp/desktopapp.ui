@@ -1,0 +1,843 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DesktopAppClass</class>
+ <widget class="QWidget" name="DesktopAppClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1268</width>
+    <height>911</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>DesktopApp</string>
+  </property>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>10</y>
+     <width>1191</width>
+     <height>881</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 8pt &quot;MS Shell Dlg 2&quot;;</string>
+   </property>
+   <property name="currentIndex">
+    <number>2</number>
+   </property>
+   <widget class="QWidget" name="patientDataTab">
+    <attribute name="title">
+     <string>Patient data</string>
+    </attribute>
+    <widget class="QLabel" name="formTitle">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>0</y>
+       <width>321</width>
+       <height>141</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 36pt &quot;MS Shell Dlg 2&quot;;</string>
+     </property>
+     <property name="text">
+      <string>Patient Details</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="nameInput">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>180</y>
+       <width>348</width>
+       <height>29</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="nameLabel">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>180</y>
+       <width>61</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Full name*</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="idLabel">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>280</y>
+       <width>45</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>HKID</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="idInput">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>280</y>
+       <width>348</width>
+       <height>29</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="sexLabel">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>380</y>
+       <width>45</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Sex</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>740</x>
+       <y>380</y>
+       <width>171</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="sexInput">
+      <item>
+       <widget class="QRadioButton" name="male">
+        <property name="text">
+         <string>Male</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="female">
+        <property name="text">
+         <string>Female</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QTextEdit" name="phoneInput">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>230</y>
+       <width>348</width>
+       <height>29</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="phoneLabel">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>230</y>
+       <width>45</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Phone*</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="emailLabel">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>330</y>
+       <width>45</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Email</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="emailInput">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>330</y>
+       <width>348</width>
+       <height>29</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="medicalInput">
+     <property name="geometry">
+      <rect>
+       <x>740</x>
+       <y>180</y>
+       <width>348</width>
+       <height>29</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="medicalLabel">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>180</y>
+       <width>61</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Medical no.*</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="nationalityInput">
+     <property name="geometry">
+      <rect>
+       <x>740</x>
+       <y>230</y>
+       <width>348</width>
+       <height>29</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="nationalityLabel">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>230</y>
+       <width>61</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Nationality</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="addressLabel">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>280</y>
+       <width>61</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Address</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="addressInput">
+     <property name="geometry">
+      <rect>
+       <x>740</x>
+       <y>280</y>
+       <width>348</width>
+       <height>81</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="heightLabel">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>430</y>
+       <width>61</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Height (cm)</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="heightInput">
+     <property name="geometry">
+      <rect>
+       <x>740</x>
+       <y>430</y>
+       <width>348</width>
+       <height>29</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="weightLabel">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>480</y>
+       <width>61</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Weight (kg)</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="weightInput">
+     <property name="geometry">
+      <rect>
+       <x>740</x>
+       <y>480</y>
+       <width>348</width>
+       <height>29</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="savePatientButton">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>710</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Save</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="patientDataValidation">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>760</y>
+       <width>341</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="loadPatientButton">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>710</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Load</string>
+     </property>
+    </widget>
+    <widget class="QCalendarWidget" name="dobInput">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>380</y>
+       <width>281</width>
+       <height>171</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="dobLabel">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>370</y>
+       <width>71</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Date of birth</string>
+     </property>
+    </widget>
+    <zorder>formTitle</zorder>
+    <zorder>nameInput</zorder>
+    <zorder>nameLabel</zorder>
+    <zorder>idInput</zorder>
+    <zorder>idLabel</zorder>
+    <zorder>sexLabel</zorder>
+    <zorder>horizontalLayoutWidget_2</zorder>
+    <zorder>phoneInput</zorder>
+    <zorder>phoneLabel</zorder>
+    <zorder>emailLabel</zorder>
+    <zorder>emailInput</zorder>
+    <zorder>medicalInput</zorder>
+    <zorder>medicalLabel</zorder>
+    <zorder>nationalityInput</zorder>
+    <zorder>nationalityLabel</zorder>
+    <zorder>addressLabel</zorder>
+    <zorder>addressInput</zorder>
+    <zorder>heightLabel</zorder>
+    <zorder>heightInput</zorder>
+    <zorder>weightLabel</zorder>
+    <zorder>weightInput</zorder>
+    <zorder>savePatientButton</zorder>
+    <zorder>patientDataValidation</zorder>
+    <zorder>loadPatientButton</zorder>
+    <zorder>dobInput</zorder>
+    <zorder>dobLabel</zorder>
+   </widget>
+   <widget class="QWidget" name="viewTab">
+    <attribute name="title">
+     <string>View</string>
+    </attribute>
+    <widget class="QWidget" name="layoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>70</y>
+       <width>741</width>
+       <height>601</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QGraphicsView" name="graphicsViewVideo"/>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QGraphicsView" name="graphicsViewVideo2"/>
+        </item>
+        <item>
+         <widget class="QGraphicsView" name="graphicsViewVideo3"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="captureTab">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <attribute name="title">
+     <string>Capture</string>
+    </attribute>
+    <widget class="QGraphicsView" name="graphicsViewVideo4">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>70</y>
+       <width>631</width>
+       <height>321</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="captureButton">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>760</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>capture</string>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="graphicsViewImage">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>410</y>
+       <width>591</width>
+       <height>301</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="saveButtonCaptureTab">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>760</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>save</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="layoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>730</y>
+       <width>323</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QRadioButton" name="radioButton">
+        <property name="text">
+         <string>Color</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton2">
+        <property name="text">
+         <string>Depth</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton3">
+        <property name="text">
+         <string>Color to Depth</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton4">
+        <property name="text">
+         <string>Depth to Color</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QPushButton" name="annotateButtonCaptureTab">
+     <property name="geometry">
+      <rect>
+       <x>710</x>
+       <y>760</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Analysis</string>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="graphicsViewVideo5">
+     <property name="geometry">
+      <rect>
+       <x>720</x>
+       <y>70</y>
+       <width>381</width>
+       <height>321</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="imuText">
+     <property name="geometry">
+      <rect>
+       <x>680</x>
+       <y>440</y>
+       <width>411</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="graphicsViewGyroscope">
+     <property name="geometry">
+      <rect>
+       <x>680</x>
+       <y>500</y>
+       <width>191</width>
+       <height>211</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="graphicsViewAccelerometer">
+     <property name="geometry">
+      <rect>
+       <x>910</x>
+       <y>500</y>
+       <width>191</width>
+       <height>211</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="saveInfoCaptureTab">
+     <property name="geometry">
+      <rect>
+       <x>466</x>
+       <y>790</y>
+       <width>311</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="saveVideoButton">
+     <property name="geometry">
+      <rect>
+       <x>624</x>
+       <y>760</y>
+       <width>81</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>start recording</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="recordingIndicatorText">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>30</y>
+       <width>191</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;
+color: rgb(255, 0, 5);
+</string>
+     </property>
+     <property name="text">
+      <string>Recording</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="showInExplorer">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>790</x>
+       <y>820</y>
+       <width>91</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Show In Explorer</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="annotateTab">
+    <attribute name="title">
+     <string>Annotate</string>
+    </attribute>
+    <widget class="QGraphicsView" name="graphicsViewAnnotation">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>30</y>
+       <width>401</width>
+       <height>331</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="annotationsText">
+     <property name="geometry">
+      <rect>
+       <x>730</x>
+       <y>540</y>
+       <width>271</width>
+       <height>171</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>700</x>
+       <y>410</y>
+       <width>321</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QPushButton" name="saveButtonAnnotateTab">
+        <property name="text">
+         <string>Save</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="annotateButtonAnnotateTab">
+        <property name="text">
+         <string>Fetch annotations</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="reportButton">
+        <property name="text">
+         <string>Generate report</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QGraphicsView" name="graphicsViewAnnotation2">
+     <property name="geometry">
+      <rect>
+       <x>650</x>
+       <y>30</y>
+       <width>401</width>
+       <height>331</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="graphicsViewAnnotation_2">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>420</y>
+       <width>401</width>
+       <height>331</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="saveInfoAnnotateTab">
+     <property name="geometry">
+      <rect>
+       <x>700</x>
+       <y>460</y>
+       <width>321</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="alignmentTab">
+    <attribute name="title">
+     <string>Alignment</string>
+    </attribute>
+    <widget class="QPushButton" name="loadColorButton">
+     <property name="geometry">
+      <rect>
+       <x>590</x>
+       <y>200</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Upload RGB video</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="loadDepthButton">
+     <property name="geometry">
+      <rect>
+       <x>590</x>
+       <y>240</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Upload Depth video</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="colorFilename">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>200</y>
+       <width>341</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="depthFilename">
+     <property name="geometry">
+      <rect>
+       <x>236</x>
+       <y>240</y>
+       <width>341</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="alignButton">
+     <property name="geometry">
+      <rect>
+       <x>590</x>
+       <y>300</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Align RGBD video</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="messageText">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>370</y>
+       <width>341</width>
+       <height>111</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="desktopapp.qrc"/>
+ </resources>
+ <connections/>
+</ui>
