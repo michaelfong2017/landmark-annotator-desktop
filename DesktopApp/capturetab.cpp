@@ -1,4 +1,5 @@
 #include "capturetab.h"
+#include "saveimagedialog.h"
 
 CaptureTab::CaptureTab(DesktopApp* parent)
 {
@@ -20,6 +21,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
     this->captureFilepath = QString();
 
     QObject::connect(this->parent->ui.saveButtonCaptureTab, &QPushButton::clicked, [this]() {
+        SaveImageDialog dialog;
+        dialog.exec();
+
         QString dateTimeString = Helper::getCurrentDateTimeString();
         QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
         QString colorSavePath = visitFolderPath + "/color_" + dateTimeString + ".png";
