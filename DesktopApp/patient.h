@@ -8,6 +8,7 @@ private:
 	std::string hkid;
 	std::string phoneNumber;
 	std::string email;
+	std::string studyNumber;
 	std::string medicalNumber;
 	std::string nationality;
 	std::string address;
@@ -23,6 +24,7 @@ public:
 	void setHKID(std::string);
 	void setPhoneNumber(std::string);
 	void setEmail(std::string);
+	void setStudyNumber(std::string);
 	void setMedicalNumber(std::string);
 	void setNationality(std::string);
 	void setAddress(std::string);
@@ -37,6 +39,7 @@ public:
 	std::string getHKID();
 	std::string getPhoneNumber();
 	std::string getEmail();
+	std::string getStudyNumber();
 	std::string getMedicalNumber();
 	std::string getNationality();
 	std::string getAddress();

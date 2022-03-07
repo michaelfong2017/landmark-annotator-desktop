@@ -7,11 +7,16 @@ PatientDataTab::PatientDataTab(DesktopApp* parent) {
 
         bool isPatientDataValid = true;
         
-        std::string name, hkid, phone, email, medicalNumber, nationality, address;
+        std::string name, hkid, phone, email, studyNumber, medicalNumber, nationality, address;
 
         // Validate mandatory fields
         if ((name = this->parent->ui.nameInput->toPlainText().toStdString()) != "") {
             this->parent->patient.setName(name);
+        }
+        else isPatientDataValid = false;
+
+        if ((studyNumber = this->parent->ui.studyInput->toPlainText().toStdString()) != "") {
+            this->parent->patient.setStudyNumber(studyNumber);
         }
         else isPatientDataValid = false;
 
@@ -87,6 +92,7 @@ PatientDataTab::PatientDataTab(DesktopApp* parent) {
         this->parent->ui.idInput->setText("");
         this->parent->ui.phoneInput->setText("");
         this->parent->ui.emailInput->setText("");
+        this->parent->ui.studyInput->setText("");
         this->parent->ui.medicalInput->setText("");
         this->parent->ui.nationalityInput->setText("");
         this->parent->ui.addressInput->setText("");
@@ -113,6 +119,7 @@ PatientDataTab::PatientDataTab(DesktopApp* parent) {
                 else if (key == "HKID") this->parent->ui.idInput->setText(value);
                 else if (key == "Phone number") this->parent->ui.phoneInput->setText(value);
                 else if (key == "Email") this->parent->ui.emailInput->setText(value);
+                else if (key == "Study number") this->parent->ui.studyInput->setText(value);
                 else if (key == "Medical number") this->parent->ui.medicalInput->setText(value);
                 else if (key == "Nationality") this->parent->ui.nationalityInput->setText(value);
                 else if (key == "Address") this->parent->ui.addressInput->setText(value);
@@ -136,24 +143,24 @@ PatientDataTab::PatientDataTab(DesktopApp* parent) {
 }
 
 bool PatientDataTab::savePatientData() {
-    QString defaultSavePath = this->parent->savePath.absolutePath() + "/" + QString::fromStdString(this->parent->patient.getMedicalNumber());
+    QString defaultSavePath = this->parent->savePath.absolutePath() + "/" + QString::fromStdString(this->parent->patient.getStudyNumber());
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save patient data"), defaultSavePath, tr("Text (*.txt)"));
 
     if (!fileName.isEmpty()) {
         QDir savePath = QFileInfo(fileName).dir();
 
-        if (savePath.dirName().toStdString() == this->parent->patient.getMedicalNumber()) {
-            // If selected directory name is a medical number folder created prior
+        if (savePath.dirName().toStdString() == this->parent->patient.getStudyNumber()) {
+            // If selected directory name is a study number folder created prior
             this->parent->savePath = savePath;
         }
         else {
-            // If medical number folder doesn't exist, create a new one first
-            if (!savePath.exists(QString::fromStdString(this->parent->patient.getMedicalNumber()))) {
-                savePath.mkdir(QString::fromStdString(this->parent->patient.getMedicalNumber()));
+            // If study number folder doesn't exist, create a new one first
+            if (!savePath.exists(QString::fromStdString(this->parent->patient.getStudyNumber()))) {
+                savePath.mkdir(QString::fromStdString(this->parent->patient.getStudyNumber()));
             }
 
-            // Get into the medical number folder
-            savePath.cd(QString::fromStdString(this->parent->patient.getMedicalNumber()));
+            // Get into the study number folder
+            savePath.cd(QString::fromStdString(this->parent->patient.getStudyNumber()));
 
             this->parent->savePath = savePath;
         }
@@ -166,6 +173,7 @@ bool PatientDataTab::savePatientData() {
 
         QTextStream out(&file);
         out << "Full name: " << QString::fromStdString(this->parent->patient.getName()) << "\n";
+        out << "Study number: " << QString::fromStdString(this->parent->patient.getStudyNumber()) << "\n";
         out << "Medical number: " << QString::fromStdString(this->parent->patient.getMedicalNumber()) << "\n";
         out << "Phone number: " << QString::fromStdString(this->parent->patient.getPhoneNumber()) << "\n";
         out << "HKID: " << QString::fromStdString(this->parent->patient.getHKID()) << "\n";

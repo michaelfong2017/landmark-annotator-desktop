@@ -16,6 +16,11 @@ void Patient::setEmail(std::string email) {
 	this->email = email;
 }
 
+void Patient::setStudyNumber(std::string studyNumber)
+{
+	this->studyNumber = studyNumber;
+}
+
 void Patient::setMedicalNumber(std::string medicalNumber) {
 	this->medicalNumber = medicalNumber;
 }
@@ -62,6 +67,11 @@ std::string Patient::getPhoneNumber() {
 
 std::string Patient::getEmail() {
 	return this->email;
+}
+
+std::string Patient::getStudyNumber()
+{
+	return this->studyNumber;
 }
 
 std::string Patient::getMedicalNumber() {
