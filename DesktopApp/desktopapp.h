@@ -4,7 +4,7 @@
 #define MAX_IMAGE_QUEUE_SIZE 10
 #define MAX_GYROSCOPE_QUEUE_SIZE 30
 #define MAX_ACCELEROMETER_QUEUE_SIZE 30
-#define KINECT_CAMERA_FPS 30
+// #define KINECT_CAMERA_FPS 30
 
 #include <QtWidgets/QWidget>
 #include "ui_desktopapp.h"

@@ -54,8 +54,8 @@ DesktopApp::DesktopApp(QWidget* parent)
     this->annotateTab = new AnnotateTab(this);
     this->alignmentTab = new AlignmentTab(this);
 
-    if (this->ui.tabWidget->currentIndex() == 1) viewTab->timer->start(1000 / KINECT_CAMERA_FPS);
-    if (this->ui.tabWidget->currentIndex() == 2) captureTab->timer->start(1000 / KINECT_CAMERA_FPS);
+    if (this->ui.tabWidget->currentIndex() == 1) viewTab->timer->start(0);
+    if (this->ui.tabWidget->currentIndex() == 2) captureTab->timer->start(0);
 
     QObject::connect(ui.tabWidget, &QTabWidget::currentChanged, [this]() {
         switch (this->ui.tabWidget->currentIndex()) {
@@ -67,14 +67,14 @@ DesktopApp::DesktopApp(QWidget* parent)
                 if (this->captureTab->getRecorder()->getRecordingStatus()) //If capture tab is recording
                     this->ui.tabWidget->setCurrentIndex(2);
                 this->captureTab->timer->stop();
-                this->viewTab->timer->start(1000 / KINECT_CAMERA_FPS);
+                this->viewTab->timer->start(0);
                 break;
             case 2:
                 // current tab is captureTab
                 if(!this->patient.getValidity()) //If patient data is not ready
                     this->ui.tabWidget->setCurrentIndex(0);
                 this->viewTab->timer->stop();
-                this->captureTab->timer->start(1000 / KINECT_CAMERA_FPS);
+                this->captureTab->timer->start(0);
                 break;
             case 3:
                 // current tab is annotateTab
