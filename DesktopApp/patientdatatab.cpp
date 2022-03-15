@@ -6,7 +6,7 @@ PatientDataTab::PatientDataTab(DesktopApp* parent) {
     QObject::connect(parent->ui.savePatientButton, &QPushButton::clicked, [this]() {
 
         bool isPatientDataValid = true;
-        
+
         std::string name, hkid, phone, email, studyNumber, medicalNumber, nationality, address;
 
         // Validate mandatory fields
@@ -20,17 +20,15 @@ PatientDataTab::PatientDataTab(DesktopApp* parent) {
         }
         else isPatientDataValid = false;
 
-        if ((medicalNumber = this->parent->ui.medicalInput->toPlainText().toStdString()) != "") {
-            this->parent->patient.setMedicalNumber(medicalNumber);
-        }
-        else isPatientDataValid = false;
-
         if ((phone = this->parent->ui.phoneInput->toPlainText().toStdString()) != "") {
             this->parent->patient.setPhoneNumber(phone);
         }
         else isPatientDataValid = false;
 
         // Optional fields
+        medicalNumber = this->parent->ui.medicalInput->toPlainText().toStdString();
+        this->parent->patient.setMedicalNumber(medicalNumber);
+
         hkid = this->parent->ui.idInput->toPlainText().toStdString();
         this->parent->patient.setHKID(hkid);
 

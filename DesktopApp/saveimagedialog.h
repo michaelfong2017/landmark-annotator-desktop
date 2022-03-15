@@ -11,11 +11,11 @@ class SaveImageDialog : public QDialog
 	Q_OBJECT
 
 public:
-	SaveImageDialog(QWidget* parent = nullptr);
+	SaveImageDialog(CaptureTab *parent = nullptr);
 	Ui::SaveImageDialogUI ui;
 
 private:
-	
+	CaptureTab *parent;
 };
 
 #endif

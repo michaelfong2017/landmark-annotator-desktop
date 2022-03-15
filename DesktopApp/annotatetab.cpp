@@ -31,16 +31,16 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 
 	QObject::connect(this->parent->ui.annotateButtonAnnotateTab, &QPushButton::clicked, [this]() {
 		int width = this->annotatedColorImage.width(), height = this->annotatedColorImage.height();
-
+		qDebug() << "width: " << width << "\t" << "height: " << height;
 		// Reset annotations
 		this->annotations.clear();
 
-		this->annotations.insert({"a", getRandomPoint(width, height)});
-		this->annotations.insert({"b1", getRandomPoint(width, height)});
-		this->annotations.insert({"b2", getRandomPoint(width, height)});
-		this->annotations.insert({"c1", getRandomPoint(width, height)});
-		this->annotations.insert({"c2", getRandomPoint(width, height)});
-		this->annotations.insert({"d", getRandomPoint(width, height)});
+		this->annotations.insert({"a", QPointF(200.0f, 45.0f)});
+		this->annotations.insert({"b1", QPointF(170.0f, 90.0f)});
+		this->annotations.insert({"b2", QPointF(230.0f, 90.0f)});
+		this->annotations.insert({"c1", QPointF(170.0f, 135.0f)});
+		this->annotations.insert({"c2", QPointF(230.0f, 135.0f)});
+		this->annotations.insert({"d", QPointF(200.0f, 180.0f)});
 
 		int x, y;
 		this->scalingFactor = std::min(this->depthToColorImage.width() / this->annotatedDepthToColorImage.width(), this->depthToColorImage.height() / this->annotatedDepthToColorImage.height());

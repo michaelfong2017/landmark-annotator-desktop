@@ -1,4 +1,5 @@
 <RCC>
-    <qresource prefix="DesktopApp">
-    </qresource>
+  <qresource prefix="DesktopApp">
+    <file>resources/recording.gif</file>
+  </qresource>
 </RCC>

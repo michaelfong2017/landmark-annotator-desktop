@@ -26,7 +26,7 @@
     <string notr="true">font: 8pt &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="patientDataTab">
     <attribute name="title">
@@ -199,7 +199,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Medical no.*</string>
+      <string>Medical no.</string>
      </property>
     </widget>
     <widget class="QTextEdit" name="nationalityInput">
@@ -482,6 +482,9 @@
      </property>
     </widget>
     <widget class="QPushButton" name="saveButtonCaptureTab">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>540</x>
@@ -535,6 +538,9 @@
      </layout>
     </widget>
     <widget class="QPushButton" name="annotateButtonCaptureTab">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>710</x>
@@ -599,7 +605,7 @@
        <x>466</x>
        <y>790</y>
        <width>311</width>
-       <height>51</height>
+       <height>61</height>
       </rect>
      </property>
      <property name="text">
@@ -657,6 +663,39 @@ color: rgb(255, 0, 5);
      </property>
      <property name="text">
       <string>Show In Explorer</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="recordingGif">
+     <property name="geometry">
+      <rect>
+       <x>42</x>
+       <y>36</y>
+       <width>20</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="recordingElapsedTime">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>30</y>
+       <width>191</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;
+</string>
+     </property>
+     <property name="text">
+      <string>00:25</string>
      </property>
     </widget>
    </widget>

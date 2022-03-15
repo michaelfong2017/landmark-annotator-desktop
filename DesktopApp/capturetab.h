@@ -16,12 +16,17 @@ class CaptureTab: public QWidget
 
 public:
     CaptureTab(DesktopApp* parent);
+    DesktopApp* getParent();
     QTimer* timer;
     QImage getQCapturedColorImage();
     QImage getQCapturedDepthToColorImage();
     k4a_image_t* getK4aPointCloud();
     k4a_image_t* getK4aDepthToColor();
     QVector3D query3DPoint(int x, int y);
+    QImage getColorImage();
+    QImage getDepthImage();
+    QImage getColorToDepthImage();
+    QImage getDepthToColorImage();
     int getCaptureCount();
     void setCaptureCount(int newCaptureCount);
     Recorder* getRecorder();
@@ -39,6 +44,7 @@ private:
     int captureCount;
     Recorder* recorder;
     QString captureFilepath;
+    QElapsedTimer recordingElapsedTimer;
     void setDefaultCaptureMode();
     void registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image);
     void drawGyroscopeData();

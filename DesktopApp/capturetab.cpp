@@ -6,6 +6,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
     this->parent = parent;
     this->recorder = new Recorder(parent);
     this->parent->ui.recordingIndicatorText->setVisible(false);
+    this->parent->ui.recordingElapsedTime->setVisible(false);
 
     this->setDefaultCaptureMode();
 
@@ -21,41 +22,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
     this->captureFilepath = QString();
 
     QObject::connect(this->parent->ui.saveButtonCaptureTab, &QPushButton::clicked, [this]() {
-        SaveImageDialog dialog;
+        SaveImageDialog dialog(this);
         dialog.exec();
-
-        QString dateTimeString = Helper::getCurrentDateTimeString();
-        QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
-        QString colorSavePath = visitFolderPath + "/color_" + dateTimeString + ".png";
-        QString depthToColorSavePath = visitFolderPath + "/rgbd_" + dateTimeString + ".png";
-        QString depthSavePath = visitFolderPath + "/depth_" + dateTimeString + ".png";
-        QString colorToDepthSavePath = visitFolderPath + "/color_aligned_" + dateTimeString + ".png";
-
-        QImageWriter colorWriter(colorSavePath);
-        QImageWriter depthToColorWriter(depthToColorSavePath);
-        QImageWriter depthWriter(depthSavePath);
-        QImageWriter colorToDepthWriter(colorToDepthSavePath);
-
-        if (
-            !colorWriter.write(this->colorImage) | 
-            !depthToColorWriter.write(this->depthToColorImage) | 
-            !depthWriter.write(this->depthImage) | 
-            !colorToDepthWriter.write(this->colorToDepthImage)
-            ) {
-            qDebug() << colorWriter.errorString();
-            qDebug() << depthToColorWriter.errorString();
-            qDebug() << depthWriter.errorString();
-            qDebug() << depthToColorWriter.errorString();
-            this->parent->ui.saveInfoCaptureTab->setText("Something went wrong, cannot save images.");
-
-            this->parent->ui.showInExplorer->hide();
-            return;
-        }
-
-        this->parent->ui.saveInfoCaptureTab->setText("Images saved under " + visitFolderPath + "\n at " + dateTimeString);
-
-        this->parent->ui.showInExplorer->show();
-        this->setCaptureFilepath(colorSavePath);
     });
 
     QObject::connect(this->parent->ui.saveVideoButton, &QPushButton::clicked, [this]() {
@@ -66,25 +34,51 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
             // Modify UI to disable recording status
             this->parent->ui.recordingIndicatorText->setVisible(false);
+            this->parent->ui.recordingElapsedTime->setVisible(false);
             this->parent->ui.captureTab->setStyleSheet("");
 
             this->recorder->stopRecorder();
             this->parent->ui.saveVideoButton->setText("start recording");
 
-            this->parent->ui.saveInfoCaptureTab->setText("Recording is saved under " + visitFolderPath + "\nat " + dateTimeString);
+            this->parent->ui.saveInfoCaptureTab->setText("Recording is saved under\n" + visitFolderPath + "\nat " + dateTimeString);
 
             this->parent->ui.showInExplorer->show();
             this->setCaptureFilepath(this->recorder->getColorOutputFilename());
+
+            // Recording gif
+            QLabel* recordingGif = this->parent->ui.recordingGif;
+            QMovie* movie = recordingGif->movie();
+            if (movie != nullptr) {
+                movie->stop();
+                delete movie;
+            }
+            // Recording gif END
+            // Recording time elapsed
+            this->recordingElapsedTimer.invalidate();
+            // Recording time elapsed END
         }
         else {
             // Current status is NOT recording
  
             // Modify UI to indicate recording status
             this->parent->ui.recordingIndicatorText->setVisible(true);
+            this->parent->ui.recordingElapsedTime->setVisible(true);
             this->parent->ui.captureTab->setStyleSheet("#captureTab {border: 2px solid red}");
 
             this->recorder->prepareRecorder();
             this->parent->ui.saveVideoButton->setText("stop recording");
+
+            // Recording gif
+            QMovie* movie = new QMovie(":/DesktopApp/resources/recording.gif");
+            movie->setScaledSize(QSize(20, 20));
+            QLabel* recordingGif = this->parent->ui.recordingGif;
+            recordingGif->setMovie(movie);
+            movie->start();
+            // Recording gif END
+
+            // Recording time elapsed
+            this->recordingElapsedTimer.start();
+            // Recording time elapsed END
 
             this->recorder->timer->start(1000);
         }
@@ -110,6 +104,10 @@ CaptureTab::CaptureTab(DesktopApp* parent)
         this->depthImage = this->parent->getQDepthImage();
         this->colorToDepthImage = this->parent->getQColorToDepthImage();
         this->depthToColorImage = this->parent->getQDepthToColorImage();
+
+        /** Assume that capture is all successful */
+        this->parent->ui.saveButtonCaptureTab->setEnabled(true);
+        this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
 
         QImage image;
 
@@ -151,6 +149,10 @@ CaptureTab::CaptureTab(DesktopApp* parent)
     });
 
     QObject::connect(timer, &QTimer::timeout, [this]() {
+        // Recording time elapsed
+        this->parent->ui.recordingElapsedTime->setText(QTime::fromMSecsSinceStartOfDay(this->recordingElapsedTimer.elapsed()).toString("mm:ss"));
+        // Recording time elapsed END
+
         qDebug() << "timer connect start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
         if (this->parent->deviceCount > 0) {
             switch (k4a_device_get_capture(this->parent->device, &this->parent->capture, K4A_WAIT_INFINITE)) {
@@ -303,6 +305,11 @@ void CaptureTab::registerRadioButtonOnClicked(QRadioButton* radioButton, QImage*
     });
 }
 
+DesktopApp* CaptureTab::getParent()
+{
+    return this->parent;
+}
+
 QImage CaptureTab::getQCapturedColorImage() {
     return this->colorImage;
 }
@@ -445,6 +452,26 @@ QVector3D CaptureTab::query3DPoint(int x, int y) {
 
     free(visited);
     return QVector3D(0, 0, 0);
+}
+
+QImage CaptureTab::getColorImage()
+{
+    return this->colorImage;
+}
+
+QImage CaptureTab::getDepthImage()
+{
+    return this->depthImage;
+}
+
+QImage CaptureTab::getColorToDepthImage()
+{
+    return this->colorToDepthImage;
+}
+
+QImage CaptureTab::getDepthToColorImage()
+{
+    return this->depthToColorImage;
 }
 
 int CaptureTab::getCaptureCount() { return this->captureCount; }

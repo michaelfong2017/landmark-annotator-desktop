@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>592</width>
-    <height>453</height>
+    <height>482</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
      <number>20</number>
     </property>
     <item>
-     <widget class="QWidget" name="widget_2" native="true">
+     <widget class="QWidget" name="widget" native="true">
       <property name="styleSheet">
        <string notr="true">background-color: rgb(247, 249, 251)</string>
       </property>
@@ -40,9 +40,9 @@
          <height>41</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_7">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QCheckBox" name="checkBox_3">
+         <widget class="QCheckBox" name="checkBoxColor">
           <property name="font">
            <font>
             <pointsize>11</pointsize>
@@ -61,6 +61,9 @@ QCheckBox::indicator:unchecked {
           </property>
           <property name="text">
            <string>Color</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -82,9 +85,9 @@ QCheckBox::indicator:unchecked {
          <height>41</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_12">
+       <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
-         <widget class="QCheckBox" name="checkBox_8">
+         <widget class="QCheckBox" name="checkBoxDepth">
           <property name="font">
            <font>
             <pointsize>11</pointsize>
@@ -104,6 +107,9 @@ QCheckBox::indicator:unchecked {
           <property name="text">
            <string>Depth</string>
           </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
        </layout>
@@ -111,7 +117,7 @@ QCheckBox::indicator:unchecked {
      </widget>
     </item>
     <item>
-     <widget class="QWidget" name="widget_3" native="true">
+     <widget class="QWidget" name="widget_2" native="true">
       <property name="styleSheet">
        <string notr="true">background-color: rgb(247, 249, 251)</string>
       </property>
@@ -124,9 +130,9 @@ QCheckBox::indicator:unchecked {
          <height>41</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_10">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QCheckBox" name="checkBox_6">
+         <widget class="QCheckBox" name="checkBoxColorToDepth">
           <property name="font">
            <font>
             <pointsize>11</pointsize>
@@ -145,6 +151,9 @@ QCheckBox::indicator:unchecked {
           </property>
           <property name="text">
            <string>Color to Depth</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -166,9 +175,9 @@ QCheckBox::indicator:unchecked {
          <height>41</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_11">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <widget class="QCheckBox" name="checkBox_7">
+         <widget class="QCheckBox" name="checkBoxDepthToColor">
           <property name="font">
            <font>
             <pointsize>11</pointsize>
@@ -188,6 +197,9 @@ QCheckBox::indicator:unchecked {
           <property name="text">
            <string>Depth to Color</string>
           </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
        </layout>
@@ -196,7 +208,7 @@ QCheckBox::indicator:unchecked {
     </item>
    </layout>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="title">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -212,7 +224,7 @@ QCheckBox::indicator:unchecked {
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;What image type would you like to save?&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="imageSavePath">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -225,11 +237,11 @@ QCheckBox::indicator:unchecked {
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Images saved under&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
-  <widget class="QDialogButtonBox" name="buttonBox_4">
+  <widget class="QDialogButtonBox" name="buttonBoxSave">
    <property name="geometry">
     <rect>
      <x>300</x>
-     <y>380</y>
+     <y>400</y>
      <width>191</width>
      <height>51</height>
     </rect>
@@ -260,11 +272,11 @@ QCheckBox::indicator:unchecked {
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QDialogButtonBox" name="buttonBox_5">
+  <widget class="QDialogButtonBox" name="buttonBoxCancel">
    <property name="geometry">
     <rect>
      <x>100</x>
-     <y>380</y>
+     <y>400</y>
      <width>191</width>
      <height>51</height>
     </rect>
@@ -293,6 +305,19 @@ QCheckBox::indicator:unchecked {
    </property>
    <property name="centerButtons">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="warningLabel">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>370</y>
+     <width>351</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; color:#ff0000;&quot;&gt;Please tick at least one checkbox, or press Cancel.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
  </widget>
