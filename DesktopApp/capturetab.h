@@ -45,6 +45,7 @@ private:
     Recorder* recorder;
     QString captureFilepath;
     QElapsedTimer recordingElapsedTimer;
+    bool noImageCaptured;
     void setDefaultCaptureMode();
     void registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image);
     void drawGyroscopeData();
