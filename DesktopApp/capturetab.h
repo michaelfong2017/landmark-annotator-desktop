@@ -2,6 +2,9 @@
 #define CAPTURETAB_H
 
 #include <QtWidgets/QWidget>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
 #include "stdafx.h"
 #include "helper.h"
 #include "annotatetab.h"
@@ -45,12 +48,14 @@ private:
     Recorder* recorder;
     QString captureFilepath;
     QElapsedTimer recordingElapsedTimer;
+    QNetworkAccessManager manager;
     bool noImageCaptured;
     void setDefaultCaptureMode();
     void registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image);
     void drawGyroscopeData();
     void drawAccelerometerData();
     void alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ);
+    void onManagerFinished(QNetworkReply* reply);
 };
 
 #endif

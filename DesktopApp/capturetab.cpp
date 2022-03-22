@@ -16,6 +16,10 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	this->registerRadioButtonOnClicked(this->parent->ui.radioButton3, &this->colorToDepthImage);
 	this->registerRadioButtonOnClicked(this->parent->ui.radioButton4, &this->depthToColorImage);
 
+	/** QNetworkAccessManager */
+	connect(&manager, &QNetworkAccessManager::finished, this, &CaptureTab::onManagerFinished);
+	/***/
+
 	this->captureCount = 0;
 	this->noImageCaptured = true;
 	this->timer = new QTimer;
@@ -156,6 +160,24 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		});
 
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
+		/** Send RGBImageArray and DepthToRGBImageArray to server */
+		QImage colorImage = this->getColorImage();
+		QImage depthToColorImage = this->getDepthToColorImage();
+
+		QNetworkRequest request(QUrl("http://127.0.0.1:8000"));
+		//request.setRawHeader("Content-Type", "application/fhir+json");
+		//QFile file("/path/of/themostsimplepatientJSON.json");
+		//if (file.open(QIODevice::ReadOnly)) {
+		//	QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+		//	QJsonObject obj = doc.object();
+		//	obj["id"] = "4705560"; // add ID
+		//	doc.setObject(obj);
+		//	manager.put(request, doc.toJson());
+		//}
+		manager.get(request);
+
+		/** Send to server END */
+
 		// Move to annotate tab whose index is 3
 		this->parent->annotateTab->reloadCurrentImage();
 		this->parent->ui.tabWidget->setCurrentIndex(3);
@@ -429,6 +451,11 @@ void CaptureTab::alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX
 		DeviceMovingDialog dialog(this);
 		dialog.exec();
 	}
+}
+
+void CaptureTab::onManagerFinished(QNetworkReply* reply)
+{
+	qDebug() << reply->readAll();
 }
 
 k4a_image_t* CaptureTab::getK4aPointCloud() {

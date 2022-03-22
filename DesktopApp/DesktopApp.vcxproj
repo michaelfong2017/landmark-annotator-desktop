@@ -64,12 +64,15 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>$(Qt_LIBS_);H:\opencv-4.5.2\build\Debug\install\x64\vc16\lib\*.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\lib\Qt5Networkd.lib;$(Qt_LIBS_);H:\opencv-4.5.2\build\Debug\install\x64\vc16\lib\*.lib</AdditionalDependencies>
     </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
-      <AdditionalDependencies>H:\opencv-4.5.2\build\Release\install\x64\vc16\lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\lib\Qt5Network.lib;H:\opencv-4.5.2\build\Release\install\x64\vc16\lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
