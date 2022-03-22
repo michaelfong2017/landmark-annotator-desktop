@@ -423,7 +423,7 @@ void CaptureTab::drawAccelerometerData() {
 
 void CaptureTab::alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ)
 {
-	qDebug() << "alertIfMoving - " << gyroX << ", " << gyroY << ", " << gyroZ << ", " << accX << ", " << accY << ", " << accZ;
+	//qDebug() << "alertIfMoving - " << gyroX << ", " << gyroY << ", " << gyroZ << ", " << accX << ", " << accY << ", " << accZ;
 
 	if (abs(gyroX) > 0.02f || abs(gyroY) > 0.02f || abs(gyroZ) > 0.02f || abs(accX) > 0.2f || abs(accY) > 0.3f || abs(accZ + 9.77f) > 0.1f) {
 		DeviceMovingDialog dialog(this);
