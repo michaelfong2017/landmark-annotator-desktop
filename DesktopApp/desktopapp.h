@@ -61,3 +61,5 @@ public:
 };
 
 #endif
+
+void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb);
