@@ -2,9 +2,6 @@
 #define CAPTURETAB_H
 
 #include <QtWidgets/QWidget>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
 #include "stdafx.h"
 #include "helper.h"
 #include "annotatetab.h"
@@ -12,6 +9,7 @@
 #include "recorder.h"
 #include <k4a/k4a.hpp>
 #include <opencv2/opencv.hpp>
+#include "util/networkutil.h"
 
 class CaptureTab: public QWidget
 {

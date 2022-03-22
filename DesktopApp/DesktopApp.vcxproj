@@ -148,6 +148,8 @@
     <QtMoc Include="annotatetab.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />
     <QtMoc Include="alignmenttab.h" />
     <QtMoc Include="devicemovingdialog.h" />

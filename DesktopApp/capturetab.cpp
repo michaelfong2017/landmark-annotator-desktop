@@ -164,18 +164,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		QImage colorImage = this->getColorImage();
 		QImage depthToColorImage = this->getDepthToColorImage();
 
-		QNetworkRequest request(QUrl("http://127.0.0.1:8000"));
-		//request.setRawHeader("Content-Type", "application/fhir+json");
-		//QFile file("/path/of/themostsimplepatientJSON.json");
-		//if (file.open(QIODevice::ReadOnly)) {
-		//	QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
-		//	QJsonObject obj = doc.object();
-		//	obj["id"] = "4705560"; // add ID
-		//	doc.setObject(obj);
-		//	manager.put(request, doc.toJson());
-		//}
-		manager.get(request);
-
+		uploadRGBImageArrayAndDepthToRGBImageArray(manager, QUrl("http://127.0.0.1:8000"), QString("image_id_001"), 4, colorImage, depthToColorImage);
 		/** Send to server END */
 
 		// Move to annotate tab whose index is 3
