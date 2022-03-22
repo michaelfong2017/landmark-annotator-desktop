@@ -170,13 +170,66 @@ QImage DesktopApp::getQDepthImage() {
         *(this->captureTab->getRecorder()->getDepthVideoWriter()) << matDepthImage;
     }
 
+    /** Colorize depth image */
     cv::Mat temp;
-    cvtColor(matDepthImage, temp, cv::COLOR_GRAY2RGB);
+    colorizeDepth(matDepthImage, temp);
+    /** Colorize depth image END */
 
     QImage qImage((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
     qImage.bits();
 
     return qImage;
+}
+
+void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb)
+{
+    double maxDisp = 255;
+    float S = 1.f;
+    float V = 1.f;
+
+    rgb.create(gray.size(), CV_8UC3);
+    rgb = cv::Scalar::all(0);
+
+    if (maxDisp < 1)
+        return;
+
+    for (int y = 0; y < gray.rows; y++)
+    {
+        for (int x = 0; x < gray.cols; x++)
+        {
+            uchar d = gray.at<uchar>(y, x);
+            unsigned int H = 255 - ((uchar)maxDisp - d) * 280 / (uchar)maxDisp;
+            unsigned int hi = (H / 60) % 6;
+
+            float f = H / 60.f - H / 60;
+            float p = V * (1 - S); // 0.f
+            float q = V * (1 - f * S); // 1 - f
+            float t = V * (1 - (1 - f) * S); // f
+
+            cv::Point3f res;
+
+            //qDebug() << d << " " << H << " " << hi << f;
+            if (hi == 0) // R = V, G = t,  B = p
+                res = cv::Point3f(p, t, V);
+            if (hi == 1) // R = q, G = V,  B = p
+                res = cv::Point3f(p, V, q);
+            if (hi == 2) // R = p, G = V,  B = t
+                res = cv::Point3f(t, V, p);
+            if (hi == 3) // R = p, G = q,  B = V
+                res = cv::Point3f(V, q, p);
+            if (hi == 4) // R = t, G = p,  B = V
+                res = cv::Point3f(V, p, t);
+            if (hi == 5) // R = V, G = p,  B = q
+                res = cv::Point3f(q, p, V);
+
+            uchar b = (uchar)(std::max(0.f, std::min(res.x, 1.f)) * 255.f);
+            uchar g = (uchar)(std::max(0.f, std::min(res.y, 1.f)) * 255.f);
+            uchar r = (uchar)(std::max(0.f, std::min(res.z, 1.f)) * 255.f);
+
+            rgb.at<cv::Point3_<uchar> >(y, x) = cv::Point3_<uchar>(b, g, r);
+
+        }
+    }
 }
 
 QImage DesktopApp::getQIRImage() {
