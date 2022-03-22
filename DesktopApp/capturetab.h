@@ -50,6 +50,7 @@ private:
     void registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image);
     void drawGyroscopeData();
     void drawAccelerometerData();
+    void alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ);
 };
 
 #endif

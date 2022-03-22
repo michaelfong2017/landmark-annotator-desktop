@@ -112,6 +112,7 @@
     <ClCompile Include="alignmenttab.cpp" />
     <ClCompile Include="annotatetab.cpp" />
     <ClCompile Include="capturetab.cpp" />
+    <ClCompile Include="devicemovingdialog.cpp" />
     <ClCompile Include="draganddropgraphicsscene.cpp" />
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="patient.cpp" />
@@ -128,6 +129,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <QtUic Include="devicemovingdialog.ui" />
     <QtUic Include="saveimagedialog.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +147,7 @@
   <ItemGroup>
     <QtMoc Include="saveimagedialog.h" />
     <QtMoc Include="alignmenttab.h" />
+    <QtMoc Include="devicemovingdialog.h" />
     <ClInclude Include="draganddropgraphicsscene.h" />
     <ClInclude Include="helper.h" />
     <ClInclude Include="patient.h" />

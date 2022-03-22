@@ -1,5 +1,6 @@
 #include "capturetab.h"
 #include "saveimagedialog.h"
+#include "devicemovingdialog.h"
 
 CaptureTab::CaptureTab(DesktopApp* parent)
 {
@@ -166,7 +167,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->parent->ui.recordingElapsedTime->setText(QTime::fromMSecsSinceStartOfDay(this->recordingElapsedTimer.elapsed()).toString("mm:ss"));
 		// Recording time elapsed END
 
-		qDebug() << "timer connect start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+		//qDebug() << "timer connect start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 		if (this->parent->deviceCount > 0) {
 			switch (k4a_device_get_capture(this->parent->device, &this->parent->capture, K4A_WAIT_INFINITE)) {
 			case K4A_WAIT_RESULT_SUCCEEDED:
@@ -174,58 +175,58 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			}
 
 			if (this->parent->capture) {
-				qDebug() << "timer connect 1: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+				//qDebug() << "timer connect 1: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 				k4a_image_t k4aColorImage = k4a_capture_get_color_image(this->parent->capture);
 
-				qDebug() << "timer connect 2: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+				//qDebug() << "timer connect 2: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 				if (k4aColorImage != NULL) {
 					this->parent->colorImageQueue.push(k4aColorImage);
-					qDebug() << "timer connect 3: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+					//qDebug() << "timer connect 3: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 
 					int width = this->parent->ui.graphicsViewVideo4->width(), height = this->parent->ui.graphicsViewVideo4->height();
-					qDebug() << "timer connect 4: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+					//qDebug() << "timer connect 4: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 					QImage qColorImageNotScaled = this->parent->getQColorImage();
-					qDebug() << "timer connect 5: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+					//qDebug() << "timer connect 5: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 					QImage qColorImage = qColorImageNotScaled.scaled(width, height, Qt::KeepAspectRatio);
 
-					qDebug() << "timer connect 6: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+					//qDebug() << "timer connect 6: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 					// Deallocate heap memory used by previous GGraphicsScene object
 					if (this->parent->ui.graphicsViewVideo4->scene()) {
 						delete this->parent->ui.graphicsViewVideo4->scene();
 					}
 
-					qDebug() << "timer connect 7: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+					//qDebug() << "timer connect 7: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 					QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(qColorImage));
 					QGraphicsScene* scene = new QGraphicsScene;
 					scene->addItem(item);
 
-					qDebug() << "timer connect 8: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+					//qDebug() << "timer connect 8: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 					this->parent->ui.graphicsViewVideo4->setScene(scene);
 					this->parent->ui.graphicsViewVideo4->show();
 
-					qDebug() << "timer connect 9: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+					//qDebug() << "timer connect 9: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 					while (this->parent->colorImageQueue.size() > MAX_IMAGE_QUEUE_SIZE) {
-						qDebug() << "timer connect while start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+						//qDebug() << "timer connect while start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 						k4a_image_release(this->parent->colorImageQueue.front());
-						qDebug() << "timer connect while 1: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+						//qDebug() << "timer connect while 1: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 						this->parent->colorImageQueue.pop();
-						qDebug() << "timer connect while end: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+						//qDebug() << "timer connect while end: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 					}
 				}
 
-				qDebug() << "timer connect 10: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+				//qDebug() << "timer connect 10: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 				k4a_image_t k4aDepthImage = k4a_capture_get_depth_image(this->parent->capture);
 
-				qDebug() << "timer connect 11: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+				//qDebug() << "timer connect 11: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 				if (k4aDepthImage != NULL) {
 					this->parent->depthImageQueue.push(k4aDepthImage);
 
 					int width = this->parent->ui.graphicsViewVideo5->width(), height = this->parent->ui.graphicsViewVideo5->height();
-					qDebug() << "timer connect 12: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+					//qDebug() << "timer connect 12: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 					QImage qDepthImageNotScaled = this->parent->getQDepthImage();
-					qDebug() << "timer connect 13: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+					//qDebug() << "timer connect 13: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 					QImage qDepthImage = qDepthImageNotScaled.scaled(width, height, Qt::KeepAspectRatio);
-					qDebug() << "timer connect 14: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+					//qDebug() << "timer connect 14: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 
 					// Deallocate heap memory used by previous GGraphicsScene object
 					if (this->parent->ui.graphicsViewVideo5->scene()) {
@@ -245,9 +246,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 					}
 				}
 
-				qDebug() << "timer connect 15: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+				//qDebug() << "timer connect 15: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 				k4a_capture_release(this->parent->capture);
-				qDebug() << "timer connect 16: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+				//qDebug() << "timer connect 16: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 			}
 			else {
 				qDebug() << "No capture found\n";
@@ -260,34 +261,45 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			}
 
 			if (&this->parent->imuSample != NULL) {
-				qDebug() << "timer connect 17: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+				//qDebug() << "timer connect 17: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+				/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved */
+				alertIfMoving(
+					this->parent->imuSample.gyro_sample.xyz.x,
+					this->parent->imuSample.gyro_sample.xyz.y,
+					this->parent->imuSample.gyro_sample.xyz.z,
+					this->parent->imuSample.acc_sample.xyz.x,
+					this->parent->imuSample.acc_sample.xyz.y,
+					this->parent->imuSample.acc_sample.xyz.z
+				);
+				/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved END */
+
 				this->parent->gyroSampleQueue.push_back(this->parent->imuSample.gyro_sample);
 				this->parent->accSampleQueue.push_back(this->parent->imuSample.acc_sample);
-				qDebug() << "timer connect 18: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+				//qDebug() << "timer connect 18: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 
 				QString text;
 				text += ("Temperature: " + QString::number(this->parent->imuSample.temperature, 0, 2) + " C\n");
 				this->parent->ui.imuText->setText(text);
 			}
-			qDebug() << "timer connect 19: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+			//qDebug() << "timer connect 19: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 
 			while (this->parent->gyroSampleQueue.size() > MAX_GYROSCOPE_QUEUE_SIZE) this->parent->gyroSampleQueue.pop_front();
 
-			qDebug() << "timer connect 20: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+			//qDebug() << "timer connect 20: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 
 			while (this->parent->accSampleQueue.size() > MAX_ACCELEROMETER_QUEUE_SIZE) this->parent->accSampleQueue.pop_front();
 
-			qDebug() << "timer connect 21: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+			//qDebug() << "timer connect 21: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 
 			if (this->parent->gyroSampleQueue.size() >= MAX_GYROSCOPE_QUEUE_SIZE) this->drawGyroscopeData();
 
-			qDebug() << "timer connect 22: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+			//qDebug() << "timer connect 22: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 
 			if (this->parent->accSampleQueue.size() >= MAX_ACCELEROMETER_QUEUE_SIZE) this->drawAccelerometerData();
 
-			qDebug() << "timer connect 23: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+			//qDebug() << "timer connect 23: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 		}
-		qDebug() << "timer connect end: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+		//qDebug() << "timer connect end: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 		});
 }
 
@@ -407,6 +419,16 @@ void CaptureTab::drawAccelerometerData() {
 	scene->addItem(item);
 
 	this->parent->ui.graphicsViewAccelerometer->setScene(scene);
+}
+
+void CaptureTab::alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ)
+{
+	qDebug() << "alertIfMoving - " << gyroX << ", " << gyroY << ", " << gyroZ << ", " << accX << ", " << accY << ", " << accZ;
+
+	if (abs(gyroX) > 0.02f || abs(gyroY) > 0.02f || abs(gyroZ) > 0.02f || abs(accX) > 0.2f || abs(accY) > 0.3f || abs(accZ + 9.77f) > 0.1f) {
+		DeviceMovingDialog dialog(this);
+		dialog.exec();
+	}
 }
 
 k4a_image_t* CaptureTab::getK4aPointCloud() {
