@@ -164,7 +164,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		QImage colorImage = this->getColorImage();
 		QImage depthToColorImage = this->getDepthToColorImage();
 
-		uploadRGBImageArrayAndDepthToRGBImageArray(manager, QUrl("http://127.0.0.1:8000"), QString("image_id_001"), 4, colorImage, depthToColorImage);
+		uploadRGBImageArrayAndDepthToRGBImageArray(manager, QUrl("http://127.0.0.1:8000/uploadimages"), QString("image_id_001"), 4, colorImage, depthToColorImage);
 		/** Send to server END */
 
 		// Move to annotate tab whose index is 3
