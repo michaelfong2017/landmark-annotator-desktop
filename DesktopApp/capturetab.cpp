@@ -118,6 +118,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->depthImage = this->parent->getQDepthImage();
 		this->colorToDepthImage = this->parent->getQColorToDepthImage();
 		this->depthToColorImage = this->parent->getQDepthToColorImage();
+		this->cvDepthToColorImage = this->parent->getCVDepthToColorImage();
 
 		/** Assume that capture is all successful, otherwise print a warning. */
 		if (this->colorImage.isNull() || this->depthImage.isNull() || this->colorToDepthImage.isNull() || this->depthToColorImage.isNull()) {
@@ -456,52 +457,29 @@ k4a_image_t* CaptureTab::getK4aDepthToColor() {
 }
 
 QVector3D CaptureTab::query3DPoint(int x, int y) {
-	int width = k4a_image_get_width_pixels(*this->getK4aPointCloud());
-	int height = k4a_image_get_height_pixels(*this->getK4aPointCloud());
-
-	bool* visited = (bool*)malloc((width * height) * sizeof(bool));
-	std::queue<std::pair<int, int>> coordQueue;
-
-	for (int i = 0; i < height; ++i) {
-		for (int j = 0; j < width; ++j)
-			visited[(width * i) + j] = false;
+	cv::Mat cvDepthToColorImage = this->getCVDepthToColorImage();
+	ushort d = cvDepthToColorImage.at<ushort>(y, x);
+	//qDebug() << "d: " << d;
+	
+	k4a_calibration_t calibration;
+	if (k4a_device_get_calibration(this->parent->device, this->parent->deviceConfig.depth_mode, this->parent->deviceConfig.color_resolution, &calibration) != K4A_RESULT_SUCCEEDED) {
+		return QVector3D(0, 0, 0);
 	}
 
-	visited[(width * y) + x] = true;
-	coordQueue.push(std::make_pair(x, y));
-	int index;
-	int16_t xOut, yOut, zOut;
-
-
-	while (!coordQueue.empty()) {
-		std::pair<int, int> coord = coordQueue.front();
-		coordQueue.pop();
-
-		index = 3 * ((width * coord.second) + coord.first);
-
-		xOut = (int16_t)k4a_image_get_buffer(*this->getK4aPointCloud())[index];
-		yOut = (int16_t)k4a_image_get_buffer(*this->getK4aPointCloud())[++index];
-		zOut = (int16_t)k4a_image_get_buffer(*this->getK4aPointCloud())[++index];
-
-		if (!(xOut == 0 && yOut == 0 && zOut == 0)) {
-			free(visited);
-			return QVector3D(xOut, yOut, zOut);
-		}
-
-		for (int i = coord.second - 1; i <= coord.second + 1; ++i) {
-			for (int j = coord.first - 1; j <= coord.first + 1; ++j) {
-				if (i < 0 || i >= height) continue;
-				if (j < 0 || j >= width) continue;
-
-				if (!visited[(width * i) + j]) {
-					coordQueue.push(std::make_pair(j, i));
-					visited[(width * i) + j] = true;
-				}
-			}
-		}
+	k4a_float2_t p;
+	p.xy.x = (float)x;
+	p.xy.y = (float)y;
+	k4a_float3_t p3D;
+	int valid;
+	if (k4a_calibration_2d_to_3d(&calibration, &p, d, K4A_CALIBRATION_TYPE_COLOR, K4A_CALIBRATION_TYPE_COLOR, &p3D, &valid) != K4A_WAIT_RESULT_SUCCEEDED) {
+		return QVector3D(0, 0, 0);
+	}
+	//qDebug() << "p3D(" << p3D.xyz.x << ", " << p3D.xyz.y << ", " << p3D.xyz.z << ")";
+	// source_point2d is a valid coordinate
+	if (valid == 1) {
+		return QVector3D(p3D.xyz.x, p3D.xyz.y, p3D.xyz.z);
 	}
 
-	free(visited);
 	return QVector3D(0, 0, 0);
 }
 
@@ -523,6 +501,11 @@ QImage CaptureTab::getColorToDepthImage()
 QImage CaptureTab::getDepthToColorImage()
 {
 	return this->depthToColorImage;
+}
+
+cv::Mat CaptureTab::getCVDepthToColorImage()
+{
+	return this->cvDepthToColorImage;
 }
 
 int CaptureTab::getCaptureCount() { return this->captureCount; }

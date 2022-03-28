@@ -28,6 +28,7 @@ public:
     QImage getDepthImage();
     QImage getColorToDepthImage();
     QImage getDepthToColorImage();
+    cv::Mat getCVDepthToColorImage();
     int getCaptureCount();
     void setCaptureCount(int newCaptureCount);
     Recorder* getRecorder();
@@ -42,6 +43,7 @@ private:
     QImage depthImage;
     QImage colorToDepthImage;
     QImage depthToColorImage;
+    cv::Mat cvDepthToColorImage;
     int captureCount;
     Recorder* recorder;
     QString captureFilepath;

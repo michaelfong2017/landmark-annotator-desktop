@@ -318,6 +318,69 @@ QImage DesktopApp::getQDepthToColorImage() {
     return qEmptyImage;
 }
 
+cv::Mat DesktopApp::getCVDepthToColorImage()
+{
+    k4a_image_t k4aDepthImage = this->depthImageQueue.back(), k4aColorImage = this->colorImageQueue.back();
+
+    cv::Mat cvEmptyImage;
+
+    if (k4aDepthImage != NULL && k4aColorImage != NULL) {
+        k4a_calibration_t calibration;
+        if (k4a_device_get_calibration(this->device, this->deviceConfig.depth_mode, this->deviceConfig.color_resolution, &calibration) != K4A_RESULT_SUCCEEDED) {
+            return cvEmptyImage;
+        }
+
+        k4a_transformation_t transformationHandle = k4a_transformation_create(&calibration);
+        k4a_image_t alignmentImage;
+
+        if (k4a_image_create(K4A_IMAGE_FORMAT_DEPTH16,
+            k4a_image_get_width_pixels(k4aColorImage),
+            k4a_image_get_height_pixels(k4aColorImage),
+            k4a_image_get_width_pixels(k4aColorImage) * (int)sizeof(uint16_t),
+            &alignmentImage) != K4A_RESULT_SUCCEEDED) {
+            k4a_transformation_destroy(transformationHandle);
+            k4a_image_release(alignmentImage);
+            return cvEmptyImage;
+        }
+
+        if (k4a_transformation_depth_image_to_color_camera(transformationHandle, k4aDepthImage, alignmentImage) != K4A_WAIT_RESULT_SUCCEEDED) {
+            k4a_transformation_destroy(transformationHandle);
+            k4a_image_release(alignmentImage);
+            return cvEmptyImage;
+        }
+
+        //double min, max;
+        cv::Mat matAlignmentImageRaw = cv::Mat(k4a_image_get_height_pixels(alignmentImage), k4a_image_get_width_pixels(alignmentImage), CV_16U, k4a_image_get_buffer(alignmentImage), cv::Mat::AUTO_STEP);
+        
+        return matAlignmentImageRaw;
+        //cv::minMaxIdx(matAlignmentImageRaw, &min, &max);
+        //cv::Mat matAlignmentImage;
+        //cv::convertScaleAbs(matAlignmentImageRaw, matAlignmentImage, 255 / max);
+
+        //cv::Mat temp;
+        //cv::applyColorMap(matAlignmentImage, temp, cv::COLORMAP_RAINBOW);
+
+        //QImage qImage((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+        //qImage.bits();
+
+        //// Get point cloud alignment and copy as a member variable of captureTab (this->captureTab->k4aPointCloud)
+        //if (this->alignk4APointCloud(&alignmentImage, this->captureTab->getK4aPointCloud()) != K4A_RESULT_SUCCEEDED) {
+        //    qDebug() << "Failed to align point cloud";
+        //}
+
+        //// Get depth to color alignment image and copt as a member variable of captureTab (this->captureTab->k4aDepthToColor)
+        //if (this->copyk4aImage(&alignmentImage, this->captureTab->getK4aDepthToColor()) != K4A_RESULT_SUCCEEDED) {
+        //    qDebug() << "Failed to copy depth to color alignment image";
+        //}
+
+        //k4a_transformation_destroy(transformationHandle);
+        //k4a_image_release(alignmentImage);
+        //return qImage;
+    }
+
+    return cv::Mat();
+}
+
 QImage DesktopApp::getQColorToDepthImage() {
     QImage qEmptyImage;
 
