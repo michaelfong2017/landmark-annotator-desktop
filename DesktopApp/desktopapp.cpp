@@ -198,6 +198,12 @@ void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb)
         for (int x = 0; x < gray.cols; x++)
         {
             uchar d = gray.at<uchar>(y, x);
+            
+            if (d == 0) {
+                rgb.at<cv::Point3_<uchar> >(y, x) = cv::Point3_<uchar>(0.f, 0.f, 0.f);
+                continue;
+            }
+
             unsigned int H = 255 - ((uchar)maxDisp - d) * 280 / (uchar)maxDisp;
             unsigned int hi = (H / 60) % 6;
 
