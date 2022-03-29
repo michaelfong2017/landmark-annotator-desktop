@@ -437,7 +437,7 @@ void CaptureTab::alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX
 {
 	//qDebug() << "alertIfMoving - " << gyroX << ", " << gyroY << ", " << gyroZ << ", " << accX << ", " << accY << ", " << accZ;
 
-	if (abs(gyroX) > 0.02f || abs(gyroY) > 0.02f || abs(gyroZ) > 0.02f || abs(accX) > 0.2f || abs(accY) > 0.3f || abs(accZ + 9.77f) > 0.1f) {
+	if (abs(gyroX) > 1.0f || abs(gyroY) > 1.0f || abs(gyroZ) > 1.0f || abs(accX) > 1.0f || abs(accY) > 1.0f || abs(accZ + 9.81f) > 1.0f) {
 		DeviceMovingDialog dialog(this);
 		dialog.exec();
 	}

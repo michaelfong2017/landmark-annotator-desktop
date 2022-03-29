@@ -288,14 +288,19 @@ QImage DesktopApp::getQDepthToColorImage() {
         }
 
         double min, max;
-        cv::Mat matAlignmentImageRaw = cv::Mat(k4a_image_get_height_pixels(alignmentImage), k4a_image_get_width_pixels(alignmentImage), CV_16U, k4a_image_get_buffer(alignmentImage), cv::Mat::AUTO_STEP);
+        //cv::Mat matAlignmentImageRaw = cv::Mat(k4a_image_get_height_pixels(alignmentImage), k4a_image_get_width_pixels(alignmentImage), CV_16U, k4a_image_get_buffer(alignmentImage), cv::Mat::AUTO_STEP);
+        cv::Mat matDepthImage = cv::Mat(k4a_image_get_height_pixels(alignmentImage), k4a_image_get_width_pixels(alignmentImage), CV_16U, k4a_image_get_buffer(alignmentImage), cv::Mat::AUTO_STEP);
 
-        cv::minMaxIdx(matAlignmentImageRaw, &min, &max);
-        cv::Mat matAlignmentImage;
-        cv::convertScaleAbs(matAlignmentImageRaw, matAlignmentImage, 255 / max);
+        matDepthImage.convertTo(matDepthImage, CV_8U, 255.0 / 5000.0, 0.0);
 
+        if (this->captureTab->getRecorder()->getRecordingStatus()) {
+            *(this->captureTab->getRecorder()->getDepthVideoWriter()) << matDepthImage;
+        }
+
+        /** Colorize depth image */
         cv::Mat temp;
-        cv::applyColorMap(matAlignmentImage, temp, cv:: COLORMAP_RAINBOW);
+        colorizeDepth(matDepthImage, temp);
+        /** Colorize depth image END */
 
         QImage qImage((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
         qImage.bits();
