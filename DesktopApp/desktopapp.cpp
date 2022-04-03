@@ -171,14 +171,36 @@ QImage DesktopApp::getQDepthImage() {
     }
 
     /** Colorize depth image */
-    cv::Mat temp;
-    colorizeDepth(matDepthImage, temp);
+    //cv::Mat temp;
+    //colorizeDepth(matDepthImage, temp);
     /** Colorize depth image END */
+    cv::Mat temp;
+    cvtColor(matDepthImage, temp, cv::COLOR_GRAY2RGB);
 
     QImage qImage((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
     qImage.bits();
 
     return qImage;
+}
+
+cv::Mat DesktopApp::getCVDepthImage()
+{
+    k4a_image_t k4aDepthImage = this->depthImageQueue.back();
+    cv::Mat cvEmptyImage;
+
+    if (k4aDepthImage != NULL) {
+        uint8_t* buffer = k4a_image_get_buffer(k4aDepthImage);
+        int rows = k4a_image_get_height_pixels(k4aDepthImage);
+        int cols = k4a_image_get_width_pixels(k4aDepthImage);
+
+        cv::Mat matDepthImage(rows, cols, CV_16U, (void*)buffer, cv::Mat::AUTO_STEP);
+
+        matDepthImage.convertTo(matDepthImage, CV_8U, 255.0 / 5000.0, 0.0);
+
+        return matDepthImage;
+    }
+
+    return cvEmptyImage;
 }
 
 void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb)
@@ -298,9 +320,11 @@ QImage DesktopApp::getQDepthToColorImage() {
         }
 
         /** Colorize depth image */
-        cv::Mat temp;
-        colorizeDepth(matDepthImage, temp);
+        //cv::Mat temp;
+        //colorizeDepth(matDepthImage, temp);
         /** Colorize depth image END */
+        cv::Mat temp;
+        cvtColor(matDepthImage, temp, cv::COLOR_GRAY2RGB);
 
         QImage qImage((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
         qImage.bits();
@@ -354,10 +378,13 @@ cv::Mat DesktopApp::getCVDepthToColorImage()
             return cvEmptyImage;
         }
 
-        //double min, max;
-        cv::Mat matAlignmentImageRaw = cv::Mat(k4a_image_get_height_pixels(alignmentImage), k4a_image_get_width_pixels(alignmentImage), CV_16U, k4a_image_get_buffer(alignmentImage), cv::Mat::AUTO_STEP);
-        
-        return matAlignmentImageRaw;
+        double min, max;
+        //cv::Mat matAlignmentImageRaw = cv::Mat(k4a_image_get_height_pixels(alignmentImage), k4a_image_get_width_pixels(alignmentImage), CV_16U, k4a_image_get_buffer(alignmentImage), cv::Mat::AUTO_STEP);
+        cv::Mat matDepthImage = cv::Mat(k4a_image_get_height_pixels(alignmentImage), k4a_image_get_width_pixels(alignmentImage), CV_16U, k4a_image_get_buffer(alignmentImage), cv::Mat::AUTO_STEP);
+
+        matDepthImage.convertTo(matDepthImage, CV_8U, 255.0 / 5000.0, 0.0);
+        return matDepthImage;
+
         //cv::minMaxIdx(matAlignmentImageRaw, &min, &max);
         //cv::Mat matAlignmentImage;
         //cv::convertScaleAbs(matAlignmentImageRaw, matAlignmentImage, 255 / max);

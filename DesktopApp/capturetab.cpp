@@ -116,12 +116,29 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	QObject::connect(this->parent->ui.captureButton, &QPushButton::clicked, [this]() {
 		this->colorImage = this->parent->getQColorImage();
 		this->depthImage = this->parent->getQDepthImage();
+		this->cvDepthImage = this->parent->getCVDepthImage();
 		this->colorToDepthImage = this->parent->getQColorToDepthImage();
 		this->depthToColorImage = this->parent->getQDepthToColorImage();
 		this->cvDepthToColorImage = this->parent->getCVDepthToColorImage();
+		
+		/** Colorize depthToColorImage */
+		/** No need to colorize depth image because it was colorized in live preview */
+		//cv::Mat temp;
+		//colorizeDepth(this->cvDepthImage, temp);
+		//QImage qImage((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+		//qImage.bits();
+		//this->depthImageColorized = qImage;
+
+		cv::Mat temp2;
+		colorizeDepth(this->cvDepthToColorImage, temp2);
+		QImage qImage2((const uchar*)temp2.data, temp2.cols, temp2.rows, temp2.step, QImage::Format_RGB888);
+		qImage2.bits();
+		this->depthToColorImageColorized = qImage2;
+		/** Colorize END */
 
 		/** Assume that capture is all successful, otherwise print a warning. */
-		if (this->colorImage.isNull() || this->depthImage.isNull() || this->colorToDepthImage.isNull() || this->depthToColorImage.isNull()) {
+		if (this->colorImage.isNull() || this->depthImage.isNull() || this->colorToDepthImage.isNull() || this->depthToColorImage.isNull()
+			|| this->cvDepthImage.empty() || this->cvDepthToColorImage.empty() || this->depthImageColorized.isNull() || this->depthToColorImageColorized.isNull()) {
 			qWarning() << "capturetab captureButton - one of the captured images is null";
 		}
 		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
@@ -235,7 +252,15 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 					int width = this->parent->ui.graphicsViewVideo5->width(), height = this->parent->ui.graphicsViewVideo5->height();
 					//qDebug() << "timer connect 12: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-					QImage qDepthImageNotScaled = this->parent->getQDepthImage();
+					/** Colorize live depth image preview */
+					cv::Mat cvDepth = this->parent->getCVDepthImage();
+					cv::Mat temp;
+					colorizeDepth(cvDepth, temp);
+					QImage qDepthImageNotScaled((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+					qDepthImageNotScaled.bits();
+					this->depthImageColorized = qDepthImageNotScaled;
+					/** Colorize END */
+
 					//qDebug() << "timer connect 13: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 					QImage qDepthImage = qDepthImageNotScaled.scaled(width, height, Qt::KeepAspectRatio);
 					//qDebug() << "timer connect 14: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
@@ -351,8 +376,8 @@ QImage CaptureTab::getQCapturedColorImage() {
 	return this->colorImage;
 }
 
-QImage CaptureTab::getQCapturedDepthToColorImage() {
-	return this->depthToColorImage;
+QImage CaptureTab::getQCapturedDepthToColorImageColorized() {
+	return this->depthToColorImageColorized;
 }
 
 void CaptureTab::drawGyroscopeData() {
@@ -458,7 +483,7 @@ k4a_image_t* CaptureTab::getK4aDepthToColor() {
 
 QVector3D CaptureTab::query3DPoint(int x, int y) {
 	cv::Mat cvDepthToColorImage = this->getCVDepthToColorImage();
-	ushort d = cvDepthToColorImage.at<ushort>(y, x);
+	uchar d = cvDepthToColorImage.at<uchar>(y, x);
 	//qDebug() << "d: " << d;
 	
 	k4a_calibration_t calibration;
@@ -493,6 +518,16 @@ QImage CaptureTab::getDepthImage()
 	return this->depthImage;
 }
 
+QImage CaptureTab::getDepthImageColorized()
+{
+	return this->depthImageColorized;
+}
+
+cv::Mat CaptureTab::getCVDepthImage()
+{
+	return this->cvDepthImage;
+}
+
 QImage CaptureTab::getColorToDepthImage()
 {
 	return this->colorToDepthImage;
@@ -501,6 +536,11 @@ QImage CaptureTab::getColorToDepthImage()
 QImage CaptureTab::getDepthToColorImage()
 {
 	return this->depthToColorImage;
+}
+
+QImage CaptureTab::getDepthToColorImageColorized()
+{
+	return this->depthToColorImageColorized;
 }
 
 cv::Mat CaptureTab::getCVDepthToColorImage()

@@ -53,6 +53,7 @@ public:
     void setTextOnGraphicsViews(std::string text);
     QImage getQColorImage();
     QImage getQDepthImage();
+    cv::Mat getCVDepthImage();
     QImage getQIRImage();
     QImage getQDepthToColorImage();
     cv::Mat getCVDepthToColorImage();
