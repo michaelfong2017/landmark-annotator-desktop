@@ -55,8 +55,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <IncludePath>H:\opencv-4.5.2\build\Debug\install\include;$(IncludePath)</IncludePath>
-    <LibraryPath>H:\opencv-4.5.2\build\Debug\install\x64\vc16\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>H:\opencv-4.5.2\build\Debug\install\include;D:\opencv-4.5.2\build\include;$(IncludePath)</IncludePath>
+    <LibraryPath>H:\opencv-4.5.2\build\Debug\install\x64\vc16\lib;D:\opencv-4.5.2\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <IncludePath>H:\opencv-4.5.2\build\Release\install\include;$(IncludePath)</IncludePath>
@@ -64,7 +64,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\lib\Qt5Networkd.lib;$(Qt_LIBS_);H:\opencv-4.5.2\build\Debug\install\x64\vc16\lib\*.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\lib\Qt5Networkd.lib;$(Qt_LIBS_);H:\opencv-4.5.2\build\Debug\install\x64\vc16\lib\*.lib;D:\opencv-4.5.2\build\x64\vc15\lib\*.lib</AdditionalDependencies>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Qt\Qt5.12.11\5.12.11\msvc2017_64\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
