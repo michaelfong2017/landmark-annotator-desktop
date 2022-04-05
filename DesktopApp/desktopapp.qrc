@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="DesktopApp">
+    <file>resources/HumanCutShape2.png</file>
+    <file>resources/HumanCutShape.png</file>
     <file>resources/recording.gif</file>
   </qresource>
 </RCC>

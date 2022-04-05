@@ -252,6 +252,12 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 					QGraphicsScene* scene = new QGraphicsScene;
 					scene->addItem(item);
 
+					/** Human cut shape */
+					QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape2.png");
+					QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
+					scene->addPixmap(humanPixmapScaled);
+					/** Human cut shape END */
+
 					//qDebug() << "timer connect 8: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 					this->parent->ui.graphicsViewVideo4->setScene(scene);
 					this->parent->ui.graphicsViewVideo4->show();
