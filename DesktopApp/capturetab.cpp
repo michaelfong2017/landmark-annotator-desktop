@@ -114,27 +114,49 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	END */
 
 	QObject::connect(this->parent->ui.captureButton, &QPushButton::clicked, [this]() {
-		this->colorImage = this->parent->getQColorImage();
-		this->depthImage = this->parent->getQDepthImage();
+
+		//this->colorImage = this->parent->getQColorImage();
+		//this->depthImage = this->parent->getQDepthImage();
 		this->cvDepthImage = this->parent->getCVDepthImage();
-		this->colorToDepthImage = this->parent->getQColorToDepthImage();
-		this->depthToColorImage = this->parent->getQDepthToColorImage();
+		//this->colorToDepthImage = this->parent->getQColorToDepthImage();
+		//this->depthToColorImage = this->parent->getQDepthToColorImage();
 		this->cvDepthToColorImage = this->parent->getCVDepthToColorImage();
-		
-		/** Colorize depthToColorImage */
-		/** No need to colorize depth image because it was colorized in live preview */
-		//cv::Mat temp;
-		//colorizeDepth(this->cvDepthImage, temp);
-		//QImage qImage((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
-		//qImage.bits();
-		//this->depthImageColorized = qImage;
 
 		cv::Mat temp2;
 		colorizeDepth(this->cvDepthToColorImage, temp2);
 		QImage qImage2((const uchar*)temp2.data, temp2.cols, temp2.rows, temp2.step, QImage::Format_RGB888);
 		qImage2.bits();
 		this->depthToColorImageColorized = qImage2;
-		/** Colorize END */
+
+		this->CapturedRawColorImage = this->parent->getRawColorImage().clone();
+		this->CapturedRawDepthImage = this->parent->getRawDepthImage().clone();
+		this->CapturedRawColorToDepthImage = this->parent->getRawColorToDepthImage().clone();
+		this->CapturedRawDepthToColorImage = this->parent->getRawDepthToColorImage().clone();
+
+		// Transform the 4 Captured cv::Mat images to QImage
+		cv::Mat tempCV1 = this->CapturedRawColorImage;
+		cvtColor(tempCV1, tempCV1, cv::COLOR_BGRA2RGB);
+		QImage ColorQImage((const uchar*)tempCV1.data, tempCV1.cols, tempCV1.rows, tempCV1.step, QImage::Format_RGB888);
+		ColorQImage.bits();
+		this->colorImage = ColorQImage;
+
+		cv::Mat tempCV2 = this->CapturedRawDepthImage;
+		tempCV2.convertTo(tempCV2, CV_8U, 255.0 / 5000.0, 0.0); // should be removed once we have QImage 16bit support
+		QImage DepthQImage((const uchar*)tempCV2.data, tempCV2.cols, tempCV2.rows, tempCV2.step, QImage::Format_Grayscale8);
+		DepthQImage.bits();
+		this->depthImage = DepthQImage;
+
+		cv::Mat tempCV3 = this->CapturedRawColorToDepthImage;
+		cvtColor(tempCV3, tempCV3, cv::COLOR_BGRA2RGB);
+		QImage ColorToDepthQImage((const uchar*)tempCV3.data, tempCV3.cols, tempCV3.rows, tempCV3.step, QImage::Format_RGB888);
+		ColorToDepthQImage.bits();
+		this->colorToDepthImage = ColorToDepthQImage;
+
+		cv::Mat tempCV4 = this->CapturedRawDepthToColorImage;
+		tempCV4.convertTo(tempCV4, CV_8U, 255.0 / 5000.0, 0.0); // should be removed once we have QImage 16bit support
+		QImage DepthToColorQImage((const uchar*)tempCV4.data, tempCV4.cols, tempCV4.rows, tempCV4.step, QImage::Format_Grayscale8);
+		DepthToColorQImage.bits();
+		this->depthToColorImage = DepthToColorQImage;
 
 		/** Assume that capture is all successful, otherwise print a warning. */
 		if (this->colorImage.isNull() || this->depthImage.isNull() || this->colorToDepthImage.isNull() || this->depthToColorImage.isNull()
@@ -147,6 +169,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		QImage image;
 
+		// only for initial state
 		if (this->parent->ui.radioButton->isChecked()) {
 			image = this->colorImage;
 		}
@@ -157,7 +180,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			image = this->colorToDepthImage;
 		}
 		else {
-			image = this->depthToColorImage;
+			image = this->depthToColorImage;;
 		}
 
 		int width = this->parent->ui.graphicsViewImage->width(), height = this->parent->ui.graphicsViewImage->height();
@@ -175,7 +198,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		this->parent->ui.graphicsViewImage->setScene(scene);
 		this->parent->ui.graphicsViewImage->show();
-		});
+	});
 
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
 		/** Send RGBImageArray and DepthToRGBImageArray to server */
@@ -516,6 +539,22 @@ QImage CaptureTab::getColorImage()
 QImage CaptureTab::getDepthImage()
 {
 	return this->depthImage;
+}
+
+cv::Mat CaptureTab::getCapturedRawColorImage() {
+	return this->CapturedRawColorImage;
+}
+
+cv::Mat CaptureTab::getCapturedRawDepthImage() {
+	return this->CapturedRawDepthImage;
+}
+
+cv::Mat CaptureTab::getCapturedRawColorToDepthImage() {
+	return this->CapturedRawColorToDepthImage;
+}
+
+cv::Mat CaptureTab::getCapturedRawDepthToColorImage() {
+	return this->CapturedRawDepthToColorImage;
 }
 
 QImage CaptureTab::getDepthImageColorized()

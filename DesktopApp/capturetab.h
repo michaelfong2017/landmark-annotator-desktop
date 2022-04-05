@@ -38,6 +38,11 @@ public:
     QString getCaptureFilepath();
     void setCaptureFilepath(QString captureFilepath);
 
+    cv::Mat getCapturedRawColorImage();
+    cv::Mat getCapturedRawDepthImage();
+    cv::Mat getCapturedRawColorToDepthImage();
+    cv::Mat getCapturedRawDepthToColorImage();
+
 private:
     DesktopApp* parent;
     k4a_image_t k4aPointCloud;
@@ -50,6 +55,12 @@ private:
     QImage depthToColorImage;
     QImage depthToColorImageColorized;
     cv::Mat cvDepthToColorImage;
+
+    cv::Mat CapturedRawColorImage;
+    cv::Mat CapturedRawDepthImage;
+    cv::Mat CapturedRawColorToDepthImage;
+    cv::Mat CapturedRawDepthToColorImage;
+
     int captureCount;
     Recorder* recorder;
     QString captureFilepath;
