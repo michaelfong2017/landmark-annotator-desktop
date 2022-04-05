@@ -180,7 +180,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			image = this->colorToDepthImage;
 		}
 		else {
-			image = this->depthToColorImage;;
+			image = this->depthToColorImage;
 		}
 
 		int width = this->parent->ui.graphicsViewImage->width(), height = this->parent->ui.graphicsViewImage->height();
