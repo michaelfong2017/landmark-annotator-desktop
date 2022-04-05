@@ -631,6 +631,10 @@ cv::Mat DesktopApp::getCVDepthToColorImage()
         cv::Mat matDepthImage = cv::Mat(k4a_image_get_height_pixels(alignmentImage), k4a_image_get_width_pixels(alignmentImage), CV_16U, k4a_image_get_buffer(alignmentImage), cv::Mat::AUTO_STEP);
 
         matDepthImage.convertTo(matDepthImage, CV_8U, 255.0 / 5000.0, 0.0);
+        
+        k4a_transformation_destroy(transformationHandle);
+        k4a_image_release(alignmentImage);
+
         return matDepthImage;
 
         //cv::minMaxIdx(matAlignmentImageRaw, &min, &max);
