@@ -253,7 +253,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 					scene->addItem(item);
 
 					/** Human cut shape */
-					QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape2.png");
+					QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape.png");
 					QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
 					scene->addPixmap(humanPixmapScaled);
 					/** Human cut shape END */
