@@ -121,6 +121,7 @@
     <ClCompile Include="devicemovingdialog.cpp" />
     <ClCompile Include="draganddropgraphicsscene.cpp" />
     <ClCompile Include="helper.cpp" />
+    <ClCompile Include="kinectengine.cpp" />
     <ClCompile Include="patient.cpp" />
     <ClCompile Include="patientdatatab.cpp" />
     <ClCompile Include="recorder.cpp" />
@@ -151,6 +152,7 @@
     <QtMoc Include="annotatetab.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="kinectengine.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />

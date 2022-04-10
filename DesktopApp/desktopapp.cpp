@@ -5,11 +5,26 @@
 #include "capturetab.h"
 #include "annotatetab.h"
 #include "alignmenttab.h"
+#include "kinectengine.h"
 
 DesktopApp::DesktopApp(QWidget* parent)
     : QWidget(parent)
 {
     ui.setupUi(this);
+
+    // Test refactoring
+    KinectEngine::getInstance().captureImages();
+    KinectEngine::getInstance().captureImages();
+    KinectEngine::getInstance().captureImages();
+    KinectEngine::getInstance().captureImages();
+    cv::Mat c, d, c2d, d2c;
+    KinectEngine::getInstance().readAllImages(c, d, c2d, d2c);
+    cv::imwrite("refactor_test_color.png", c);
+    cv::imwrite("refactor_test_depth.png", d);
+    cv::imwrite("refactor_test_color2depth.png", c2d);
+    cv::imwrite("refactor_test_depth2color.png", d2c);
+    KinectEngine::getInstance().closeDevice();
+    // Test refactoring END
 
     // Setup azure kinect device
 
