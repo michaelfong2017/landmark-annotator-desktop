@@ -27,10 +27,10 @@ public:
 
     void captureImages();
     void readAllImages(cv::Mat& colorImage, cv::Mat& depthImage, cv::Mat& colorToDepthImage, cv::Mat& depthToColorImage);
-    void readColorImage(cv::Mat& colorImage, k4a_image_t k4aColorImage);
-    void readDepthImage(cv::Mat& depthImage, k4a_image_t k4aDepthImage);
-    void readColorToDepthImage(cv::Mat& colorToDepthImage, k4a_image_t k4aColorImage, k4a_image_t k4aDepthImage);
-    void readDepthToColorImage(cv::Mat& depthToColorImage, k4a_image_t k4aColorImage, k4a_image_t k4aDepthImage);
+    void readColorImage(cv::Mat& colorImage, k4a_image_t k4aColorImage = NULL);
+    void readDepthImage(cv::Mat& depthImage, k4a_image_t k4aDepthImage = NULL);
+    void readColorToDepthImage(cv::Mat& colorToDepthImage, k4a_image_t k4aColorImage = NULL, k4a_image_t k4aDepthImage = NULL);
+    void readDepthToColorImage(cv::Mat& depthToColorImage, k4a_image_t k4aColorImage = NULL, k4a_image_t k4aDepthImage = NULL);
 
 private:
     KinectEngine();
@@ -43,5 +43,11 @@ private:
     k4a_image_t k4aColorImage;
     k4a_image_t k4aDepthImage;
 };
+
+QImage convertColorCVToQImage(cv::Mat);
+QImage convertDepthCVToColorizedQImage(cv::Mat);
+QImage convertColorToDepthCVToQImage(cv::Mat);
+QImage convertDepthToColorCVToColorizedQImage(cv::Mat);
+void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb);
 
 #endif

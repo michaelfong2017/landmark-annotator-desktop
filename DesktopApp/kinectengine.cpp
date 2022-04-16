@@ -4,8 +4,6 @@
 #include "stdafx.h"
 
 KinectEngine::KinectEngine() : QWidget() {
-    this->configDevice();
-    bool openDeviceSuccess = openDevice();
 }
 
 #pragma region cvMatRawDataMethods
@@ -112,7 +110,7 @@ void KinectEngine::readAllImages(cv::Mat& colorImage, cv::Mat& depthImage, cv::M
 * Retrieves image from colorImageQueue and transform from k4a_image_t to cv::Mat
 * @return cv::Mat(1080, 1920, 8UC4), empty cv::Mat if error
 */
-void KinectEngine::readColorImage(cv::Mat& colorImage, k4a_image_t k4aColorImage = NULL) {
+void KinectEngine::readColorImage(cv::Mat& colorImage, k4a_image_t k4aColorImage) {
     // Shallow copy
     k4a_image_t _k4aColorImage = this->k4aColorImage;
 
@@ -139,7 +137,7 @@ void KinectEngine::readColorImage(cv::Mat& colorImage, k4a_image_t k4aColorImage
 * Retrieves image from depthImageQueue and transform from k4a_image_t to cv::Mat
 * @return cv::Mat(576, 640, 16UC1), empty cv::Mat if error
 */
-void KinectEngine::readDepthImage(cv::Mat& depthImage, k4a_image_t k4aDepthImage = NULL) {
+void KinectEngine::readDepthImage(cv::Mat& depthImage, k4a_image_t k4aDepthImage) {
     // Shallow copy
     k4a_image_t _k4aDepthImage = this->k4aDepthImage;
 
@@ -165,7 +163,7 @@ void KinectEngine::readDepthImage(cv::Mat& depthImage, k4a_image_t k4aDepthImage
 * Takes a new capture and aligned the Color onto Depth
 * @return cv::Mat(576, 640, 8UC4), empty cv::Mat if error
 */
-void KinectEngine::readColorToDepthImage(cv::Mat& colorToDepthImage, k4a_image_t k4aColorImage = NULL, k4a_image_t k4aDepthImage = NULL) {
+void KinectEngine::readColorToDepthImage(cv::Mat& colorToDepthImage, k4a_image_t k4aColorImage, k4a_image_t k4aDepthImage) {
     this->k4aImageLock.lockForRead();
     // Shallow copy
     k4a_image_t _k4aColorImage = this->k4aColorImage;
@@ -217,7 +215,7 @@ void KinectEngine::readColorToDepthImage(cv::Mat& colorToDepthImage, k4a_image_t
 * Takes a new capture and aligned the Depth onto Color
 * @return cv::Mat(1080, 1920, 16UC1), empty cv::Mat if error
 */
-void KinectEngine::readDepthToColorImage(cv::Mat& depthToColorImage, k4a_image_t k4aColorImage = NULL, k4a_image_t k4aDepthImage = NULL) {
+void KinectEngine::readDepthToColorImage(cv::Mat& depthToColorImage, k4a_image_t k4aColorImage, k4a_image_t k4aDepthImage) {
     this->k4aImageLock.lockForRead();
     // Shallow copy
     k4a_image_t _k4aColorImage = this->k4aColorImage;
@@ -262,4 +260,104 @@ void KinectEngine::readDepthToColorImage(cv::Mat& depthToColorImage, k4a_image_t
 }
 
 #pragma endregion
+
+QImage convertColorCVToQImage(cv::Mat cvImage) {
+    if (cvImage.empty()) {
+        // isNull() will return true
+        return QImage(); 
+    }
+
+    cv::Mat temp;
+
+    cvtColor(cvImage, temp, cv::COLOR_BGR2RGB);
+
+    QImage qImage((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+    qImage.bits();
+
+    return qImage;
+}
+
+QImage convertDepthCVToColorizedQImage(cv::Mat cvImage) {
+    if (cvImage.empty()) {
+        // isNull() will return true
+        return QImage();
+    }
+
+    cvImage.convertTo(cvImage, CV_8U, 255.0 / 5000.0, 0.0);
+
+    /** Colorize depth image */
+    cv::Mat temp;
+    colorizeDepth(cvImage, temp);
+    /** Colorize depth image END */
+
+    QImage qImage((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+    qImage.bits();
+
+    return qImage;
+}
+
+QImage convertColorToDepthCVToQImage(cv::Mat cvImage) {
+    return convertColorCVToQImage(cvImage);
+}
+
+QImage convertDepthToColorCVToColorizedQImage(cv::Mat cvImage) {
+    return convertDepthCVToColorizedQImage(cvImage);
+}
+
+void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb)
+{
+    double maxDisp = 255;
+    float S = 1.f;
+    float V = 1.f;
+
+    rgb.create(gray.size(), CV_8UC3);
+    rgb = cv::Scalar::all(0);
+
+    if (maxDisp < 1)
+        return;
+
+    for (int y = 0; y < gray.rows; y++)
+    {
+        for (int x = 0; x < gray.cols; x++)
+        {
+            uchar d = gray.at<uchar>(y, x);
+
+            if (d == 0) {
+                rgb.at<cv::Point3_<uchar> >(y, x) = cv::Point3_<uchar>(0.f, 0.f, 0.f);
+                continue;
+            }
+
+            unsigned int H = 255 - ((uchar)maxDisp - d) * 280 / (uchar)maxDisp;
+            unsigned int hi = (H / 60) % 6;
+
+            float f = H / 60.f - H / 60;
+            float p = V * (1 - S); // 0.f
+            float q = V * (1 - f * S); // 1 - f
+            float t = V * (1 - (1 - f) * S); // f
+
+            cv::Point3f res;
+
+            //qDebug() << d << " " << H << " " << hi << f;
+            if (hi == 0) // R = V, G = t,  B = p
+                res = cv::Point3f(p, t, V);
+            if (hi == 1) // R = q, G = V,  B = p
+                res = cv::Point3f(p, V, q);
+            if (hi == 2) // R = p, G = V,  B = t
+                res = cv::Point3f(t, V, p);
+            if (hi == 3) // R = p, G = q,  B = V
+                res = cv::Point3f(V, q, p);
+            if (hi == 4) // R = t, G = p,  B = V
+                res = cv::Point3f(V, p, t);
+            if (hi == 5) // R = V, G = p,  B = q
+                res = cv::Point3f(q, p, V);
+
+            uchar b = (uchar)(std::max(0.f, std::min(res.x, 1.f)) * 255.f);
+            uchar g = (uchar)(std::max(0.f, std::min(res.y, 1.f)) * 255.f);
+            uchar r = (uchar)(std::max(0.f, std::min(res.z, 1.f)) * 255.f);
+
+            rgb.at<cv::Point3_<uchar> >(y, x) = cv::Point3_<uchar>(b, g, r);
+
+        }
+    }
+}
 

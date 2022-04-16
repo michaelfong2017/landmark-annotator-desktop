@@ -67,6 +67,4 @@ public:
     cv::Mat getRawDepthToColorImage();
 };
 
-void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb);
-
 #endif

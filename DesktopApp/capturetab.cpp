@@ -1,6 +1,7 @@
 #include "capturetab.h"
 #include "saveimagedialog.h"
 #include "devicemovingdialog.h"
+#include "kinectengine.h"
 
 CaptureTab::CaptureTab(DesktopApp* parent)
 {
@@ -198,7 +199,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		this->parent->ui.graphicsViewImage->setScene(scene);
 		this->parent->ui.graphicsViewImage->show();
-	});
+		});
 
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
 		/** Send RGBImageArray and DepthToRGBImageArray to server */
@@ -215,158 +216,126 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		});
 
 	QObject::connect(timer, &QTimer::timeout, [this]() {
+		qDebug() << "timer connect start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+
+		KinectEngine::getInstance().captureImages();
+		cv::Mat color, depth;
+		KinectEngine::getInstance().readColorImage(color);
+		KinectEngine::getInstance().readDepthImage(depth);
+		QImage qColor = convertColorCVToQImage(color);
+		QImage qDepth = convertDepthCVToColorizedQImage(depth);
+
 		// Recording time elapsed
 		this->parent->ui.recordingElapsedTime->setText(QTime::fromMSecsSinceStartOfDay(this->recordingElapsedTimer.elapsed()).toString("mm:ss"));
 		// Recording time elapsed END
 
-		//qDebug() << "timer connect start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-		if (this->parent->deviceCount > 0) {
-			switch (k4a_device_get_capture(this->parent->device, &this->parent->capture, K4A_WAIT_INFINITE)) {
-			case K4A_WAIT_RESULT_SUCCEEDED:
-				break;
+		/*
+		* Display color image
+		*/
+		if (!qColor.isNull()) {
+			int width = this->parent->ui.graphicsViewVideo4->width();
+			int height = this->parent->ui.graphicsViewVideo4->height();
+			QImage qColorScaled = qColor.scaled(width, height, Qt::KeepAspectRatio);
+
+			// Deallocate heap memory used by previous GGraphicsScene object
+			if (this->parent->ui.graphicsViewVideo4->scene()) {
+				delete this->parent->ui.graphicsViewVideo4->scene();
 			}
+			// Deallocate heap memory used by previous GGraphicsScene object END
 
-			if (this->parent->capture) {
-				//qDebug() << "timer connect 1: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-				k4a_image_t k4aColorImage = k4a_capture_get_color_image(this->parent->capture);
+			QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(qColorScaled));
+			QGraphicsScene* scene = new QGraphicsScene;
+			scene->addItem(item);
 
-				//qDebug() << "timer connect 2: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-				if (k4aColorImage != NULL) {
-					this->parent->colorImageQueue.push(k4aColorImage);
-					//qDebug() << "timer connect 3: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+			/** Human cut shape */
+			QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape.png");
+			QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
+			scene->addPixmap(humanPixmapScaled);
+			/** Human cut shape END */
 
-					int width = this->parent->ui.graphicsViewVideo4->width(), height = this->parent->ui.graphicsViewVideo4->height();
-					//qDebug() << "timer connect 4: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-					QImage qColorImageNotScaled = this->parent->getQColorImage();
-					//qDebug() << "timer connect 5: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-					QImage qColorImage = qColorImageNotScaled.scaled(width, height, Qt::KeepAspectRatio);
-
-					//qDebug() << "timer connect 6: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-					// Deallocate heap memory used by previous GGraphicsScene object
-					if (this->parent->ui.graphicsViewVideo4->scene()) {
-						delete this->parent->ui.graphicsViewVideo4->scene();
-					}
-
-					//qDebug() << "timer connect 7: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-					QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(qColorImage));
-					QGraphicsScene* scene = new QGraphicsScene;
-					scene->addItem(item);
-
-					/** Human cut shape */
-					QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape.png");
-					QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
-					scene->addPixmap(humanPixmapScaled);
-					/** Human cut shape END */
-
-					//qDebug() << "timer connect 8: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-					this->parent->ui.graphicsViewVideo4->setScene(scene);
-					this->parent->ui.graphicsViewVideo4->show();
-
-					//qDebug() << "timer connect 9: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-					while (this->parent->colorImageQueue.size() > MAX_IMAGE_QUEUE_SIZE) {
-						//qDebug() << "timer connect while start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-						k4a_image_release(this->parent->colorImageQueue.front());
-						//qDebug() << "timer connect while 1: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-						this->parent->colorImageQueue.pop();
-						//qDebug() << "timer connect while end: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-					}
-				}
-
-				//qDebug() << "timer connect 10: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-				k4a_image_t k4aDepthImage = k4a_capture_get_depth_image(this->parent->capture);
-
-				//qDebug() << "timer connect 11: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-				if (k4aDepthImage != NULL) {
-					this->parent->depthImageQueue.push(k4aDepthImage);
-
-					int width = this->parent->ui.graphicsViewVideo5->width(), height = this->parent->ui.graphicsViewVideo5->height();
-					//qDebug() << "timer connect 12: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-					/** Colorize live depth image preview */
-					cv::Mat cvDepth = this->parent->getCVDepthImage();
-					cv::Mat temp;
-					colorizeDepth(cvDepth, temp);
-					QImage qDepthImageNotScaled((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
-					qDepthImageNotScaled.bits();
-					this->depthImageColorized = qDepthImageNotScaled;
-					/** Colorize END */
-
-					//qDebug() << "timer connect 13: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-					QImage qDepthImage = qDepthImageNotScaled.scaled(width, height, Qt::KeepAspectRatio);
-					//qDebug() << "timer connect 14: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-
-					// Deallocate heap memory used by previous GGraphicsScene object
-					if (this->parent->ui.graphicsViewVideo5->scene()) {
-						delete this->parent->ui.graphicsViewVideo5->scene();
-					}
-
-					QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(qDepthImage));
-					QGraphicsScene* scene = new QGraphicsScene;
-					scene->addItem(item);
-
-					this->parent->ui.graphicsViewVideo5->setScene(scene);
-					this->parent->ui.graphicsViewVideo5->show();
-
-					while (this->parent->depthImageQueue.size() > MAX_IMAGE_QUEUE_SIZE) {
-						k4a_image_release(this->parent->depthImageQueue.front());
-						this->parent->depthImageQueue.pop();
-					}
-				}
-
-				//qDebug() << "timer connect 15: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-				k4a_capture_release(this->parent->capture);
-				//qDebug() << "timer connect 16: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-			}
-			else {
-				qDebug() << "No capture found\n";
-			}
-
-			// Capture a imu sample
-			switch (k4a_device_get_imu_sample(this->parent->device, &this->parent->imuSample, K4A_WAIT_INFINITE)) {
-			case K4A_WAIT_RESULT_SUCCEEDED:
-				break;
-			}
-
-			if (&this->parent->imuSample != NULL) {
-				//qDebug() << "timer connect 17: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-				/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved */
-				alertIfMoving(
-					this->parent->imuSample.gyro_sample.xyz.x,
-					this->parent->imuSample.gyro_sample.xyz.y,
-					this->parent->imuSample.gyro_sample.xyz.z,
-					this->parent->imuSample.acc_sample.xyz.x,
-					this->parent->imuSample.acc_sample.xyz.y,
-					this->parent->imuSample.acc_sample.xyz.z
-				);
-				/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved END */
-
-				this->parent->gyroSampleQueue.push_back(this->parent->imuSample.gyro_sample);
-				this->parent->accSampleQueue.push_back(this->parent->imuSample.acc_sample);
-				//qDebug() << "timer connect 18: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-
-				QString text;
-				text += ("Temperature: " + QString::number(this->parent->imuSample.temperature, 0, 2) + " C\n");
-				this->parent->ui.imuText->setText(text);
-			}
-			//qDebug() << "timer connect 19: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-
-			while (this->parent->gyroSampleQueue.size() > MAX_GYROSCOPE_QUEUE_SIZE) this->parent->gyroSampleQueue.pop_front();
-
-			//qDebug() << "timer connect 20: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-
-			while (this->parent->accSampleQueue.size() > MAX_ACCELEROMETER_QUEUE_SIZE) this->parent->accSampleQueue.pop_front();
-
-			//qDebug() << "timer connect 21: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-
-			if (this->parent->gyroSampleQueue.size() >= MAX_GYROSCOPE_QUEUE_SIZE) this->drawGyroscopeData();
-
-			//qDebug() << "timer connect 22: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-
-			if (this->parent->accSampleQueue.size() >= MAX_ACCELEROMETER_QUEUE_SIZE) this->drawAccelerometerData();
-
-			//qDebug() << "timer connect 23: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+			this->parent->ui.graphicsViewVideo4->setScene(scene);
+			this->parent->ui.graphicsViewVideo4->show();
 		}
-		//qDebug() << "timer connect end: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-		});
+		/*
+		* Display color image END
+		*/
+
+
+		/*
+		* Display depth image
+		*/
+		if (!qDepth.isNull()) {
+			int width = this->parent->ui.graphicsViewVideo5->width();
+			int height = this->parent->ui.graphicsViewVideo5->height();
+			QImage qDepthScaled = qDepth.scaled(width, height, Qt::KeepAspectRatio);
+
+			// Deallocate heap memory used by previous GGraphicsScene object
+			if (this->parent->ui.graphicsViewVideo5->scene()) {
+				delete this->parent->ui.graphicsViewVideo5->scene();
+			}
+			// Deallocate heap memory used by previous GGraphicsScene object END
+
+			QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(qDepthScaled));
+			QGraphicsScene* scene = new QGraphicsScene;
+			scene->addItem(item);
+
+			this->parent->ui.graphicsViewVideo5->setScene(scene);
+			this->parent->ui.graphicsViewVideo5->show();
+		}
+		/*
+		* Display depth image END
+		*/
+
+
+		// Capture a imu sample
+		switch (k4a_device_get_imu_sample(this->parent->device, &this->parent->imuSample, K4A_WAIT_INFINITE)) {
+		case K4A_WAIT_RESULT_SUCCEEDED:
+			break;
+		}
+
+		if (&this->parent->imuSample != NULL) {
+			//qDebug() << "timer connect 17: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+			/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved */
+			alertIfMoving(
+				this->parent->imuSample.gyro_sample.xyz.x,
+				this->parent->imuSample.gyro_sample.xyz.y,
+				this->parent->imuSample.gyro_sample.xyz.z,
+				this->parent->imuSample.acc_sample.xyz.x,
+				this->parent->imuSample.acc_sample.xyz.y,
+				this->parent->imuSample.acc_sample.xyz.z
+			);
+			/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved END */
+
+			this->parent->gyroSampleQueue.push_back(this->parent->imuSample.gyro_sample);
+			this->parent->accSampleQueue.push_back(this->parent->imuSample.acc_sample);
+			//qDebug() << "timer connect 18: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+
+			QString text;
+			text += ("Temperature: " + QString::number(this->parent->imuSample.temperature, 0, 2) + " C\n");
+			this->parent->ui.imuText->setText(text);
+		}
+		//qDebug() << "timer connect 19: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+
+		while (this->parent->gyroSampleQueue.size() > MAX_GYROSCOPE_QUEUE_SIZE) this->parent->gyroSampleQueue.pop_front();
+
+		//qDebug() << "timer connect 20: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+
+		while (this->parent->accSampleQueue.size() > MAX_ACCELEROMETER_QUEUE_SIZE) this->parent->accSampleQueue.pop_front();
+
+		//qDebug() << "timer connect 21: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+
+		if (this->parent->gyroSampleQueue.size() >= MAX_GYROSCOPE_QUEUE_SIZE) this->drawGyroscopeData();
+
+		//qDebug() << "timer connect 22: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+
+		if (this->parent->accSampleQueue.size() >= MAX_ACCELEROMETER_QUEUE_SIZE) this->drawAccelerometerData();
+
+		//qDebug() << "timer connect 23: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+
+		qDebug() << "timer connect end: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+		}
+	);
+
 }
 
 void CaptureTab::setDefaultCaptureMode() {
@@ -489,9 +458,9 @@ void CaptureTab::drawAccelerometerData() {
 
 void CaptureTab::alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ)
 {
-	//qDebug() << "alertIfMoving - " << gyroX << ", " << gyroY << ", " << gyroZ << ", " << accX << ", " << accY << ", " << accZ;
+	qDebug() << "alertIfMoving - " << gyroX << ", " << gyroY << ", " << gyroZ << ", " << accX << ", " << accY << ", " << accZ;
 
-	if (abs(gyroX) > 1.0f || abs(gyroY) > 1.0f || abs(gyroZ) > 1.0f || abs(accX) > 1.0f || abs(accY) > 1.0f || abs(accZ + 9.81f) > 1.0f) {
+	if (abs(accX) > 1.0f || abs(accY) > 1.0f || abs(accZ) > 1.0f) {
 		DeviceMovingDialog dialog(this);
 		dialog.exec();
 	}
@@ -514,7 +483,7 @@ QVector3D CaptureTab::query3DPoint(int x, int y) {
 	cv::Mat cvDepthToColorImage = this->getCVDepthToColorImage();
 	uchar d = cvDepthToColorImage.at<uchar>(y, x);
 	//qDebug() << "d: " << d;
-	
+
 	k4a_calibration_t calibration;
 	if (k4a_device_get_calibration(this->parent->device, this->parent->deviceConfig.depth_mode, this->parent->deviceConfig.color_resolution, &calibration) != K4A_RESULT_SUCCEEDED) {
 		return QVector3D(0, 0, 0);
