@@ -19,47 +19,39 @@ public:
     CaptureTab(DesktopApp* parent);
     DesktopApp* getParent();
     QTimer* timer;
-    QImage getQCapturedColorImage();
-    QImage getQCapturedDepthToColorImageColorized();
-    k4a_image_t* getK4aPointCloud();
-    k4a_image_t* getK4aDepthToColor();
-    QVector3D query3DPoint(int x, int y);
-    QImage getColorImage();
-    QImage getDepthImage();
-    QImage getDepthImageColorized();
-    cv::Mat getCVDepthImage();
-    QImage getColorToDepthImage();
-    QImage getDepthToColorImage();
-    QImage getDepthToColorImageColorized();
-    cv::Mat getCVDepthToColorImage();
     int getCaptureCount();
     void setCaptureCount(int newCaptureCount);
     Recorder* getRecorder();
     QString getCaptureFilepath();
     void setCaptureFilepath(QString captureFilepath);
 
-    cv::Mat getCapturedRawColorImage();
-    cv::Mat getCapturedRawDepthImage();
-    cv::Mat getCapturedRawColorToDepthImage();
-    cv::Mat getCapturedRawDepthToColorImage();
+    cv::Mat getCapturedColorImage();
+    cv::Mat getCapturedDepthImage();
+    cv::Mat getCapturedColorToDepthImage();
+    cv::Mat getCapturedDepthToColorImage();
+
+    QImage getQColorImage();
+    QImage getQDepthImage();
+    QImage getQColorToDepthImage();
+    QImage getQDepthToColorImage();
+    QImage getQDepthToColorColorizedImage();
 
 private:
     DesktopApp* parent;
-    k4a_image_t k4aPointCloud;
-    k4a_image_t k4aDepthToColor;
-    QImage colorImage;
-    QImage depthImage;
-    QImage depthImageColorized;
-    cv::Mat cvDepthImage;
-    QImage colorToDepthImage;
-    QImage depthToColorImage;
-    QImage depthToColorImageColorized;
-    cv::Mat cvDepthToColorImage;
 
-    cv::Mat CapturedRawColorImage;
-    cv::Mat CapturedRawDepthImage;
-    cv::Mat CapturedRawColorToDepthImage;
-    cv::Mat CapturedRawDepthToColorImage;
+    // Only captured images have to be stored
+    // Live preview images are not stored
+    cv::Mat capturedColorImage;
+    cv::Mat capturedDepthImage;
+    cv::Mat capturedColorToDepthImage;
+    cv::Mat capturedDepthToColorImage;
+    // stored captured images END
+
+    QImage qColorImage;
+    QImage qDepthImage;
+    QImage qColorToDepthImage;
+    QImage qDepthToColorImage;
+    QImage qDepthToColorColorizedImage;
 
     int captureCount;
     Recorder* recorder;
@@ -69,8 +61,8 @@ private:
     bool noImageCaptured;
     void setDefaultCaptureMode();
     void registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image);
-    void drawGyroscopeData();
-    void drawAccelerometerData();
+    void drawGyroscopeData(std::deque<k4a_float3_t> gyroSampleQueue);
+    void drawAccelerometerData(std::deque<k4a_float3_t> accSampleQueue);
     void alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ);
     void onManagerFinished(QNetworkReply* reply);
 };

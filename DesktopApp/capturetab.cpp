@@ -12,10 +12,10 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 	this->setDefaultCaptureMode();
 
-	this->registerRadioButtonOnClicked(this->parent->ui.radioButton, &this->colorImage);
-	this->registerRadioButtonOnClicked(this->parent->ui.radioButton2, &this->depthImage);
-	this->registerRadioButtonOnClicked(this->parent->ui.radioButton3, &this->colorToDepthImage);
-	this->registerRadioButtonOnClicked(this->parent->ui.radioButton4, &this->depthToColorImage);
+	this->registerRadioButtonOnClicked(this->parent->ui.radioButton, &this->qColorImage);
+	this->registerRadioButtonOnClicked(this->parent->ui.radioButton2, &this->qDepthImage);
+	this->registerRadioButtonOnClicked(this->parent->ui.radioButton3, &this->qColorToDepthImage);
+	this->registerRadioButtonOnClicked(this->parent->ui.radioButton4, &this->qDepthToColorImage);
 
 	/** QNetworkAccessManager */
 	connect(&manager, &QNetworkAccessManager::finished, this, &CaptureTab::onManagerFinished);
@@ -115,76 +115,52 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	END */
 
 	QObject::connect(this->parent->ui.captureButton, &QPushButton::clicked, [this]() {
-
-		//this->colorImage = this->parent->getQColorImage();
-		//this->depthImage = this->parent->getQDepthImage();
-		this->cvDepthImage = this->parent->getCVDepthImage();
-		//this->colorToDepthImage = this->parent->getQColorToDepthImage();
-		//this->depthToColorImage = this->parent->getQDepthToColorImage();
-		this->cvDepthToColorImage = this->parent->getCVDepthToColorImage();
-
-		cv::Mat temp2;
-		colorizeDepth(this->cvDepthToColorImage, temp2);
-		QImage qImage2((const uchar*)temp2.data, temp2.cols, temp2.rows, temp2.step, QImage::Format_RGB888);
-		qImage2.bits();
-		this->depthToColorImageColorized = qImage2;
-
-		this->CapturedRawColorImage = this->parent->getRawColorImage().clone();
-		this->CapturedRawDepthImage = this->parent->getRawDepthImage().clone();
-		this->CapturedRawColorToDepthImage = this->parent->getRawColorToDepthImage().clone();
-		this->CapturedRawDepthToColorImage = this->parent->getRawDepthToColorImage().clone();
-
-		// Transform the 4 Captured cv::Mat images to QImage
-		cv::Mat tempCV1 = this->CapturedRawColorImage;
-		cvtColor(tempCV1, tempCV1, cv::COLOR_BGRA2RGB);
-		QImage ColorQImage((const uchar*)tempCV1.data, tempCV1.cols, tempCV1.rows, tempCV1.step, QImage::Format_RGB888);
-		ColorQImage.bits();
-		this->colorImage = ColorQImage;
-
-		cv::Mat tempCV2 = this->CapturedRawDepthImage;
-		tempCV2.convertTo(tempCV2, CV_8U, 255.0 / 5000.0, 0.0); // should be removed once we have QImage 16bit support
-		QImage DepthQImage((const uchar*)tempCV2.data, tempCV2.cols, tempCV2.rows, tempCV2.step, QImage::Format_Grayscale8);
-		DepthQImage.bits();
-		this->depthImage = DepthQImage;
-
-		cv::Mat tempCV3 = this->CapturedRawColorToDepthImage;
-		cvtColor(tempCV3, tempCV3, cv::COLOR_BGRA2RGB);
-		QImage ColorToDepthQImage((const uchar*)tempCV3.data, tempCV3.cols, tempCV3.rows, tempCV3.step, QImage::Format_RGB888);
-		ColorToDepthQImage.bits();
-		this->colorToDepthImage = ColorToDepthQImage;
-
-		cv::Mat tempCV4 = this->CapturedRawDepthToColorImage;
-		tempCV4.convertTo(tempCV4, CV_8U, 255.0 / 5000.0, 0.0); // should be removed once we have QImage 16bit support
-		QImage DepthToColorQImage((const uchar*)tempCV4.data, tempCV4.cols, tempCV4.rows, tempCV4.step, QImage::Format_Grayscale8);
-		DepthToColorQImage.bits();
-		this->depthToColorImage = DepthToColorQImage;
+		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
+		
+		// Shallow copy
+		cv::Mat color = this->capturedColorImage;
+		cv::Mat depth = this->capturedDepthImage;
+		cv::Mat colorToDepth = this->capturedColorToDepthImage;
+		cv::Mat depthToColor = this->capturedDepthToColorImage;
+		//
 
 		/** Assume that capture is all successful, otherwise print a warning. */
-		if (this->colorImage.isNull() || this->depthImage.isNull() || this->colorToDepthImage.isNull() || this->depthToColorImage.isNull()
-			|| this->cvDepthImage.empty() || this->cvDepthToColorImage.empty() || this->depthImageColorized.isNull() || this->depthToColorImageColorized.isNull()) {
+		if (color.empty() || depth.empty() || colorToDepth.empty() || depthToColor.empty()) {
 			qWarning() << "capturetab captureButton - one of the captured images is null";
 		}
 		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
 		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
 		this->noImageCaptured = false;
 
+		/*
+		* Display captured images
+		*/
+		this->qColorImage = convertColorCVToQImage(color);
+		this->qDepthImage = convertDepthCVToQImage(depth);
+		this->qColorToDepthImage = convertColorToDepthCVToQImage(colorToDepth);
+		this->qDepthToColorImage = convertDepthToColorCVToQImage(depthToColor);
+		// For annotatetab instead
+		this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(depthToColor);
+		// For annotatetab instead END
+
 		QImage image;
 
 		// only for initial state
 		if (this->parent->ui.radioButton->isChecked()) {
-			image = this->colorImage;
+			image = this->getQColorImage();
 		}
 		else if (this->parent->ui.radioButton2->isChecked()) {
-			image = this->depthImage;
+			image = this->getQDepthImage();
 		}
 		else if (this->parent->ui.radioButton3->isChecked()) {
-			image = this->colorToDepthImage;
+			image = this->getQColorToDepthImage();
 		}
 		else {
-			image = this->depthToColorImage;
+			image = this->getQDepthToColorImage();
 		}
 
-		int width = this->parent->ui.graphicsViewImage->width(), height = this->parent->ui.graphicsViewImage->height();
+		int width = this->parent->ui.graphicsViewImage->width();
+		int height = this->parent->ui.graphicsViewImage->height();
 
 		QImage imageScaled = image.scaled(width, height, Qt::KeepAspectRatio);
 
@@ -199,29 +175,31 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		this->parent->ui.graphicsViewImage->setScene(scene);
 		this->parent->ui.graphicsViewImage->show();
+		/*
+		* Display captured images END
+		*/
 		});
 
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
 		/** Send RGBImageArray and DepthToRGBImageArray to server */
-		QImage colorImage = this->getColorImage();
-		QImage depthToColorImage = this->getDepthToColorImage();
+		QImage colorImage = this->getQColorImage();
+		QImage depthToColorImage = this->getQDepthToColorImage();
 
 		uploadRGBImageArrayAndDepthToRGBImageArray(manager, QUrl("http://127.0.0.1:8000/uploadimages"), QString("image_id_001"), 4, colorImage, depthToColorImage);
 		/** Send to server END */
 
-		// Move to annotate tab whose index is 3
+		// Move to annotate tab whose index is 2
 		this->parent->annotateTab->reloadCurrentImage();
-		this->parent->ui.tabWidget->setCurrentIndex(3);
+		this->parent->ui.tabWidget->setCurrentIndex(2);
 		this->parent->ui.annotateButtonAnnotateTab->click();
 		});
 
 	QObject::connect(timer, &QTimer::timeout, [this]() {
-		qDebug() << "timer connect start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+		//qDebug() << "timer connect start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 
 		KinectEngine::getInstance().captureImages();
 		cv::Mat color, depth;
-		KinectEngine::getInstance().readColorImage(color);
-		KinectEngine::getInstance().readDepthImage(depth);
+		KinectEngine::getInstance().readColorAndDepthImages(color, depth);
 		QImage qColor = convertColorCVToQImage(color);
 		QImage qDepth = convertDepthCVToColorizedQImage(depth);
 
@@ -286,53 +264,54 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		* Display depth image END
 		*/
 
-
-		// Capture a imu sample
-		switch (k4a_device_get_imu_sample(this->parent->device, &this->parent->imuSample, K4A_WAIT_INFINITE)) {
-		case K4A_WAIT_RESULT_SUCCEEDED:
-			break;
+		/*
+		* Record color image video and depth image video
+		*/
+		// OpenCV cannot save 16-bit video. Therefore, convert to 8-bit.
+		cv::Mat depth8bit;
+		depth.convertTo(depth8bit, CV_8U, 255.0 / 5000.0, 0.0);
+		// If recording mode is on, send temp to the output file stream
+		if (this->getRecorder()->getRecordingStatus()) {
+			*(this->getRecorder()->getColorVideoWriter()) << color;
+			*(this->getRecorder()->getDepthVideoWriter()) << depth8bit;
 		}
+		/*
+		* Record color image video and depth image video END
+		*/
 
-		if (&this->parent->imuSample != NULL) {
+		/*
+		* IMU sample
+		*/
+		KinectEngine::getInstance().queueIMUSample();
+		std::deque<k4a_float3_t> gyroSampleQueue = KinectEngine::getInstance().getGyroSampleQueue();
+		std::deque<k4a_float3_t> accSampleQueue = KinectEngine::getInstance().getAccSampleQueue();
+		float temperature = KinectEngine::getInstance().getTemperature();
+
+		if (!gyroSampleQueue.empty() && !accSampleQueue.empty()) {
 			//qDebug() << "timer connect 17: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 			/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved */
 			alertIfMoving(
-				this->parent->imuSample.gyro_sample.xyz.x,
-				this->parent->imuSample.gyro_sample.xyz.y,
-				this->parent->imuSample.gyro_sample.xyz.z,
-				this->parent->imuSample.acc_sample.xyz.x,
-				this->parent->imuSample.acc_sample.xyz.y,
-				this->parent->imuSample.acc_sample.xyz.z
+				gyroSampleQueue[gyroSampleQueue.size() - 1].xyz.x,
+				gyroSampleQueue[gyroSampleQueue.size() - 1].xyz.y,
+				gyroSampleQueue[gyroSampleQueue.size() - 1].xyz.z,
+				accSampleQueue[accSampleQueue.size() - 1].xyz.x,
+				accSampleQueue[accSampleQueue.size() - 1].xyz.y,
+				accSampleQueue[accSampleQueue.size() - 1].xyz.z
 			);
 			/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved END */
 
-			this->parent->gyroSampleQueue.push_back(this->parent->imuSample.gyro_sample);
-			this->parent->accSampleQueue.push_back(this->parent->imuSample.acc_sample);
-			//qDebug() << "timer connect 18: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-
 			QString text;
-			text += ("Temperature: " + QString::number(this->parent->imuSample.temperature, 0, 2) + " C\n");
+			text += ("Temperature: " + QString::number(temperature, 0, 2) + " C\n");
 			this->parent->ui.imuText->setText(text);
 		}
-		//qDebug() << "timer connect 19: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 
-		while (this->parent->gyroSampleQueue.size() > MAX_GYROSCOPE_QUEUE_SIZE) this->parent->gyroSampleQueue.pop_front();
+		if (gyroSampleQueue.size() >= MAX_GYROSCOPE_QUEUE_SIZE) this->drawGyroscopeData(gyroSampleQueue);
+		if (accSampleQueue.size() >= MAX_ACCELEROMETER_QUEUE_SIZE) this->drawAccelerometerData(accSampleQueue);
+		/*
+		* IMU sample END
+		*/
 
-		//qDebug() << "timer connect 20: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-
-		while (this->parent->accSampleQueue.size() > MAX_ACCELEROMETER_QUEUE_SIZE) this->parent->accSampleQueue.pop_front();
-
-		//qDebug() << "timer connect 21: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-
-		if (this->parent->gyroSampleQueue.size() >= MAX_GYROSCOPE_QUEUE_SIZE) this->drawGyroscopeData();
-
-		//qDebug() << "timer connect 22: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-
-		if (this->parent->accSampleQueue.size() >= MAX_ACCELEROMETER_QUEUE_SIZE) this->drawAccelerometerData();
-
-		//qDebug() << "timer connect 23: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-
-		qDebug() << "timer connect end: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+		//qDebug() << "timer connect end: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 		}
 	);
 
@@ -370,15 +349,7 @@ DesktopApp* CaptureTab::getParent()
 	return this->parent;
 }
 
-QImage CaptureTab::getQCapturedColorImage() {
-	return this->colorImage;
-}
-
-QImage CaptureTab::getQCapturedDepthToColorImageColorized() {
-	return this->depthToColorImageColorized;
-}
-
-void CaptureTab::drawGyroscopeData() {
+void CaptureTab::drawGyroscopeData(std::deque<k4a_float3_t> gyroSampleQueue) {
 	// Deallocate heap memory used by previous GGraphicsScene object
 	if (this->parent->ui.graphicsViewGyroscope->scene()) {
 		delete this->parent->ui.graphicsViewGyroscope->scene();
@@ -396,18 +367,18 @@ void CaptureTab::drawGyroscopeData() {
 		int segmentHeight = height / 3;
 
 		// Draw  gyroscope measurement w.r.t x-axis
-		int leftSegmentHeight = 2 * this->parent->gyroSampleQueue[i].xyz.x;
-		int rightSegmentHeight = 2 * this->parent->gyroSampleQueue[i + 1].xyz.x;
+		int leftSegmentHeight = 2 * gyroSampleQueue[i].xyz.x;
+		int rightSegmentHeight = 2 * gyroSampleQueue[i + 1].xyz.x;
 		painter.drawLine(i * segmentLength, segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, segmentHeight / 2 + rightSegmentHeight);
 
 		// Draw  gyroscope measurement w.r.t y-axis
-		leftSegmentHeight = 2 * this->parent->gyroSampleQueue[i].xyz.y;
-		rightSegmentHeight = 2 * this->parent->gyroSampleQueue[i + 1].xyz.y;
+		leftSegmentHeight = 2 * gyroSampleQueue[i].xyz.y;
+		rightSegmentHeight = 2 * gyroSampleQueue[i + 1].xyz.y;
 		painter.drawLine(i * segmentLength, 3 * segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, 3 * segmentHeight / 2 + rightSegmentHeight);
 
 		// Draw  gyroscope measurement w.r.t z-axis
-		leftSegmentHeight = 2 * this->parent->gyroSampleQueue[i].xyz.z;
-		rightSegmentHeight = 2 * this->parent->gyroSampleQueue[i + 1].xyz.z;
+		leftSegmentHeight = 2 * gyroSampleQueue[i].xyz.z;
+		rightSegmentHeight = 2 * gyroSampleQueue[i + 1].xyz.z;
 		painter.drawLine(i * segmentLength, 5 * segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, 5 * segmentHeight / 2 + rightSegmentHeight);
 	}
 
@@ -417,7 +388,7 @@ void CaptureTab::drawGyroscopeData() {
 	this->parent->ui.graphicsViewGyroscope->setScene(scene);
 }
 
-void CaptureTab::drawAccelerometerData() {
+void CaptureTab::drawAccelerometerData(std::deque<k4a_float3_t> accSampleQueue) {
 	// Deallocate heap memory used by previous GGraphicsScene object
 	if (this->parent->ui.graphicsViewAccelerometer->scene()) {
 		delete this->parent->ui.graphicsViewAccelerometer->scene();
@@ -435,18 +406,18 @@ void CaptureTab::drawAccelerometerData() {
 		int segmentHeight = height / 3;
 
 		// Draw  gyroscope measurement w.r.t x-axis
-		int leftSegmentHeight = 2 * this->parent->accSampleQueue[i].xyz.x;
-		int rightSegmentHeight = 2 * this->parent->accSampleQueue[i + 1].xyz.x;
+		int leftSegmentHeight = 2 * accSampleQueue[i].xyz.x;
+		int rightSegmentHeight = 2 * accSampleQueue[i + 1].xyz.x;
 		painter.drawLine(i * segmentLength, segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, segmentHeight / 2 + rightSegmentHeight);
 
 		// Draw  gyroscope measurement w.r.t y-axis
-		leftSegmentHeight = 2 * this->parent->accSampleQueue[i].xyz.y;
-		rightSegmentHeight = 2 * this->parent->accSampleQueue[i + 1].xyz.y;
+		leftSegmentHeight = 2 * accSampleQueue[i].xyz.y;
+		rightSegmentHeight = 2 * accSampleQueue[i + 1].xyz.y;
 		painter.drawLine(i * segmentLength, 3 * segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, 3 * segmentHeight / 2 + rightSegmentHeight);
 
 		// Draw  gyroscope measurement w.r.t z-axis
-		leftSegmentHeight = 2 * this->parent->accSampleQueue[i].xyz.z;
-		rightSegmentHeight = 2 * this->parent->accSampleQueue[i + 1].xyz.z;
+		leftSegmentHeight = 2 * accSampleQueue[i].xyz.z;
+		rightSegmentHeight = 2 * accSampleQueue[i + 1].xyz.z;
 		painter.drawLine(i * segmentLength, 5 * segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, 5 * segmentHeight / 2 + rightSegmentHeight);
 	}
 
@@ -458,9 +429,9 @@ void CaptureTab::drawAccelerometerData() {
 
 void CaptureTab::alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ)
 {
-	qDebug() << "alertIfMoving - " << gyroX << ", " << gyroY << ", " << gyroZ << ", " << accX << ", " << accY << ", " << accZ;
+	//qDebug() << "alertIfMoving - " << gyroX << ", " << gyroY << ", " << gyroZ << ", " << accX << ", " << accY << ", " << accZ;
 
-	if (abs(accX) > 1.0f || abs(accY) > 1.0f || abs(accZ) > 1.0f) {
+	if (abs(accX) > 1.0f || abs(accY) > 1.0f || abs(accZ + 9.81) > 1.0f) {
 		DeviceMovingDialog dialog(this);
 		dialog.exec();
 	}
@@ -471,95 +442,45 @@ void CaptureTab::onManagerFinished(QNetworkReply* reply)
 	qDebug() << reply->readAll();
 }
 
-k4a_image_t* CaptureTab::getK4aPointCloud() {
-	return &(this->k4aPointCloud);
+cv::Mat CaptureTab::getCapturedColorImage() {
+	return this->capturedColorImage;
 }
 
-k4a_image_t* CaptureTab::getK4aDepthToColor() {
-	return &(this->k4aDepthToColor);
+cv::Mat CaptureTab::getCapturedDepthImage() {
+	return this->capturedDepthImage;
 }
 
-QVector3D CaptureTab::query3DPoint(int x, int y) {
-	cv::Mat cvDepthToColorImage = this->getCVDepthToColorImage();
-	uchar d = cvDepthToColorImage.at<uchar>(y, x);
-	//qDebug() << "d: " << d;
-
-	k4a_calibration_t calibration;
-	if (k4a_device_get_calibration(this->parent->device, this->parent->deviceConfig.depth_mode, this->parent->deviceConfig.color_resolution, &calibration) != K4A_RESULT_SUCCEEDED) {
-		return QVector3D(0, 0, 0);
-	}
-
-	k4a_float2_t p;
-	p.xy.x = (float)x;
-	p.xy.y = (float)y;
-	k4a_float3_t p3D;
-	int valid;
-	if (k4a_calibration_2d_to_3d(&calibration, &p, d, K4A_CALIBRATION_TYPE_COLOR, K4A_CALIBRATION_TYPE_COLOR, &p3D, &valid) != K4A_WAIT_RESULT_SUCCEEDED) {
-		return QVector3D(0, 0, 0);
-	}
-	//qDebug() << "p3D(" << p3D.xyz.x << ", " << p3D.xyz.y << ", " << p3D.xyz.z << ")";
-	// source_point2d is a valid coordinate
-	if (valid == 1) {
-		return QVector3D(p3D.xyz.x, p3D.xyz.y, p3D.xyz.z);
-	}
-
-	return QVector3D(0, 0, 0);
+cv::Mat CaptureTab::getCapturedColorToDepthImage() {
+	return this->capturedColorToDepthImage;
 }
 
-QImage CaptureTab::getColorImage()
+cv::Mat CaptureTab::getCapturedDepthToColorImage() {
+	return this->capturedDepthToColorImage;
+}
+
+QImage CaptureTab::getQColorImage()
 {
-	return this->colorImage;
+	return this->qColorImage;
 }
 
-QImage CaptureTab::getDepthImage()
+QImage CaptureTab::getQDepthImage()
 {
-	return this->depthImage;
+	return this->qDepthImage;
 }
 
-cv::Mat CaptureTab::getCapturedRawColorImage() {
-	return this->CapturedRawColorImage;
-}
-
-cv::Mat CaptureTab::getCapturedRawDepthImage() {
-	return this->CapturedRawDepthImage;
-}
-
-cv::Mat CaptureTab::getCapturedRawColorToDepthImage() {
-	return this->CapturedRawColorToDepthImage;
-}
-
-cv::Mat CaptureTab::getCapturedRawDepthToColorImage() {
-	return this->CapturedRawDepthToColorImage;
-}
-
-QImage CaptureTab::getDepthImageColorized()
+QImage CaptureTab::getQColorToDepthImage()
 {
-	return this->depthImageColorized;
+	return this->qColorToDepthImage;
 }
 
-cv::Mat CaptureTab::getCVDepthImage()
+QImage CaptureTab::getQDepthToColorImage()
 {
-	return this->cvDepthImage;
+	return this->qDepthToColorImage;
 }
 
-QImage CaptureTab::getColorToDepthImage()
+QImage CaptureTab::getQDepthToColorColorizedImage()
 {
-	return this->colorToDepthImage;
-}
-
-QImage CaptureTab::getDepthToColorImage()
-{
-	return this->depthToColorImage;
-}
-
-QImage CaptureTab::getDepthToColorImageColorized()
-{
-	return this->depthToColorImageColorized;
-}
-
-cv::Mat CaptureTab::getCVDepthToColorImage()
-{
-	return this->cvDepthToColorImage;
+	return this->qDepthToColorColorizedImage;
 }
 
 int CaptureTab::getCaptureCount() { return this->captureCount; }

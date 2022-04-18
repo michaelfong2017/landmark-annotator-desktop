@@ -39,31 +39,25 @@ SaveImageDialog::SaveImageDialog(CaptureTab* parent)
 		bool depthToColorWriteSuccess = false;
 
 		if (ui.checkBoxColor->isChecked()) {
-			QImageWriter colorWriter(colorSavePath);
-			colorWriteSuccess = colorWriter.write(this->parent->getColorImage());
+			cv::Mat i = this->parent->getCapturedColorImage();
+			colorWriteSuccess = cv::imwrite(colorSavePath.toStdString(), i);
 		}
 		if (ui.checkBoxDepth->isChecked()) {
-			//QImageWriter depthWriter(depthSavePath);
-			//depthWriteSuccess = depthWriter.write(this->parent->getDepthImage());
-
-			cv::Mat i = this->parent->getCapturedRawDepthImage();
+			cv::Mat i = this->parent->getCapturedDepthImage();
 			cv::imwrite(depthSavePath.toStdString(), i);
 
 			depthWriteSuccess = true;
 		}
 		if (ui.checkBoxColorToDepth->isChecked()) {
-			QImageWriter colorToDepthWriter(colorToDepthSavePath);
-			colorToDepthWriteSuccess = colorToDepthWriter.write(this->parent->getColorToDepthImage());
+			cv::Mat i = this->parent->getCapturedColorToDepthImage();
+			cv::Mat temp;
+			cvtColor(i, temp, cv::COLOR_BGRA2BGR);
+			colorToDepthWriteSuccess = cv::imwrite(colorToDepthSavePath.toStdString(), temp);
 		}
 
 		if (ui.checkBoxDepthToColor->isChecked()) {
-			//QImageWriter depthToColorWriter(depthToColorSavePath);
-			//depthToColorWriteSuccess = depthToColorWriter.write(this->parent->getDepthToColorImage());
-
-			cv::Mat i = this->parent->getCapturedRawDepthToColorImage();
-			cv::imwrite(depthToColorSavePath.toStdString(), i);
-
-			depthToColorWriteSuccess = true;
+			cv::Mat i = this->parent->getCapturedDepthToColorImage();
+			depthToColorWriteSuccess = cv::imwrite(depthToColorSavePath.toStdString(), i);
 		}
 
 		/** "Images saved under" */

@@ -1,19 +1,20 @@
-#include "draganddropgraphicsscene.h";
-#include "annotatetab.h";
+#include "draganddropgraphicsscene.h"
+#include "annotatetab.h"
+#include "kinectengine.h"
 
 DragAndDropGraphicsScene::DragAndDropGraphicsScene( AnnotateTab* annotateTab, ImageType imageType) {
 	this->annotateTab = annotateTab;
 	this->imageType = imageType;
 
 	// Draw annotations if any
-	QPainter painter(this->imageType == ImageType::Color ? this->annotateTab->getAnnotatedColorImage() : this->annotateTab->getAnnotatedDepthToColorImage());
+	QPainter painter(this->imageType == ImageType::Color ? this->annotateTab->getAnnotatedColorImage() : this->annotateTab->getAnnotatedDepthToColorColorizedImage());
 
-	painter.setPen(QPen(Qt::red, 8, Qt::SolidLine, Qt::RoundCap));
+	painter.setPen(QPen(Qt::magenta, 8, Qt::SolidLine, Qt::RoundCap));
 	for(auto it: *this->annotateTab->getAnnotations()) {
 		if(!it.second.isNull()) painter.drawPoint(it.second.x(), it.second.y());
 	}
 
-	painter.setPen(QPen(Qt::white , 2, Qt::SolidLine, Qt::RoundCap));
+	painter.setPen(QPen(Qt::white, 2, Qt::SolidLine, Qt::RoundCap));
 	for(auto it: *this->annotateTab->getAnnotations()) {
 		if(!it.second.isNull()) painter.drawText(it.second.x(), it.second.y(), QString::fromStdString(it.first));
 	}
@@ -31,7 +32,7 @@ DragAndDropGraphicsScene::DragAndDropGraphicsScene( AnnotateTab* annotateTab, Im
 
 	painter.end();
 
-	this->addPixmap(QPixmap::fromImage(this->imageType == ImageType::Color ? *this->annotateTab->getAnnotatedColorImage() : *this->annotateTab->getAnnotatedDepthToColorImage()));
+	this->addPixmap(QPixmap::fromImage(this->imageType == ImageType::Color ? *this->annotateTab->getAnnotatedColorImage() : *this->annotateTab->getAnnotatedDepthToColorColorizedImage()));
 	this->annotateTab->computeMetrics();
 	this->annotateTab->setAnnotationsText();
 }
@@ -73,24 +74,24 @@ void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 
 		x *= *this->annotateTab->getScalingFactor();
 		y *= *this->annotateTab->getScalingFactor();
-		QVector3D vector3D = this->annotateTab->query3DPoint(x, y);
+		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->annotateTab->getDepthToColorImage());
 
 		(*this->annotateTab->getAnnotations3D())[this->pointKey].setX(vector3D.x());
 		(*this->annotateTab->getAnnotations3D())[this->pointKey].setY(vector3D.y());
 		(*this->annotateTab->getAnnotations3D())[this->pointKey].setZ(vector3D.z());
 
 		QPainter painter(this->annotateTab->getAnnotatedColorImage());
-		QPainter painter2(this->annotateTab->getAnnotatedDepthToColorImage());
+		QPainter painter2(this->annotateTab->getAnnotatedDepthToColorColorizedImage());
 
-		painter.setPen(QPen(Qt::red, 8, Qt::SolidLine, Qt::RoundCap));
-		painter2.setPen(QPen(Qt::red, 8, Qt::SolidLine, Qt::RoundCap));
+		painter.setPen(QPen(Qt::magenta, 8, Qt::SolidLine, Qt::RoundCap));
+		painter2.setPen(QPen(Qt::magenta, 8, Qt::SolidLine, Qt::RoundCap));
 		for(auto it: *this->annotateTab->getAnnotations()) {
 			painter.drawPoint(it.second.x(), it.second.y());
 			painter2.drawPoint(it.second.x(), it.second.y());
 		}
 
-		painter.setPen(QPen(Qt::white , 2, Qt::SolidLine, Qt::RoundCap));
-		painter2.setPen(QPen(Qt::white , 2, Qt::SolidLine, Qt::RoundCap));
+		painter.setPen(QPen(Qt::white, 2, Qt::SolidLine, Qt::RoundCap));
+		painter2.setPen(QPen(Qt::white, 2, Qt::SolidLine, Qt::RoundCap));
 		for(auto it: *this->annotateTab->getAnnotations()) {
 			painter.drawText(it.second.x(), it.second.y(), QString::fromStdString(it.first));
 			painter2.drawText(it.second.x(), it.second.y(), QString::fromStdString(it.first));
@@ -122,12 +123,12 @@ void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 		
 		if (this->imageType == ImageType::Color) {
 			this->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedColorImage()));
-			this->annotateTab->getDepthToColorScene()->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedDepthToColorImage()));
+			this->annotateTab->getDepthToColorScene()->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedDepthToColorColorizedImage()));
 		}
 
 		if (this->imageType == ImageType::DepthToColor) {
 			this->annotateTab->getColorScene()->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedColorImage()));
-			this->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedDepthToColorImage()));
+			this->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedDepthToColorColorizedImage()));
 		}
 
 		this->annotateTab->computeMetrics();
