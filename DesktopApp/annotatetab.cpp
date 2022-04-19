@@ -38,12 +38,12 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 		// Reset annotations
 		this->annotations.clear();
 
-		this->annotations.insert({"a", QPointF(200.0f, 45.0f)});
-		this->annotations.insert({"b1", QPointF(170.0f, 90.0f)});
-		this->annotations.insert({"b2", QPointF(230.0f, 90.0f)});
-		this->annotations.insert({"c1", QPointF(170.0f, 135.0f)});
-		this->annotations.insert({"c2", QPointF(230.0f, 135.0f)});
-		this->annotations.insert({"d", QPointF(200.0f, 180.0f)});
+		this->annotations.insert({"C", QPointF(200.0f, 45.0f)});
+		this->annotations.insert({"A1", QPointF(170.0f, 90.0f)});
+		this->annotations.insert({"A2", QPointF(230.0f, 90.0f)});
+		this->annotations.insert({"B1", QPointF(170.0f, 135.0f)});
+		this->annotations.insert({"B2", QPointF(230.0f, 135.0f)});
+		this->annotations.insert({"D", QPointF(200.0f, 180.0f)});
 
 		int x, y;
 		this->scalingFactor = std::min(this->qDepthToColorColorizedImage.width() / this->annotatedDepthToColorColorizedImage.width(), this->qDepthToColorColorizedImage.height() / this->annotatedDepthToColorColorizedImage.height());
@@ -176,8 +176,7 @@ void AnnotateTab::setAnnotationsText() {
 		text.append(str);
 	}
 
-	text.append(QString::fromStdString("Distance 1 ( b1 - b2 ): " + std::to_string(this->distance1) + " cm\n"));
-	text.append(QString::fromStdString("Distance 2 ( c1 - c2 ): " + std::to_string(this->distance2) + " cm\n"));
+	text.append(QString::fromStdString("Distance d ( D - C ): " + std::to_string(this->distance1) + " cm\n"));
 	text.append(QString::fromStdString("Alpha: " + std::to_string(this->angle1) + " degree\n"));
 	text.append(QString::fromStdString("Beta: " + std::to_string(this->angle2) + " degree\n"));
 
@@ -192,6 +191,11 @@ void AnnotateTab::recopyAnnotatedImage() {
 	width = this->parent->ui.graphicsViewAnnotation2->width();
 	height = this->parent->ui.graphicsViewAnnotation2->height();
 	this->annotatedDepthToColorColorizedImage = this->qDepthToColorColorizedImage.copy().scaled(width, height, Qt::KeepAspectRatio);
+}
+
+DesktopApp* AnnotateTab::getParent()
+{
+	return this->parent;
 }
 
 QJsonDocument AnnotateTab::getAnnotationsJson() {
@@ -233,18 +237,17 @@ std::map<std::string, QVector3D>* AnnotateTab::getAnnotations3D() {
 
 void AnnotateTab::computeMetrics() {
 	const float PI = 3.14159265;
-	this->distance1 = this->annotations3D["b1"].distanceToPoint(this->annotations3D["b2"])/10;
-	this->distance2 = this->annotations3D["c1"].distanceToPoint(this->annotations3D["c2"])/10;
+	this->distance1 = (this->annotations3D["D"].x() - this->annotations3D["C"].x())/10;
 	
 	//Angle between b1-b2 line and xy-plane
-	float zDiff = this->annotations3D["b1"].z() - this->annotations3D["b2"].z();
+	float yDiff = this->annotations3D["A1"].y() - this->annotations3D["A2"].y();
 	//float xyDistance = std::sqrt(std::pow(this->annotations3D["b1"].x() - this->annotations3D["b2"].x(), 2) + std::pow(this->annotations3D["b1"].y() - this->annotations3D["b2"].y(), 2));
-	float xDistance = this->annotations3D["b2"].x() - this->annotations3D["b1"].x();
-	this->angle1 = std::atan(zDiff/xDistance) * 180 / PI;
+	float xDistance = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
+	this->angle1 = std::atan(yDiff/xDistance) * 180 / PI;
 
 	//Angle between c1-c2 line and xy-plane
-	zDiff = this->annotations3D["c1"].z() - this->annotations3D["c2"].z();
+	yDiff = this->annotations3D["B1"].y() - this->annotations3D["B2"].y();
 	//xyDistance = std::sqrt(std::pow(this->annotations3D["c1"].x() - this->annotations3D["c2"].x(), 2) + std::pow(this->annotations3D["c1"].y() - this->annotations3D["c2"].y(), 2));
-	xDistance = this->annotations3D["b2"].x() - this->annotations3D["b1"].x();
-	this->angle2 = std::atan(zDiff/xDistance) * 180 / PI;
+	xDistance = this->annotations3D["B2"].x() - this->annotations3D["B1"].x();
+	this->angle2 = std::atan(yDiff/xDistance) * 180 / PI;
 }

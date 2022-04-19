@@ -33,6 +33,26 @@ DragAndDropGraphicsScene::DragAndDropGraphicsScene( AnnotateTab* annotateTab, Im
 	painter.end();
 
 	this->addPixmap(QPixmap::fromImage(this->imageType == ImageType::Color ? *this->annotateTab->getAnnotatedColorImage() : *this->annotateTab->getAnnotatedDepthToColorColorizedImage()));
+	
+	/** Human cut shape */
+	int width, height;
+	if (this->imageType == ImageType::Color) {
+		width = this->annotateTab->getParent()->ui.graphicsViewAnnotation->width();
+		height = this->annotateTab->getParent()->ui.graphicsViewAnnotation->height();
+	}
+	else if (this->imageType == ImageType::DepthToColor) {
+		width = this->annotateTab->getParent()->ui.graphicsViewAnnotation2->width();
+		height = this->annotateTab->getParent()->ui.graphicsViewAnnotation2->height();
+	}
+	else {
+		qWarning() << "draganddropgraphicsscene ImageType is neither Color nor DepthToColor!";
+	}
+	
+	QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape.png");
+	QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
+	this->addPixmap(humanPixmapScaled);
+	/** Human cut shape END */
+
 	this->annotateTab->computeMetrics();
 	this->annotateTab->setAnnotationsText();
 }
@@ -130,6 +150,20 @@ void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 			this->annotateTab->getColorScene()->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedColorImage()));
 			this->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedDepthToColorColorizedImage()));
 		}
+
+		/** Human cut shape */
+		int width = this->annotateTab->getParent()->ui.graphicsViewAnnotation->width();
+		int height = this->annotateTab->getParent()->ui.graphicsViewAnnotation->height();
+		QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape.png");
+		QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
+		this->annotateTab->getColorScene()->addPixmap(humanPixmapScaled);
+
+		int width2 = this->annotateTab->getParent()->ui.graphicsViewAnnotation2->width();
+		int height2 = this->annotateTab->getParent()->ui.graphicsViewAnnotation2->height();
+		QPixmap humanPixmap2(":/DesktopApp/resources/HumanCutShape.png");
+		QPixmap humanPixmapScaled2 = humanPixmap2.scaled(width2, height2, Qt::KeepAspectRatio);
+		this->annotateTab->getDepthToColorScene()->addPixmap(humanPixmapScaled2);
+		/** Human cut shape END */
 
 		this->annotateTab->computeMetrics();
 		this->annotateTab->setAnnotationsText();

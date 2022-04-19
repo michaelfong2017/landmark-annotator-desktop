@@ -30,6 +30,7 @@ public:
     std::map<std::string, QPointF>* getAnnotations();
     void setAnnotationsText();
     void recopyAnnotatedImage();
+    DesktopApp* getParent();
     DragAndDropGraphicsScene* getColorScene();
     DragAndDropGraphicsScene* getDepthToColorScene();
     int* getScalingFactor();
