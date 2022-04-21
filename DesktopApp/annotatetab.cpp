@@ -240,14 +240,14 @@ void AnnotateTab::computeMetrics() {
 	this->distance1 = (this->annotations3D["D"].x() - this->annotations3D["C"].x())/10;
 	
 	//Angle between b1-b2 line and xy-plane
-	float yDiff = this->annotations3D["A1"].y() - this->annotations3D["A2"].y();
+	float yDiff = this->annotations3D["B1"].y() - this->annotations3D["B2"].y();
 	//float xyDistance = std::sqrt(std::pow(this->annotations3D["b1"].x() - this->annotations3D["b2"].x(), 2) + std::pow(this->annotations3D["b1"].y() - this->annotations3D["b2"].y(), 2));
-	float xDistance = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
+	float xDistance = this->annotations3D["B2"].x() - this->annotations3D["B1"].x();
 	this->angle1 = std::atan(yDiff/xDistance) * 180 / PI;
 
 	//Angle between c1-c2 line and xy-plane
-	yDiff = this->annotations3D["B1"].y() - this->annotations3D["B2"].y();
+	yDiff = this->annotations3D["A1"].y() - this->annotations3D["A2"].y();
 	//xyDistance = std::sqrt(std::pow(this->annotations3D["c1"].x() - this->annotations3D["c2"].x(), 2) + std::pow(this->annotations3D["c1"].y() - this->annotations3D["c2"].y(), 2));
-	xDistance = this->annotations3D["B2"].x() - this->annotations3D["B1"].x();
+	xDistance = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
 	this->angle2 = std::atan(yDiff/xDistance) * 180 / PI;
 }
