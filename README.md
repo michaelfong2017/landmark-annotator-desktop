@@ -31,4 +31,17 @@ Whether the `Configuration` is `Release` or `Debug` has to match with your insta
 `Additional Include Directories` -> edit -> `C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\include\QtNetwork`.
 2. Set for both `Debug` and `Release`:
 Under Linker -> Input: prepend `C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\lib\Qt5Networkd.lib` for Debug mode and `C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\lib\Qt5Network.lib` for Release mode.
-3. Copy the `C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\bin\Qt5Networkd.dll` and the `C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\bin\Qt5Network.dll` to `x64/Debug` and `x64/Release` respectively directly under the project root directory.
+
+## Step 3 old method
+Copy the `C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\bin\Qt5Networkd.dll` and the `C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\bin\Qt5Network.dll` to `x64/Debug` and `x64/Release` respectively directly under the project root directory.
+
+## Step 3 new method
+Run the below command to update the `x64\Debug` directory such as (automatically) adding dll files there.
+```
+C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\bin\windeployqt.exe C:\Users\Edward\Desktop\Michael_Fong\DesktopApp\x64\Debug\DesktopApp.exe
+```
+
+Similarly, for `x64\Release` directory.
+```
+C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\bin\windeployqt.exe C:\Users\Edward\Desktop\Michael_Fong\DesktopApp\x64\Release\DesktopApp.exe
+```
