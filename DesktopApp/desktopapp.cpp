@@ -1,5 +1,6 @@
 #include "desktopapp.h"
 #include "stdafx.h"
+#include "logintab.h"
 #include "patientdatatab.h"
 #include "capturetab.h"
 #include "annotatetab.h"
@@ -30,7 +31,8 @@ DesktopApp::DesktopApp(QWidget* parent)
 	cv::imwrite("refactor_test_depth2color.png", d2c);
 	//KinectEngine::getInstance().closeDevice();
 	// Test refactoring END
-
+	
+	this->loginTab = new LoginTab(this);
 	this->patientDataTab = new PatientDataTab(this);
 	this->captureTab = new CaptureTab(this);
 	this->annotateTab = new AnnotateTab(this);

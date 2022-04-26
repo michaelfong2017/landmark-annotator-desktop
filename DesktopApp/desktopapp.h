@@ -13,8 +13,8 @@
 // Forward declaration to break circular dependency
 // Since DesktopApp have member variables of type <PatientData | View | Capture | Annotate | Alignment>Tab
 // And each tab classes has member variable of type DesktopApp
+class LoginTab;
 class PatientDataTab;
-class ViewTab;
 class CaptureTab;
 class AnnotateTab;
 class AlignmentTab;
@@ -28,8 +28,8 @@ public:
 
     Ui::DesktopAppClass ui;
     
+    LoginTab* loginTab;
     PatientDataTab* patientDataTab;
-    ViewTab* viewTab;
     CaptureTab* captureTab;
     AnnotateTab* annotateTab;
     AlignmentTab* alignmentTab;
