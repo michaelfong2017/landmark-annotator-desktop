@@ -38,15 +38,15 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 		// Reset annotations
 		this->annotations.clear();
 
-		this->annotations.insert({"C", QPointF(200.0f, 45.0f)});
-		this->annotations.insert({"A1", QPointF(170.0f, 90.0f)});
-		this->annotations.insert({"A2", QPointF(230.0f, 90.0f)});
-		this->annotations.insert({"B1", QPointF(170.0f, 135.0f)});
-		this->annotations.insert({"B2", QPointF(230.0f, 135.0f)});
-		this->annotations.insert({"D", QPointF(200.0f, 180.0f)});
+		this->annotations.insert({"C", QPointF(240.0f, 70.0f)});
+		this->annotations.insert({"A1", QPointF(220.0f, 130.0f)});
+		this->annotations.insert({"A2", QPointF(260.0f, 130.0f)});
+		this->annotations.insert({"B1", QPointF(220.0f, 165.0f)});
+		this->annotations.insert({"B2", QPointF(260.0f, 165.0f)});
+		this->annotations.insert({"D", QPointF(240.0f, 185.0f)});
 
 		int x, y;
-		this->scalingFactor = std::min(this->qDepthToColorColorizedImage.width() / this->annotatedDepthToColorColorizedImage.width(), this->qDepthToColorColorizedImage.height() / this->annotatedDepthToColorColorizedImage.height());
+		this->scalingFactor = std::min(this->qDepthToColorColorizedImage.width() / (float)this->annotatedDepthToColorColorizedImage.width(), this->qDepthToColorColorizedImage.height() / (float)this->annotatedDepthToColorColorizedImage.height());
 
 		for (auto it : this->annotations) {
 			x = it.second.x();
@@ -202,7 +202,7 @@ QJsonDocument AnnotateTab::getAnnotationsJson() {
 	QJsonObject emptyJsonObject{};
 	QJsonDocument document;
 
-	if (!this->annotations["a"].isNull()) {
+	if (!this->annotations["A1"].isNull()) {
 		QJsonObject coordinates;
 
 		for(auto it: this->annotations) {

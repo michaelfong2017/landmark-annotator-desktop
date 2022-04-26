@@ -21,13 +21,13 @@ DragAndDropGraphicsScene::DragAndDropGraphicsScene( AnnotateTab* annotateTab, Im
 
 	painter.setPen(QPen(Qt::white , 0.5, Qt::DashLine, Qt::RoundCap));
 	painter.drawLine(
-		(*this->annotateTab->getAnnotations())["b1"].x(), (*this->annotateTab->getAnnotations())["b1"].y(),
-		(*this->annotateTab->getAnnotations())["b2"].x(), (*this->annotateTab->getAnnotations())["b2"].y()
+		(*this->annotateTab->getAnnotations())["A1"].x(), (*this->annotateTab->getAnnotations())["A1"].y(),
+		(*this->annotateTab->getAnnotations())["A2"].x(), (*this->annotateTab->getAnnotations())["A2"].y()
 	);
 
 	painter.drawLine(
-		(*this->annotateTab->getAnnotations())["c1"].x(), (*this->annotateTab->getAnnotations())["c1"].y(),
-		(*this->annotateTab->getAnnotations())["c2"].x(), (*this->annotateTab->getAnnotations())["c2"].y()
+		(*this->annotateTab->getAnnotations())["B1"].x(), (*this->annotateTab->getAnnotations())["B1"].y(),
+		(*this->annotateTab->getAnnotations())["B2"].x(), (*this->annotateTab->getAnnotations())["B2"].y()
 	);
 
 	painter.end();
@@ -120,21 +120,21 @@ void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 		painter.setPen(QPen(Qt::white , 0.5, Qt::DashLine, Qt::RoundCap));
 		painter2.setPen(QPen(Qt::white , 0.5, Qt::DashLine, Qt::RoundCap));
 		painter.drawLine(
-			(*this->annotateTab->getAnnotations())["b1"].x(), (*this->annotateTab->getAnnotations())["b1"].y(),
-			(*this->annotateTab->getAnnotations())["b2"].x(), (*this->annotateTab->getAnnotations())["b2"].y()
+			(*this->annotateTab->getAnnotations())["A1"].x(), (*this->annotateTab->getAnnotations())["A1"].y(),
+			(*this->annotateTab->getAnnotations())["A2"].x(), (*this->annotateTab->getAnnotations())["A2"].y()
 		);
 		painter2.drawLine(
-			(*this->annotateTab->getAnnotations())["b1"].x(), (*this->annotateTab->getAnnotations())["b1"].y(),
-			(*this->annotateTab->getAnnotations())["b2"].x(), (*this->annotateTab->getAnnotations())["b2"].y()
+			(*this->annotateTab->getAnnotations())["A1"].x(), (*this->annotateTab->getAnnotations())["A1"].y(),
+			(*this->annotateTab->getAnnotations())["A2"].x(), (*this->annotateTab->getAnnotations())["A2"].y()
 		);
 
 		painter.drawLine(
-			(*this->annotateTab->getAnnotations())["c1"].x(), (*this->annotateTab->getAnnotations())["c1"].y(),
-			(*this->annotateTab->getAnnotations())["c2"].x(), (*this->annotateTab->getAnnotations())["c2"].y()
+			(*this->annotateTab->getAnnotations())["B1"].x(), (*this->annotateTab->getAnnotations())["B1"].y(),
+			(*this->annotateTab->getAnnotations())["B2"].x(), (*this->annotateTab->getAnnotations())["B2"].y()
 		);
 		painter2.drawLine(
-			(*this->annotateTab->getAnnotations())["c1"].x(), (*this->annotateTab->getAnnotations())["c1"].y(),
-			(*this->annotateTab->getAnnotations())["c2"].x(), (*this->annotateTab->getAnnotations())["c2"].y()
+			(*this->annotateTab->getAnnotations())["B1"].x(), (*this->annotateTab->getAnnotations())["B1"].y(),
+			(*this->annotateTab->getAnnotations())["B2"].x(), (*this->annotateTab->getAnnotations())["B2"].y()
 		);
 
 

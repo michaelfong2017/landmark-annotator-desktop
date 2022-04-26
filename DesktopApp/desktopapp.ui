@@ -427,6 +427,9 @@
        <height>321</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}</string>
+     </property>
     </widget>
     <widget class="QPushButton" name="captureButton">
      <property name="geometry">
@@ -449,6 +452,9 @@
        <width>591</width>
        <height>301</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}</string>
      </property>
     </widget>
     <widget class="QPushButton" name="saveButtonCaptureTab">
@@ -532,6 +538,9 @@
        <height>321</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}</string>
+     </property>
     </widget>
     <widget class="QLabel" name="imuText">
      <property name="geometry">
@@ -557,6 +566,9 @@
        <width>191</width>
        <height>211</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}</string>
      </property>
     </widget>
     <widget class="QGraphicsView" name="graphicsViewAccelerometer">
@@ -678,9 +690,13 @@ color: rgb(255, 0, 5);
       <rect>
        <x>120</x>
        <y>30</y>
-       <width>401</width>
-       <height>331</height>
+       <width>480</width>
+       <height>270</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}
+</string>
      </property>
     </widget>
     <widget class="QLabel" name="annotationsText">
@@ -740,9 +756,12 @@ color: rgb(255, 0, 5);
       <rect>
        <x>650</x>
        <y>30</y>
-       <width>401</width>
-       <height>331</height>
+       <width>480</width>
+       <height>270</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}</string>
      </property>
     </widget>
     <widget class="QGraphicsView" name="graphicsViewAnnotation_2">
@@ -753,6 +772,9 @@ color: rgb(255, 0, 5);
        <width>401</width>
        <height>331</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}</string>
      </property>
     </widget>
     <widget class="QLabel" name="saveInfoAnnotateTab">
