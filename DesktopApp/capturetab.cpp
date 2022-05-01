@@ -188,9 +188,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		uploadRGBImageArrayAndDepthToRGBImageArray(manager, QUrl("http://127.0.0.1:8000/uploadimages"), QString("image_id_001"), 4, colorImage, depthToColorImage);
 		/** Send to server END */
 
-		// Move to annotate tab whose index is 2
+		// Move to annotate tab whose index is 4
 		this->parent->annotateTab->reloadCurrentImage();
-		this->parent->ui.tabWidget->setCurrentIndex(2);
+		this->parent->ui.tabWidget->setCurrentIndex(4);
 		this->parent->ui.annotateButtonAnnotateTab->click();
 		});
 

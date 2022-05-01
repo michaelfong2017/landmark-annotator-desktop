@@ -1,5 +1,6 @@
 #include "patientlisttab.h"
 #include "patientlistdatamodel.h"
+#include "createnewpatientdialog.h"
 
 PatientListTab::PatientListTab(DesktopApp* parent)
 {
@@ -19,8 +20,8 @@ PatientListTab::PatientListTab(DesktopApp* parent)
 
     QObject::connect(this->parent->ui.patientListTab->findChild<QPushButton*>("createNewPatientButton"), &QPushButton::clicked, [this]() {
         qDebug() << "createNewPatientButton clicked";
-        //SaveImageDialog dialog(this);
-        //dialog.exec();
+        CreateNewPatientDialog dialog(this);
+        dialog.exec();
 		});
 }
 

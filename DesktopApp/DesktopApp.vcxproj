@@ -118,6 +118,7 @@
     <ClCompile Include="alignmenttab.cpp" />
     <ClCompile Include="annotatetab.cpp" />
     <ClCompile Include="capturetab.cpp" />
+    <ClCompile Include="createnewpatientdialog.cpp" />
     <ClCompile Include="devicemovingdialog.cpp" />
     <ClCompile Include="draganddropgraphicsscene.cpp" />
     <ClCompile Include="helper.cpp" />
@@ -130,6 +131,7 @@
     <ClCompile Include="recorder.cpp" />
     <ClCompile Include="saveimagedialog.cpp" />
     <QtRcc Include="desktopapp.qrc" />
+    <QtUic Include="createnewpatientdialog.ui" />
     <QtUic Include="desktopapp.ui" />
     <QtMoc Include="desktopapp.h" />
     <ClCompile Include="desktopapp.cpp" />
@@ -155,6 +157,7 @@
     <QtMoc Include="logintab.h" />
     <QtMoc Include="patientlisttab.h" />
     <QtMoc Include="patientlistdatamodel.h" />
+    <QtMoc Include="createnewpatientdialog.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />
