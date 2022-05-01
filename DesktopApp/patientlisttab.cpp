@@ -5,7 +5,7 @@ PatientListTab::PatientListTab(DesktopApp* parent)
 {
 	this->parent = parent;
 
-    QTableView* tableView = this->parent->ui.tableView;
+    QTableView* tableView = this->parent->ui.patientListTab->findChild<QTableView*>("tableView");
     PatientListDataModel* patientListDataModel = new PatientListDataModel();
     tableView->setModel(patientListDataModel);
 
@@ -16,6 +16,12 @@ PatientListTab::PatientListTab(DesktopApp* parent)
 
     tableView->horizontalHeader()->setStretchLastSection(true);
     tableView->show();
+
+    QObject::connect(this->parent->ui.patientListTab->findChild<QPushButton*>("createNewPatientButton"), &QPushButton::clicked, [this]() {
+        qDebug() << "createNewPatientButton clicked";
+        //SaveImageDialog dialog(this);
+        //dialog.exec();
+		});
 }
 
 DesktopApp* PatientListTab::getParent()
