@@ -26,7 +26,7 @@
     <string notr="true">font: 8pt &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="loginTab">
     <attribute name="title">
@@ -105,6 +105,48 @@
     <attribute name="title">
      <string>Patient list</string>
     </attribute>
+    <widget class="QTableView" name="tableView">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>90</y>
+       <width>1100</width>
+       <height>631</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>20</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
+     </property>
+     <property name="text">
+      <string>Patient List</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="createNewPatientButton">
+     <property name="geometry">
+      <rect>
+       <x>990</x>
+       <y>750</y>
+       <width>151</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+     </property>
+     <property name="text">
+      <string>Create New Patient</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="patientTab">
     <attribute name="title">
@@ -195,8 +237,8 @@
       <rect>
        <x>740</x>
        <y>430</y>
-       <width>171</width>
-       <height>31</height>
+       <width>194</width>
+       <height>39</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="sexInput">
@@ -561,8 +603,8 @@
       <rect>
        <x>460</x>
        <y>730</y>
-       <width>323</width>
-       <height>19</height>
+       <width>591</width>
+       <height>39</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -806,8 +848,8 @@ color: rgb(255, 0, 5);
       <rect>
        <x>700</x>
        <y>410</y>
-       <width>321</width>
-       <height>31</height>
+       <width>505</width>
+       <height>43</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">

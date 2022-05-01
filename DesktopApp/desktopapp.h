@@ -14,6 +14,7 @@
 // Since DesktopApp have member variables of type <PatientData | View | Capture | Annotate | Alignment>Tab
 // And each tab classes has member variable of type DesktopApp
 class LoginTab;
+class PatientListTab;
 class PatientDataTab;
 class CaptureTab;
 class AnnotateTab;
@@ -29,6 +30,7 @@ public:
     Ui::DesktopAppClass ui;
     
     LoginTab* loginTab;
+    PatientListTab* patientListTab;
     PatientDataTab* patientDataTab;
     CaptureTab* captureTab;
     AnnotateTab* annotateTab;
