@@ -1,4 +1,5 @@
 #include "logintab.h"
+#include "qnetworkclient.h"
 
 LoginTab::LoginTab(DesktopApp* parent)
 {
@@ -11,6 +12,8 @@ LoginTab::LoginTab(DesktopApp* parent)
 		QString password = this->parent->ui.loginTab->findChild<QLineEdit*>("passwordLineEdit")->text();
 
 		qDebug() << username << password;
+
+		QNetworkClient::getInstance().login();
 	});
 }
 

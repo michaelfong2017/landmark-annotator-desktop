@@ -2,9 +2,7 @@
 
 A landmark annotator desktop application written in C++, built on top of openCV APIs and Azure Kinect SDK for a radiation-free spine deformity prediction tool.
 
-# Example on how to link OpenCV4.5.2 and Qt5 to VS2019
-
-## 1. Link OpenCV to Visual Studio 2019
+# 1. Link OpenCV to Visual Studio 2019
 1. Project -> DesktopApp Property  
 Whether the `Configuration` is `Release` or `Debug` has to match with your installation. For instance, I only installed OpenCV `Release`. Therefore, I must always use `Release`.
 2. VC++ Directories:  
@@ -15,7 +13,7 @@ Whether the `Configuration` is `Release` or `Debug` has to match with your insta
 
 - There is only 1 lib if `BUILD_opencv_world` was used when compiling from source.
 
-## 2. Link Qt5 to Visual Studio 2019
+# 2. Link Qt5 to Visual Studio 2019
 1. Extensions -> Manage Extensions  
 Install `Qt Visual Studio Tools`.
 2. Extensions -> Qt VS Tools -> Qt Versions  
@@ -45,3 +43,6 @@ Similarly, for `x64\Release` directory.
 ```
 C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\bin\windeployqt.exe C:\Users\Edward\Desktop\Michael_Fong\DesktopApp\x64\Release\DesktopApp.exe
 ```
+
+# 4. Manually add SSL libraries so that HTTPS requests can be sent
+Copy `libcrypto-1_1-x64.dll`, `libeay32.dll`, `libssl-1_1-x64.dll` and `ssleay32.dll` to `C:\Users\Edward\Desktop\Michael_Fong\DesktopApp\x64\Debug` and `C:\Users\Edward\Desktop\Michael_Fong\DesktopApp\x64\Release`.

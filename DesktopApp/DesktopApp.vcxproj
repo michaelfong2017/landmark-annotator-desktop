@@ -130,6 +130,7 @@
     <ClCompile Include="patientlistdatamodel.cpp" />
     <ClCompile Include="patientlisttab.cpp" />
     <ClCompile Include="patienttab.cpp" />
+    <ClCompile Include="qnetworkclient.cpp" />
     <ClCompile Include="recorder.cpp" />
     <ClCompile Include="saveimagedialog.cpp" />
     <QtRcc Include="desktopapp.qrc" />
@@ -162,6 +163,7 @@
     <QtMoc Include="createnewpatientdialog.h" />
     <QtMoc Include="patientdatamodel.h" />
     <QtMoc Include="patienttab.h" />
+    <QtMoc Include="qnetworkclient.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />
