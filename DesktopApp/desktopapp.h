@@ -15,7 +15,7 @@
 // And each tab classes has member variable of type DesktopApp
 class LoginTab;
 class PatientListTab;
-class PatientDataTab;
+class PatientTab;
 class CaptureTab;
 class AnnotateTab;
 class AlignmentTab;
@@ -31,7 +31,7 @@ public:
     
     LoginTab* loginTab;
     PatientListTab* patientListTab;
-    PatientDataTab* patientDataTab;
+    PatientTab* patientTab;
     CaptureTab* captureTab;
     AnnotateTab* annotateTab;
     AlignmentTab* alignmentTab;

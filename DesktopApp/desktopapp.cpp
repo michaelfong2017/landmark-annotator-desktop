@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "logintab.h"
 #include "patientlisttab.h"
+#include "patienttab.h"
 #include "capturetab.h"
 #include "annotatetab.h"
 #include "alignmenttab.h"
@@ -34,12 +35,13 @@ DesktopApp::DesktopApp(QWidget* parent)
 	
 	this->loginTab = new LoginTab(this);
 	this->patientListTab = new PatientListTab(this);
+	this->patientTab = new PatientTab(this);
 	this->captureTab = new CaptureTab(this);
 	this->annotateTab = new AnnotateTab(this);
 	this->alignmentTab = new AlignmentTab(this);
 
-	// Comment out during development
-	//this->patient.setValidity(false);
+	// Set to true during development
+	this->patient.setValidity(true);
 
 	if (this->ui.tabWidget->currentIndex() == 2) captureTab->timer->start(0);
 
