@@ -127,7 +127,6 @@
     <ClCompile Include="patient.cpp" />
     <ClCompile Include="patientdatamodel.cpp" />
     <ClCompile Include="patientdatatab.cpp" />
-    <ClCompile Include="patientlistdatamodel.cpp" />
     <ClCompile Include="patientlisttab.cpp" />
     <ClCompile Include="patienttab.cpp" />
     <ClCompile Include="qnetworkclient.cpp" />
@@ -159,7 +158,6 @@
     <QtMoc Include="kinectengine.h" />
     <QtMoc Include="logintab.h" />
     <QtMoc Include="patientlisttab.h" />
-    <QtMoc Include="patientlistdatamodel.h" />
     <QtMoc Include="createnewpatientdialog.h" />
     <QtMoc Include="patientdatamodel.h" />
     <QtMoc Include="patienttab.h" />

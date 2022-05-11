@@ -17,6 +17,8 @@ public:
 
 private:
     DesktopApp* parent;
+    QTableView* tableView;
+    QStandardItemModel* patientListDataModel;
 
 private slots:
     void onFetchPatientList(QNetworkReply* reply);
