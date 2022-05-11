@@ -21,13 +21,12 @@ public:
 
     void operator=(QNetworkClient const&) = delete;
 
-    QNetworkAccessManager* getManager();
-
     void login();
+    void fetchPatientList(const QObject* receiver, const char* member);
 
 private:
     QNetworkClient();
-    QNetworkAccessManager* manager;
+    QString userToken;
 
 private slots:
     void onLogin(QNetworkReply* reply);

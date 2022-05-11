@@ -1,6 +1,7 @@
 #include "patientlisttab.h"
 #include "patientlistdatamodel.h"
 #include "createnewpatientdialog.h"
+#include "qnetworkclient.h"
 
 PatientListTab::PatientListTab(DesktopApp* parent)
 {
@@ -29,3 +30,18 @@ DesktopApp* PatientListTab::getParent()
 {
 	return this->parent;
 }
+
+void PatientListTab::onEnterTab() {
+    QNetworkClient::getInstance().fetchPatientList(this, SLOT(onFetchPatientList(QNetworkReply*)));
+}
+
+void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
+    QByteArray response_data = reply->readAll();
+    QJsonDocument json = QJsonDocument::fromJson(response_data);
+
+    qDebug() << json;
+
+    reply->deleteLater();
+
+}
+

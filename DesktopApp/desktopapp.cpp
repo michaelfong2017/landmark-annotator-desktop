@@ -54,6 +54,9 @@ DesktopApp::DesktopApp(QWidget* parent)
 			// current tab is patientListTab
 			if (!this->patient.getValidity()) //If patient data is not ready
 				this->ui.tabWidget->setCurrentIndex(0);
+			else {
+				this->patientListTab->onEnterTab();
+			}
 			break;
 		case 2:
 			// current tab is patientTab

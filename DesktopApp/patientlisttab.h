@@ -4,6 +4,7 @@
 #include <QtWidgets/QWidget>
 #include "stdafx.h"
 #include "desktopapp.h"
+#include <QtNetwork>
 
 class PatientListTab : public QWidget
 {
@@ -12,10 +13,13 @@ class PatientListTab : public QWidget
 public:
     PatientListTab(DesktopApp* parent);
     DesktopApp* getParent();
+    void onEnterTab();
 
 private:
     DesktopApp* parent;
 
+private slots:
+    void onFetchPatientList(QNetworkReply* reply);
 };
 
 #endif
