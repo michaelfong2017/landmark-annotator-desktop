@@ -40,9 +40,6 @@ DesktopApp::DesktopApp(QWidget* parent)
 	this->annotateTab = new AnnotateTab(this);
 	this->alignmentTab = new AlignmentTab(this);
 
-	// Set to true during development
-	this->patient.setValidity(true);
-
 	if (this->ui.tabWidget->currentIndex() == 2) captureTab->timer->start(0);
 
 	QObject::connect(ui.tabWidget, &QTabWidget::currentChanged, [this]() {
@@ -52,37 +49,22 @@ DesktopApp::DesktopApp(QWidget* parent)
 			break;
 		case 1:
 			// current tab is patientListTab
-			if (!this->patient.getValidity()) //If patient data is not ready
-				this->ui.tabWidget->setCurrentIndex(0);
-			else {
-				this->patientListTab->onEnterTab();
-			}
+			this->patientListTab->onEnterTab();
 			break;
 		case 2:
 			// current tab is patientTab
-			if (!this->patient.getValidity()) //If patient data is not ready
-				this->ui.tabWidget->setCurrentIndex(0);
 			break;
 		case 3:
-			// current tab is captureTab
-			if (!this->patient.getValidity()) //If patient data is not ready
-				this->ui.tabWidget->setCurrentIndex(0);
 			this->captureTab->timer->start(0);
 			break;
 		case 4:
 			// current tab is annotateTab
-			if (!this->patient.getValidity()) //If patient data is not ready
-				this->ui.tabWidget->setCurrentIndex(0);
-
 			if (this->captureTab->getRecorder()->getRecordingStatus()) //If capture tab is recording
 				this->ui.tabWidget->setCurrentIndex(3);
 			this->captureTab->timer->stop();
 			break;
 		case 5:
 			// current tab is alignmentTab
-			if (!this->patient.getValidity()) //If patient data is not ready
-				this->ui.tabWidget->setCurrentIndex(0);
-
 			if (this->captureTab->getRecorder()->getRecordingStatus()) //If capture tab is recording
 				this->ui.tabWidget->setCurrentIndex(3);
 			break;

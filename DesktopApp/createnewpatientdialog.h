@@ -5,6 +5,8 @@
 #include "ui_createnewpatientdialog.h"
 #include "stdafx.h"
 #include "patientlisttab.h"
+#include "patient.h"
+#include "qnetworkclient.h"
 
 class CreateNewPatientDialog : public QDialog
 {
@@ -16,6 +18,10 @@ public:
 
 private:
 	PatientListTab* parent;
+	Patient patient;
+
+private slots:
+	void onUploadNewPatient(QNetworkReply* reply);
 };
 
 #endif

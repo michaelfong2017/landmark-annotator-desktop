@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include <QtNetwork>
 #include <QtWidgets/QWidget>
+#include "patient.h"
 
 
 class QNetworkClient : public QWidget
@@ -23,6 +24,7 @@ public:
 
     void login();
     void fetchPatientList(const QObject* receiver, const char* member);
+    void uploadNewPatient(Patient patient, const QObject* receiver, const char* member);
 
 private:
     QNetworkClient();

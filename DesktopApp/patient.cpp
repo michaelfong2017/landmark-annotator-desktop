@@ -16,13 +16,13 @@ void Patient::setEmail(std::string email) {
 	this->email = email;
 }
 
-void Patient::setStudyNumber(std::string studyNumber)
+void Patient::setSubjectNumber(std::string subjectNumber)
 {
-	this->studyNumber = studyNumber;
+	this->subjectNumber = subjectNumber;
 }
 
-void Patient::setMedicalNumber(std::string medicalNumber) {
-	this->medicalNumber = medicalNumber;
+void Patient::setSocialSecurityNumber(std::string socialSecurityNumber) {
+	this->socialSecurityNumber = socialSecurityNumber;
 }
 
 void Patient::setNationality(std::string nationality) {
@@ -69,13 +69,13 @@ std::string Patient::getEmail() {
 	return this->email;
 }
 
-std::string Patient::getStudyNumber()
+std::string Patient::getSubjectNumber()
 {
-	return this->studyNumber;
+	return this->subjectNumber;
 }
 
-std::string Patient::getMedicalNumber() {
-	return this->medicalNumber;
+std::string Patient::getSocialSecurityNumber() {
+	return this->socialSecurityNumber;
 }
 
 std::string Patient::getNationality() {

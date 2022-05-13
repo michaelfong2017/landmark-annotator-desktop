@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1002</width>
-    <height>497</height>
+    <height>537</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,7 +72,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="studyLabel">
+  <widget class="QLabel" name="subjectNumberLabel">
    <property name="geometry">
     <rect>
      <x>533</x>
@@ -98,7 +98,7 @@
     <string>Weight (kg):</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="studyInput">
+  <widget class="QTextEdit" name="subjectNumberInput">
    <property name="geometry">
     <rect>
      <x>660</x>
@@ -118,7 +118,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="medicalInput">
+  <widget class="QTextEdit" name="socialSecurityInput">
    <property name="geometry">
     <rect>
      <x>660</x>
@@ -184,7 +184,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="medicalLabel">
+  <widget class="QLabel" name="socialSecurityLabel">
    <property name="geometry">
     <rect>
      <x>533</x>
@@ -309,7 +309,7 @@
    <property name="geometry">
     <rect>
      <x>860</x>
-     <y>450</y>
+     <y>480</y>
      <width>101</width>
      <height>31</height>
     </rect>
@@ -338,6 +338,19 @@
    </property>
    <property name="centerButtons">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="patientDataValidation">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>450</y>
+     <width>341</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>
