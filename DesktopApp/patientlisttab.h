@@ -6,6 +6,7 @@
 #include "desktopapp.h"
 #include <QtNetwork>
 #include <vector>
+#include "patienttab.h"
 
 class PatientListTab : public QWidget
 {

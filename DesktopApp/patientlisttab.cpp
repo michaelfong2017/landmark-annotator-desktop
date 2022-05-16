@@ -130,6 +130,32 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
     int row = tableView->currentIndex().row();
     qDebug() << "Selected patientId is" << patientIdVector[row];
 
-    
+    this->parent->patientTab->setCurrentPatientId(patientIdVector[row]);
+
+    for (int i = 0; i < 5; i++)
+    {
+        QString data;
+        QModelIndex index;
+        switch (i) {
+        case 0:
+            index = patientListDataModel->index(row, i);
+            data = patientListDataModel->data(index).toString();
+            this->parent->patientTab->setName(data);
+            break;
+        case 2:
+            index = patientListDataModel->index(row, i);
+            data = patientListDataModel->data(index).toString();
+            this->parent->patientTab->setAge(data);
+            break;
+        case 4:
+            index = patientListDataModel->index(row, i);
+            data = patientListDataModel->data(index).toString();
+            this->parent->patientTab->setSubjectNumber(data);
+            break;
+        }
+       
+    }
+
+    this->parent->ui.tabWidget->setCurrentIndex(2);
 }
 

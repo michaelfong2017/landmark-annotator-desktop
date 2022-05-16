@@ -125,8 +125,6 @@
     <ClCompile Include="kinectengine.cpp" />
     <ClCompile Include="logintab.cpp" />
     <ClCompile Include="patient.cpp" />
-    <ClCompile Include="patientdatamodel.cpp" />
-    <ClCompile Include="patientdatatab.cpp" />
     <ClCompile Include="patientlisttab.cpp" />
     <ClCompile Include="patienttab.cpp" />
     <ClCompile Include="qnetworkclient.cpp" />
@@ -159,7 +157,6 @@
     <QtMoc Include="logintab.h" />
     <QtMoc Include="patientlisttab.h" />
     <QtMoc Include="createnewpatientdialog.h" />
-    <QtMoc Include="patientdatamodel.h" />
     <QtMoc Include="patienttab.h" />
     <QtMoc Include="qnetworkclient.h" />
     <ClInclude Include="stdafx.h" />
@@ -170,7 +167,6 @@
     <ClInclude Include="draganddropgraphicsscene.h" />
     <ClInclude Include="helper.h" />
     <ClInclude Include="patient.h" />
-    <ClInclude Include="patientdatatab.h" />
     <ClInclude Include="recorder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

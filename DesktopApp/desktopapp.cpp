@@ -53,6 +53,7 @@ DesktopApp::DesktopApp(QWidget* parent)
 			break;
 		case 2:
 			// current tab is patientTab
+			this->patientTab->onEnterTab();
 			break;
 		case 3:
 			this->captureTab->timer->start(0);

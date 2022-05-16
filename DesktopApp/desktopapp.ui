@@ -162,7 +162,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="patientName">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -178,7 +178,7 @@
       <string>Name: Jerry Tam</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="patientAge">
      <property name="geometry">
       <rect>
        <x>460</x>
@@ -194,7 +194,7 @@
       <string>Age: XX</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="patientSubjectNumber">
      <property name="geometry">
       <rect>
        <x>680</x>

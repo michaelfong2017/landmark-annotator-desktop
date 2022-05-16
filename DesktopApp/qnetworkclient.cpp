@@ -79,3 +79,17 @@ void QNetworkClient::uploadNewPatient(Patient patient, const QObject* receiver, 
 
     // will return patientId, needs to be stored
 }
+
+void QNetworkClient::fetchExistingImagesOfPatient(int patientId, const QObject* receiver, const char* member) {
+    // Get Image List
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7").arg(patientId);
+
+    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7").arg(patientId)));
+    request.setRawHeader("Authorization", userToken.toUtf8());
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
+
+    manager->get(request);
+}
