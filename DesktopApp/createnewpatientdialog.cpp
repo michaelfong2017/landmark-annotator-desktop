@@ -21,6 +21,8 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
         }
         else isPatientDataValid = false;
 
+        /** HKID card number seems to be the unique key of a patient in the database.
+          * This also seems to correspond to the id (patientId) returned in response. */
         if ((hkid = ui.idInput->toPlainText().toStdString()) != "") {
             patient.setHKID(hkid);
         }

@@ -15,6 +15,10 @@ PatientListTab::PatientListTab(DesktopApp* parent)
     tableView->horizontalHeader()->setStretchLastSection(true);
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
+    /** Handle double click row */
+    bool value = connect(tableView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onSlotRowDoubleClicked(const QModelIndex&)));
+    /** Handle double click row END */
+
     QObject::connect(this->parent->ui.patientListTab->findChild<QPushButton*>("createNewPatientButton"), &QPushButton::clicked, [this]() {
         CreateNewPatientDialog dialog(this);
         dialog.exec();
@@ -78,6 +82,13 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
         //qDebug() << obj["phoneNumber"].toString();
         //qDebug() << obj["subjectNumber"].toString();
 
+        /** Store patientId of each patient in memory for later processing */
+        int patientId;
+        patientId = obj["patientId"].toInt();
+        qDebug() << "patientId is " << patientId;
+        patientIdVector.push_back(patientId);
+        /** Store patientId of each patient in memory for later processing END */
+
         QList<QStandardItem*> itemList;
         QStandardItem* item;
         for (int i = 0; i < 5; i++)
@@ -113,5 +124,12 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     }
     reply->deleteLater();
 
+}
+
+void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
+    int row = tableView->currentIndex().row();
+    qDebug() << "Selected patientId is" << patientIdVector[row];
+
+    
 }
 

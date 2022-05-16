@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "desktopapp.h"
 #include <QtNetwork>
+#include <vector>
 
 class PatientListTab : public QWidget
 {
@@ -19,9 +20,11 @@ private:
     DesktopApp* parent;
     QTableView* tableView;
     QStandardItemModel* patientListDataModel;
+    std::vector<int> patientIdVector;
 
 private slots:
     void onFetchPatientList(QNetworkReply* reply);
+    void onSlotRowDoubleClicked(const QModelIndex &index);
 };
 
 #endif
