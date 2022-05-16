@@ -21,6 +21,7 @@ private:
 	Patient patient;
 
 private slots:
+	void onCheckNewPatient(QNetworkReply* reply);
 	void onUploadNewPatient(QNetworkReply* reply);
 };
 

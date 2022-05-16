@@ -10,7 +10,6 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
 	ui.buttonBox->addButton("Add", QDialogButtonBox::AcceptRole);
 
 	QObject::connect(ui.buttonBox, &QDialogButtonBox::accepted, [this]() {
-		Patient patient;
         bool isPatientDataValid = true;
 
         std::string name, hkid, phone, email, subjectNumber, socialSecurityNumber, nationality, address;
@@ -86,11 +85,31 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
             //    ui.patientDataValidation->setText("Something went wrong while saving patient data.");
             //}
 
-            QNetworkClient::getInstance().uploadNewPatient(patient, this, SLOT(onUploadNewPatient(QNetworkReply*)));
+            QNetworkClient::getInstance().checkNewPatient(patient, this, SLOT(onCheckNewPatient(QNetworkReply*)));
         }
 
         patient.setValidity(isPatientDataValid);
 	});
+}
+
+void CreateNewPatientDialog::onCheckNewPatient(QNetworkReply* reply) {
+    QByteArray response_data = reply->readAll();
+    reply->deleteLater();
+
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
+
+    QJsonObject jsonObject = jsonResponse.object();
+
+    //qDebug() << jsonObject;
+
+    if (jsonObject.isEmpty()) {
+        qDebug() << "Patient does not exist. Uploading patient...";
+        QNetworkClient::getInstance().uploadNewPatient(patient, this, SLOT(onUploadNewPatient(QNetworkReply*)));
+    }
+    else {
+        qDebug() << "Patient exists. No data are uploaded.";
+        QDialog::accept();
+    }
 }
 
 void CreateNewPatientDialog::onUploadNewPatient(QNetworkReply* reply) {

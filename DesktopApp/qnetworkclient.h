@@ -24,6 +24,7 @@ public:
 
     void login();
     void fetchPatientList(const QObject* receiver, const char* member);
+    void checkNewPatient(Patient patient, const QObject* receiver, const char* member);
     void uploadNewPatient(Patient patient, const QObject* receiver, const char* member);
     void fetchExistingImagesOfPatient(int patientId, const QObject* receiver, const char* member);
 

@@ -40,6 +40,8 @@ void PatientListTab::onEnterTab() {
 }
 
 void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
+    qDebug() << "onFetchPatientList";
+
     // Clear data and re-fetch all data every time
     patientListDataModel->clear();
 
@@ -85,7 +87,7 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
         /** Store patientId of each patient in memory for later processing */
         int patientId;
         patientId = obj["patientId"].toInt();
-        qDebug() << "patientId is " << patientId;
+        //qDebug() << "patientId is " << patientId;
         patientIdVector.push_back(patientId);
         /** Store patientId of each patient in memory for later processing END */
 

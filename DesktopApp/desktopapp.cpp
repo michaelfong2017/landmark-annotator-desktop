@@ -17,19 +17,21 @@ DesktopApp::DesktopApp(QWidget* parent)
 	KinectEngine::getInstance().openDevice();
 
 	// Test refactoring
-	KinectEngine::getInstance().captureImages();
-	KinectEngine::getInstance().captureImages();
-	KinectEngine::getInstance().captureImages();
-	KinectEngine::getInstance().captureImages();
-	KinectEngine::getInstance().captureImages();
-	cv::Mat c, d, c2d, d2c;
-	KinectEngine::getInstance().readAllImages(c, d, c2d, d2c);
-	cv::imwrite("refactor_test_color.png", c);
-	cv::imwrite("refactor_test_depth.png", d);
-	cv::Mat c2dBGR;
-	cvtColor(c2d, c2dBGR, cv::COLOR_BGRA2BGR);
-	cv::imwrite("refactor_test_color2depth.png", c2dBGR);
-	cv::imwrite("refactor_test_depth2color.png", d2c);
+	// 
+	//KinectEngine::getInstance().captureImages();
+	//KinectEngine::getInstance().captureImages();
+	//KinectEngine::getInstance().captureImages();
+	//KinectEngine::getInstance().captureImages();
+	//KinectEngine::getInstance().captureImages();
+	//cv::Mat c, d, c2d, d2c;
+	//KinectEngine::getInstance().readAllImages(c, d, c2d, d2c);
+	//cv::imwrite("refactor_test_color.png", c);
+	//cv::imwrite("refactor_test_depth.png", d);
+	//cv::Mat c2dBGR;
+	//cvtColor(c2d, c2dBGR, cv::COLOR_BGRA2BGR);
+	//cv::imwrite("refactor_test_color2depth.png", c2dBGR);
+	//cv::imwrite("refactor_test_depth2color.png", d2c);
+	// 
 	//KinectEngine::getInstance().closeDevice();
 	// Test refactoring END
 	
