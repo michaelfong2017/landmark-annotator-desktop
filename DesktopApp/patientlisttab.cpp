@@ -16,9 +16,12 @@ PatientListTab::PatientListTab(DesktopApp* parent)
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     QObject::connect(this->parent->ui.patientListTab->findChild<QPushButton*>("createNewPatientButton"), &QPushButton::clicked, [this]() {
-        qDebug() << "createNewPatientButton clicked";
         CreateNewPatientDialog dialog(this);
         dialog.exec();
+        
+        /** After dialog is finished */
+        // Re-fetch data
+        this->onEnterTab();
 		});
 }
 

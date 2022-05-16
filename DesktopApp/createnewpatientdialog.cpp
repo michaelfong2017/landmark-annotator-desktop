@@ -37,7 +37,7 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
         subjectNumber = ui.subjectNumberInput->toPlainText().toStdString();
         patient.setSubjectNumber(subjectNumber);
 
-        phone = ui.phoneInput->toPlainText().toStdString() != "";
+        phone = ui.phoneInput->toPlainText().toStdString();
         patient.setPhoneNumber(phone);
 
         email = ui.emailInput->toPlainText().toStdString();
@@ -88,11 +88,12 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
         }
 
         patient.setValidity(isPatientDataValid);
-
-		QDialog::accept();
 	});
 }
 
 void CreateNewPatientDialog::onUploadNewPatient(QNetworkReply* reply) {
     qDebug() << reply->readAll();
+    reply->deleteLater();
+
+    QDialog::accept();
 }

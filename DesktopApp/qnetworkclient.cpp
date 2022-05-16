@@ -61,32 +61,21 @@ void QNetworkClient::uploadNewPatient(Patient patient, const QObject* receiver, 
 
     /** Parse patient END */
 
-    //QJsonObject obj;
-    //obj["name"] = QString::fromStdString(patient.getName());
-    //obj["sex"] = sex;
-    //obj["birthday"] = patient.getDOB().toString("yyyy-MM-dd");
-    //obj["phoneNumber"] = QString::fromStdString(patient.getPhoneNumber());
-    //obj["idCard"] = QString::fromStdString(patient.getHKID());
-    //obj["sin"] = "1232135";		// sin is social security number
-    //obj["subjectNumber"] = "Subject A123";
-    //obj["email"] = "1243test@gmail.com";
-    //obj["address"] = "Mong Kok";
-    //QByteArray data = QJsonDocument(obj).toJson();
+    QJsonObject obj;
+    obj["name"] = QString::fromStdString(patient.getName());
+    obj["sex"] = sex;
+    obj["birthday"] = patient.getDOB().toString("yyyy-MM-dd");
+    obj["phoneNumber"] = QString::fromStdString(patient.getPhoneNumber());
+    obj["idCard"] = QString::fromStdString(patient.getHKID());
+    obj["sin"] = QString::fromStdString(patient.getSocialSecurityNumber());
+    obj["subjectNumber"] = QString::fromStdString(patient.getSubjectNumber());
+    obj["email"] = QString::fromStdString(patient.getEmail());
+    obj["address"] = QString::fromStdString(patient.getAddress());
+    QByteArray data = QJsonDocument(obj).toJson();
 
-    //out << "Full name: " << QString::fromStdString(this->parent->patient.getName()) << "\n";
-    //out << "Study number: " << QString::fromStdString(this->parent->patient.getStudyNumber()) << "\n";
-    //out << "Medical number: " << QString::fromStdString(this->parent->patient.getMedicalNumber()) << "\n";
-    //out << "Phone number: " << QString::fromStdString(this->parent->patient.getPhoneNumber()) << "\n";
-    //out << "HKID: " << QString::fromStdString(this->parent->patient.getHKID()) << "\n";
-    //out << "Email: " << QString::fromStdString(this->parent->patient.getEmail()) << "\n";
-    //out << "Date of birth: " << this->parent->patient.getDOB().toString(DATE_FORMAT) << "\n";
-    //out << "Nationality: " << QString::fromStdString(this->parent->patient.getNationality()) << "\n";
-    //out << "Address: " << QString::fromStdString(this->parent->patient.getAddress()) << "\n";
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
 
-
-    //connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-
-    //manager->post(request, data);
+    manager->post(request, data);
 
     // will return patientId, needs to be stored
 }
