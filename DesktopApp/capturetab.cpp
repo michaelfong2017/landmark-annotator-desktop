@@ -191,7 +191,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		// Move to annotate tab whose index is 4
 		this->parent->annotateTab->reloadCurrentImage();
 		this->parent->ui.tabWidget->setCurrentIndex(4);
-		this->parent->ui.annotateButtonAnnotateTab->click();
 		});
 
 	QObject::connect(timer, &QTimer::timeout, [this]() {

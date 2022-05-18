@@ -41,6 +41,24 @@ public:
     float getTemperature();
     QVector3D query3DPoint(int x, int y, cv::Mat depthToColorImage);
 
+    /** Calculate plane equation and distance between plane and 3D point */
+    /** You are given a points (x1, y1, z1) and a plane a * x + b * y + c * z + d = 0.
+    The task is to find the perpendicular(shortest) distance between that point and the given Plane. */
+    
+    // Find the equation of plane passing through 3 points.
+    // Return [a, b, c, d].
+    float* findPlaneEquationCoefficients(float x1, float y1,
+        float z1, float x2,
+        float y2, float z2,
+		float x3, float y3, float z3);
+
+    float findDistanceBetween3DPointAndPlane(float x1, float y1,
+        float z1, float a,
+        float b, float c,
+        float d);
+
+    /** Calculate plane equation and distance between plane and 3D point END */
+
 private:
     KinectEngine();
 
