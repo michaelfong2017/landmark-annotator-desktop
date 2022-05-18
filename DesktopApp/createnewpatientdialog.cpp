@@ -74,7 +74,7 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
         }
 
         if (!isPatientDataValid) {
-            std::string errorMessage = "Please fill in all mandatory fields.\n Height and weight should be a number";
+            std::string errorMessage = "Please fill in all mandatory fields.";
             ui.patientDataValidation->setText(QString::fromStdString(errorMessage));
         }
         else {
@@ -110,6 +110,10 @@ void CreateNewPatientDialog::onCheckNewPatient(QNetworkReply* reply) {
     }
     else {
         qDebug() << "Patient exists. No data are uploaded.";
+
+        PatientExistsDialog dialog;
+        dialog.exec();
+
         QDialog::accept();
     }
 }

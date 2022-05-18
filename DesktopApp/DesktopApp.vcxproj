@@ -125,6 +125,7 @@
     <ClCompile Include="kinectengine.cpp" />
     <ClCompile Include="logintab.cpp" />
     <ClCompile Include="patient.cpp" />
+    <ClCompile Include="patientexistsdialog.cpp" />
     <ClCompile Include="patientlisttab.cpp" />
     <ClCompile Include="patienttab.cpp" />
     <ClCompile Include="qnetworkclient.cpp" />
@@ -141,6 +142,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <QtUic Include="devicemovingdialog.ui" />
+    <QtUic Include="patientexistsdialog.ui" />
     <QtUic Include="saveimagedialog.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +161,7 @@
     <QtMoc Include="createnewpatientdialog.h" />
     <QtMoc Include="patienttab.h" />
     <QtMoc Include="qnetworkclient.h" />
+    <QtMoc Include="patientexistsdialog.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />
