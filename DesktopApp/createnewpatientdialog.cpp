@@ -98,11 +98,13 @@ void CreateNewPatientDialog::onCheckNewPatient(QNetworkReply* reply) {
 
     QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
 
-    QJsonObject jsonObject = jsonResponse.object();
+    QJsonArray jsonArray = jsonResponse.array();
 
-    //qDebug() << jsonObject;
+    //qDebug() << response_data;
+    //qDebug() << jsonResponse;
+    //qDebug() << jsonArray;
 
-    if (jsonObject.isEmpty()) {
+    if (jsonArray.isEmpty()) {
         qDebug() << "Patient does not exist. Uploading patient...";
         QNetworkClient::getInstance().uploadNewPatient(patient, this, SLOT(onUploadNewPatient(QNetworkReply*)));
     }

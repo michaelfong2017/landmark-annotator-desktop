@@ -33,7 +33,7 @@ public:
     DesktopApp* getParent();
     DragAndDropGraphicsScene* getColorScene();
     DragAndDropGraphicsScene* getDepthToColorScene();
-    int* getScalingFactor();
+    float* getScalingFactor();
     std::map<std::string, QVector3D>* getAnnotations3D();
     void computeMetrics();
 
@@ -50,7 +50,7 @@ private:
     DesktopApp* parent;
     DragAndDropGraphicsScene* colorScene;
     DragAndDropGraphicsScene* depthToColorScene;
-    int scalingFactor;
+    float scalingFactor;
     void drawAnnotations();
     QJsonDocument getAnnotationsJson();
 

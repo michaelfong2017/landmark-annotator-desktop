@@ -48,6 +48,13 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 		int x, y;
 		this->scalingFactor = std::min(this->qDepthToColorColorizedImage.width() / (float)this->annotatedDepthToColorColorizedImage.width(), this->qDepthToColorColorizedImage.height() / (float)this->annotatedDepthToColorColorizedImage.height());
 
+		//qDebug() << this->qDepthToColorColorizedImage.width();
+		//qDebug() << this->annotatedDepthToColorColorizedImage.width();
+		//qDebug() << this->qDepthToColorColorizedImage.height();
+		//qDebug() << this->annotatedDepthToColorColorizedImage.height();
+		//qDebug() << this->qDepthToColorColorizedImage.width() / (float)this->annotatedDepthToColorColorizedImage.width();
+		//qDebug() << this->qDepthToColorColorizedImage.height() / (float)this->annotatedDepthToColorColorizedImage.height();
+
 		for (auto it : this->annotations) {
 			x = it.second.x();
 			y = it.second.y();
@@ -227,7 +234,7 @@ DragAndDropGraphicsScene* AnnotateTab::getDepthToColorScene() {
 	return this->depthToColorScene;
 }
 
-int* AnnotateTab::getScalingFactor() {
+float* AnnotateTab::getScalingFactor() {
 	return &this->scalingFactor;
 }
 
