@@ -132,6 +132,84 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
 		this->noImageCaptured = false;
 
+		/* New Code Here */
+		cv::Mat color3 = this->capturedColorImage;
+		std::vector<cv::Mat>channelsForColor2(3);
+		cv::split(color3, channelsForColor2);
+
+		cv::Mat depthToColor3 = this->capturedDepthToColorImage;
+		std::vector<cv::Mat>channelsForDepth2(1);
+		cv::split(depthToColor3, channelsForDepth2);
+
+		cv::Mat FourChannelPNG = cv::Mat::ones(720, 1280, CV_16UC4);;
+		std::vector<cv::Mat>channels3(4);
+		cv::split(FourChannelPNG, channels3);
+
+		for (int i = 0; i < 1280 * 720; i++) {
+			channels3[0].at<uint16_t>(i) = (channelsForColor2[0].at<uint8_t>(i) << 8) | channelsForColor2[1].at<uint8_t>(i);
+			channels3[1].at<uint16_t>(i) = (channelsForColor2[2].at<uint8_t>(i) << 8);
+		}
+		channels3[2] = channelsForDepth2[0];
+		channels3[3] = channelsForDepth2[0];
+
+		cv::merge(channels3, FourChannelPNG);
+		
+		// *** This is the image that needed to be sent to server ***
+		//cv::imshow("Combined Image", FourChannelPNG);
+		//cv::imwrite("C:/Users/User/Documents/GitHub/landmark-annotator-desktop/x64/Debug/FourChannelMix.png", FourChannelPNG);
+
+		/*
+		cv::Mat ultimate;
+
+		cv::Mat color3 = this->capturedColorImage;
+		color3.convertTo(color3, CV_16UC3, 65535.0f / 255.0f);
+		std::vector<cv::Mat>channelsForColor2(3);
+		cv::split(color3, channelsForColor2);
+
+		cv::Mat depthToColor3 = this->capturedDepthToColorImage;
+		std::vector<cv::Mat>channelsForDepth2(1);
+		cv::split(depthToColor3, channelsForDepth2);
+
+		// Start of bit conversion
+
+		std::vector<cv::Mat>channels2(5);
+		channels2[0] = channelsForColor2[0];
+		channels2[1] = channelsForColor2[1];
+		channels2[2] = channelsForColor2[2];
+		channels2[3] = channelsForDepth2[0];
+		channels2[4] = channelsForDepth2[0];
+		cv::merge(channels2, ultimate);
+
+		//qDebug() << "This Check " << ultimate.channels() << " Con " << ultimate.isContinuous();
+
+		cv::Mat flat = ultimate.reshape(1, 1280*720*5); // 1xN mat of 1 channel, O(1) operation
+
+		if (!ultimate.isContinuous()) {
+			flat = flat.clone(); // O(N),
+		}
+
+		// flat.data is your array pointer
+		auto* ptr = flat.data; // usually, its uchar*
+		std::vector<uint16_t> vec(flat.begin<uint16_t>(), flat.end<uint16_t>());
+
+		std::vector<char> EightBitVec(9216000);
+
+		for (int i = 0; i < 1280 * 720 * 5; i++) {
+			EightBitVec[2 * i] = vec[i] >> 8;       // 2^8 - 2^15
+			EightBitVec[2 * i + 1] = vec[i] & 0xff; // 2^0 - 2^7
+			//qDebug() << (vec[i] & 0xff) << ":" << (vec[i] >> 8);
+		}
+
+		qDebug() << "========================================================";
+
+		std::ofstream fp;
+		fp.open("C:/Users/User/Documents/GitHub/landmark-annotator-desktop/x64/Debug/somefile.bin", std::ios::out | std::ios::binary);
+		fp.write(&EightBitVec[0], EightBitVec.size());
+
+		*/
+
+		/* New Code Ends Here */
+
 		/*
 		* Display captured images
 		*/
