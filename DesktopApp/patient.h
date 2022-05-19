@@ -1,3 +1,6 @@
+#ifndef PATIENT_H
+#define PATIENT_H
+
 #include "stdafx.h"
 
 enum class Sex {Male, Female, Undefined};
@@ -8,7 +11,8 @@ private:
 	std::string hkid;
 	std::string phoneNumber;
 	std::string email;
-	std::string medicalNumber;
+	std::string subjectNumber;
+	std::string socialSecurityNumber;
 	std::string nationality;
 	std::string address;
 	Sex sex = Sex::Undefined;
@@ -23,7 +27,8 @@ public:
 	void setHKID(std::string);
 	void setPhoneNumber(std::string);
 	void setEmail(std::string);
-	void setMedicalNumber(std::string);
+	void setSubjectNumber(std::string);
+	void setSocialSecurityNumber(std::string);
 	void setNationality(std::string);
 	void setAddress(std::string);
 	void setSex(Sex);
@@ -37,7 +42,8 @@ public:
 	std::string getHKID();
 	std::string getPhoneNumber();
 	std::string getEmail();
-	std::string getMedicalNumber();
+	std::string getSubjectNumber();
+	std::string getSocialSecurityNumber();
 	std::string getNationality();
 	std::string getAddress();
 	Sex getSex();
@@ -46,3 +52,4 @@ public:
 	QDate getDOB();
 	bool getValidity();
 };
+#endif

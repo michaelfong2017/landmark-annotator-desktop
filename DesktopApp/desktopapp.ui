@@ -16,8 +16,8 @@
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>10</y>
+     <x>30</x>
+     <y>20</y>
      <width>1191</width>
      <height>881</height>
     </rect>
@@ -26,394 +26,205 @@
     <string notr="true">font: 8pt &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
-   <widget class="QWidget" name="patientDataTab">
+   <widget class="QWidget" name="loginTab">
     <attribute name="title">
-     <string>Patient data</string>
+     <string>Login</string>
     </attribute>
-    <widget class="QLabel" name="formTitle">
+    <widget class="QLabel" name="usernameLabel">
      <property name="geometry">
       <rect>
-       <x>460</x>
-       <y>0</y>
-       <width>321</width>
-       <height>141</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font: 36pt &quot;MS Shell Dlg 2&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Patient Details</string>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="nameInput">
-     <property name="geometry">
-      <rect>
-       <x>200</x>
-       <y>180</y>
-       <width>348</width>
-       <height>29</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="nameLabel">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>180</y>
-       <width>61</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Full name*</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="idLabel">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>280</y>
-       <width>45</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>HKID</string>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="idInput">
-     <property name="geometry">
-      <rect>
-       <x>200</x>
-       <y>280</y>
-       <width>348</width>
-       <height>29</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="sexLabel">
-     <property name="geometry">
-      <rect>
-       <x>660</x>
-       <y>380</y>
-       <width>45</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Sex</string>
-     </property>
-    </widget>
-    <widget class="QWidget" name="horizontalLayoutWidget_2">
-     <property name="geometry">
-      <rect>
-       <x>740</x>
-       <y>380</y>
-       <width>171</width>
+       <x>340</x>
+       <y>229</y>
+       <width>141</width>
        <height>31</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="sexInput">
-      <item>
-       <widget class="QRadioButton" name="male">
-        <property name="text">
-         <string>Male</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="female">
-        <property name="text">
-         <string>Female</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QTextEdit" name="phoneInput">
-     <property name="geometry">
-      <rect>
-       <x>200</x>
-       <y>230</y>
-       <width>348</width>
-       <height>29</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="phoneLabel">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>230</y>
-       <width>45</width>
-       <height>29</height>
-      </rect>
+     <property name="styleSheet">
+      <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
-      <string>Phone*</string>
+      <string>Username*</string>
      </property>
     </widget>
-    <widget class="QLabel" name="emailLabel">
+    <widget class="QLabel" name="passwordLabel">
      <property name="geometry">
       <rect>
-       <x>120</x>
-       <y>330</y>
-       <width>45</width>
-       <height>29</height>
+       <x>340</x>
+       <y>299</y>
+       <width>141</width>
+       <height>31</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
-      <string>Email</string>
+      <string>Password*</string>
      </property>
     </widget>
-    <widget class="QTextEdit" name="emailInput">
+    <widget class="QPushButton" name="loginButton">
      <property name="geometry">
       <rect>
-       <x>200</x>
-       <y>330</y>
-       <width>348</width>
-       <height>29</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="medicalInput">
-     <property name="geometry">
-      <rect>
-       <x>740</x>
-       <y>180</y>
-       <width>348</width>
-       <height>29</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="medicalLabel">
-     <property name="geometry">
-      <rect>
-       <x>660</x>
-       <y>180</y>
-       <width>61</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Medical no.*</string>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="nationalityInput">
-     <property name="geometry">
-      <rect>
-       <x>740</x>
-       <y>230</y>
-       <width>348</width>
-       <height>29</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="nationalityLabel">
-     <property name="geometry">
-      <rect>
-       <x>660</x>
-       <y>230</y>
-       <width>61</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Nationality</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="addressLabel">
-     <property name="geometry">
-      <rect>
-       <x>660</x>
-       <y>280</y>
-       <width>61</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Address</string>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="addressInput">
-     <property name="geometry">
-      <rect>
-       <x>740</x>
-       <y>280</y>
-       <width>348</width>
-       <height>81</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="heightLabel">
-     <property name="geometry">
-      <rect>
-       <x>660</x>
-       <y>430</y>
-       <width>61</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Height (cm)</string>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="heightInput">
-     <property name="geometry">
-      <rect>
-       <x>740</x>
-       <y>430</y>
-       <width>348</width>
-       <height>29</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="weightLabel">
-     <property name="geometry">
-      <rect>
-       <x>660</x>
-       <y>480</y>
-       <width>61</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Weight (kg)</string>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="weightInput">
-     <property name="geometry">
-      <rect>
-       <x>740</x>
-       <y>480</y>
-       <width>348</width>
-       <height>29</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="savePatientButton">
-     <property name="geometry">
-      <rect>
-       <x>560</x>
-       <y>710</y>
-       <width>75</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Save</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="patientDataValidation">
-     <property name="geometry">
-      <rect>
-       <x>470</x>
-       <y>760</y>
-       <width>341</width>
-       <height>71</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="loadPatientButton">
-     <property name="geometry">
-      <rect>
-       <x>660</x>
-       <y>710</y>
-       <width>75</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Load</string>
-     </property>
-    </widget>
-    <widget class="QCalendarWidget" name="dobInput">
-     <property name="geometry">
-      <rect>
-       <x>200</x>
+       <x>440</x>
        <y>380</y>
-       <width>281</width>
-       <height>171</height>
+       <width>111</width>
+       <height>31</height>
       </rect>
      </property>
-    </widget>
-    <widget class="QLabel" name="dobLabel">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>370</y>
-       <width>71</width>
-       <height>29</height>
-      </rect>
+     <property name="styleSheet">
+      <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
-      <string>Date of birth</string>
+      <string>Login</string>
      </property>
     </widget>
-    <zorder>formTitle</zorder>
-    <zorder>nameInput</zorder>
-    <zorder>nameLabel</zorder>
-    <zorder>idInput</zorder>
-    <zorder>idLabel</zorder>
-    <zorder>sexLabel</zorder>
-    <zorder>horizontalLayoutWidget_2</zorder>
-    <zorder>phoneInput</zorder>
-    <zorder>phoneLabel</zorder>
-    <zorder>emailLabel</zorder>
-    <zorder>emailInput</zorder>
-    <zorder>medicalInput</zorder>
-    <zorder>medicalLabel</zorder>
-    <zorder>nationalityInput</zorder>
-    <zorder>nationalityLabel</zorder>
-    <zorder>addressLabel</zorder>
-    <zorder>addressInput</zorder>
-    <zorder>heightLabel</zorder>
-    <zorder>heightInput</zorder>
-    <zorder>weightLabel</zorder>
-    <zorder>weightInput</zorder>
-    <zorder>savePatientButton</zorder>
-    <zorder>patientDataValidation</zorder>
-    <zorder>loadPatientButton</zorder>
-    <zorder>dobInput</zorder>
-    <zorder>dobLabel</zorder>
-   </widget>
-   <widget class="QWidget" name="viewTab">
-    <attribute name="title">
-     <string>View</string>
-    </attribute>
-    <widget class="QWidget" name="layoutWidget">
+    <widget class="QLineEdit" name="usernameLineEdit">
      <property name="geometry">
       <rect>
-       <x>70</x>
-       <y>70</y>
-       <width>741</width>
-       <height>601</height>
+       <x>482</x>
+       <y>229</y>
+       <width>181</width>
+       <height>31</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QGraphicsView" name="graphicsViewVideo"/>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QGraphicsView" name="graphicsViewVideo2"/>
-        </item>
-        <item>
-         <widget class="QGraphicsView" name="graphicsViewVideo3"/>
-        </item>
-       </layout>
-      </item>
-     </layout>
+    </widget>
+    <widget class="QLineEdit" name="passwordLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>480</x>
+       <y>300</y>
+       <width>181</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="patientListTab">
+    <attribute name="title">
+     <string>Patient list</string>
+    </attribute>
+    <widget class="QTableView" name="tableView">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>90</y>
+       <width>1100</width>
+       <height>631</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>20</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
+     </property>
+     <property name="text">
+      <string>Patient List</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="createNewPatientButton">
+     <property name="geometry">
+      <rect>
+       <x>990</x>
+       <y>750</y>
+       <width>151</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+     </property>
+     <property name="text">
+      <string>Create New Patient</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="patientTab">
+    <attribute name="title">
+     <string>Patient</string>
+    </attribute>
+    <widget class="QTableView" name="tableViewPatient">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>100</y>
+       <width>1100</width>
+       <height>621</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="patientName">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>30</y>
+       <width>371</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
+     </property>
+     <property name="text">
+      <string>Name: Jerry Tam</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="patientAge">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>30</y>
+       <width>111</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
+     </property>
+     <property name="text">
+      <string>Age: XX</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="patientSubjectNumber">
+     <property name="geometry">
+      <rect>
+       <x>680</x>
+       <y>30</y>
+       <width>371</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
+     </property>
+     <property name="text">
+      <string>Subject Number: </string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="captureNewButton">
+     <property name="geometry">
+      <rect>
+       <x>990</x>
+       <y>750</y>
+       <width>151</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+     </property>
+     <property name="text">
+      <string>Capture New</string>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="captureTab">
@@ -431,6 +242,9 @@
        <width>631</width>
        <height>321</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}</string>
      </property>
     </widget>
     <widget class="QPushButton" name="captureButton">
@@ -455,8 +269,14 @@
        <height>301</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}</string>
+     </property>
     </widget>
     <widget class="QPushButton" name="saveButtonCaptureTab">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>540</x>
@@ -474,8 +294,8 @@
       <rect>
        <x>460</x>
        <y>730</y>
-       <width>323</width>
-       <height>19</height>
+       <width>321</width>
+       <height>39</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -510,6 +330,9 @@
      </layout>
     </widget>
     <widget class="QPushButton" name="annotateButtonCaptureTab">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>710</x>
@@ -530,6 +353,9 @@
        <width>381</width>
        <height>321</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}</string>
      </property>
     </widget>
     <widget class="QLabel" name="imuText">
@@ -557,6 +383,9 @@
        <height>211</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}</string>
+     </property>
     </widget>
     <widget class="QGraphicsView" name="graphicsViewAccelerometer">
      <property name="geometry">
@@ -574,7 +403,7 @@
        <x>466</x>
        <y>790</y>
        <width>311</width>
-       <height>51</height>
+       <height>61</height>
       </rect>
      </property>
      <property name="text">
@@ -634,6 +463,39 @@ color: rgb(255, 0, 5);
       <string>Show In Explorer</string>
      </property>
     </widget>
+    <widget class="QLabel" name="recordingGif">
+     <property name="geometry">
+      <rect>
+       <x>42</x>
+       <y>36</y>
+       <width>20</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="recordingElapsedTime">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>30</y>
+       <width>191</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;
+</string>
+     </property>
+     <property name="text">
+      <string>00:25</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="annotateTab">
     <attribute name="title">
@@ -644,18 +506,22 @@ color: rgb(255, 0, 5);
       <rect>
        <x>120</x>
        <y>30</y>
-       <width>401</width>
-       <height>331</height>
+       <width>480</width>
+       <height>270</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}
+</string>
      </property>
     </widget>
     <widget class="QLabel" name="annotationsText">
      <property name="geometry">
       <rect>
-       <x>730</x>
+       <x>760</x>
        <y>540</y>
        <width>271</width>
-       <height>171</height>
+       <height>201</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -671,10 +537,10 @@ color: rgb(255, 0, 5);
     <widget class="QWidget" name="horizontalLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>700</x>
+       <x>650</x>
        <y>410</y>
-       <width>321</width>
-       <height>31</height>
+       <width>505</width>
+       <height>43</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -706,9 +572,12 @@ color: rgb(255, 0, 5);
       <rect>
        <x>650</x>
        <y>30</y>
-       <width>401</width>
-       <height>331</height>
+       <width>480</width>
+       <height>270</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}</string>
      </property>
     </widget>
     <widget class="QGraphicsView" name="graphicsViewAnnotation_2">
@@ -719,6 +588,9 @@ color: rgb(255, 0, 5);
        <width>401</width>
        <height>331</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollBar {height:0px; width:0px;}</string>
      </property>
     </widget>
     <widget class="QLabel" name="saveInfoAnnotateTab">

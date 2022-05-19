@@ -1,5 +1,6 @@
 #include "annotatetab.h"
 #include "draganddropgraphicsscene.h"
+#include "kinectengine.h"
 
 QPointF getRandomPoint(int maxWidth, int maxHeight) {
 	int randX = rand() % (maxWidth + 1);
@@ -11,15 +12,6 @@ QPointF getRandomPoint(int maxWidth, int maxHeight) {
 AnnotateTab::AnnotateTab(DesktopApp* parent) {
 	this->parent = parent;
 
-	this->colorImage = this->parent->captureTab->getQCapturedColorImage().copy();
-	this->depthToColorImage = this->parent->captureTab->getQCapturedDepthToColorImage().copy();
-
-	int width = this->parent->ui.graphicsViewAnnotation->width(), height = this->parent->ui.graphicsViewAnnotation->height();
-	this->annotatedColorImage = this->colorImage.copy().scaled(width, height, Qt::KeepAspectRatio);
-
-	width = this->parent->ui.graphicsViewAnnotation2->width();  height = this->parent->ui.graphicsViewAnnotation2->height();
-	this->annotatedDepthToColorImage = this->depthToColorImage.copy().scaled(width, height, Qt::KeepAspectRatio);
-
 	this->colorScene = new DragAndDropGraphicsScene(this, ImageType::Color);
 	this->depthToColorScene = new DragAndDropGraphicsScene(this, ImageType::DepthToColor);
 
@@ -28,43 +20,6 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 
 	this->parent->ui.graphicsViewAnnotation2->setScene(this->depthToColorScene);
 	this->parent->ui.graphicsViewAnnotation2->show();
-
-	QObject::connect(this->parent->ui.annotateButtonAnnotateTab, &QPushButton::clicked, [this]() {
-		int width = this->annotatedColorImage.width(), height = this->annotatedColorImage.height();
-
-		// Reset annotations
-		this->annotations.clear();
-
-		this->annotations.insert({"a", getRandomPoint(width, height)});
-		this->annotations.insert({"b1", getRandomPoint(width, height)});
-		this->annotations.insert({"b2", getRandomPoint(width, height)});
-		this->annotations.insert({"c1", getRandomPoint(width, height)});
-		this->annotations.insert({"c2", getRandomPoint(width, height)});
-		this->annotations.insert({"d", getRandomPoint(width, height)});
-
-		int x, y;
-		this->scalingFactor = std::min(this->depthToColorImage.width() / this->annotatedDepthToColorImage.width(), this->depthToColorImage.height() / this->annotatedDepthToColorImage.height());
-
-		for (auto it : this->annotations) {
-			x = it.second.x();
-			y = it.second.y();
-			x *= this->scalingFactor;
-			y *= this->scalingFactor;
-			QVector3D vector3D = this->parent->captureTab->query3DPoint(x, y);
-			
-			if (this->annotations3D.find(it.first) == this->annotations3D.end()) {
-				this->annotations3D.insert({ it.first, vector3D });
-			} else {
-				this->annotations3D[it.first].setX(vector3D.x());
-				this->annotations3D[it.first].setY(vector3D.y());
-				this->annotations3D[it.first].setZ(vector3D.z());
-			}
-		}
-
-		this->drawAnnotations();
-		this->computeMetrics();
-		this->setAnnotationsText();
-	});
 
 	QObject::connect(this->parent->ui.saveButtonAnnotateTab, &QPushButton::clicked, [this]() {
 		QString dateTimeString = Helper::getCurrentDateTimeString();
@@ -83,7 +38,7 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 
 		// Save RGBD image
 		QImageWriter depthToColorWriter(depthToColorSavePath);
-		if (!depthToColorWriter.write(this->annotatedDepthToColorImage)) {
+		if (!depthToColorWriter.write(this->annotatedDepthToColorColorizedImage)) {
 			qDebug() << depthToColorWriter.errorString();
 			this->parent->ui.saveInfoAnnotateTab->setText("Something went wrong, cannot save images.");
 			return;
@@ -102,30 +57,97 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 void AnnotateTab::reloadCurrentImage() {
 	// Remove existing annotations in annotations member variable
 	for (auto it : this->annotations) this->annotations[it.first] = QPointF();
+	// Remove existing annotations in annotations member variable END
 
-	this->colorImage = this->parent->captureTab->getQCapturedColorImage().copy();
-	this->depthToColorImage = this->parent->captureTab->getQCapturedDepthToColorImage().copy();
+	this->depthToColorImage = this->parent->captureTab->getCapturedDepthToColorImage().clone();
 
-	int width = this->parent->ui.graphicsViewAnnotation->width(), height = this->parent->ui.graphicsViewAnnotation->height();
-	this->annotatedColorImage = this->colorImage.copy().scaled(width, height, Qt::KeepAspectRatio);
+	if (depthToColorImage.empty()) {
+		qCritical() << "Cannot proceed since no successful depthToColorImage has been captured.";
+		return;
+	}
 
-	width = this->parent->ui.graphicsViewAnnotation2->width(); height = this->parent->ui.graphicsViewAnnotation2->height();
-	this->annotatedDepthToColorImage = this->depthToColorImage.copy().scaled(width, height, Qt::KeepAspectRatio);
+	/** Calculate plane equation and distance to plane of each 3D point */
+	/**** Get the 3D coordinates of 3 reference points that are assumed to lie on the plane. */
+	// HARD CODED VALUES
+	float x1_2D = 256.0f;
+	float y1_2D = 180.0f;
+	float x2_2D = 256.0f;
+	float y2_2D = 540.0f;
+	float x3_2D = 1024.0f;
+	float y3_2D = 360.0f;
+	// HARD CODED VALUES END
 
-	// Deallocate heap memory used by previous GGraphicsScene object
-    if (this->colorScene) delete this->colorScene;
-	if (this->depthToColorScene) delete this->depthToColorScene;
+	QVector3D vector3D_1 = KinectEngine::getInstance().query3DPoint(x1_2D, y1_2D, this->depthToColorImage);
+	QVector3D vector3D_2 = KinectEngine::getInstance().query3DPoint(x2_2D, y2_2D, this->depthToColorImage);
+	QVector3D vector3D_3 = KinectEngine::getInstance().query3DPoint(x3_2D, y3_2D, this->depthToColorImage);
 
-	this->colorScene = new DragAndDropGraphicsScene(this, ImageType::Color);
-	this->depthToColorScene = new DragAndDropGraphicsScene(this, ImageType::DepthToColor);
+	/**** Get the 3D coordinates of 3 reference points that are assumed to lie on the plane. END */
+	float* abcd;
+	abcd = KinectEngine::getInstance().findPlaneEquationCoefficients(
+		vector3D_1.x(), vector3D_1.y(), vector3D_1.z(),
+		vector3D_2.x(), vector3D_2.y(), vector3D_2.z(),
+		vector3D_3.x(), vector3D_3.y(), vector3D_3.z()
+	);
 
-	this->parent->ui.graphicsViewAnnotation->setScene(this->colorScene);
-	this->parent->ui.graphicsViewAnnotation->show();
+	/** Calculate plane equation and distance to plane of each 3D point END */
 
-	this->parent->ui.graphicsViewAnnotation2->setScene(this->depthToColorScene);
-	this->parent->ui.graphicsViewAnnotation2->show();
+	this->qColorImage = this->parent->captureTab->getQColorImage().copy();
+	this->qDepthToColorColorizedImage = this->parent->captureTab->getQDepthToColorColorizedImage().copy();
 
-    this->parent->ui.annotateButtonAnnotateTab->click();
+	int width = this->parent->ui.graphicsViewAnnotation->width();
+	int height = this->parent->ui.graphicsViewAnnotation->height();
+	this->annotatedColorImage = this->qColorImage.copy().scaled(width, height, Qt::KeepAspectRatio);
+
+	width = this->parent->ui.graphicsViewAnnotation2->width();
+	height = this->parent->ui.graphicsViewAnnotation2->height();
+	this->annotatedDepthToColorColorizedImage = this->qDepthToColorColorizedImage.copy().scaled(width, height, Qt::KeepAspectRatio);
+
+
+	// Reset annotations
+	this->annotations.clear();
+
+	this->annotations.insert({ "C", QPointF(240.0f, 70.0f) });
+	this->annotations.insert({ "A1", QPointF(220.0f, 130.0f) });
+	this->annotations.insert({ "A2", QPointF(260.0f, 130.0f) });
+	this->annotations.insert({ "B1", QPointF(220.0f, 165.0f) });
+	this->annotations.insert({ "B2", QPointF(260.0f, 165.0f) });
+	this->annotations.insert({ "D", QPointF(240.0f, 185.0f) });
+
+	int x, y;
+	this->scalingFactor = std::min(this->qDepthToColorColorizedImage.width() / (float)this->annotatedDepthToColorColorizedImage.width(), this->qDepthToColorColorizedImage.height() / (float)this->annotatedDepthToColorColorizedImage.height());
+
+	//qDebug() << this->qDepthToColorColorizedImage.width();
+	//qDebug() << this->annotatedDepthToColorColorizedImage.width();
+	//qDebug() << this->qDepthToColorColorizedImage.height();
+	//qDebug() << this->annotatedDepthToColorColorizedImage.height();
+	//qDebug() << this->qDepthToColorColorizedImage.width() / (float)this->annotatedDepthToColorColorizedImage.width();
+	//qDebug() << this->qDepthToColorColorizedImage.height() / (float)this->annotatedDepthToColorColorizedImage.height();
+
+	for (auto it : this->annotations) {
+		x = it.second.x();
+		y = it.second.y();
+		x *= this->scalingFactor;
+		y *= this->scalingFactor;
+		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->depthToColorImage);
+
+		if (this->annotations3D.find(it.first) == this->annotations3D.end()) {
+			this->annotations3D.insert({ it.first, vector3D });
+		}
+		else {
+			this->annotations3D[it.first].setX(vector3D.x());
+			this->annotations3D[it.first].setY(vector3D.y());
+			this->annotations3D[it.first].setZ(vector3D.z());
+		}
+	}
+
+	this->drawAnnotations();
+	this->computeMetrics();
+	this->setAnnotationsText();
+}
+
+cv::Mat AnnotateTab::getDepthToColorImage()
+{
+	return this->depthToColorImage;
 }
 
 void AnnotateTab::drawAnnotations() {
@@ -145,16 +167,16 @@ void AnnotateTab::drawAnnotations() {
     this->parent->ui.graphicsViewAnnotation2->show();
 }
 
-QImage* AnnotateTab::getImage() {
-	return &this->colorImage;
+QImage* AnnotateTab::getQColorImage() {
+	return &this->qColorImage;
 }
 
 QImage* AnnotateTab::getAnnotatedColorImage() {
 	return &this->annotatedColorImage;
 }
 
-QImage* AnnotateTab::getAnnotatedDepthToColorImage() {
-	return &this->annotatedDepthToColorImage;
+QImage* AnnotateTab::getAnnotatedDepthToColorColorizedImage() {
+	return &this->annotatedDepthToColorColorizedImage;
 }
 
 std::map<std::string, QPointF>* AnnotateTab::getAnnotations() {
@@ -170,8 +192,7 @@ void AnnotateTab::setAnnotationsText() {
 		text.append(str);
 	}
 
-	text.append(QString::fromStdString("Distance 1 ( b1 - b2 ): " + std::to_string(this->distance1) + " cm\n"));
-	text.append(QString::fromStdString("Distance 2 ( c1 - c2 ): " + std::to_string(this->distance2) + " cm\n"));
+	text.append(QString::fromStdString("Distance d ( D - C ): " + std::to_string(this->distance1) + " cm\n"));
 	text.append(QString::fromStdString("Alpha: " + std::to_string(this->angle1) + " degree\n"));
 	text.append(QString::fromStdString("Beta: " + std::to_string(this->angle2) + " degree\n"));
 
@@ -179,18 +200,25 @@ void AnnotateTab::setAnnotationsText() {
 }
 
 void AnnotateTab::recopyAnnotatedImage() {
-	int width = this->parent->ui.graphicsViewAnnotation->width(), height = this->parent->ui.graphicsViewAnnotation->height();
-	this->annotatedColorImage = this->colorImage.copy().scaled(width, height, Qt::KeepAspectRatio);
+	int width = this->parent->ui.graphicsViewAnnotation->width();
+	int height = this->parent->ui.graphicsViewAnnotation->height();
+	this->annotatedColorImage = this->qColorImage.copy().scaled(width, height, Qt::KeepAspectRatio);
 
-	width = this->parent->ui.graphicsViewAnnotation2->width();  height = this->parent->ui.graphicsViewAnnotation2->height();
-	this->annotatedDepthToColorImage = this->depthToColorImage.copy().scaled(width, height, Qt::KeepAspectRatio);
+	width = this->parent->ui.graphicsViewAnnotation2->width();
+	height = this->parent->ui.graphicsViewAnnotation2->height();
+	this->annotatedDepthToColorColorizedImage = this->qDepthToColorColorizedImage.copy().scaled(width, height, Qt::KeepAspectRatio);
+}
+
+DesktopApp* AnnotateTab::getParent()
+{
+	return this->parent;
 }
 
 QJsonDocument AnnotateTab::getAnnotationsJson() {
 	QJsonObject emptyJsonObject{};
 	QJsonDocument document;
 
-	if (!this->annotations["a"].isNull()) {
+	if (!this->annotations["A1"].isNull()) {
 		QJsonObject coordinates;
 
 		for(auto it: this->annotations) {
@@ -215,7 +243,7 @@ DragAndDropGraphicsScene* AnnotateTab::getDepthToColorScene() {
 	return this->depthToColorScene;
 }
 
-int* AnnotateTab::getScalingFactor() {
+float* AnnotateTab::getScalingFactor() {
 	return &this->scalingFactor;
 }
 
@@ -223,22 +251,19 @@ std::map<std::string, QVector3D>* AnnotateTab::getAnnotations3D() {
 	return &this->annotations3D;
 }
 
-QVector3D AnnotateTab::query3DPoint(int x, int y) {
-	return this->parent->captureTab->query3DPoint(x, y);
-}
-
 void AnnotateTab::computeMetrics() {
 	const float PI = 3.14159265;
-	this->distance1 = this->annotations3D["b1"].distanceToPoint(this->annotations3D["b2"])/10;
-	this->distance2 = this->annotations3D["c1"].distanceToPoint(this->annotations3D["c2"])/10;
+	this->distance1 = (this->annotations3D["D"].x() - this->annotations3D["C"].x())/10;
 	
 	//Angle between b1-b2 line and xy-plane
-	float zDiff = this->annotations3D["b1"].z() - this->annotations3D["b2"].z();
-	float xyDistance = std::sqrt(std::pow(this->annotations3D["b1"].x() - this->annotations3D["b2"].x(), 2) + std::pow(this->annotations3D["b1"].y() - this->annotations3D["b2"].y(), 2));
-	this->angle1 = std::atan(zDiff/xyDistance) * 180 / PI;
+	float yDiff = this->annotations3D["B1"].y() - this->annotations3D["B2"].y();
+	//float xyDistance = std::sqrt(std::pow(this->annotations3D["b1"].x() - this->annotations3D["b2"].x(), 2) + std::pow(this->annotations3D["b1"].y() - this->annotations3D["b2"].y(), 2));
+	float xDistance = this->annotations3D["B2"].x() - this->annotations3D["B1"].x();
+	this->angle1 = std::atan(yDiff/xDistance) * 180 / PI;
 
 	//Angle between c1-c2 line and xy-plane
-	zDiff = this->annotations3D["c1"].z() - this->annotations3D["c2"].z();
-	xyDistance = std::sqrt(std::pow(this->annotations3D["c1"].x() - this->annotations3D["c2"].x(), 2) + std::pow(this->annotations3D["c1"].y() - this->annotations3D["c2"].y(), 2));
-	this->angle2 = std::atan(zDiff/xyDistance) * 180 / PI;
+	yDiff = this->annotations3D["A1"].y() - this->annotations3D["A2"].y();
+	//xyDistance = std::sqrt(std::pow(this->annotations3D["c1"].x() - this->annotations3D["c2"].x(), 2) + std::pow(this->annotations3D["c1"].y() - this->annotations3D["c2"].y(), 2));
+	xDistance = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
+	this->angle2 = std::atan(yDiff/xDistance) * 180 / PI;
 }

@@ -21,30 +21,36 @@ public:
     AnnotateTab(DesktopApp* parent);
 
     void reloadCurrentImage();
-    QImage* getImage();
+
+    cv::Mat getDepthToColorImage();
+
+    QImage* getQColorImage();
     QImage* getAnnotatedColorImage();
-    QImage* getAnnotatedDepthToColorImage();
+    QImage* getAnnotatedDepthToColorColorizedImage();
     std::map<std::string, QPointF>* getAnnotations();
     void setAnnotationsText();
     void recopyAnnotatedImage();
+    DesktopApp* getParent();
     DragAndDropGraphicsScene* getColorScene();
     DragAndDropGraphicsScene* getDepthToColorScene();
-    int* getScalingFactor();
+    float* getScalingFactor();
     std::map<std::string, QVector3D>* getAnnotations3D();
-    QVector3D query3DPoint(int x, int y);
     void computeMetrics();
 
 private:
-    QImage colorImage;
+    cv::Mat depthToColorImage;
+
+    QImage qColorImage;
+    QImage qDepthToColorColorizedImage;
+
     QImage annotatedColorImage;
-    QImage depthToColorImage;
-    QImage annotatedDepthToColorImage;
+    QImage annotatedDepthToColorColorizedImage;
     std::map<std::string, QPointF> annotations;
     std::map<std::string, QVector3D> annotations3D;
     DesktopApp* parent;
     DragAndDropGraphicsScene* colorScene;
     DragAndDropGraphicsScene* depthToColorScene;
-    int scalingFactor;
+    float scalingFactor;
     void drawAnnotations();
     QJsonDocument getAnnotationsJson();
 

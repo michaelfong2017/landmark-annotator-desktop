@@ -1,419 +1,570 @@
 #include "capturetab.h"
+#include "saveimagedialog.h"
+#include "devicemovingdialog.h"
+#include "kinectengine.h"
 
 CaptureTab::CaptureTab(DesktopApp* parent)
 {
-    this->parent = parent;
-    this->recorder = new Recorder(parent);
-    this->parent->ui.recordingIndicatorText->setVisible(false);
+	this->parent = parent;
+	this->recorder = new Recorder(parent);
+	this->parent->ui.recordingIndicatorText->setVisible(false);
+	this->parent->ui.recordingElapsedTime->setVisible(false);
 
-    this->setDefaultCaptureMode();
+	this->setDefaultCaptureMode();
 
-    this->registerRadioButtonOnClicked(this->parent->ui.radioButton, &this->colorImage);
-    this->registerRadioButtonOnClicked(this->parent->ui.radioButton2, &this->depthImage);
-    this->registerRadioButtonOnClicked(this->parent->ui.radioButton3, &this->colorToDepthImage);
-    this->registerRadioButtonOnClicked(this->parent->ui.radioButton4, &this->depthToColorImage);
+	this->registerRadioButtonOnClicked(this->parent->ui.radioButton, &this->qColorImage);
+	this->registerRadioButtonOnClicked(this->parent->ui.radioButton2, &this->qDepthImage);
+	this->registerRadioButtonOnClicked(this->parent->ui.radioButton3, &this->qColorToDepthImage);
+	this->registerRadioButtonOnClicked(this->parent->ui.radioButton4, &this->qDepthToColorImage);
 
-    this->captureCount = 0;
-    this->timer = new QTimer;
+	/** QNetworkAccessManager */
+	connect(&manager, &QNetworkAccessManager::finished, this, &CaptureTab::onManagerFinished);
+	/***/
 
-    this->parent->ui.showInExplorer->hide();
-    this->captureFilepath = QString();
+	this->captureCount = 0;
+	this->noImageCaptured = true;
+	this->timer = new QTimer;
 
-    QObject::connect(this->parent->ui.saveButtonCaptureTab, &QPushButton::clicked, [this]() {
-        QString dateTimeString = Helper::getCurrentDateTimeString();
-        QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
-        QString colorSavePath = visitFolderPath + "/color_" + dateTimeString + ".png";
-        QString depthToColorSavePath = visitFolderPath + "/rgbd_" + dateTimeString + ".png";
-        QString depthSavePath = visitFolderPath + "/depth_" + dateTimeString + ".png";
-        QString colorToDepthSavePath = visitFolderPath + "/color_aligned_" + dateTimeString + ".png";
+	this->parent->ui.showInExplorer->hide();
+	this->captureFilepath = QString();
 
-        QImageWriter colorWriter(colorSavePath);
-        QImageWriter depthToColorWriter(depthToColorSavePath);
-        QImageWriter depthWriter(depthSavePath);
-        QImageWriter colorToDepthWriter(colorToDepthSavePath);
+	QObject::connect(this->parent->ui.saveButtonCaptureTab, &QPushButton::clicked, [this]() {
+		SaveImageDialog dialog(this);
+		dialog.exec();
+		});
 
-        if (
-            !colorWriter.write(this->colorImage) | 
-            !depthToColorWriter.write(this->depthToColorImage) | 
-            !depthWriter.write(this->depthImage) | 
-            !colorToDepthWriter.write(this->colorToDepthImage)
-            ) {
-            qDebug() << colorWriter.errorString();
-            qDebug() << depthToColorWriter.errorString();
-            qDebug() << depthWriter.errorString();
-            qDebug() << depthToColorWriter.errorString();
-            this->parent->ui.saveInfoCaptureTab->setText("Something went wrong, cannot save images.");
+	QObject::connect(this->parent->ui.saveVideoButton, &QPushButton::clicked, [this]() {
+		if (this->recorder->getRecordingStatus()) {
+			// Current status is recording
+			QString dateTimeString = Helper::getCurrentDateTimeString();
+			QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
 
-            this->parent->ui.showInExplorer->hide();
-            return;
-        }
+			// Modify UI to disable recording status
+			this->parent->ui.recordingIndicatorText->setVisible(false);
+			this->parent->ui.recordingElapsedTime->setVisible(false);
+			this->parent->ui.captureTab->setStyleSheet("");
 
-        this->parent->ui.saveInfoCaptureTab->setText("Images saved under " + visitFolderPath + "\n at " + dateTimeString);
+			this->recorder->stopRecorder();
+			this->parent->ui.saveVideoButton->setText("start recording");
 
-        this->parent->ui.showInExplorer->show();
-        this->setCaptureFilepath(colorSavePath);
-    });
+			this->parent->ui.saveInfoCaptureTab->setText("Recording is saved under\n" + visitFolderPath + "\nat " + dateTimeString);
 
-    QObject::connect(this->parent->ui.saveVideoButton, &QPushButton::clicked, [this]() {
-        if (this->recorder->getRecordingStatus()) {
-            // Current status is recording
-            QString dateTimeString = Helper::getCurrentDateTimeString();
-            QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
+			this->parent->ui.showInExplorer->show();
+			this->setCaptureFilepath(this->recorder->getColorOutputFilename());
 
-            // Modify UI to disable recording status
-            this->parent->ui.recordingIndicatorText->setVisible(false);
-            this->parent->ui.captureTab->setStyleSheet("");
+			// Enable analysis button
+			if (!this->noImageCaptured) {
+				this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
+			}
 
-            this->recorder->stopRecorder();
-            this->parent->ui.saveVideoButton->setText("start recording");
+			// Recording gif
+			QLabel* recordingGif = this->parent->ui.recordingGif;
+			QMovie* movie = recordingGif->movie();
+			if (movie != nullptr) {
+				movie->stop();
+				delete movie;
+			}
+			// Recording gif END
+			// Recording time elapsed
+			this->recordingElapsedTimer.invalidate();
+			// Recording time elapsed END
+		}
+		else {
+			// Current status is NOT recording
 
-            this->parent->ui.saveInfoCaptureTab->setText("Recording is saved under " + visitFolderPath + "\nat " + dateTimeString);
+			// Modify UI to indicate recording status
+			this->parent->ui.recordingIndicatorText->setVisible(true);
+			this->parent->ui.recordingElapsedTime->setVisible(true);
+			this->parent->ui.captureTab->setStyleSheet("#captureTab {border: 2px solid red}");
 
-            this->parent->ui.showInExplorer->show();
-            this->setCaptureFilepath(this->recorder->getColorOutputFilename());
-        }
-        else {
-            // Current status is NOT recording
- 
-            // Modify UI to indicate recording status
-            this->parent->ui.recordingIndicatorText->setVisible(true);
-            this->parent->ui.captureTab->setStyleSheet("#captureTab {border: 2px solid red}");
+			this->recorder->prepareRecorder();
+			this->parent->ui.saveVideoButton->setText("stop recording");
 
-            this->recorder->prepareRecorder();
-            this->parent->ui.saveVideoButton->setText("stop recording");
+			// Disable analysis button
+			this->parent->ui.annotateButtonCaptureTab->setEnabled(false);
 
-            this->recorder->timer->start(1000);
-        }
-    });
+			// Recording gif
+			QMovie* movie = new QMovie(":/DesktopApp/resources/recording.gif");
+			movie->setScaledSize(QSize(20, 20));
+			QLabel* recordingGif = this->parent->ui.recordingGif;
+			recordingGif->setMovie(movie);
+			movie->start();
+			// Recording gif END
 
-    /** Michael Fong Show In Explorer
-    BEGIN */
-    QObject::connect(this->parent->ui.showInExplorer, &QPushButton::clicked, [this]() {
-        QString filepath = this->getCaptureFilepath();
+			// Recording time elapsed
+			this->recordingElapsedTimer.start();
+			// Recording time elapsed END
 
-        QStringList args;
+			this->recorder->timer->start(1000);
+		}
+		});
 
-        args << "/select," << QDir::toNativeSeparators(filepath);
+	/** Michael Fong Show In Explorer
+	BEGIN */
+	QObject::connect(this->parent->ui.showInExplorer, &QPushButton::clicked, [this]() {
+		QString filepath = this->getCaptureFilepath();
 
-        QProcess* process = new QProcess(this);
-        process->startDetached("explorer.exe", args);
-    });
-    /** Michael Fong Show In Explorer
-    END */
+		QStringList args;
 
-    QObject::connect(this->parent->ui.captureButton, &QPushButton::clicked, [this]() {
-        this->colorImage = this->parent->getQColorImage();
-        this->depthImage = this->parent->getQDepthImage();
-        this->colorToDepthImage = this->parent->getQColorToDepthImage();
-        this->depthToColorImage = this->parent->getQDepthToColorImage();
+		args << "/select," << QDir::toNativeSeparators(filepath);
 
-        QImage image;
+		QProcess* process = new QProcess(this);
+		process->startDetached("explorer.exe", args);
+		});
+	/** Michael Fong Show In Explorer
+	END */
 
-        if (this->parent->ui.radioButton->isChecked()) {
-            image = this->colorImage;
-        }
-        else if (this->parent->ui.radioButton2->isChecked()) {
-            image = this->depthImage;
-        }
-        else if (this->parent->ui.radioButton3->isChecked()) {
-            image = this->colorToDepthImage;
-        }
-        else {
-            image = this->depthToColorImage;
-        }
+	QObject::connect(this->parent->ui.captureButton, &QPushButton::clicked, [this]() {
+		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
+		
+		// Shallow copy
+		cv::Mat color = this->capturedColorImage;
+		cv::Mat depth = this->capturedDepthImage;
+		cv::Mat colorToDepth = this->capturedColorToDepthImage;
+		cv::Mat depthToColor = this->capturedDepthToColorImage;
+		//
 
-        int width = this->parent->ui.graphicsViewImage->width(), height = this->parent->ui.graphicsViewImage->height();
+		/** Assume that capture is all successful, otherwise print a warning. */
+		if (color.empty() || depth.empty() || colorToDepth.empty() || depthToColor.empty()) {
+			qWarning() << "capturetab captureButton - one of the captured images is null";
+		}
+		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
+		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
+		this->noImageCaptured = false;
 
-        QImage imageScaled = image.scaled(width, height, Qt::KeepAspectRatio);
+		/* New Code Here */
+		cv::Mat color3 = this->capturedColorImage;
+		std::vector<cv::Mat>channelsForColor2(3);
+		cv::split(color3, channelsForColor2);
 
-        // Deallocate heap memory used by previous GGraphicsScene object
-        if (this->parent->ui.graphicsViewImage->scene()) {
-            delete this->parent->ui.graphicsViewImage->scene();
-        }
+		cv::Mat depthToColor3 = this->capturedDepthToColorImage;
+		std::vector<cv::Mat>channelsForDepth2(1);
+		cv::split(depthToColor3, channelsForDepth2);
 
-        QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
-        QGraphicsScene* scene = new QGraphicsScene;
-        scene->addItem(item);
+		cv::Mat FourChannelPNG = cv::Mat::ones(720, 1280, CV_16UC4);;
+		std::vector<cv::Mat>channels3(4);
+		cv::split(FourChannelPNG, channels3);
 
-        this->parent->ui.graphicsViewImage->setScene(scene);
-        this->parent->ui.graphicsViewImage->show();
-    });
+		for (int i = 0; i < 1280 * 720; i++) {
+			channels3[0].at<uint16_t>(i) = (channelsForColor2[0].at<uint8_t>(i) << 8) | channelsForColor2[1].at<uint8_t>(i);
+			channels3[1].at<uint16_t>(i) = (channelsForColor2[2].at<uint8_t>(i) << 8);
+		}
+		channels3[2] = channelsForDepth2[0];
+		channels3[3] = channelsForDepth2[0];
 
-    QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
-        // Move to annotate tab whose index is 3
-        this->parent->annotateTab->reloadCurrentImage();
-        this->parent->ui.tabWidget->setCurrentIndex(3);
-        this->parent->ui.annotateButtonAnnotateTab->click();
-    });
+		cv::merge(channels3, FourChannelPNG);
+		
+		// *** This is the image that needed to be sent to server ***
+		//cv::imshow("Combined Image", FourChannelPNG);
+		//cv::imwrite("C:/Users/User/Documents/GitHub/landmark-annotator-desktop/x64/Debug/FourChannelMix.png", FourChannelPNG);
 
-    QObject::connect(timer, &QTimer::timeout, [this]() {
-        if (this->parent->deviceCount > 0) {
-            switch (k4a_device_get_capture(this->parent->device, &this->parent->capture, K4A_WAIT_INFINITE)) {
-                case K4A_WAIT_RESULT_SUCCEEDED:
-                    break;
-            }
+		/*
+		cv::Mat ultimate;
 
-            if (this->parent->capture) {
-                k4a_image_t k4aColorImage = k4a_capture_get_color_image(this->parent->capture);
+		cv::Mat color3 = this->capturedColorImage;
+		color3.convertTo(color3, CV_16UC3, 65535.0f / 255.0f);
+		std::vector<cv::Mat>channelsForColor2(3);
+		cv::split(color3, channelsForColor2);
 
-                if (k4aColorImage != NULL) {
-                    this->parent->colorImageQueue.push(k4aColorImage);
+		cv::Mat depthToColor3 = this->capturedDepthToColorImage;
+		std::vector<cv::Mat>channelsForDepth2(1);
+		cv::split(depthToColor3, channelsForDepth2);
 
-                    int width = this->parent->ui.graphicsViewVideo4->width(), height = this->parent->ui.graphicsViewVideo4->height();
-                    QImage qColorImage = (this->parent->getQColorImage()).scaled(width, height, Qt::KeepAspectRatio);
+		// Start of bit conversion
 
-                    // Deallocate heap memory used by previous GGraphicsScene object
-                    if (this->parent->ui.graphicsViewVideo4->scene()) {
-                        delete this->parent->ui.graphicsViewVideo4->scene();
-                    }
-                    
-                    QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(qColorImage));
-                    QGraphicsScene* scene = new QGraphicsScene;
-                    scene->addItem(item);
+		std::vector<cv::Mat>channels2(5);
+		channels2[0] = channelsForColor2[0];
+		channels2[1] = channelsForColor2[1];
+		channels2[2] = channelsForColor2[2];
+		channels2[3] = channelsForDepth2[0];
+		channels2[4] = channelsForDepth2[0];
+		cv::merge(channels2, ultimate);
 
-                    this->parent->ui.graphicsViewVideo4->setScene(scene);
-                    this->parent->ui.graphicsViewVideo4->show();
+		//qDebug() << "This Check " << ultimate.channels() << " Con " << ultimate.isContinuous();
 
-                    while (this->parent->colorImageQueue.size() > MAX_IMAGE_QUEUE_SIZE) {
-                        k4a_image_release(this->parent->colorImageQueue.front());
-                        this->parent->colorImageQueue.pop();
-                    }
-                }
+		cv::Mat flat = ultimate.reshape(1, 1280*720*5); // 1xN mat of 1 channel, O(1) operation
 
-                k4a_image_t k4aDepthImage = k4a_capture_get_depth_image(this->parent->capture);
+		if (!ultimate.isContinuous()) {
+			flat = flat.clone(); // O(N),
+		}
 
-                if (k4aDepthImage != NULL) {
-                    this->parent->depthImageQueue.push(k4aDepthImage);
+		// flat.data is your array pointer
+		auto* ptr = flat.data; // usually, its uchar*
+		std::vector<uint16_t> vec(flat.begin<uint16_t>(), flat.end<uint16_t>());
 
-                    int width = this->parent->ui.graphicsViewVideo5->width(), height = this->parent->ui.graphicsViewVideo5->height();
-                    QImage qDepthImage = (this->parent->getQDepthImage()).scaled(width, height, Qt::KeepAspectRatio);
+		std::vector<char> EightBitVec(9216000);
 
-                    // Deallocate heap memory used by previous GGraphicsScene object
-                    if (this->parent->ui.graphicsViewVideo5->scene()) {
-                        delete this->parent->ui.graphicsViewVideo5->scene();
-                    }
+		for (int i = 0; i < 1280 * 720 * 5; i++) {
+			EightBitVec[2 * i] = vec[i] >> 8;       // 2^8 - 2^15
+			EightBitVec[2 * i + 1] = vec[i] & 0xff; // 2^0 - 2^7
+			//qDebug() << (vec[i] & 0xff) << ":" << (vec[i] >> 8);
+		}
 
-                    QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(qDepthImage));
-                    QGraphicsScene* scene = new QGraphicsScene;
-                    scene->addItem(item);
+		qDebug() << "========================================================";
 
-                    this->parent->ui.graphicsViewVideo5->setScene(scene);
-                    this->parent->ui.graphicsViewVideo5->show();
+		std::ofstream fp;
+		fp.open("C:/Users/User/Documents/GitHub/landmark-annotator-desktop/x64/Debug/somefile.bin", std::ios::out | std::ios::binary);
+		fp.write(&EightBitVec[0], EightBitVec.size());
 
-                    while (this->parent->depthImageQueue.size() > MAX_IMAGE_QUEUE_SIZE) {
-                        k4a_image_release(this->parent->depthImageQueue.front());
-                        this->parent->depthImageQueue.pop();
-                    }
-                }
+		*/
 
-                k4a_capture_release(this->parent->capture);
-            }
-            else {
-                qDebug() << "No capture found\n";
-            }
+		/* New Code Ends Here */
 
-            // Capture a imu sample
-            switch (k4a_device_get_imu_sample(this->parent->device, &this->parent->imuSample, K4A_WAIT_INFINITE)) {
-                case K4A_WAIT_RESULT_SUCCEEDED:
-                    break;
-            }
+		/*
+		* Display captured images
+		*/
+		this->qColorImage = convertColorCVToQImage(color);
+		this->qDepthImage = convertDepthCVToQImage(depth);
+		this->qColorToDepthImage = convertColorToDepthCVToQImage(colorToDepth);
+		this->qDepthToColorImage = convertDepthToColorCVToQImage(depthToColor);
+		// For annotatetab instead
+		this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(depthToColor);
+		// For annotatetab instead END
 
-            if (&this->parent->imuSample != NULL) {
-                this->parent->gyroSampleQueue.push_back(this->parent->imuSample.gyro_sample);
-                this->parent->accSampleQueue.push_back(this->parent->imuSample.acc_sample);
+		QImage image;
 
-                QString text;
-                text += ("Temperature: " + QString::number(this->parent->imuSample.temperature, 0, 2) + " C\n");
-                this->parent->ui.imuText->setText(text);
-            }
+		// only for initial state
+		if (this->parent->ui.radioButton->isChecked()) {
+			image = this->getQColorImage();
+		}
+		else if (this->parent->ui.radioButton2->isChecked()) {
+			image = this->getQDepthImage();
+		}
+		else if (this->parent->ui.radioButton3->isChecked()) {
+			image = this->getQColorToDepthImage();
+		}
+		else {
+			image = this->getQDepthToColorImage();
+		}
 
-            while (this->parent->gyroSampleQueue.size() > MAX_GYROSCOPE_QUEUE_SIZE) this->parent->gyroSampleQueue.pop_front();
+		int width = this->parent->ui.graphicsViewImage->width();
+		int height = this->parent->ui.graphicsViewImage->height();
 
-            while (this->parent->accSampleQueue.size() > MAX_ACCELEROMETER_QUEUE_SIZE) this->parent->accSampleQueue.pop_front();
+		QImage imageScaled = image.scaled(width, height, Qt::KeepAspectRatio);
 
-            if (this->parent->gyroSampleQueue.size() >= MAX_GYROSCOPE_QUEUE_SIZE) this->drawGyroscopeData();
+		// Deallocate heap memory used by previous GGraphicsScene object
+		if (this->parent->ui.graphicsViewImage->scene()) {
+			delete this->parent->ui.graphicsViewImage->scene();
+		}
 
-            if (this->parent->accSampleQueue.size() >= MAX_ACCELEROMETER_QUEUE_SIZE) this->drawAccelerometerData();
-        }
-    });
+		QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
+		QGraphicsScene* scene = new QGraphicsScene;
+		scene->addItem(item);
+
+		this->parent->ui.graphicsViewImage->setScene(scene);
+		this->parent->ui.graphicsViewImage->show();
+		/*
+		* Display captured images END
+		*/
+		});
+
+	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
+		/** Send RGBImageArray and DepthToRGBImageArray to server */
+		QImage colorImage = this->getQColorImage();
+		QImage depthToColorImage = this->getQDepthToColorImage();
+
+		uploadRGBImageArrayAndDepthToRGBImageArray(manager, QUrl("http://127.0.0.1:8000/uploadimages"), QString("image_id_001"), 4, colorImage, depthToColorImage);
+		/** Send to server END */
+
+		// Move to annotate tab whose index is 4
+		this->parent->annotateTab->reloadCurrentImage();
+		this->parent->ui.tabWidget->setCurrentIndex(4);
+		});
+
+	QObject::connect(timer, &QTimer::timeout, [this]() {
+		//qDebug() << "timer connect start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+
+		KinectEngine::getInstance().captureImages();
+		cv::Mat color, depth;
+		KinectEngine::getInstance().readColorAndDepthImages(color, depth);
+		QImage qColor = convertColorCVToQImage(color);
+		QImage qDepth = convertDepthCVToColorizedQImage(depth);
+
+		// Recording time elapsed
+		this->parent->ui.recordingElapsedTime->setText(QTime::fromMSecsSinceStartOfDay(this->recordingElapsedTimer.elapsed()).toString("mm:ss"));
+		// Recording time elapsed END
+
+		/*
+		* Display color image
+		*/
+		if (!qColor.isNull()) {
+			int width = this->parent->ui.graphicsViewVideo4->width();
+			int height = this->parent->ui.graphicsViewVideo4->height();
+			QImage qColorScaled = qColor.scaled(width, height, Qt::KeepAspectRatio);
+
+			// Deallocate heap memory used by previous GGraphicsScene object
+			if (this->parent->ui.graphicsViewVideo4->scene()) {
+				delete this->parent->ui.graphicsViewVideo4->scene();
+			}
+			// Deallocate heap memory used by previous GGraphicsScene object END
+
+			QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(qColorScaled));
+			QGraphicsScene* scene = new QGraphicsScene;
+			scene->addItem(item);
+
+			/** Human cut shape */
+			QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape.png");
+			QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
+			scene->addPixmap(humanPixmapScaled);
+			/** Human cut shape END */
+
+			this->parent->ui.graphicsViewVideo4->setScene(scene);
+			this->parent->ui.graphicsViewVideo4->show();
+		}
+		/*
+		* Display color image END
+		*/
+
+
+		/*
+		* Display depth image
+		*/
+		if (!qDepth.isNull()) {
+			int width = this->parent->ui.graphicsViewVideo5->width();
+			int height = this->parent->ui.graphicsViewVideo5->height();
+			QImage qDepthScaled = qDepth.scaled(width, height, Qt::KeepAspectRatio);
+
+			// Deallocate heap memory used by previous GGraphicsScene object
+			if (this->parent->ui.graphicsViewVideo5->scene()) {
+				delete this->parent->ui.graphicsViewVideo5->scene();
+			}
+			// Deallocate heap memory used by previous GGraphicsScene object END
+
+			QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(qDepthScaled));
+			QGraphicsScene* scene = new QGraphicsScene;
+			scene->addItem(item);
+
+			this->parent->ui.graphicsViewVideo5->setScene(scene);
+			this->parent->ui.graphicsViewVideo5->show();
+		}
+		/*
+		* Display depth image END
+		*/
+
+		/*
+		* Record color image video and depth image video
+		*/
+		// OpenCV cannot save 16-bit video. Therefore, convert to 8-bit.
+		cv::Mat depth8bit;
+		depth.convertTo(depth8bit, CV_8U, 255.0 / 5000.0, 0.0);
+		// If recording mode is on, send temp to the output file stream
+		if (this->getRecorder()->getRecordingStatus()) {
+			*(this->getRecorder()->getColorVideoWriter()) << color;
+			*(this->getRecorder()->getDepthVideoWriter()) << depth8bit;
+		}
+		/*
+		* Record color image video and depth image video END
+		*/
+
+		/*
+		* IMU sample
+		*/
+		KinectEngine::getInstance().queueIMUSample();
+		std::deque<k4a_float3_t> gyroSampleQueue = KinectEngine::getInstance().getGyroSampleQueue();
+		std::deque<k4a_float3_t> accSampleQueue = KinectEngine::getInstance().getAccSampleQueue();
+		float temperature = KinectEngine::getInstance().getTemperature();
+
+		if (!gyroSampleQueue.empty() && !accSampleQueue.empty()) {
+			//qDebug() << "timer connect 17: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+			/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved */
+			alertIfMoving(
+				gyroSampleQueue[gyroSampleQueue.size() - 1].xyz.x,
+				gyroSampleQueue[gyroSampleQueue.size() - 1].xyz.y,
+				gyroSampleQueue[gyroSampleQueue.size() - 1].xyz.z,
+				accSampleQueue[accSampleQueue.size() - 1].xyz.x,
+				accSampleQueue[accSampleQueue.size() - 1].xyz.y,
+				accSampleQueue[accSampleQueue.size() - 1].xyz.z
+			);
+			/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved END */
+
+			QString text;
+			text += ("Temperature: " + QString::number(temperature, 0, 2) + " C\n");
+			this->parent->ui.imuText->setText(text);
+		}
+
+		if (gyroSampleQueue.size() >= MAX_GYROSCOPE_QUEUE_SIZE) this->drawGyroscopeData(gyroSampleQueue);
+		if (accSampleQueue.size() >= MAX_ACCELEROMETER_QUEUE_SIZE) this->drawAccelerometerData(accSampleQueue);
+		/*
+		* IMU sample END
+		*/
+
+		//qDebug() << "timer connect end: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+		}
+	);
+
 }
 
 void CaptureTab::setDefaultCaptureMode() {
-    parent->ui.radioButton->setChecked(true);
-    parent->ui.radioButton2->setChecked(false);
-    parent->ui.radioButton3->setChecked(false);
-    parent->ui.radioButton4->setChecked(false);
+	parent->ui.radioButton->setChecked(true);
+	parent->ui.radioButton2->setChecked(false);
+	parent->ui.radioButton3->setChecked(false);
+	parent->ui.radioButton4->setChecked(false);
 }
 
 void CaptureTab::registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image) {
-    QObject::connect(radioButton, &QRadioButton::clicked, [this, image]() {
-        int width = this->parent->ui.graphicsViewImage->width(), height = this->parent->ui.graphicsViewImage->height();
+	QObject::connect(radioButton, &QRadioButton::clicked, [this, image]() {
+		int width = this->parent->ui.graphicsViewImage->width(), height = this->parent->ui.graphicsViewImage->height();
 
-        QImage imageScaled = (*image).scaled(width, height, Qt::KeepAspectRatio);
+		QImage imageScaled = (*image).scaled(width, height, Qt::KeepAspectRatio);
 
-        // Deallocate heap memory used by previous GGraphicsScene object
-        if (this->parent->ui.graphicsViewImage->scene()) {
-            delete this->parent->ui.graphicsViewImage->scene();
-        }
+		// Deallocate heap memory used by previous GGraphicsScene object
+		if (this->parent->ui.graphicsViewImage->scene()) {
+			delete this->parent->ui.graphicsViewImage->scene();
+		}
 
-        QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
-        QGraphicsScene* scene = new QGraphicsScene;
-        scene->addItem(item);
+		QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
+		QGraphicsScene* scene = new QGraphicsScene;
+		scene->addItem(item);
 
-        this->parent->ui.graphicsViewImage->setScene(scene);
-        this->parent->ui.graphicsViewImage->show();
-    });
+		this->parent->ui.graphicsViewImage->setScene(scene);
+		this->parent->ui.graphicsViewImage->show();
+		});
 }
 
-QImage CaptureTab::getQCapturedColorImage() {
-    return this->colorImage;
+DesktopApp* CaptureTab::getParent()
+{
+	return this->parent;
 }
 
-QImage CaptureTab::getQCapturedDepthToColorImage() {
-    return this->depthToColorImage;
+void CaptureTab::drawGyroscopeData(std::deque<k4a_float3_t> gyroSampleQueue) {
+	// Deallocate heap memory used by previous GGraphicsScene object
+	if (this->parent->ui.graphicsViewGyroscope->scene()) {
+		delete this->parent->ui.graphicsViewGyroscope->scene();
+	}
+
+	int width = this->parent->ui.graphicsViewGyroscope->width(), height = this->parent->ui.graphicsViewGyroscope->height();
+	QGraphicsScene* scene = new QGraphicsScene();
+	QImage image = QPixmap(0.95 * width, 0.95 * height).toImage();
+
+	QPainter painter(&image);
+	painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap));
+
+	for (int i = 0; i < MAX_GYROSCOPE_QUEUE_SIZE - 1; ++i) {
+		int segmentLength = width / MAX_GYROSCOPE_QUEUE_SIZE;
+		int segmentHeight = height / 3;
+
+		// Draw  gyroscope measurement w.r.t x-axis
+		int leftSegmentHeight = 2 * gyroSampleQueue[i].xyz.x;
+		int rightSegmentHeight = 2 * gyroSampleQueue[i + 1].xyz.x;
+		painter.drawLine(i * segmentLength, segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, segmentHeight / 2 + rightSegmentHeight);
+
+		// Draw  gyroscope measurement w.r.t y-axis
+		leftSegmentHeight = 2 * gyroSampleQueue[i].xyz.y;
+		rightSegmentHeight = 2 * gyroSampleQueue[i + 1].xyz.y;
+		painter.drawLine(i * segmentLength, 3 * segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, 3 * segmentHeight / 2 + rightSegmentHeight);
+
+		// Draw  gyroscope measurement w.r.t z-axis
+		leftSegmentHeight = 2 * gyroSampleQueue[i].xyz.z;
+		rightSegmentHeight = 2 * gyroSampleQueue[i + 1].xyz.z;
+		painter.drawLine(i * segmentLength, 5 * segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, 5 * segmentHeight / 2 + rightSegmentHeight);
+	}
+
+	QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+	scene->addItem(item);
+
+	this->parent->ui.graphicsViewGyroscope->setScene(scene);
 }
 
-void CaptureTab::drawGyroscopeData() {
-    // Deallocate heap memory used by previous GGraphicsScene object
-    if (this->parent->ui.graphicsViewGyroscope->scene()) {
-        delete this->parent->ui.graphicsViewGyroscope->scene();
-    }
+void CaptureTab::drawAccelerometerData(std::deque<k4a_float3_t> accSampleQueue) {
+	// Deallocate heap memory used by previous GGraphicsScene object
+	if (this->parent->ui.graphicsViewAccelerometer->scene()) {
+		delete this->parent->ui.graphicsViewAccelerometer->scene();
+	}
 
-    int width = this->parent->ui.graphicsViewGyroscope->width(), height = this->parent->ui.graphicsViewGyroscope->height();
-    QGraphicsScene* scene = new QGraphicsScene();
-    QImage image = QPixmap(0.95 * width, 0.95 * height).toImage();
+	int width = this->parent->ui.graphicsViewAccelerometer->width(), height = this->parent->ui.graphicsViewAccelerometer->height();
+	QGraphicsScene* scene = new QGraphicsScene();
+	QImage image = QPixmap(0.95 * width, 0.95 * height).toImage();
 
-    QPainter painter(&image);
-    painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap));
+	QPainter painter(&image);
+	painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap));
 
-    for (int i = 0; i < MAX_GYROSCOPE_QUEUE_SIZE - 1; ++i) {
-        int segmentLength = width / MAX_GYROSCOPE_QUEUE_SIZE;
-        int segmentHeight = height / 3;
+	for (int i = 0; i < MAX_ACCELEROMETER_QUEUE_SIZE - 1; ++i) {
+		int segmentLength = width / MAX_ACCELEROMETER_QUEUE_SIZE;
+		int segmentHeight = height / 3;
 
-        // Draw  gyroscope measurement w.r.t x-axis
-        int leftSegmentHeight = 2 * this->parent->gyroSampleQueue[i].xyz.x;
-        int rightSegmentHeight = 2 * this->parent->gyroSampleQueue[i + 1].xyz.x;
-        painter.drawLine(i * segmentLength, segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, segmentHeight / 2 + rightSegmentHeight);
+		// Draw  gyroscope measurement w.r.t x-axis
+		int leftSegmentHeight = 2 * accSampleQueue[i].xyz.x;
+		int rightSegmentHeight = 2 * accSampleQueue[i + 1].xyz.x;
+		painter.drawLine(i * segmentLength, segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, segmentHeight / 2 + rightSegmentHeight);
 
-        // Draw  gyroscope measurement w.r.t y-axis
-        leftSegmentHeight = 2 * this->parent->gyroSampleQueue[i].xyz.y;
-        rightSegmentHeight = 2 * this->parent->gyroSampleQueue[i + 1].xyz.y;
-        painter.drawLine(i * segmentLength, 3 * segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, 3 * segmentHeight / 2 + rightSegmentHeight);
+		// Draw  gyroscope measurement w.r.t y-axis
+		leftSegmentHeight = 2 * accSampleQueue[i].xyz.y;
+		rightSegmentHeight = 2 * accSampleQueue[i + 1].xyz.y;
+		painter.drawLine(i * segmentLength, 3 * segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, 3 * segmentHeight / 2 + rightSegmentHeight);
 
-        // Draw  gyroscope measurement w.r.t z-axis
-        leftSegmentHeight = 2 * this->parent->gyroSampleQueue[i].xyz.z;
-        rightSegmentHeight = 2 * this->parent->gyroSampleQueue[i + 1].xyz.z;
-        painter.drawLine(i * segmentLength, 5 * segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, 5 * segmentHeight / 2 + rightSegmentHeight);
-    }
+		// Draw  gyroscope measurement w.r.t z-axis
+		leftSegmentHeight = 2 * accSampleQueue[i].xyz.z;
+		rightSegmentHeight = 2 * accSampleQueue[i + 1].xyz.z;
+		painter.drawLine(i * segmentLength, 5 * segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, 5 * segmentHeight / 2 + rightSegmentHeight);
+	}
 
-    QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-    scene->addItem(item);
+	QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+	scene->addItem(item);
 
-    this->parent->ui.graphicsViewGyroscope->setScene(scene);
+	this->parent->ui.graphicsViewAccelerometer->setScene(scene);
 }
 
-void CaptureTab::drawAccelerometerData() {
-    // Deallocate heap memory used by previous GGraphicsScene object
-    if (this->parent->ui.graphicsViewAccelerometer->scene()) {
-        delete this->parent->ui.graphicsViewAccelerometer->scene();
-    }
+void CaptureTab::alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ)
+{
+	//qDebug() << "alertIfMoving - " << gyroX << ", " << gyroY << ", " << gyroZ << ", " << accX << ", " << accY << ", " << accZ;
 
-    int width = this->parent->ui.graphicsViewAccelerometer->width(), height = this->parent->ui.graphicsViewAccelerometer->height();
-    QGraphicsScene* scene = new QGraphicsScene();
-    QImage image = QPixmap(0.95 * width, 0.95 * height).toImage();
-
-    QPainter painter(&image);
-    painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap));
-
-    for (int i = 0; i < MAX_ACCELEROMETER_QUEUE_SIZE - 1; ++i) {
-        int segmentLength = width / MAX_ACCELEROMETER_QUEUE_SIZE;
-        int segmentHeight = height / 3;
-
-        // Draw  gyroscope measurement w.r.t x-axis
-        int leftSegmentHeight = 2 * this->parent->accSampleQueue[i].xyz.x;
-        int rightSegmentHeight = 2 * this->parent->accSampleQueue[i + 1].xyz.x;
-        painter.drawLine(i * segmentLength, segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, segmentHeight / 2 + rightSegmentHeight);
-
-        // Draw  gyroscope measurement w.r.t y-axis
-        leftSegmentHeight = 2 * this->parent->accSampleQueue[i].xyz.y;
-        rightSegmentHeight = 2 * this->parent->accSampleQueue[i + 1].xyz.y;
-        painter.drawLine(i * segmentLength, 3 * segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, 3 * segmentHeight / 2 + rightSegmentHeight);
-
-        // Draw  gyroscope measurement w.r.t z-axis
-        leftSegmentHeight = 2 * this->parent->accSampleQueue[i].xyz.z;
-        rightSegmentHeight = 2 * this->parent->accSampleQueue[i + 1].xyz.z;
-        painter.drawLine(i * segmentLength, 5 * segmentHeight / 2 + leftSegmentHeight, (i + 1) * segmentLength, 5 * segmentHeight / 2 + rightSegmentHeight);
-    }
-
-    QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-    scene->addItem(item);
-
-    this->parent->ui.graphicsViewAccelerometer->setScene(scene);
+	if (abs(accX) > 1.0f || abs(accY) > 1.0f || abs(accZ + 9.81) > 1.0f) {
+		DeviceMovingDialog dialog(this);
+		dialog.exec();
+	}
 }
 
-k4a_image_t* CaptureTab::getK4aPointCloud() {
-    return &(this->k4aPointCloud);
+void CaptureTab::onManagerFinished(QNetworkReply* reply)
+{
+	qDebug() << reply->readAll();
 }
 
-k4a_image_t* CaptureTab::getK4aDepthToColor() {
-    return &(this->k4aDepthToColor);
+cv::Mat CaptureTab::getCapturedColorImage() {
+	return this->capturedColorImage;
 }
 
-QVector3D CaptureTab::query3DPoint(int x, int y) {
-    int width = k4a_image_get_width_pixels(*this->getK4aPointCloud());
-    int height = k4a_image_get_height_pixels(*this->getK4aPointCloud());
+cv::Mat CaptureTab::getCapturedDepthImage() {
+	return this->capturedDepthImage;
+}
 
-    bool* visited = (bool*) malloc((width * height) * sizeof(bool));
-    std::queue<std::pair<int, int>> coordQueue;
+cv::Mat CaptureTab::getCapturedColorToDepthImage() {
+	return this->capturedColorToDepthImage;
+}
 
-    for (int i = 0; i < height; ++i) {
-        for (int j = 0; j < width; ++j) 
-            visited[(width * i) + j] = false;
-    }
+cv::Mat CaptureTab::getCapturedDepthToColorImage() {
+	return this->capturedDepthToColorImage;
+}
 
-    visited[(width * y) + x] = true;
-    coordQueue.push(std::make_pair(x, y));
-    int index;
-    int16_t xOut, yOut, zOut;
+QImage CaptureTab::getQColorImage()
+{
+	return this->qColorImage;
+}
 
+QImage CaptureTab::getQDepthImage()
+{
+	return this->qDepthImage;
+}
 
-    while (!coordQueue.empty()) {
-        std::pair<int, int> coord = coordQueue.front();
-        coordQueue.pop();
+QImage CaptureTab::getQColorToDepthImage()
+{
+	return this->qColorToDepthImage;
+}
 
-        index = 3 * ((width * coord.second) + coord.first);
+QImage CaptureTab::getQDepthToColorImage()
+{
+	return this->qDepthToColorImage;
+}
 
-        xOut = (int16_t) k4a_image_get_buffer(*this->getK4aPointCloud())[index];
-        yOut = (int16_t) k4a_image_get_buffer(*this->getK4aPointCloud())[++index];
-        zOut = (int16_t) k4a_image_get_buffer(*this->getK4aPointCloud())[++index];
-
-        if (!(xOut == 0 && yOut == 0 && zOut == 0)) {
-            free(visited);
-            return QVector3D(xOut, yOut, zOut);
-        }
-
-        for (int i = coord.second - 1; i <= coord.second + 1; ++i) {
-            for (int j = coord.first - 1; j <= coord.first + 1; ++j) {
-                if (i < 0 || i >= height) continue;
-                if (j < 0 || j >= width) continue;
-
-                if (!visited[(width * i) + j]) {
-                    coordQueue.push(std::make_pair(j, i));
-                    visited[(width * i) + j] = true;
-                }
-            }
-        }
-    }
-
-    free(visited);
-    return QVector3D(0, 0, 0);
+QImage CaptureTab::getQDepthToColorColorizedImage()
+{
+	return this->qDepthToColorColorizedImage;
 }
 
 int CaptureTab::getCaptureCount() { return this->captureCount; }
 
 void CaptureTab::setCaptureCount(int newCaptureCount) { this->captureCount = newCaptureCount; }
 
-Recorder* CaptureTab::getRecorder() { return this->recorder;  }
+Recorder* CaptureTab::getRecorder() { return this->recorder; }
 
 QString CaptureTab::getCaptureFilepath() { return this->captureFilepath; }
 void CaptureTab::setCaptureFilepath(QString captureFilepath) { this->captureFilepath = captureFilepath; }

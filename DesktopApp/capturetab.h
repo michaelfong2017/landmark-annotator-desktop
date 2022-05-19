@@ -9,6 +9,7 @@
 #include "recorder.h"
 #include <k4a/k4a.hpp>
 #include <opencv2/opencv.hpp>
+#include "util/networkutil.h"
 
 class CaptureTab: public QWidget
 {
@@ -16,33 +17,54 @@ class CaptureTab: public QWidget
 
 public:
     CaptureTab(DesktopApp* parent);
+    DesktopApp* getParent();
     QTimer* timer;
-    QImage getQCapturedColorImage();
-    QImage getQCapturedDepthToColorImage();
-    k4a_image_t* getK4aPointCloud();
-    k4a_image_t* getK4aDepthToColor();
-    QVector3D query3DPoint(int x, int y);
     int getCaptureCount();
     void setCaptureCount(int newCaptureCount);
     Recorder* getRecorder();
     QString getCaptureFilepath();
     void setCaptureFilepath(QString captureFilepath);
 
+    cv::Mat getCapturedColorImage();
+    cv::Mat getCapturedDepthImage();
+    cv::Mat getCapturedColorToDepthImage();
+    cv::Mat getCapturedDepthToColorImage();
+
+    QImage getQColorImage();
+    QImage getQDepthImage();
+    QImage getQColorToDepthImage();
+    QImage getQDepthToColorImage();
+    QImage getQDepthToColorColorizedImage();
+
 private:
     DesktopApp* parent;
-    k4a_image_t k4aPointCloud;
-    k4a_image_t k4aDepthToColor;
-    QImage colorImage;
-    QImage depthImage;
-    QImage colorToDepthImage;
-    QImage depthToColorImage;
+
+    // Only captured images have to be stored
+    // Live preview images are not stored
+    cv::Mat capturedColorImage;
+    cv::Mat capturedDepthImage;
+    cv::Mat capturedColorToDepthImage;
+    cv::Mat capturedDepthToColorImage;
+    // stored captured images END
+
+    QImage qColorImage;
+    QImage qDepthImage;
+    QImage qColorToDepthImage;
+    QImage qDepthToColorImage;
+    QImage qDepthToColorColorizedImage;
+
     int captureCount;
     Recorder* recorder;
     QString captureFilepath;
+    QElapsedTimer recordingElapsedTimer;
+    QNetworkAccessManager manager;
+    bool noImageCaptured;
     void setDefaultCaptureMode();
     void registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image);
-    void drawGyroscopeData();
-    void drawAccelerometerData();
+    void drawGyroscopeData(std::deque<k4a_float3_t> gyroSampleQueue);
+    void drawAccelerometerData(std::deque<k4a_float3_t> accSampleQueue);
+    void alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ);
+    void onManagerFinished(QNetworkReply* reply);
 };
 
 #endif
