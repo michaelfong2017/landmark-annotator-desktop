@@ -483,9 +483,6 @@ float* KinectEngine::findPlaneEquationCoefficients(float x1, float y1,
 	float c = a1 * b2 - b1 * a2;
 	float d = (-a * x1 - b * y1 - c * z1);
 
-	qDebug() << "Equation of plane is " << a << " x + " << b
-		<< " y + " << c << " z + " << d << " = 0.";
-
 	out[0] = a;
 	out[1] = b;
 	out[2] = c;
