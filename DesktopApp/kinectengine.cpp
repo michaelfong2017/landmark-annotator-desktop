@@ -466,6 +466,54 @@ float KinectEngine::getTemperature()
 	return this->temperature;
 }
 
+float* KinectEngine::findPlaneEquationCoefficients(cv::Mat depthToColorImage) {
+	float out[4];
+
+	int rows = depthToColorImage.rows;
+	int cols = depthToColorImage.cols;
+
+	/** The purpose for counting how many pixels are in each interval is to
+	* pick the top 2 intervals for sampling points which likely lie on the wall. */
+	/**
+	* Intervals should be 0, [1, 250], [251, 500], ... , [4751, 5000]
+	*/
+	const int MAX_DEPTH_VALUE = 5000; // Depth sensor maximum is 5000mm
+
+	const int NUM_OF_INTERVALS = 21;
+	const int SIZE_OF_INTERVALS = 250;
+	int countOfDepth[NUM_OF_INTERVALS] = { 0 };
+
+	for (int y = 0; y < rows; y++) {
+		for (int x = 0; x < cols; x++) {
+			uint16_t d = depthToColorImage.at<uint16_t>(y, x);
+
+			if (d == 0) {
+				countOfDepth[0]++;
+				continue;
+			}
+			else {
+				countOfDepth[(int)((d-1) / SIZE_OF_INTERVALS) + 1]++;
+			}
+		}
+	}
+
+	for (int i = 0; i < NUM_OF_INTERVALS; i++) {
+		if (i == 0) {
+			qDebug() << "countOfDepth[0] = " << countOfDepth[0];
+		}
+		else {
+			qDebug() << "countOfDepth[" << (i-1)*SIZE_OF_INTERVALS + 1 << " - " << i*SIZE_OF_INTERVALS << "] = " << countOfDepth[i];
+		}
+	}
+	/**
+	* Intervals should be 0, [1, 250], [251, 500], ... , [4751, 5000]
+	* END */
+
+
+
+	return out;
+}
+
 float* KinectEngine::findPlaneEquationCoefficients(float x1, float y1,
 	float z1, float x2,
 	float y2, float z2,

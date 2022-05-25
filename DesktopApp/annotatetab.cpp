@@ -66,6 +66,11 @@ void AnnotateTab::reloadCurrentImage() {
 		return;
 	}
 
+	/** New plane calculation */
+	float* p;
+	p = KinectEngine::getInstance().findPlaneEquationCoefficients(this->depthToColorImage);
+	/** New plane calculation END */
+
 	/** Calculate plane equation and distance to plane of each 3D point */
 	/**** Get the 3D coordinates of 3 reference points that are assumed to lie on the plane. */
 	// HARD CODED VALUES
