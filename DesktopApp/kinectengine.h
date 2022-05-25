@@ -4,6 +4,7 @@
 #include <QtWidgets/QWidget>
 #include <k4a/k4a.hpp>
 #include "stdafx.h"
+#include <utility>
 
 #define MAX_GYROSCOPE_QUEUE_SIZE 30
 #define MAX_ACCELEROMETER_QUEUE_SIZE 30

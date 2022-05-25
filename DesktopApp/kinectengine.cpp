@@ -475,13 +475,19 @@ float* KinectEngine::findPlaneEquationCoefficients(cv::Mat depthToColorImage) {
 	/** The purpose for counting how many pixels are in each interval is to
 	* pick the top 2 intervals for sampling points which likely lie on the wall. */
 	/**
-	* Intervals should be 0, [1, 250], [251, 500], ... , [4751, 5000]
+	* Intervals should be 0, [1, 250], [251, 500], ... , [4751, 5000], [5001, 5250], [5251, 5500]
 	*/
-	const int MAX_DEPTH_VALUE = 5000; // Depth sensor maximum is 5000mm
+	const int MAX_DEPTH_VALUE = 5500; // Depth sensor maximum is 5XXXmm
 
-	const int NUM_OF_INTERVALS = 21;
+	const int NUM_OF_INTERVALS = 23;
 	const int SIZE_OF_INTERVALS = 250;
 	int countOfDepth[NUM_OF_INTERVALS] = { 0 };
+
+	std::vector<std::vector<std::pair<int, int>>> v;
+	for (int i = 0; i < NUM_OF_INTERVALS; i++) {
+		std::vector<std::pair<int, int>> s;
+		v.push_back(s);
+	}
 
 	for (int y = 0; y < rows; y++) {
 		for (int x = 0; x < cols; x++) {
@@ -489,10 +495,12 @@ float* KinectEngine::findPlaneEquationCoefficients(cv::Mat depthToColorImage) {
 
 			if (d == 0) {
 				countOfDepth[0]++;
-				continue;
+				v[0].push_back({ x, y });
 			}
 			else {
-				countOfDepth[(int)((d-1) / SIZE_OF_INTERVALS) + 1]++;
+				int i = (int)((d - 1) / SIZE_OF_INTERVALS) + 1;
+				countOfDepth[i]++;
+				v[i].push_back({ x, y });
 			}
 		}
 	}
@@ -509,7 +517,28 @@ float* KinectEngine::findPlaneEquationCoefficients(cv::Mat depthToColorImage) {
 	* Intervals should be 0, [1, 250], [251, 500], ... , [4751, 5000]
 	* END */
 
+	/** Pick the top 2 intervals. Interval "0" is not considered. */
+	int largest = -1;
+	int secondLargest = -1;
+	int largestIndex = -1;
+	int secondLargestIndex = -1;
+	for (int i = 1; i < NUM_OF_INTERVALS; i++) {
+		if (countOfDepth[i] > largest) {
+			largest = countOfDepth[i];
+			largestIndex = i;
+		}
+		else if (countOfDepth[i] > secondLargest) {
+			secondLargest = countOfDepth[i];
+			secondLargestIndex = i;
+		}
+	}
 
+	qDebug() << "largest index is" << largestIndex;
+	qDebug() << "second largest index is" << secondLargestIndex;
+
+	qDebug() << "First set of sample points is" << v[largestIndex];
+	qDebug() << "Second set of sample points is" << v[secondLargestIndex];
+	/** Pick the top 2 intervals. Interval "0" is not considered. END */
 
 	return out;
 }
@@ -550,4 +579,3 @@ float KinectEngine::findDistanceBetween3DPointAndPlane(float x1, float y1,
 
 	return d / e;
 }
-
