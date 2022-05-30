@@ -24,6 +24,7 @@ void QNetworkClient::login() {
 }
 void QNetworkClient::onLogin(QNetworkReply* reply) {
     this->userToken = QString::fromStdString("Bearer " + reply->readAll().toStdString());
+    qDebug() << this->userToken;
     reply->deleteLater();
 }
 
@@ -136,4 +137,62 @@ void QNetworkClient::fetchExistingImagesOfPatient(int patientId, const QObject* 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
 
     manager->get(request);
+}
+
+void QNetworkClient::uploadImage(cv::Mat image, const QObject* receiver, const char* member) {
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images")));
+    request.setRawHeader("Authorization", this->userToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QJsonObject obj;
+    obj["patientId"] = QJsonValue::Null;
+    obj["url"] = QString::fromStdString("https://raw.githubusercontent.com/monaen/Storage/master/AlignPro/BarebackRGBDN/0094.png");
+    obj["imageType"] = 7;
+    obj["imageName"] = QString::fromStdString("");
+    QByteArray data = QJsonDocument(obj).toJson();
+
+    //QHttpMultiPart* multipart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+    //// patientId
+    //QHttpPart patientIdPart;
+    //patientIdPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"patientId\""));
+    //patientIdPart.setBody(nullptr);
+    //multipart->append(patientIdPart);
+
+    //// imageType
+    //QHttpPart imageTypePart;
+    //imageTypePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"imageType\""));
+    //imageTypePart.setBody(QByteArray::number(7));
+    //multipart->append(imageTypePart);
+
+    //// imageName
+    //QHttpPart imageNamePart;
+    //imageNamePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"imageName\""));
+    //imageNamePart.setBody(QByteArray::fromStdString(""));
+    //multipart->append(imageNamePart);
+
+    //// url
+    //QHttpPart imageArray;
+    //imageArray.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));
+    //imageArray.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"rgb_image_array\""));
+    //QByteArray byteArray;
+    //QBuffer buffer(&byteArray);
+
+    //QImage qImage((const uchar*)image.data, image.cols, image.rows, image.step, QImage::Format_RGBA64);
+    //qImage.bits();
+    //qImage.save(&buffer, "PNG");
+    //imageArray.setBody(byteArray);
+    //multipart->append(imageArray);
+
+    // url 2
+    //QHttpPart imageUrlPart;
+    //imageUrlPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; url=\"https://raw.githubusercontent.com/monaen/Storage/master/AlignPro/BarebackRGBDN/0094.png\""));
+    //imageUrlPart.setBody(QByteArray::fromStdString(""));
+    //multipart->append(imageUrlPart);
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
+
+    manager->post(request, data);
 }

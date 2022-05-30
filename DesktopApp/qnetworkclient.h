@@ -6,6 +6,7 @@
 #include <QtNetwork>
 #include <QtWidgets/QWidget>
 #include "patient.h"
+#include <opencv2/opencv.hpp>
 
 
 class QNetworkClient : public QWidget
@@ -27,6 +28,7 @@ public:
     void checkNewPatient(Patient patient, const QObject* receiver, const char* member);
     void uploadNewPatient(Patient patient, const QObject* receiver, const char* member);
     void fetchExistingImagesOfPatient(int patientId, const QObject* receiver, const char* member);
+    void uploadImage(cv::Mat image, const QObject* receiver, const char* member);
 
 private:
     QNetworkClient();

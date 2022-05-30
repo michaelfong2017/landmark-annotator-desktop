@@ -10,6 +10,7 @@
 #include <k4a/k4a.hpp>
 #include <opencv2/opencv.hpp>
 #include "util/networkutil.h"
+#include "qnetworkclient.h"
 
 class CaptureTab: public QWidget
 {
@@ -65,6 +66,9 @@ private:
     void drawAccelerometerData(std::deque<k4a_float3_t> accSampleQueue);
     void alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ);
     void onManagerFinished(QNetworkReply* reply);
+
+private slots:
+    void onUploadImage(QNetworkReply* reply);
 };
 
 #endif
