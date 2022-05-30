@@ -181,7 +181,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		});
 
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
-		/* New Code Here */
+		/* Convert to the special 4 channels image and upload */
 		cv::Mat color3 = this->capturedColorImage;
 		std::vector<cv::Mat>channelsForColor2(3);
 		cv::split(color3, channelsForColor2);
@@ -204,11 +204,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		cv::merge(channels3, FourChannelPNG);
 
 		QNetworkClient::getInstance().uploadImage(FourChannelPNG, this, SLOT(onUploadImage(QNetworkReply*)));
-		/* New Code Ends Here */
+		/* Convert to the special 4 channels image and upload END */
 
 		// Move to annotate tab whose index is 4
-		//this->parent->annotateTab->reloadCurrentImage();
-		//this->parent->ui.tabWidget->setCurrentIndex(4);
+		this->parent->annotateTab->reloadCurrentImage();
+		this->parent->ui.tabWidget->setCurrentIndex(4);
 		});
 
 	QObject::connect(timer, &QTimer::timeout, [this]() {
@@ -461,6 +461,14 @@ void CaptureTab::onManagerFinished(QNetworkReply* reply)
 
 void CaptureTab::onUploadImage(QNetworkReply* reply) {
 	qDebug() << "onUploadImage";
+	QString url = reply->readAll();
+	reply->deleteLater();
+
+	QNetworkClient::getInstance().bindImageUrl(this->parent->patientTab->getCurrentPatientId(), url, this, SLOT(onBindImageUrl(QNetworkReply*)));
+}
+
+void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
+	qDebug() << "onBindImageUrl";
 	qDebug() << reply->readAll();
 	reply->deleteLater();
 }

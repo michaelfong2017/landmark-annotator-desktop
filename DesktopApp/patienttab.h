@@ -15,6 +15,7 @@ public:
     DesktopApp* getParent();
     void onEnterTab();
     void setCurrentPatientId(int currentPatientId);
+    int getCurrentPatientId();
     void setName(QString name);
     void setAge(QString age);
     void setSubjectNumber(QString subjectNumber);

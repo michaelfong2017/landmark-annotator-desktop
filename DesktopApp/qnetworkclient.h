@@ -29,6 +29,7 @@ public:
     void uploadNewPatient(Patient patient, const QObject* receiver, const char* member);
     void fetchExistingImagesOfPatient(int patientId, const QObject* receiver, const char* member);
     void uploadImage(cv::Mat image, const QObject* receiver, const char* member);
+    void bindImageUrl(int patientId, QString url, const QObject* receiver, const char* member);
 
 private:
     QNetworkClient();

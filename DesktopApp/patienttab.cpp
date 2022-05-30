@@ -38,6 +38,10 @@ void PatientTab::setCurrentPatientId(int currentPatientId) {
     this->currentPatientId = currentPatientId;
 }
 
+int PatientTab::getCurrentPatientId() {
+    return this->currentPatientId;
+}
+
 void PatientTab::setName(QString name)
 {
     this->name = name;

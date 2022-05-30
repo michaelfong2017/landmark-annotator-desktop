@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "helper.h"
 #include "annotatetab.h"
+#include "patienttab.h"
 #include "desktopapp.h"
 #include "recorder.h"
 #include <k4a/k4a.hpp>
@@ -69,6 +70,7 @@ private:
 
 private slots:
     void onUploadImage(QNetworkReply* reply);
+    void onBindImageUrl(QNetworkReply* reply);
 };
 
 #endif
