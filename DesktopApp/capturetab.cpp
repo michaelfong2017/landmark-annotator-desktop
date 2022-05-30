@@ -132,6 +132,55 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
 		this->noImageCaptured = false;
 
+		/*
+		* Display captured images
+		*/
+		this->qColorImage = convertColorCVToQImage(color);
+		this->qDepthImage = convertDepthCVToQImage(depth);
+		this->qColorToDepthImage = convertColorToDepthCVToQImage(colorToDepth);
+		this->qDepthToColorImage = convertDepthToColorCVToQImage(depthToColor);
+		// For annotatetab instead
+		this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(depthToColor);
+		// For annotatetab instead END
+
+		QImage image;
+
+		// only for initial state
+		if (this->parent->ui.radioButton->isChecked()) {
+			image = this->getQColorImage();
+		}
+		else if (this->parent->ui.radioButton2->isChecked()) {
+			image = this->getQDepthImage();
+		}
+		else if (this->parent->ui.radioButton3->isChecked()) {
+			image = this->getQColorToDepthImage();
+		}
+		else {
+			image = this->getQDepthToColorImage();
+		}
+
+		int width = this->parent->ui.graphicsViewImage->width();
+		int height = this->parent->ui.graphicsViewImage->height();
+
+		QImage imageScaled = image.scaled(width, height, Qt::KeepAspectRatio);
+
+		// Deallocate heap memory used by previous GGraphicsScene object
+		if (this->parent->ui.graphicsViewImage->scene()) {
+			delete this->parent->ui.graphicsViewImage->scene();
+		}
+
+		QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
+		QGraphicsScene* scene = new QGraphicsScene;
+		scene->addItem(item);
+
+		this->parent->ui.graphicsViewImage->setScene(scene);
+		this->parent->ui.graphicsViewImage->show();
+		/*
+		* Display captured images END
+		*/
+		});
+
+	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
 		/* New Code Here */
 		cv::Mat color3 = this->capturedColorImage;
 		std::vector<cv::Mat>channelsForColor2(3);
@@ -153,7 +202,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		channels3[3] = channelsForDepth2[0];
 
 		cv::merge(channels3, FourChannelPNG);
-		
+
 		// *** This is the image that needed to be sent to server ***
 		//cv::imshow("Combined Image", FourChannelPNG);
 		//cv::imwrite("C:/Users/User/Documents/GitHub/landmark-annotator-desktop/x64/Debug/FourChannelMix.png", FourChannelPNG);
@@ -209,62 +258,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		*/
 
 		/* New Code Ends Here */
-
-		/*
-		* Display captured images
-		*/
-		this->qColorImage = convertColorCVToQImage(color);
-		this->qDepthImage = convertDepthCVToQImage(depth);
-		this->qColorToDepthImage = convertColorToDepthCVToQImage(colorToDepth);
-		this->qDepthToColorImage = convertDepthToColorCVToQImage(depthToColor);
-		// For annotatetab instead
-		this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(depthToColor);
-		// For annotatetab instead END
-
-		QImage image;
-
-		// only for initial state
-		if (this->parent->ui.radioButton->isChecked()) {
-			image = this->getQColorImage();
-		}
-		else if (this->parent->ui.radioButton2->isChecked()) {
-			image = this->getQDepthImage();
-		}
-		else if (this->parent->ui.radioButton3->isChecked()) {
-			image = this->getQColorToDepthImage();
-		}
-		else {
-			image = this->getQDepthToColorImage();
-		}
-
-		int width = this->parent->ui.graphicsViewImage->width();
-		int height = this->parent->ui.graphicsViewImage->height();
-
-		QImage imageScaled = image.scaled(width, height, Qt::KeepAspectRatio);
-
-		// Deallocate heap memory used by previous GGraphicsScene object
-		if (this->parent->ui.graphicsViewImage->scene()) {
-			delete this->parent->ui.graphicsViewImage->scene();
-		}
-
-		QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
-		QGraphicsScene* scene = new QGraphicsScene;
-		scene->addItem(item);
-
-		this->parent->ui.graphicsViewImage->setScene(scene);
-		this->parent->ui.graphicsViewImage->show();
-		/*
-		* Display captured images END
-		*/
-		});
-
-	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
-		/** Send RGBImageArray and DepthToRGBImageArray to server */
-		QImage colorImage = this->getQColorImage();
-		QImage depthToColorImage = this->getQDepthToColorImage();
-
-		uploadRGBImageArrayAndDepthToRGBImageArray(manager, QUrl("http://127.0.0.1:8000/uploadimages"), QString("image_id_001"), 4, colorImage, depthToColorImage);
-		/** Send to server END */
 
 		// Move to annotate tab whose index is 4
 		this->parent->annotateTab->reloadCurrentImage();
