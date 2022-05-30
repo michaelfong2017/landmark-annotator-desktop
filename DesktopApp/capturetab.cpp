@@ -206,9 +206,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		QNetworkClient::getInstance().uploadImage(FourChannelPNG, this, SLOT(onUploadImage(QNetworkReply*)));
 		/* Convert to the special 4 channels image and upload END */
 
-		// Move to annotate tab whose index is 4
-		this->parent->annotateTab->reloadCurrentImage();
-		this->parent->ui.tabWidget->setCurrentIndex(4);
+		// Moving to annotate tab will be done after the series of requests is sent to obtain the landmark predictions */
 		});
 
 	QObject::connect(timer, &QTimer::timeout, [this]() {
@@ -468,9 +466,42 @@ void CaptureTab::onUploadImage(QNetworkReply* reply) {
 }
 
 void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
-	qDebug() << "onBindImageUrl";
-	qDebug() << reply->readAll();
+	QByteArray response_data = reply->readAll();
 	reply->deleteLater();
+
+	QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
+
+	QJsonObject obj = jsonResponse.object();
+	int imageId = obj["id"].toInt();
+
+	QNetworkClient::getInstance().findLandmarkPredictions(imageId, this, SLOT(onFindLandmarkPredictions(QNetworkReply*)));
+}
+
+void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
+	QByteArray response_data = reply->readAll();
+	reply->deleteLater();
+
+	QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
+
+	qDebug() << jsonResponse;
+
+	QJsonObject obj = jsonResponse.object();
+	QString aiImageUrl = obj["aiImageUrl"].toString();
+	QString aiOriginResult = obj["aiOriginResult"].toString();
+
+	qDebug() << aiImageUrl;
+	qDebug() << aiOriginResult;
+
+	QStringList list = aiOriginResult.split(",");
+	for (int i = 0; i < list.size(); i++) {
+		QString chopped = list[i].remove("[]");
+		qDebug() << chopped;
+	}
+	AnnotateTab* annotateTab = this->parent->annotateTab;
+
+	// Move to annotate tab which index is 4
+	this->parent->annotateTab->reloadCurrentImage();
+	this->parent->ui.tabWidget->setCurrentIndex(4);
 }
 
 cv::Mat CaptureTab::getCapturedColorImage() {

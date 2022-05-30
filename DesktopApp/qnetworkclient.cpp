@@ -183,3 +183,14 @@ void QNetworkClient::bindImageUrl(int patientId, QString url, const QObject* rec
 
     manager->post(request, data);
 }
+
+void QNetworkClient::findLandmarkPredictions(int imageId, const QObject* receiver, const char* member) {
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1").arg(imageId)));
+    request.setRawHeader("Authorization", userToken.toUtf8());
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
+
+    manager->get(request);
+}

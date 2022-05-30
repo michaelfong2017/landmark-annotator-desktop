@@ -145,6 +145,8 @@ void AnnotateTab::reloadCurrentImage() {
 
 
 	// Reset annotations
+	this->scalingFactor = std::min(this->qDepthToColorColorizedImage.width() / (float)this->annotatedDepthToColorColorizedImage.width(), this->qDepthToColorColorizedImage.height() / (float)this->annotatedDepthToColorColorizedImage.height());
+
 	this->annotations.clear();
 
 	this->annotations.insert({ "C", QPointF(240.0f, 70.0f) });
@@ -154,8 +156,14 @@ void AnnotateTab::reloadCurrentImage() {
 	this->annotations.insert({ "B2", QPointF(260.0f, 165.0f) });
 	this->annotations.insert({ "D", QPointF(240.0f, 185.0f) });
 
+	//this->annotations.insert({ "C", QPointF(predictedCX / scalingFactor, predictedCY / scalingFactor) });
+	//this->annotations.insert({ "A1", QPointF(predictedA1X / scalingFactor, predictedA1Y / scalingFactor) });
+	//this->annotations.insert({ "A2", QPointF(predictedA2X / scalingFactor, predictedA2Y / scalingFactor) });
+	//this->annotations.insert({ "B1", QPointF(predictedB1X / scalingFactor, predictedB1Y / scalingFactor) });
+	//this->annotations.insert({ "B2", QPointF(predictedB2X / scalingFactor, predictedB2Y / scalingFactor) });
+	//this->annotations.insert({ "D", QPointF(predictedDX / scalingFactor, predictedDY / scalingFactor) });
+
 	int x, y;
-	this->scalingFactor = std::min(this->qDepthToColorColorizedImage.width() / (float)this->annotatedDepthToColorColorizedImage.width(), this->qDepthToColorColorizedImage.height() / (float)this->annotatedDepthToColorColorizedImage.height());
 
 	//qDebug() << this->qDepthToColorColorizedImage.width();
 	//qDebug() << this->annotatedDepthToColorColorizedImage.width();

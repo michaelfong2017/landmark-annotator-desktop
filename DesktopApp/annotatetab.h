@@ -37,6 +37,22 @@ public:
     std::map<std::string, QVector3D>* getAnnotations3D();
     void computeMetrics();
 
+    // Landmark predictions
+    // Conceptually should be private but in order to avoid long script, public is used.
+    float predictedA1X;
+    float predictedA1Y;
+    float predictedA2X;
+    float predictedA2Y;
+    float predictedB1X;
+    float predictedB1Y;
+    float predictedB2X;
+    float predictedB2Y;
+    float predictedCX;
+    float predictedCY;
+    float predictedDX;
+    float predictedDY;
+    // Landmark predictions END
+
 private:
     cv::Mat depthToColorImage;
 

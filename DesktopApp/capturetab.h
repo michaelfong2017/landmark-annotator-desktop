@@ -71,6 +71,7 @@ private:
 private slots:
     void onUploadImage(QNetworkReply* reply);
     void onBindImageUrl(QNetworkReply* reply);
+    void onFindLandmarkPredictions(QNetworkReply* reply);
 };
 
 #endif

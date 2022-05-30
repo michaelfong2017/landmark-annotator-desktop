@@ -104,7 +104,7 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
             QString text;
             switch (i) {
                 case 0:
-                    text = obj["auditDate"].toString();
+                    text = obj["aiDiagnosisDate"].toString();
                     break;
                 case 1:
                     text = obj["url"].toString();
