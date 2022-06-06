@@ -28,6 +28,7 @@ SaveImageDialog::SaveImageDialog(CaptureTab* parent)
 		QString dateTimeString = Helper::getCurrentDateTimeString();
 		QString visitFolderPath = Helper::getVisitFolderPath(this->parent->getParent()->savePath);
 		Patient patient = this->parent->getParent()->patient;
+		qDebug() << "Patient:" << QString::fromStdString(patient.getSubjectNumber());
 		QString colorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(patient.getSubjectNumber() + "_" + patient.getName() + "_" + dateTimeString.toStdString() + "_color.png"));
 		QString depthToColorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(patient.getSubjectNumber() + "_" + patient.getName() + "_" + dateTimeString.toStdString() + "_depth_aligned.png"));
 		QString depthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(patient.getSubjectNumber() + "_" + patient.getName() + "_" + dateTimeString.toStdString() + "_depth.png"));

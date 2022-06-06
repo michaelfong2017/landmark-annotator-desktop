@@ -205,6 +205,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		cv::merge(channels3, FourChannelPNG);
 
+		qDebug() << "Merging image completed";
+
 		QNetworkClient::getInstance().uploadImage(FourChannelPNG, this, SLOT(onUploadImage(QNetworkReply*)));
 		/* Convert to the special 4 channels image and upload END */
 

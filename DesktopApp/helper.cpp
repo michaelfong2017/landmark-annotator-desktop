@@ -17,8 +17,11 @@ QString Helper::getCurrentDateString() {
 QString Helper::getVisitFolderPath(QDir parentDir) {
     QString visitFolder = Helper::getCurrentDateString();
 
-    if (parentDir.cd(visitFolder)) return parentDir.absolutePath();
-    else {
+    if (parentDir.cd(visitFolder)) {
+        return parentDir.absolutePath();
+    }
+    else 
+    {
         parentDir.mkdir(visitFolder);
         parentDir.cd(visitFolder);
         return parentDir.absolutePath();

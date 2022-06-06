@@ -35,7 +35,7 @@ void QNetworkClient::onLogin(QNetworkReply* reply) {
 void QNetworkClient::fetchPatientList(const QObject* receiver, const char* member) {
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients"));
+    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients?MaxResultCount=100"));
     request.setRawHeader("Authorization", this->userToken.toUtf8());
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
@@ -59,10 +59,10 @@ void QNetworkClient::checkNewPatient(Patient patient, const QObject* receiver, c
         sex = 1;
         break;
     case Sex::Female:
-        sex = 0;
+        sex = 2;
         break;
     default:
-        sex = -1;
+        sex = 0;
         break;
     }
 
@@ -101,10 +101,10 @@ void QNetworkClient::uploadNewPatient(Patient patient, const QObject* receiver, 
         sex = 1;
         break;
     case Sex::Female:
-        sex = 0;
+        sex = 2;
         break;
     default:
-        sex = -1;
+        sex = 0;
         break;
     }
 

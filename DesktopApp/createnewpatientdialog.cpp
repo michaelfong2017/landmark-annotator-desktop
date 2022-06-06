@@ -13,6 +13,7 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
         bool isPatientDataValid = true;
 
         std::string name, hkid, phone, email, subjectNumber, socialSecurityNumber, nationality, address;
+        QDate dob;
 
         // Validate mandatory fields
         if ((name = ui.nameInput->toPlainText().toStdString()) != "") {
@@ -28,10 +29,13 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
         else isPatientDataValid = false;
 
         // Parse date of birth (DOB)
-        qDebug() << ui.dobInput->selectedDate();
+        qDebug() << "ui.dobInput->selectedDate()" << ui.dobInput->selectedDate().toString("yyyy.MM.dd");
         //else isPatientDataValid = false;
 
         // Optional fields
+        dob = ui.dobInput->selectedDate();
+        patient.setDOB(dob);
+
         socialSecurityNumber = ui.socialSecurityInput->toPlainText().toStdString();
         patient.setSocialSecurityNumber(socialSecurityNumber);
 
