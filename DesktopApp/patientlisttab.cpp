@@ -75,6 +75,9 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     QJsonObject jsonObject = jsonResponse.object();
     QJsonArray jsonArray = jsonObject["items"].toArray();
 
+    qDebug() << jsonArray;
+    qDebug() << "Number of returned items:" << jsonArray.size();
+
 
     foreach(const QJsonValue &value, jsonArray) {
         QJsonObject obj = value.toObject();
@@ -101,11 +104,29 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
                     text = obj["name"].toString();
                  break;
                 case 1:
-                    text = obj["sex"].toString();
+                    text = obj["sexTxt"].toString();
                     break;
                 case 2:
-                    text = obj["birthday"].toString();
+                {
+                    if (obj["birthday"].toString().isEmpty()) {
+                        text = QString();
+                        break;
+                    }
+
+                    QDate date = QDate::fromString(obj["birthday"].toString(), "yyyy-MM-dd");
+                    QDate today = QDate::currentDate();
+                    int age = today.year() - date.year();
+
+                    if (today.month() < date.month()) {
+                        age--;
+                    }
+                    else if (today.month() == date.month() && today.day() < date.day()) {
+                        age--;
+                    }
+
+                    text = QString::number(age);
                     break;
+                }
                 case 3:
                     text = obj["phoneNumber"].toString();
                     break;

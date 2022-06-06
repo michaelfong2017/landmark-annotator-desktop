@@ -66,71 +66,71 @@ void AnnotateTab::reloadCurrentImage() {
 		return;
 	}
 
-	/** New plane calculation */
-	float* p;
-	p = KinectEngine::getInstance().findPlaneEquationCoefficients(this->depthToColorImage);
-	/** New plane calculation END */
+	///** New plane calculation */
+	//float* p;
+	//p = KinectEngine::getInstance().findPlaneEquationCoefficients(this->depthToColorImage);
+	///** New plane calculation END */
 
-	/** Calculate plane equation and distance to plane of each 3D point */
-	/**** Get the 3D coordinates of 3 reference points that are assumed to lie on the plane. */
-	// HARD CODED VALUES
-	float x1_2D = 360.0f;
-	float y1_2D = 360.0f;
-	float x2_2D = 750.0f;
-	float y2_2D = 250.0f;
-	float x3_2D = 750.0f;
-	float y3_2D = 470.0f;
-	// HARD CODED VALUES END
+	///** Calculate plane equation and distance to plane of each 3D point */
+	///**** Get the 3D coordinates of 3 reference points that are assumed to lie on the plane. */
+	//// HARD CODED VALUES
+	//float x1_2D = 360.0f;
+	//float y1_2D = 360.0f;
+	//float x2_2D = 750.0f;
+	//float y2_2D = 250.0f;
+	//float x3_2D = 750.0f;
+	//float y3_2D = 470.0f;
+	//// HARD CODED VALUES END
 
-	QVector3D vector3D_1 = KinectEngine::getInstance().query3DPoint(x1_2D, y1_2D, this->depthToColorImage);
-	QVector3D vector3D_2 = KinectEngine::getInstance().query3DPoint(x2_2D, y2_2D, this->depthToColorImage);
-	QVector3D vector3D_3 = KinectEngine::getInstance().query3DPoint(x3_2D, y3_2D, this->depthToColorImage);
+	//QVector3D vector3D_1 = KinectEngine::getInstance().query3DPoint(x1_2D, y1_2D, this->depthToColorImage);
+	//QVector3D vector3D_2 = KinectEngine::getInstance().query3DPoint(x2_2D, y2_2D, this->depthToColorImage);
+	//QVector3D vector3D_3 = KinectEngine::getInstance().query3DPoint(x3_2D, y3_2D, this->depthToColorImage);
 
-	/**** Get the 3D coordinates of 3 reference points that are assumed to lie on the plane. END */
-	float* abcd;
-	abcd = KinectEngine::getInstance().findPlaneEquationCoefficients(
-		vector3D_1.x(), vector3D_1.y(), vector3D_1.z(),
-		vector3D_2.x(), vector3D_2.y(), vector3D_2.z(),
-		vector3D_3.x(), vector3D_3.y(), vector3D_3.z()
-	);
+	///**** Get the 3D coordinates of 3 reference points that are assumed to lie on the plane. END */
+	//float* abcd;
+	//abcd = KinectEngine::getInstance().findPlaneEquationCoefficients(
+	//	vector3D_1.x(), vector3D_1.y(), vector3D_1.z(),
+	//	vector3D_2.x(), vector3D_2.y(), vector3D_2.z(),
+	//	vector3D_3.x(), vector3D_3.y(), vector3D_3.z()
+	//);
 
-	float a = abcd[0];
-	float b = abcd[1];
-	float c = abcd[2];
-	float d = abcd[3];
+	//float a = abcd[0];
+	//float b = abcd[1];
+	//float c = abcd[2];
+	//float d = abcd[3];
 
-	qDebug() << "Equation of plane is " << a << " x + " << b
-		<< " y + " << c << " z + " << d << " = 0.";
+	//qDebug() << "Equation of plane is " << a << " x + " << b
+	//	<< " y + " << c << " z + " << d << " = 0.";
 
-	cv::Mat out = cv::Mat::zeros(depthToColorImage.rows, depthToColorImage.cols, CV_16UC1);
-	float maxDistance = 0.0f;
-	for (int y = 0; y < depthToColorImage.rows; y++) {
-		for (int x = 0; x < depthToColorImage.cols; x++) {
-			QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->depthToColorImage);
-			
-			if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
-				out.at<uint16_t>(y, x) = 0.0f;
-				continue;
-			}
+	//cv::Mat out = cv::Mat::zeros(depthToColorImage.rows, depthToColorImage.cols, CV_16UC1);
+	//float maxDistance = 0.0f;
+	//for (int y = 0; y < depthToColorImage.rows; y++) {
+	//	for (int x = 0; x < depthToColorImage.cols; x++) {
+	//		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->depthToColorImage);
+	//		
+	//		if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
+	//			out.at<uint16_t>(y, x) = 0.0f;
+	//			continue;
+	//		}
 
-			float distance = KinectEngine::getInstance().findDistanceBetween3DPointAndPlane(vector3D.x(), vector3D.y(), vector3D.z(), a, b, c, d);
-			out.at<uint16_t>(y, x) = distance;
-			
-			if (distance > maxDistance) {
-				maxDistance = distance;
-			}
-		}
-	}
+	//		float distance = KinectEngine::getInstance().findDistanceBetween3DPointAndPlane(vector3D.x(), vector3D.y(), vector3D.z(), a, b, c, d);
+	//		out.at<uint16_t>(y, x) = distance;
+	//		
+	//		if (distance > maxDistance) {
+	//			maxDistance = distance;
+	//		}
+	//	}
+	//}
 
-	QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
-	QString depthSavePath = QDir(visitFolderPath).filePath("out.png");
+	//QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
+	//QString depthSavePath = QDir(visitFolderPath).filePath("out.png");
 
-	cv::Mat temp;
-	out.convertTo(temp, CV_8U, 255.0 / maxDistance, 0.0);
+	//cv::Mat temp;
+	//out.convertTo(temp, CV_8U, 255.0 / maxDistance, 0.0);
 
-	cv::imwrite(depthSavePath.toStdString(), temp);
+	//cv::imwrite(depthSavePath.toStdString(), temp);
 
-	/** Calculate plane equation and distance to plane of each 3D point END */
+	///** Calculate plane equation and distance to plane of each 3D point END */
 
 	this->qColorImage = this->parent->captureTab->getQColorImage().copy();
 	this->qDepthToColorColorizedImage = this->parent->captureTab->getQDepthToColorColorizedImage().copy();

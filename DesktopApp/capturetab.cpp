@@ -181,6 +181,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		});
 
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
+		qDebug() << "Analysis button clicked";
+
 		/* Convert to the special 4 channels image and upload */
 		cv::Mat color3 = this->capturedColorImage;
 		std::vector<cv::Mat>channelsForColor2(3);
@@ -195,8 +197,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		cv::split(FourChannelPNG, channels3);
 
 		for (int i = 0; i < 1280 * 720; i++) {
-			channels3[0].at<uint16_t>(i) = (channelsForColor2[0].at<uint8_t>(i) << 8) | channelsForColor2[1].at<uint8_t>(i);
-			channels3[1].at<uint16_t>(i) = (channelsForColor2[2].at<uint8_t>(i) << 8);
+			channels3[0].at<uint16_t>(i) = (channelsForColor2[2].at<uint8_t>(i) << 8) | channelsForColor2[1].at<uint8_t>(i);
+			channels3[1].at<uint16_t>(i) = (channelsForColor2[0].at<uint8_t>(i) << 8);
 		}
 		channels3[2] = channelsForDepth2[0];
 		channels3[3] = channelsForDepth2[0];
@@ -460,24 +462,35 @@ void CaptureTab::onManagerFinished(QNetworkReply* reply)
 void CaptureTab::onUploadImage(QNetworkReply* reply) {
 	qDebug() << "onUploadImage";
 	QString url = reply->readAll();
+
+	qDebug() << url;
+
 	reply->deleteLater();
 
 	QNetworkClient::getInstance().bindImageUrl(this->parent->patientTab->getCurrentPatientId(), url, this, SLOT(onBindImageUrl(QNetworkReply*)));
 }
 
 void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
+	qDebug() << "onBindImageUrl";
+	
 	QByteArray response_data = reply->readAll();
 	reply->deleteLater();
 
 	QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
 
+	qDebug() << jsonResponse;
+
 	QJsonObject obj = jsonResponse.object();
 	int imageId = obj["id"].toInt();
+
+	qDebug() << "id:" << imageId;
 
 	QNetworkClient::getInstance().findLandmarkPredictions(imageId, this, SLOT(onFindLandmarkPredictions(QNetworkReply*)));
 }
 
 void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
+	qDebug() << "onFindLandmarkPredictions";
+
 	QByteArray response_data = reply->readAll();
 	reply->deleteLater();
 
@@ -489,13 +502,13 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	QString aiImageUrl = obj["aiImageUrl"].toString();
 	QString aiOriginResult = obj["aiOriginResult"].toString();
 
-	qDebug() << aiImageUrl;
-	qDebug() << aiOriginResult;
+	qDebug() << "aiImageUrl:" << aiImageUrl;
+	qDebug() << "aiOriginResult:" << aiOriginResult;
 
 	QStringList list = aiOriginResult.split(",");
 	for (int i = 0; i < list.size(); i++) {
 		QString chopped = list[i].remove("[]");
-		qDebug() << chopped;
+		//qDebug() << chopped;
 	}
 	AnnotateTab* annotateTab = this->parent->annotateTab;
 

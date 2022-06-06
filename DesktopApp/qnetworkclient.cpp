@@ -5,7 +5,9 @@ QNetworkClient::QNetworkClient() : QWidget() {
     
 }
 
-void QNetworkClient::login() {
+void QNetworkClient::login(QTabWidget* qTabWidget) {
+    this->qTabWidget = qTabWidget;
+
     // Login
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
@@ -26,6 +28,8 @@ void QNetworkClient::onLogin(QNetworkReply* reply) {
     this->userToken = QString::fromStdString("Bearer " + reply->readAll().toStdString());
     qDebug() << this->userToken;
     reply->deleteLater();
+
+    qTabWidget->setCurrentIndex(1);
 }
 
 void QNetworkClient::fetchPatientList(const QObject* receiver, const char* member) {

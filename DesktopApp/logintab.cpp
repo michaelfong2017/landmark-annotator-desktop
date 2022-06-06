@@ -13,7 +13,7 @@ LoginTab::LoginTab(DesktopApp* parent)
 
 		qDebug() << username << password;
 
-		QNetworkClient::getInstance().login();
+		QNetworkClient::getInstance().login(this->parent->ui.tabWidget);
 	});
 }
 
