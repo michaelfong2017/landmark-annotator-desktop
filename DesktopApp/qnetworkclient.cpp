@@ -144,6 +144,9 @@ void QNetworkClient::fetchExistingImagesOfPatient(int patientId, const QObject* 
 }
 
 void QNetworkClient::uploadImage(cv::Mat image, const QObject* receiver, const char* member) {
+
+    qDebug() << "uploadImage: " << image.channels();
+
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
     QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/api/v1/upload")));
@@ -169,6 +172,9 @@ void QNetworkClient::uploadImage(cv::Mat image, const QObject* receiver, const c
 }
 
 void QNetworkClient::bindImageUrl(int patientId, QString url, const QObject* receiver, const char* member) {
+
+    qDebug() << "bindImageUrl";
+
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
     QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/images"));
@@ -193,6 +199,8 @@ void QNetworkClient::findLandmarkPredictions(int imageId, const QObject* receive
 
     QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1").arg(imageId)));
     request.setRawHeader("Authorization", userToken.toUtf8());
+
+    qDebug() << QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1").arg(imageId));
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
 

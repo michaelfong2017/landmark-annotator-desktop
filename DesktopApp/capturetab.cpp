@@ -2,6 +2,7 @@
 #include "saveimagedialog.h"
 #include "devicemovingdialog.h"
 #include "kinectengine.h"
+#include <Windows.h>
 
 CaptureTab::CaptureTab(DesktopApp* parent)
 {
@@ -485,7 +486,9 @@ void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
 	QJsonObject obj = jsonResponse.object();
 	int imageId = obj["id"].toInt();
 
-	qDebug() << "id:" << imageId;
+	qDebug() << "Sleep 2 seconds";
+
+	Sleep(2000);
 
 	QNetworkClient::getInstance().findLandmarkPredictions(imageId, this, SLOT(onFindLandmarkPredictions(QNetworkReply*)));
 }
