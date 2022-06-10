@@ -6,7 +6,7 @@ QPointF getRandomPoint(int maxWidth, int maxHeight) {
 	int randX = rand() % (maxWidth + 1);
 	int randY = rand() % (maxHeight + 1);
 
-	return QPointF((float) randX, (float) randY);
+	return QPointF((float)randX, (float)randY);
 }
 
 AnnotateTab::AnnotateTab(DesktopApp* parent) {
@@ -51,7 +51,102 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 		jsonFile.write(document.toJson());
 
 		this->parent->ui.saveInfoAnnotateTab->setText("Images saved as " + colorSavePath + " and " + depthToColorSavePath);
-	});
+		});
+
+	QObject::connect(this->parent->ui.confirmLandmarksButton, &QPushButton::clicked, [this]() {
+		qDebug() << "confirmLandmarksButton clicked";
+
+		QString aiOriginResult = QString("[[");
+
+		float x, y;
+		QPointF second;
+
+		// C
+		second = this->annotations.at("C");
+		x = second.x();
+		y = second.y();
+		x *= this->scalingFactor;
+		y *= this->scalingFactor;
+
+		// One decimal place, e.g., 170.0
+		aiOriginResult += QString("%1").arg(x, 0, 'f', 1);
+		aiOriginResult += ",";
+		aiOriginResult += QString("%1").arg(y, 0, 'f', 1);
+		aiOriginResult += "],[";
+		// C END
+
+		// A1
+		second = this->annotations.at("A1");
+		x = second.x();
+		y = second.y();
+		x *= this->scalingFactor;
+		y *= this->scalingFactor;
+
+		// One decimal place, e.g., 170.0
+		aiOriginResult += QString("%1").arg(x, 0, 'f', 1);
+		aiOriginResult += ",";
+		aiOriginResult += QString("%1").arg(y, 0, 'f', 1);
+		aiOriginResult += "],[";
+		// A1 END
+
+		// A2
+		second = this->annotations.at("A2");
+		x = second.x();
+		y = second.y();
+		x *= this->scalingFactor;
+		y *= this->scalingFactor;
+
+		// One decimal place, e.g., 170.0
+		aiOriginResult += QString("%1").arg(x, 0, 'f', 1);
+		aiOriginResult += ",";
+		aiOriginResult += QString("%1").arg(y, 0, 'f', 1);
+		aiOriginResult += "],[";
+		// A2 END
+
+		// B1
+		second = this->annotations.at("B1");
+		x = second.x();
+		y = second.y();
+		x *= this->scalingFactor;
+		y *= this->scalingFactor;
+
+		// One decimal place, e.g., 170.0
+		aiOriginResult += QString("%1").arg(x, 0, 'f', 1);
+		aiOriginResult += ",";
+		aiOriginResult += QString("%1").arg(y, 0, 'f', 1);
+		aiOriginResult += "],[";
+		// B1 END
+
+		// B2
+		second = this->annotations.at("B2");
+		x = second.x();
+		y = second.y();
+		x *= this->scalingFactor;
+		y *= this->scalingFactor;
+
+		// One decimal place, e.g., 170.0
+		aiOriginResult += QString("%1").arg(x, 0, 'f', 1);
+		aiOriginResult += ",";
+		aiOriginResult += QString("%1").arg(y, 0, 'f', 1);
+		aiOriginResult += "],[";
+		// B2 END
+
+		// D
+		second = this->annotations.at("D");
+		x = second.x();
+		y = second.y();
+		x *= this->scalingFactor;
+		y *= this->scalingFactor;
+
+		// One decimal place, e.g., 170.0
+		aiOriginResult += QString("%1").arg(x, 0, 'f', 1);
+		aiOriginResult += ",";
+		aiOriginResult += QString("%1").arg(y, 0, 'f', 1);
+		aiOriginResult += "]]";
+		// D END
+
+		qDebug() << aiOriginResult;
+		});
 }
 
 void AnnotateTab::reloadCurrentImage() {
@@ -149,19 +244,19 @@ void AnnotateTab::reloadCurrentImage() {
 
 	this->annotations.clear();
 
-	this->annotations.insert({ "C", QPointF(240.0f, 70.0f) });
-	this->annotations.insert({ "A1", QPointF(220.0f, 130.0f) });
-	this->annotations.insert({ "A2", QPointF(260.0f, 130.0f) });
-	this->annotations.insert({ "B1", QPointF(220.0f, 165.0f) });
-	this->annotations.insert({ "B2", QPointF(260.0f, 165.0f) });
-	this->annotations.insert({ "D", QPointF(240.0f, 185.0f) });
+	//this->annotations.insert({ "C", QPointF(240.0f, 70.0f) });
+	//this->annotations.insert({ "A1", QPointF(220.0f, 130.0f) });
+	//this->annotations.insert({ "A2", QPointF(260.0f, 130.0f) });
+	//this->annotations.insert({ "B1", QPointF(220.0f, 165.0f) });
+	//this->annotations.insert({ "B2", QPointF(260.0f, 165.0f) });
+	//this->annotations.insert({ "D", QPointF(240.0f, 185.0f) });
 
-	//this->annotations.insert({ "C", QPointF(predictedCX / scalingFactor, predictedCY / scalingFactor) });
-	//this->annotations.insert({ "A1", QPointF(predictedA1X / scalingFactor, predictedA1Y / scalingFactor) });
-	//this->annotations.insert({ "A2", QPointF(predictedA2X / scalingFactor, predictedA2Y / scalingFactor) });
-	//this->annotations.insert({ "B1", QPointF(predictedB1X / scalingFactor, predictedB1Y / scalingFactor) });
-	//this->annotations.insert({ "B2", QPointF(predictedB2X / scalingFactor, predictedB2Y / scalingFactor) });
-	//this->annotations.insert({ "D", QPointF(predictedDX / scalingFactor, predictedDY / scalingFactor) });
+	this->annotations.insert({ "C", QPointF(predictedCX / scalingFactor, predictedCY / scalingFactor) });
+	this->annotations.insert({ "A1", QPointF(predictedA1X / scalingFactor, predictedA1Y / scalingFactor) });
+	this->annotations.insert({ "A2", QPointF(predictedA2X / scalingFactor, predictedA2Y / scalingFactor) });
+	this->annotations.insert({ "B1", QPointF(predictedB1X / scalingFactor, predictedB1Y / scalingFactor) });
+	this->annotations.insert({ "B2", QPointF(predictedB2X / scalingFactor, predictedB2Y / scalingFactor) });
+	this->annotations.insert({ "D", QPointF(predictedDX / scalingFactor, predictedDY / scalingFactor) });
 
 	int x, y;
 
@@ -203,17 +298,17 @@ void AnnotateTab::drawAnnotations() {
 	this->recopyAnnotatedImage();
 
 	// Deallocate heap memory used by previous GGraphicsScene object
-    if (this->colorScene) delete this->colorScene;
-    if (this->depthToColorScene) delete this->depthToColorScene;
-	
+	if (this->colorScene) delete this->colorScene;
+	if (this->depthToColorScene) delete this->depthToColorScene;
+
 	this->colorScene = new DragAndDropGraphicsScene(this, ImageType::Color);
 	this->depthToColorScene = new DragAndDropGraphicsScene(this, ImageType::DepthToColor);
-	
+
 	this->parent->ui.graphicsViewAnnotation->setScene(this->colorScene);
-    this->parent->ui.graphicsViewAnnotation->show();
+	this->parent->ui.graphicsViewAnnotation->show();
 
 	this->parent->ui.graphicsViewAnnotation2->setScene(this->depthToColorScene);
-    this->parent->ui.graphicsViewAnnotation2->show();
+	this->parent->ui.graphicsViewAnnotation2->show();
 }
 
 QImage* AnnotateTab::getQColorImage() {
@@ -234,7 +329,7 @@ std::map<std::string, QPointF>* AnnotateTab::getAnnotations() {
 
 void AnnotateTab::setAnnotationsText() {
 	QString text = "";
-	for(auto it: this->annotations3D) {
+	for (auto it : this->annotations3D) {
 		int x = it.second.x(), y = it.second.y(), z = it.second.z();
 		std::string plain_s = "Point " + it.first + ": (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")\n";
 		QString str = QString::fromUtf8(plain_s.c_str());
@@ -270,7 +365,7 @@ QJsonDocument AnnotateTab::getAnnotationsJson() {
 	if (!this->annotations["A1"].isNull()) {
 		QJsonObject coordinates;
 
-		for(auto it: this->annotations) {
+		for (auto it : this->annotations) {
 			QJsonObject coordinate;
 			coordinate.insert("x", it.second.x());
 			coordinate.insert("y", it.second.y());
@@ -302,17 +397,17 @@ std::map<std::string, QVector3D>* AnnotateTab::getAnnotations3D() {
 
 void AnnotateTab::computeMetrics() {
 	const float PI = 3.14159265;
-	this->distance1 = (this->annotations3D["D"].x() - this->annotations3D["C"].x())/10;
-	
+	this->distance1 = (this->annotations3D["D"].x() - this->annotations3D["C"].x()) / 10;
+
 	//Angle between b1-b2 line and xy-plane
 	float yDiff = this->annotations3D["B1"].y() - this->annotations3D["B2"].y();
 	//float xyDistance = std::sqrt(std::pow(this->annotations3D["b1"].x() - this->annotations3D["b2"].x(), 2) + std::pow(this->annotations3D["b1"].y() - this->annotations3D["b2"].y(), 2));
 	float xDistance = this->annotations3D["B2"].x() - this->annotations3D["B1"].x();
-	this->angle1 = std::atan(yDiff/xDistance) * 180 / PI;
+	this->angle1 = std::atan(yDiff / xDistance) * 180 / PI;
 
 	//Angle between c1-c2 line and xy-plane
 	yDiff = this->annotations3D["A1"].y() - this->annotations3D["A2"].y();
 	//xyDistance = std::sqrt(std::pow(this->annotations3D["c1"].x() - this->annotations3D["c2"].x(), 2) + std::pow(this->annotations3D["c1"].y() - this->annotations3D["c2"].y(), 2));
 	xDistance = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
-	this->angle2 = std::atan(yDiff/xDistance) * 180 / PI;
+	this->angle2 = std::atan(yDiff / xDistance) * 180 / PI;
 }

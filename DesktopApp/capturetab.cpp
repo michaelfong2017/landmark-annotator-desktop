@@ -470,6 +470,11 @@ void CaptureTab::onUploadImage(QNetworkReply* reply) {
 
 	reply->deleteLater();
 
+	if (url.contains("error")) {
+		qCritical() << "onUploadImage received error reply!";
+		return;
+	}
+
 	QNetworkClient::getInstance().bindImageUrl(this->parent->patientTab->getCurrentPatientId(), url, this, SLOT(onBindImageUrl(QNetworkReply*)));
 }
 
@@ -486,9 +491,9 @@ void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
 	QJsonObject obj = jsonResponse.object();
 	int imageId = obj["id"].toInt();
 
-	qDebug() << "Sleep 2 seconds";
+	qDebug() << "Sleep 3 seconds";
 
-	Sleep(2000);
+	Sleep(3000);
 
 	QNetworkClient::getInstance().findLandmarkPredictions(imageId, this, SLOT(onFindLandmarkPredictions(QNetworkReply*)));
 }
@@ -510,12 +515,29 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	qDebug() << "aiImageUrl:" << aiImageUrl;
 	qDebug() << "aiOriginResult:" << aiOriginResult;
 
+	AnnotateTab* annotateTab = this->parent->annotateTab;
+
 	QStringList list = aiOriginResult.split(",");
 	for (int i = 0; i < list.size(); i++) {
-		QString chopped = list[i].remove("[]");
-		//qDebug() << chopped;
+		QString chopped = list[i].remove("[").remove("]");
+		float f = chopped.toFloat();
+		//qDebug() << f;
+
+		switch (i) {
+		case 0: annotateTab->predictedCX = f == 0.0f ? 240.0f : f; break;
+		case 1: annotateTab->predictedCY = f == 0.0f ? 70.0f : f; break;
+		case 2: annotateTab->predictedA1X = f == 0.0f ? 220.0f : f; break;
+		case 3: annotateTab->predictedA1Y = f == 0.0f ? 130.0f : f; break;
+		case 4: annotateTab->predictedA2X = f == 0.0f ? 260.0f : f; break;
+		case 5: annotateTab->predictedA2Y = f == 0.0f ? 130.0f : f; break;
+		case 6: annotateTab->predictedB1X = f == 0.0f ? 220.0f : f; break;
+		case 7: annotateTab->predictedB1Y = f == 0.0f ? 165.0f : f; break;
+		case 8: annotateTab->predictedB2X = f == 0.0f ? 260.0f : f; break;
+		case 9: annotateTab->predictedB2Y = f == 0.0f ? 165.0f : f; break;
+		case 10: annotateTab->predictedDX = f == 0.0f ? 240.0f : f; break;
+		case 11: annotateTab->predictedDY = f == 0.0f ? 185.0f : f; break;
+		}
 	}
-	AnnotateTab* annotateTab = this->parent->annotateTab;
 
 	// Move to annotate tab which index is 4
 	this->parent->annotateTab->reloadCurrentImage();
