@@ -206,3 +206,28 @@ void QNetworkClient::findLandmarkPredictions(int imageId, const QObject* receive
 
     manager->get(request);
 }
+
+void QNetworkClient::confirmLandmarks(int imageId, QString aiOriginResult, const QObject* receiver, const char* member) {
+
+    qDebug() << "confirmLandmarks";
+    qDebug() << "imageId: " << imageId;
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1/audit").arg(imageId)));
+    request.setRawHeader("Authorization", userToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QJsonObject obj;
+    obj["result"] = aiOriginResult;
+    obj["conditionStatus"] = 1;
+    obj["describe"] = "null";
+    obj["addResult"] = "null";
+    obj["scoliosisType"] = 0;
+
+    QByteArray data = QJsonDocument(obj).toJson();
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
+
+    manager->put(request, data);
+}

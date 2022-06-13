@@ -31,6 +31,7 @@ public:
     void uploadImage(cv::Mat image, const QObject* receiver, const char* member);
     void bindImageUrl(int patientId, QString url, const QObject* receiver, const char* member);
     void findLandmarkPredictions(int imageId, const QObject* receiver, const char* member);
+    void confirmLandmarks(int imageId, QString aiOriginResult, const QObject* receiver, const char* member);
 
 private:
     QNetworkClient();

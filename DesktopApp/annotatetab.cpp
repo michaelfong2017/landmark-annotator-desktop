@@ -146,6 +146,8 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 		// D END
 
 		qDebug() << aiOriginResult;
+
+		QNetworkClient::getInstance().confirmLandmarks(this->imageId, aiOriginResult, this, SLOT(onConfirmLandmarks(QNetworkReply*)));
 		});
 }
 
@@ -410,4 +412,24 @@ void AnnotateTab::computeMetrics() {
 	//xyDistance = std::sqrt(std::pow(this->annotations3D["c1"].x() - this->annotations3D["c2"].x(), 2) + std::pow(this->annotations3D["c1"].y() - this->annotations3D["c2"].y(), 2));
 	xDistance = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
 	this->angle2 = std::atan(yDiff / xDistance) * 180 / PI;
+}
+
+void AnnotateTab::onConfirmLandmarks(QNetworkReply* reply) {
+	qDebug() << "onConfirmLandmarks";
+
+	QByteArray response_data = reply->readAll();
+	reply->deleteLater();
+
+	QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
+
+	qDebug() << jsonResponse;
+
+	QJsonObject obj = jsonResponse.object();
+	QString aiImageUrl = obj["aiImageUrl"].toString();
+
+	if (!aiImageUrl.isEmpty()) {
+		// Success
+		LandmarksConfirmedDialog dialog;
+		dialog.exec();
+	}
 }

@@ -509,13 +509,17 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	qDebug() << jsonResponse;
 
 	QJsonObject obj = jsonResponse.object();
+	int imageId = obj["id"].toInt();
 	QString aiImageUrl = obj["aiImageUrl"].toString();
 	QString aiOriginResult = obj["aiOriginResult"].toString();
 
+	qDebug() << "imageId:" << imageId;
 	qDebug() << "aiImageUrl:" << aiImageUrl;
 	qDebug() << "aiOriginResult:" << aiOriginResult;
 
 	AnnotateTab* annotateTab = this->parent->annotateTab;
+
+	annotateTab->imageId = imageId;
 
 	QStringList list = aiOriginResult.split(",");
 	for (int i = 0; i < list.size(); i++) {

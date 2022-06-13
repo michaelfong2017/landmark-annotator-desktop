@@ -10,6 +10,9 @@
 #include <opencv2/opencv.hpp>
 #include "draganddropgraphicsscene.h"
 #include "capturetab.h"
+#include <QtNetwork>
+#include "qnetworkclient.h"
+#include "landmarksconfirmed.h"
 
 enum class ImageType {Color, DepthToColor};
 
@@ -39,6 +42,7 @@ public:
 
     // Landmark predictions
     // Conceptually should be private but in order to avoid long script, public is used.
+    int imageId;
     float predictedA1X;
     float predictedA1Y;
     float predictedA2X;
@@ -75,6 +79,9 @@ private:
     float distance2; // Distance between c1 and c2 in cm
     float angle1; // Distance between b1-b2 line and xy-plane in deg
     float angle2; // Angle between c1-c2 line and xy-plane in deg
+
+private slots:
+    void onConfirmLandmarks(QNetworkReply* reply);
 };
 
 // Helper functions
