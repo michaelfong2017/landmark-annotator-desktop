@@ -13,6 +13,10 @@ PatientTab::PatientTab(DesktopApp* parent)
     tableView->horizontalHeader()->setStretchLastSection(true);
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
+    /** Open image url */
+    connect(tableView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(onTableClicked(const QModelIndex &)));
+    /** Open image url END */
+
     QObject::connect(this->parent->ui.patientTab->findChild<QPushButton*>("captureNewButton"), &QPushButton::clicked, [this]() {
         qDebug() << "captureNewButton clicked";
         this->parent->ui.tabWidget->setCurrentIndex(3);
@@ -101,19 +105,36 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
         QStandardItem* item;
         for (int i = 0; i < 2; i++)
         {
-            QString text;
-            switch (i) {
-                case 0:
-                    text = obj["aiDiagnosisDate"].toString();
-                    break;
-                case 1:
-                    text = obj["url"].toString();
-                    break;
-			    }
-            item = new QStandardItem(text);
-            QFont fn = item->font();
-            fn.setPointSize(11);
-            item->setFont(fn);
+            if (i == 0) {
+                QString text;
+
+                text = obj["aiDiagnosisDate"].toString();
+
+                item = new QStandardItem(text);
+                QFont fn = item->font();
+                fn.setPointSize(11);
+
+                item->setFont(fn);
+            }
+            else if (i == 1) {
+                QString text;
+
+                text = obj["url"].toString();
+
+                item = new QStandardItem(text);
+                QFont fn = item->font();
+                fn.setPointSize(11);
+
+                fn.setUnderline(true);
+
+                item->setFont(fn);
+
+                QBrush brush;
+                QColor blue(Qt::blue);
+                brush.setColor(blue);
+                item->setForeground(brush);
+            }
+
             itemList << item;
         }
 
@@ -124,3 +145,10 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
     reply->deleteLater();
 }
 
+void PatientTab::onTableClicked(const QModelIndex& index)
+{
+    if (index.isValid() && index.column() == 1) {
+        QString url = index.data().toString();
+        QDesktopServices::openUrl(QUrl(url));
+    }
+}
