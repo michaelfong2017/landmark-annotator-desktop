@@ -1,6 +1,7 @@
 #include "capturetab.h"
 #include "saveimagedialog.h"
 #include "devicemovingdialog.h"
+#include "loadingdialog.h"
 #include "kinectengine.h"
 #include <Windows.h>
 
@@ -25,6 +26,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	this->captureCount = 0;
 	this->noImageCaptured = true;
 	this->timer = new QTimer;
+
+	LoadingDialog d1(this);
 
 	this->parent->ui.showInExplorer->hide();
 	this->captureFilepath = QString();
@@ -184,6 +187,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
 		qDebug() << "Analysis button clicked";
 
+		this->d1.open();
+		this->d1.SetBarValue(1);
+
 		/* Convert to the special 4 channels image and upload */
 		cv::Mat color3 = this->capturedColorImage;
 		std::vector<cv::Mat>channelsForColor2(3);
@@ -212,7 +218,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/* Convert to the special 4 channels image and upload END */
 
 		// Moving to annotate tab will be done after the series of requests is sent to obtain the landmark predictions */
-		});
+	});
 
 	QObject::connect(timer, &QTimer::timeout, [this]() {
 		//qDebug() << "timer connect start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
@@ -464,6 +470,7 @@ void CaptureTab::onManagerFinished(QNetworkReply* reply)
 
 void CaptureTab::onUploadImage(QNetworkReply* reply) {
 	qDebug() << "onUploadImage";
+	this->d1.SetBarValue(33);
 	QString url = reply->readAll();
 
 	qDebug() << url;
@@ -480,7 +487,7 @@ void CaptureTab::onUploadImage(QNetworkReply* reply) {
 
 void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
 	qDebug() << "onBindImageUrl";
-	
+	this->d1.SetBarValue(66);
 	QByteArray response_data = reply->readAll();
 	reply->deleteLater();
 
@@ -543,6 +550,7 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		}
 	}
 
+	d1.reject();
 	// Move to annotate tab which index is 4
 	this->parent->annotateTab->reloadCurrentImage();
 	this->parent->ui.tabWidget->setCurrentIndex(4);

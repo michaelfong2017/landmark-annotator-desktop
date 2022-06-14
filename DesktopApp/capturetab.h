@@ -12,6 +12,7 @@
 #include <opencv2/opencv.hpp>
 #include "util/networkutil.h"
 #include "qnetworkclient.h"
+#include "loadingdialog.h"
 
 class CaptureTab: public QWidget
 {
@@ -27,6 +28,7 @@ public:
     QString getCaptureFilepath();
     void setCaptureFilepath(QString captureFilepath);
 
+    LoadingDialog d1;
     cv::Mat getCapturedColorImage();
     cv::Mat getCapturedDepthImage();
     cv::Mat getCapturedColorToDepthImage();

@@ -67,7 +67,7 @@
       <AdditionalDependencies>C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\lib\Qt5Networkd.lib;$(Qt_LIBS_);H:\opencv-4.5.2\build\Debug\install\x64\vc16\lib\*.lib;D:\opencv-4.5.2\build\x64\vc15\lib\*.lib</AdditionalDependencies>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\include\QtNetwork;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -75,7 +75,7 @@
       <AdditionalDependencies>C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\lib\Qt5Network.lib;H:\opencv-4.5.2\build\Release\install\x64\vc16\lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\include\QtNetwork;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -124,6 +124,7 @@
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="kinectengine.cpp" />
     <ClCompile Include="landmarksconfirmed.cpp" />
+    <ClCompile Include="loadingdialog.cpp" />
     <ClCompile Include="logintab.cpp" />
     <ClCompile Include="patient.cpp" />
     <ClCompile Include="patientexistsdialog.cpp" />
@@ -144,6 +145,7 @@
     </ClCompile>
     <QtUic Include="devicemovingdialog.ui" />
     <QtUic Include="landmarksconfirmeddialog.ui" />
+    <QtUic Include="loadingdialog.ui" />
     <QtUic Include="patientexistsdialog.ui" />
     <QtUic Include="saveimagedialog.ui" />
   </ItemGroup>
@@ -165,6 +167,7 @@
     <QtMoc Include="qnetworkclient.h" />
     <QtMoc Include="patientexistsdialog.h" />
     <QtMoc Include="landmarksconfirmed.h" />
+    <QtMoc Include="loadingdialog.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />
