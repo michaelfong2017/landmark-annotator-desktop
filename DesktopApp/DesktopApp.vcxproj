@@ -124,7 +124,6 @@
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="kinectengine.cpp" />
     <ClCompile Include="landmarksconfirmed.cpp" />
-    <ClCompile Include="loadingdialog.cpp" />
     <ClCompile Include="logintab.cpp" />
     <ClCompile Include="patient.cpp" />
     <ClCompile Include="patientexistsdialog.cpp" />
@@ -145,7 +144,6 @@
     </ClCompile>
     <QtUic Include="devicemovingdialog.ui" />
     <QtUic Include="landmarksconfirmeddialog.ui" />
-    <QtUic Include="loadingdialog.ui" />
     <QtUic Include="patientexistsdialog.ui" />
     <QtUic Include="saveimagedialog.ui" />
   </ItemGroup>
@@ -167,7 +165,6 @@
     <QtMoc Include="qnetworkclient.h" />
     <QtMoc Include="patientexistsdialog.h" />
     <QtMoc Include="landmarksconfirmed.h" />
-    <QtMoc Include="loadingdialog.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />

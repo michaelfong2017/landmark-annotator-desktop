@@ -39,7 +39,6 @@ public:
     void readDepthToColorImage(cv::Mat& depthToColorImage, k4a_image_t k4aColorImage = NULL, k4a_image_t k4aDepthImage = NULL);
     std::deque<k4a_float3_t> getGyroSampleQueue();
     std::deque<k4a_float3_t> getAccSampleQueue();
-    float getTemperature();
     QVector3D query3DPoint(int x, int y, cv::Mat depthToColorImage);
 
     /** New plane calculation */
@@ -76,7 +75,6 @@ private:
     k4a_image_t k4aDepthImage;
     std::deque<k4a_float3_t> gyroSampleQueue;
     std::deque<k4a_float3_t> accSampleQueue;
-    float temperature;
 };
 
 QImage convertColorCVToQImage(cv::Mat);

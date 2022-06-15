@@ -109,8 +109,6 @@ void KinectEngine::queueIMUSample()
 		while (this->gyroSampleQueue.size() > MAX_GYROSCOPE_QUEUE_SIZE) this->gyroSampleQueue.pop_front();
 		while (this->accSampleQueue.size() > MAX_ACCELEROMETER_QUEUE_SIZE) this->accSampleQueue.pop_front();
 
-		this->temperature = imuSample.temperature;
-
 		break;
 	}
 }
@@ -459,11 +457,6 @@ std::deque<k4a_float3_t> KinectEngine::getGyroSampleQueue()
 std::deque<k4a_float3_t> KinectEngine::getAccSampleQueue()
 {
 	return this->accSampleQueue;
-}
-
-float KinectEngine::getTemperature()
-{
-	return this->temperature;
 }
 
 float* KinectEngine::findPlaneEquationCoefficients(cv::Mat depthToColorImage) {

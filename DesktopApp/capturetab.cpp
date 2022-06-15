@@ -1,7 +1,6 @@
 #include "capturetab.h"
 #include "saveimagedialog.h"
 #include "devicemovingdialog.h"
-#include "loadingdialog.h"
 #include "kinectengine.h"
 #include <Windows.h>
 
@@ -11,6 +10,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	this->recorder = new Recorder(parent);
 	this->parent->ui.recordingIndicatorText->setVisible(false);
 	this->parent->ui.recordingElapsedTime->setVisible(false);
+	this->parent->ui.progressBar->setVisible(false);
 
 	this->setDefaultCaptureMode();
 
@@ -27,7 +27,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	this->noImageCaptured = true;
 	this->timer = new QTimer;
 
-	LoadingDialog d1(this);
 	this->isUploading = false;
 
 	this->parent->ui.showInExplorer->hide();
@@ -56,7 +55,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			this->parent->ui.captureTab->setStyleSheet("");
 
 			this->recorder->stopRecorder();
-			this->parent->ui.saveVideoButton->setText("start recording");
+			this->parent->ui.saveVideoButton->setText("Start Recording");
 
 			this->parent->ui.saveInfoCaptureTab->setText("Recording is saved under\n" + visitFolderPath + "\nat " + dateTimeString);
 
@@ -89,7 +88,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			this->parent->ui.captureTab->setStyleSheet("#captureTab {border: 2px solid red}");
 
 			this->recorder->prepareRecorder();
-			this->parent->ui.saveVideoButton->setText("stop recording");
+			this->parent->ui.saveVideoButton->setText("Stop Recording");
 
 			// Disable analysis button
 			this->parent->ui.annotateButtonCaptureTab->setEnabled(false);
@@ -212,8 +211,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->parent->ui.saveButtonCaptureTab->setEnabled(false);
 		this->parent->ui.annotateButtonCaptureTab->setEnabled(false);
 
-		this->d1.open();
-		this->d1.SetBarValue(1);
+		this->parent->ui.progressBar->setVisible(true);
+		this->parent->ui.progressBar->setValue(1);
 
 		/* Convert to the special 4 channels image and upload */
 		cv::Mat color3 = this->capturedColorImage;
@@ -340,7 +339,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		KinectEngine::getInstance().queueIMUSample();
 		std::deque<k4a_float3_t> gyroSampleQueue = KinectEngine::getInstance().getGyroSampleQueue();
 		std::deque<k4a_float3_t> accSampleQueue = KinectEngine::getInstance().getAccSampleQueue();
-		float temperature = KinectEngine::getInstance().getTemperature();
 
 		if (!gyroSampleQueue.empty() && !accSampleQueue.empty()) {
 			//qDebug() << "timer connect 17: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
@@ -355,13 +353,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			);
 			/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved END */
 
-			QString text;
-			text += ("Temperature: " + QString::number(temperature, 0, 2) + " C\n");
-			this->parent->ui.imuText->setText(text);
 		}
-
-		if (gyroSampleQueue.size() >= MAX_GYROSCOPE_QUEUE_SIZE) this->drawGyroscopeData(gyroSampleQueue);
-		if (accSampleQueue.size() >= MAX_ACCELEROMETER_QUEUE_SIZE) this->drawAccelerometerData(accSampleQueue);
 		/*
 		* IMU sample END
 		*/
@@ -409,6 +401,7 @@ DesktopApp* CaptureTab::getParent()
 	return this->parent;
 }
 
+/*
 void CaptureTab::drawGyroscopeData(std::deque<k4a_float3_t> gyroSampleQueue) {
 	// Deallocate heap memory used by previous GGraphicsScene object
 	if (this->parent->ui.graphicsViewGyroscope->scene()) {
@@ -485,7 +478,7 @@ void CaptureTab::drawAccelerometerData(std::deque<k4a_float3_t> accSampleQueue) 
 	scene->addItem(item);
 
 	this->parent->ui.graphicsViewAccelerometer->setScene(scene);
-}
+}*/
 
 void CaptureTab::alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ)
 {
@@ -504,7 +497,7 @@ void CaptureTab::onManagerFinished(QNetworkReply* reply)
 
 void CaptureTab::onUploadImage(QNetworkReply* reply) {
 	qDebug() << "onUploadImage";
-	this->d1.SetBarValue(33);
+	this->parent->ui.progressBar->setValue(33);
 	QString url = reply->readAll();
 
 	qDebug() << url;
@@ -521,7 +514,7 @@ void CaptureTab::onUploadImage(QNetworkReply* reply) {
 
 void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
 	qDebug() << "onBindImageUrl";
-	this->d1.SetBarValue(66);
+	this->parent->ui.progressBar->setValue(66);
 	QByteArray response_data = reply->readAll();
 	reply->deleteLater();
 
@@ -584,11 +577,11 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		}
 	}
 
-	d1.reject();
 	this->parent->ui.captureButton->setEnabled(true);
 	this->parent->ui.saveVideoButton->setEnabled(true);
 	this->parent->ui.saveButtonCaptureTab->setEnabled(true);
 	this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
+	this->parent->ui.progressBar->setVisible(false);
 	this->isUploading = false;
 
 	// Move to annotate tab which index is 4

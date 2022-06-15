@@ -21,9 +21,6 @@
     <ClCompile Include="desktopapp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="loadingdialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -48,9 +45,6 @@
     <QtMoc Include="saveimagedialog.h" />
     <QtMoc Include="alignmenttab.h" />
     <QtMoc Include="devicemovingdialog.h" />
-    <QtMoc Include="loadingdialog.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="desktopapp.qrc" />
@@ -62,9 +56,6 @@
     <QtUic Include="landmarksconfirmeddialog.ui" />
     <QtUic Include="patientexistsdialog.ui" />
     <QtUic Include="saveimagedialog.ui" />
-    <QtUic Include="loadingdialog.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -12,7 +12,6 @@
 #include <opencv2/opencv.hpp>
 #include "util/networkutil.h"
 #include "qnetworkclient.h"
-#include "loadingdialog.h"
 
 class CaptureTab: public QWidget
 {
@@ -28,7 +27,6 @@ public:
     QString getCaptureFilepath();
     void setCaptureFilepath(QString captureFilepath);
 
-    LoadingDialog d1;
     bool isUploading;
     cv::Mat getCapturedColorImage();
     cv::Mat getCapturedDepthImage();
@@ -70,8 +68,6 @@ private:
     bool noImageCaptured;
     void setDefaultCaptureMode();
     void registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image);
-    void drawGyroscopeData(std::deque<k4a_float3_t> gyroSampleQueue);
-    void drawAccelerometerData(std::deque<k4a_float3_t> accSampleQueue);
     void alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ);
     void onManagerFinished(QNetworkReply* reply);
 

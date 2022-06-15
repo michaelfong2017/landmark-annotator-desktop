@@ -35,7 +35,7 @@ void QNetworkClient::onLogin(QNetworkReply* reply) {
 void QNetworkClient::fetchPatientList(const QObject* receiver, const char* member) {
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients?MaxResultCount=100"));
+    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients?MaxResultCount=300"));
     request.setRawHeader("Authorization", this->userToken.toUtf8());
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
@@ -133,9 +133,9 @@ void QNetworkClient::fetchExistingImagesOfPatient(int patientId, const QObject* 
     // Get Image List
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7").arg(patientId);
+    //qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=300").arg(patientId);
 
-    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7").arg(patientId)));
+    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=300").arg(patientId)));
     request.setRawHeader("Authorization", userToken.toUtf8());
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
