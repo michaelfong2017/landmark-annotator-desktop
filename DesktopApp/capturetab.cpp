@@ -28,16 +28,23 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	this->timer = new QTimer;
 
 	LoadingDialog d1(this);
+	this->isUploading = false;
 
 	this->parent->ui.showInExplorer->hide();
 	this->captureFilepath = QString();
 
 	QObject::connect(this->parent->ui.saveButtonCaptureTab, &QPushButton::clicked, [this]() {
+		if (this->isUploading) {
+			return;
+		}
 		SaveImageDialog dialog(this);
 		dialog.exec();
 		});
 
 	QObject::connect(this->parent->ui.saveVideoButton, &QPushButton::clicked, [this]() {
+		if (this->isUploading) {
+			return;
+		}
 		if (this->recorder->getRecordingStatus()) {
 			// Current status is recording
 			QString dateTimeString = Helper::getCurrentDateTimeString();
@@ -119,6 +126,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	END */
 
 	QObject::connect(this->parent->ui.captureButton, &QPushButton::clicked, [this]() {
+		if (this->isUploading) {
+			return;
+		}
 		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
 		// Shallow copy
@@ -135,6 +145,13 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
 		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
 		this->noImageCaptured = false;
+
+		this->RANSACImage = computeNormalizedDepthImage(depthToColor);
+
+		//this->RANSACImage.convertTo(this->RANSACImage, CV_8U, 255.0 / 5000.0, 0.0);
+		//cv::imshow("ransac", this->RANSACImage);
+		//cv::waitKey(0);
+		//cv::destroyWindow("ransac");
 
 		/*
 		* Display captured images
@@ -185,7 +202,15 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		});
 
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
+		if (this->isUploading) {
+			return;
+		}
 		qDebug() << "Analysis button clicked";
+		this->isUploading = true;
+		this->parent->ui.captureButton->setEnabled(false);
+		this->parent->ui.saveVideoButton->setEnabled(false);
+		this->parent->ui.saveButtonCaptureTab->setEnabled(false);
+		this->parent->ui.annotateButtonCaptureTab->setEnabled(false);
 
 		this->d1.open();
 		this->d1.SetBarValue(1);
@@ -196,8 +221,12 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		cv::split(color3, channelsForColor2);
 
 		cv::Mat depthToColor3 = this->capturedDepthToColorImage;
+		std::vector<cv::Mat>channelsForDepth1(1);
+		cv::split(depthToColor3, channelsForDepth1);
+
+		cv::Mat normalizedDepthToColor = this->RANSACImage;
 		std::vector<cv::Mat>channelsForDepth2(1);
-		cv::split(depthToColor3, channelsForDepth2);
+		cv::split(normalizedDepthToColor, channelsForDepth2);
 
 		cv::Mat FourChannelPNG = cv::Mat::ones(720, 1280, CV_16UC4);;
 		std::vector<cv::Mat>channels3(4);
@@ -207,7 +236,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			channels3[0].at<uint16_t>(i) = (channelsForColor2[2].at<uint8_t>(i) << 8) | channelsForColor2[1].at<uint8_t>(i);
 			channels3[1].at<uint16_t>(i) = (channelsForColor2[0].at<uint8_t>(i) << 8);
 		}
-		channels3[2] = channelsForDepth2[0];
+		channels3[2] = channelsForDepth1[0];
 		channels3[3] = channelsForDepth2[0];
 
 		cv::merge(channels3, FourChannelPNG);
@@ -352,6 +381,11 @@ void CaptureTab::setDefaultCaptureMode() {
 
 void CaptureTab::registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image) {
 	QObject::connect(radioButton, &QRadioButton::clicked, [this, image]() {
+
+		if (this->isUploading) {
+			return;
+		}
+
 		int width = this->parent->ui.graphicsViewImage->width(), height = this->parent->ui.graphicsViewImage->height();
 
 		QImage imageScaled = (*image).scaled(width, height, Qt::KeepAspectRatio);
@@ -551,6 +585,12 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	}
 
 	d1.reject();
+	this->parent->ui.captureButton->setEnabled(true);
+	this->parent->ui.saveVideoButton->setEnabled(true);
+	this->parent->ui.saveButtonCaptureTab->setEnabled(true);
+	this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
+	this->isUploading = false;
+
 	// Move to annotate tab which index is 4
 	this->parent->annotateTab->reloadCurrentImage();
 	this->parent->ui.tabWidget->setCurrentIndex(4);
@@ -605,3 +645,267 @@ Recorder* CaptureTab::getRecorder() { return this->recorder; }
 
 QString CaptureTab::getCaptureFilepath() { return this->captureFilepath; }
 void CaptureTab::setCaptureFilepath(QString captureFilepath) { this->captureFilepath = captureFilepath; }
+
+cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
+
+	// RANSAC
+	int k = 6;
+	int threshold = 15;
+
+	int iterationCount = 0;
+	int inlierCount = 0;
+
+	int MaxInlierCount = -1;
+	float PlaneA, PlaneB, PlaneC, PlaneD;
+	float BestPointOne[2];
+	float BestPointTwo[2];
+	float BestPointThree[2];
+
+	float a, b, c, d;
+	float PointOne[2];
+	float PointTwo[2];
+	float PointThree[2];
+
+	//int rows = depthToColorImage.rows;
+	//int cols = depthToColorImage.cols;
+	//const int MAX_DEPTH_VALUE = 5500; // Depth sensor maximum is 5XXXmm
+	//const int NUM_OF_INTERVALS = 12;
+	//const int SIZE_OF_INTERVALS = 500;
+	//int countOfDepthValues[NUM_OF_INTERVALS] = { 0 };
+
+	//std::vector<std::vector<std::pair<int, int>>> v;
+	//for (int i = 0; i < NUM_OF_INTERVALS; i++) {
+	//	std::vector<std::pair<int, int>> s;
+	//	v.push_back(s);
+	//}
+	//for (int y = 0; y < rows; y++) {
+	//	for (int x = 0; x < cols; x++) {
+	//		uint16_t d = depthToColorImage.at<uint16_t>(y, x);
+	//		if (d == 0) {
+	//			countOfDepthValues[0]++;
+	//			v[0].push_back({ x, y });
+	//		}
+	//		else {
+	//			int i = (int)((d - 1) / SIZE_OF_INTERVALS) + 1;
+	//			countOfDepthValues[i]++;
+	//			v[i].push_back({ x, y });
+	//		}
+	//	}
+	//}
+	//for (int i = 0; i < NUM_OF_INTERVALS; i++) {
+	//	if (i == 0) {
+	//		qDebug() << "countOfDepth[0] = " << countOfDepthValues[0];
+	//	}
+	//	else {
+	//		qDebug() << "countOfDepth[" << (i - 1) * SIZE_OF_INTERVALS + 1 << " - " << i * SIZE_OF_INTERVALS << "] = " << countOfDepthValues[i];
+	//	}
+	//}
+	//int largestCount = -1;
+	//int largestIndex = -1;
+	//for (int i = 1; i < NUM_OF_INTERVALS; i++) {
+	//	if (countOfDepthValues[i] > largestCount) {
+	//		largestCount = countOfDepthValues[i];
+	//		largestIndex = i;
+	//	}
+	//}
+	//
+	//cv::Mat out = cv::Mat::zeros(depthToColorImage.rows, depthToColorImage.cols, CV_16UC1);
+	//for (int i = 0; i < largestCount; i++) {
+	//	qDebug() << v[largestIndex][i].first;
+	//	out.at<uint16_t>(v[largestIndex][i].second, v[largestIndex][i].first) = 5000;
+	//}
+
+	
+	//std::pair<int, int> Pair1;
+	//std::pair<int, int> Pair2;
+	//std::pair<int, int> Pair3;
+	//srand((unsigned)time(0));
+	//while (iterationCount <= k) {
+	//	
+	//	inlierCount = outlierCount = 0;
+
+	//	// First point
+	//	while (true) {
+	//		Pair1 = v[largestIndex][rand() % largestCount];
+	//		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(Pair1.first, Pair1.second, depthToColorImage);
+	//		if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
+	//			continue;
+	//		}
+	//		else {
+	//			break;
+	//		}
+	//	}
+
+	//	// Second point
+	//	while (true) {
+	//		Pair2 = v[largestIndex][rand() % largestCount];
+	//		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(Pair2.first, Pair2.second, depthToColorImage);
+	//		if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
+	//			continue;
+	//		}
+	//		if (sqrt(pow(Pair2.first - Pair1.first, 2) + pow(Pair2.second - Pair1.second, 2) * 1.0) <= 150) {
+	//			continue;
+	//		}
+	//		break;
+	//	}
+
+	//	// Third point
+	//	while (true) {
+	//		Pair3 = v[largestIndex][rand() % largestCount];
+	//		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(Pair3.first, Pair3.second, depthToColorImage);
+	//		if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
+	//			continue;
+	//		}
+	//		if (sqrt(pow(Pair3.first - Pair1.first, 2) + pow(Pair3.second - Pair1.second, 2) * 1.0) <= 150) {
+	//			continue;
+	//		}
+	//		if (sqrt(pow(Pair3.first - Pair2.first, 2) + pow(Pair3.second - Pair2.second, 2) * 1.0) <= 150) {
+	//			continue;
+	//		}
+	//		break;
+	//	}
+	//}
+
+	srand((unsigned)time(0));
+	while (iterationCount <= k) {
+		
+		inlierCount = 0;
+
+		// First point
+		while (true) {
+			PointOne[0] = rand() % depthToColorImage.cols;
+			PointOne[1] = rand() % depthToColorImage.rows;
+			if (PointOne[0] > 490 && PointOne[0] < 790) {
+				continue;
+			}
+			QVector3D vector3D_1 = KinectEngine::getInstance().query3DPoint(PointOne[0], PointOne[1], depthToColorImage);
+			if (vector3D_1.x() == 0.0f && vector3D_1.y() == 0.0f && vector3D_1.z() == 0.0f) {
+				continue;
+			}
+			else {
+				break;
+			}
+		}
+
+		// Second point
+		while (true) {
+			PointTwo[0] = rand() % depthToColorImage.cols;
+			PointTwo[1] = rand() % depthToColorImage.rows;
+			if (PointTwo[0] > 490 && PointTwo[0] < 790) {
+				continue;
+			}
+			QVector3D vector3D_2 = KinectEngine::getInstance().query3DPoint(PointTwo[0], PointTwo[1], depthToColorImage);
+			if (vector3D_2.x() == 0.0f && vector3D_2.y() == 0.0f && vector3D_2.z() == 0.0f) {
+				continue;
+			}
+			if (sqrt(pow(PointTwo[0] - PointOne[0], 2) + pow(PointTwo[1] - PointOne[1], 2) * 1.0) <= 200) {
+				continue;
+			}
+			break;
+		}
+
+		// Third point
+		while (true) {
+			PointThree[0] = rand() % depthToColorImage.cols;
+			PointThree[1] = rand() % depthToColorImage.rows;
+			if (PointThree[0] > 490 && PointThree[0] < 790) {
+				continue;
+			}
+			QVector3D vector3D_3 = KinectEngine::getInstance().query3DPoint(PointThree[0], PointThree[1], depthToColorImage);
+			if (vector3D_3.x() == 0.0f && vector3D_3.y() == 0.0f && vector3D_3.z() == 0.0f) {
+				continue;
+			}
+			if (sqrt(pow(PointThree[0] - PointOne[0], 2) + pow(PointThree[1] - PointOne[1], 2) * 1.0) <= 200) {
+				continue;
+			}
+			if (sqrt(pow(PointThree[0] - PointTwo[0], 2) + pow(PointThree[1] - PointTwo[1], 2) * 1.0) <= 200) {
+				continue;
+			}
+			break;
+		}
+
+		QVector3D vector3D_1 = KinectEngine::getInstance().query3DPoint(PointOne[0], PointOne[1], depthToColorImage);
+		QVector3D vector3D_2 = KinectEngine::getInstance().query3DPoint(PointTwo[0], PointTwo[1], depthToColorImage);
+		QVector3D vector3D_3 = KinectEngine::getInstance().query3DPoint(PointThree[0], PointThree[1], depthToColorImage);
+
+		float* abcd;
+		abcd = KinectEngine::getInstance().findPlaneEquationCoefficients(
+			vector3D_1.x(), vector3D_1.y(), vector3D_1.z(),
+			vector3D_2.x(), vector3D_2.y(), vector3D_2.z(),
+			vector3D_3.x(), vector3D_3.y(), vector3D_3.z()
+		);
+		a = abcd[0];
+		b = abcd[1];
+		c = abcd[2];
+		d = abcd[3];
+		qDebug() << "Equation of plane is " << a << " x + " << b
+			<< " y + " << c << " z + " << d << " = 0.";
+	
+		for (int y = 0; y < depthToColorImage.rows; y++) {
+			for (int x = 0; x < depthToColorImage.cols; x++) {
+				if (x > 490 && x < 790) {
+					continue;
+				}
+				QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, depthToColorImage);
+				if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
+					continue;
+				}
+
+				float distance = KinectEngine::getInstance().findDistanceBetween3DPointAndPlane(vector3D.x(), vector3D.y(), vector3D.z(), a, b, c, d);
+				if (distance <= threshold) {
+					inlierCount++;
+				}
+			}
+		}
+
+		if (inlierCount > MaxInlierCount) {
+			PlaneA = a;
+			PlaneB = b;
+			PlaneC = c;
+			PlaneD = d;
+			BestPointOne[0] = PointOne[0];
+			BestPointOne[1] = PointOne[1];
+			BestPointTwo[0] = PointTwo[0];
+			BestPointTwo[1] = PointTwo[1];
+			BestPointThree[0] = PointThree[0];
+			BestPointThree[1] = PointThree[1];
+
+			MaxInlierCount = inlierCount;
+		}
+
+		iterationCount++;
+		qDebug() << "Inliers: " << inlierCount;
+	
+	}
+	qDebug() << "Max Inliers: " << MaxInlierCount;
+
+	// computer actual image
+	cv::Mat out = cv::Mat::zeros(depthToColorImage.rows, depthToColorImage.cols, CV_16UC1);
+	float maxDistance = 0.0f;
+	for (int y = 0; y < depthToColorImage.rows; y++) {
+		for (int x = 0; x < depthToColorImage.cols; x++) {
+			
+			QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, depthToColorImage);
+			
+			if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
+				out.at<uint16_t>(y, x) = 0.0f;
+				continue;
+			}
+
+			float distance = KinectEngine::getInstance().findDistanceBetween3DPointAndPlane(vector3D.x(), vector3D.y(), vector3D.z(), PlaneA, PlaneB, PlaneC, PlaneD);
+			out.at<uint16_t>(y, x) = distance;
+			//if (distance <= threshold) {
+			//	out.at<uint16_t>(y, x) = 5000;
+			//}
+			if (distance > maxDistance) {
+				maxDistance = distance;
+			}
+		}
+	}
+	//out.at<uint16_t>(BestPointOne[1], BestPointOne[0]) = 5000;
+	//out.at<uint16_t>(BestPointTwo[1], BestPointTwo[0]) = 5000;
+	//out.at<uint16_t>(BestPointThree[1], BestPointThree[0]) = 5000;
+
+	return out;
+
+}

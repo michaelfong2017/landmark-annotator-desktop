@@ -29,10 +29,13 @@ public:
     void setCaptureFilepath(QString captureFilepath);
 
     LoadingDialog d1;
+    bool isUploading;
     cv::Mat getCapturedColorImage();
     cv::Mat getCapturedDepthImage();
     cv::Mat getCapturedColorToDepthImage();
     cv::Mat getCapturedDepthToColorImage();
+
+    cv::Mat computeNormalizedDepthImage(cv::Mat);
 
     QImage getQColorImage();
     QImage getQDepthImage();
@@ -56,6 +59,8 @@ private:
     QImage qColorToDepthImage;
     QImage qDepthToColorImage;
     QImage qDepthToColorColorizedImage;
+
+    cv::Mat RANSACImage;
 
     int captureCount;
     Recorder* recorder;
