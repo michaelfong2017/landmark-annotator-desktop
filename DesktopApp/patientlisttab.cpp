@@ -87,6 +87,10 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
         //qDebug() << obj["phoneNumber"].toString();
         //qDebug() << obj["subjectNumber"].toString();
 
+        /** Construct a map with patientId as the key and save folder path as the value */
+        patientIdToSaveFolderPath.insert_or_assign(obj["patientId"].toInt(), obj["name"].toString() + "_" + obj["birthday"].toString() + "_" + obj["idCard"].toString());
+        /** Construct a map with patientId as the key and save folder path as the value END */
+
         /** Store patientId of each patient in memory for later processing */
         int patientId;
         patientId = obj["patientId"].toInt();
@@ -154,6 +158,11 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
     qDebug() << "Selected patientId is" << patientIdVector[row];
 
     this->parent->patientTab->setCurrentPatientId(patientIdVector[row]);
+
+    /** Use the map with patientId as the key and save folder path as the value */
+    this->parent->savePath = QDir(patientIdToSaveFolderPath[patientIdVector[row]]);
+    qDebug() << QDir(patientIdToSaveFolderPath[patientIdVector[row]]);
+    /** Use map with patientId as the key and save folder path as the value END */
 
     for (int i = 0; i < 5; i++)
     {

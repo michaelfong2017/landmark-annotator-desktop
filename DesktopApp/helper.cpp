@@ -15,6 +15,12 @@ QString Helper::getCurrentDateString() {
 }
 
 QString Helper::getVisitFolderPath(QDir parentDir) {
+    /** Create directory if not exists */
+    QDir dir(parentDir);
+    if (!dir.exists())
+        dir.mkpath(".");
+    /** Create directory if not exists END */
+
     QString visitFolder = Helper::getCurrentDateString();
 
     if (parentDir.cd(visitFolder)) {

@@ -16,6 +16,7 @@ public:
     PatientListTab(DesktopApp* parent);
     DesktopApp* getParent();
     void onEnterTab();
+    std::map<int, QString> patientIdToSaveFolderPath;
 
 private:
     DesktopApp* parent;

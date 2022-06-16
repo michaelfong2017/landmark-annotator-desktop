@@ -38,7 +38,6 @@ public:
 
     std::queue<k4a_image_t> irImageQueue;
 
-    Patient patient;
     QDir savePath;
 
     void setTextOnGraphicsViews(std::string text);
