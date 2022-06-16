@@ -140,6 +140,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/** Assume that capture is all successful, otherwise print a warning. */
 		if (color.empty() || depth.empty() || colorToDepth.empty() || depthToColor.empty()) {
 			qWarning() << "capturetab captureButton - one of the captured images is null";
+			return;
 		}
 		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
 		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
@@ -551,10 +552,15 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	qDebug() << "aiImageUrl:" << aiImageUrl;
 	qDebug() << "aiOriginResult:" << aiOriginResult;
 
+	if (aiOriginResult == "") {
+		aiOriginResult = "[[640.0, 200.0], [580.0, 300.0], [700.0, 300.0], [580.0, 500.0], [700.0, 500.0], [640.0, 600.0]]";
+	}
+
 	AnnotateTab* annotateTab = this->parent->annotateTab;
 
 	annotateTab->imageId = imageId;
 
+	// This no longer works
 	QStringList list = aiOriginResult.split(",");
 	for (int i = 0; i < list.size(); i++) {
 		QString chopped = list[i].remove("[").remove("]");
@@ -562,18 +568,18 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		//qDebug() << f;
 
 		switch (i) {
-		case 0: annotateTab->predictedCX = f == 0.0f ? 240.0f : f; break;
-		case 1: annotateTab->predictedCY = f == 0.0f ? 70.0f : f; break;
-		case 2: annotateTab->predictedA1X = f == 0.0f ? 220.0f : f; break;
-		case 3: annotateTab->predictedA1Y = f == 0.0f ? 130.0f : f; break;
-		case 4: annotateTab->predictedA2X = f == 0.0f ? 260.0f : f; break;
-		case 5: annotateTab->predictedA2Y = f == 0.0f ? 130.0f : f; break;
-		case 6: annotateTab->predictedB1X = f == 0.0f ? 220.0f : f; break;
-		case 7: annotateTab->predictedB1Y = f == 0.0f ? 165.0f : f; break;
-		case 8: annotateTab->predictedB2X = f == 0.0f ? 260.0f : f; break;
-		case 9: annotateTab->predictedB2Y = f == 0.0f ? 165.0f : f; break;
-		case 10: annotateTab->predictedDX = f == 0.0f ? 240.0f : f; break;
-		case 11: annotateTab->predictedDY = f == 0.0f ? 185.0f : f; break;
+			case 0: annotateTab->predictedCX = f == 0.0f ? 240.0f : f; break;
+			case 1: annotateTab->predictedCY = f == 0.0f ? 70.0f : f; break;
+			case 2: annotateTab->predictedA1X = f == 0.0f ? 220.0f : f; break;
+			case 3: annotateTab->predictedA1Y = f == 0.0f ? 130.0f : f; break;
+			case 4: annotateTab->predictedA2X = f == 0.0f ? 260.0f : f; break;
+			case 5: annotateTab->predictedA2Y = f == 0.0f ? 130.0f : f; break;
+			case 6: annotateTab->predictedB1X = f == 0.0f ? 220.0f : f; break;
+			case 7: annotateTab->predictedB1Y = f == 0.0f ? 165.0f : f; break;
+			case 8: annotateTab->predictedB2X = f == 0.0f ? 260.0f : f; break;
+			case 9: annotateTab->predictedB2Y = f == 0.0f ? 165.0f : f; break;
+			case 10: annotateTab->predictedDX = f == 0.0f ? 240.0f : f; break;
+			case 11: annotateTab->predictedDY = f == 0.0f ? 185.0f : f; break;
 		}
 	}
 
@@ -766,7 +772,7 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 
 		// First point
 		while (true) {
-			PointOne[0] = rand() % depthToColorImage.cols;
+			PointOne[0] = rand() % depthToColorImage.cols; // ?Integer division by zero.
 			PointOne[1] = rand() % depthToColorImage.rows;
 			if (PointOne[0] > 490 && PointOne[0] < 790) {
 				continue;
