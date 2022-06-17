@@ -148,10 +148,10 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		this->RANSACImage = computeNormalizedDepthImage(depthToColor);
 
-		//this->RANSACImage.convertTo(this->RANSACImage, CV_8U, 255.0 / 5000.0, 0.0);
-		//cv::imshow("ransac", this->RANSACImage);
-		//cv::waitKey(0);
-		//cv::destroyWindow("ransac");
+		/*this->RANSACImage.convertTo(this->RANSACImage, CV_8U, 255.0 / 5000.0, 0.0);
+		cv::imshow("ransac", this->RANSACImage);
+		cv::waitKey(0);
+		cv::destroyWindow("ransac");*/
 
 		/*
 		* Display captured images
@@ -648,7 +648,7 @@ void CaptureTab::setCaptureFilepath(QString captureFilepath) { this->captureFile
 cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 
 	// RANSAC
-	int k = 6;
+	int k = 8;
 	int threshold = 15;
 
 	int iterationCount = 0;
@@ -774,6 +774,9 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 		while (true) {
 			PointOne[0] = rand() % depthToColorImage.cols; // ?Integer division by zero.
 			PointOne[1] = rand() % depthToColorImage.rows;
+			if (PointOne[0] < 100 && PointOne[0] > 1180) {
+				continue;
+			}
 			if (PointOne[0] > 490 && PointOne[0] < 790) {
 				continue;
 			}
@@ -790,6 +793,9 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 		while (true) {
 			PointTwo[0] = rand() % depthToColorImage.cols;
 			PointTwo[1] = rand() % depthToColorImage.rows;
+			if (PointTwo[0] < 100 && PointTwo[0] > 1180) {
+				continue;
+			}
 			if (PointTwo[0] > 490 && PointTwo[0] < 790) {
 				continue;
 			}
@@ -797,7 +803,7 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 			if (vector3D_2.x() == 0.0f && vector3D_2.y() == 0.0f && vector3D_2.z() == 0.0f) {
 				continue;
 			}
-			if (sqrt(pow(PointTwo[0] - PointOne[0], 2) + pow(PointTwo[1] - PointOne[1], 2) * 1.0) <= 200) {
+			if (sqrt(pow(PointTwo[0] - PointOne[0], 2) + pow(PointTwo[1] - PointOne[1], 2) * 1.0) <= 150) {
 				continue;
 			}
 			break;
@@ -807,6 +813,9 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 		while (true) {
 			PointThree[0] = rand() % depthToColorImage.cols;
 			PointThree[1] = rand() % depthToColorImage.rows;
+			if (PointThree[0] < 100 && PointThree[0] > 1180) {
+				continue;
+			}
 			if (PointThree[0] > 490 && PointThree[0] < 790) {
 				continue;
 			}
@@ -814,10 +823,10 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 			if (vector3D_3.x() == 0.0f && vector3D_3.y() == 0.0f && vector3D_3.z() == 0.0f) {
 				continue;
 			}
-			if (sqrt(pow(PointThree[0] - PointOne[0], 2) + pow(PointThree[1] - PointOne[1], 2) * 1.0) <= 200) {
+			if (sqrt(pow(PointThree[0] - PointOne[0], 2) + pow(PointThree[1] - PointOne[1], 2) * 1.0) <= 150) {
 				continue;
 			}
-			if (sqrt(pow(PointThree[0] - PointTwo[0], 2) + pow(PointThree[1] - PointTwo[1], 2) * 1.0) <= 200) {
+			if (sqrt(pow(PointThree[0] - PointTwo[0], 2) + pow(PointThree[1] - PointTwo[1], 2) * 1.0) <= 150) {
 				continue;
 			}
 			break;
@@ -840,8 +849,8 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 		qDebug() << "Equation of plane is " << a << " x + " << b
 			<< " y + " << c << " z + " << d << " = 0.";
 	
-		for (int y = 0; y < depthToColorImage.rows; y++) {
-			for (int x = 0; x < depthToColorImage.cols; x++) {
+		for (int y = 0; y < depthToColorImage.rows; y+=2) {
+			for (int x = 0; x < depthToColorImage.cols; x+=2) {
 				if (x > 490 && x < 790) {
 					continue;
 				}
@@ -893,9 +902,9 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 
 			float distance = KinectEngine::getInstance().findDistanceBetween3DPointAndPlane(vector3D.x(), vector3D.y(), vector3D.z(), PlaneA, PlaneB, PlaneC, PlaneD);
 			out.at<uint16_t>(y, x) = distance;
-			//if (distance <= threshold) {
-			//	out.at<uint16_t>(y, x) = 5000;
-			//}
+			if (distance <= threshold) {
+				out.at<uint16_t>(y, x) = 5000;
+			}
 			if (distance > maxDistance) {
 				maxDistance = distance;
 			}

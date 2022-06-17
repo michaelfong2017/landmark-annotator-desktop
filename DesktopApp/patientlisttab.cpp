@@ -160,8 +160,13 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
     this->parent->patientTab->setCurrentPatientId(patientIdVector[row]);
 
     /** Use the map with patientId as the key and save folder path as the value */
-    this->parent->savePath = QDir(patientIdToSaveFolderPath[patientIdVector[row]]);
-    qDebug() << QDir(patientIdToSaveFolderPath[patientIdVector[row]]);
+    QDir dir(QCoreApplication::applicationDirPath());
+    dir.cdUp();
+    QDir path = QDir((dir.absolutePath()) + "/" + patientIdToSaveFolderPath[patientIdVector[row]]);
+
+    this->parent->savePath = path;
+    qDebug() << "DIR:::" << path;
+    
     /** Use map with patientId as the key and save folder path as the value END */
 
     for (int i = 0; i < 5; i++)

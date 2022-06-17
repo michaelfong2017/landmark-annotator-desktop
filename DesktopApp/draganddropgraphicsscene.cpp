@@ -25,14 +25,13 @@ DragAndDropGraphicsScene::DragAndDropGraphicsScene( AnnotateTab* annotateTab, Im
 		qWarning() << "draganddropgraphicsscene ImageType is neither Color nor DepthToColor!";
 	}
 
+	/** Human cut shape Start */
 	QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape.png");
 	QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
-	//this->addPixmap(humanPixmapScaled);
 	/** Human cut shape END */
 
 	// Draw annotations if any
-	//QPainter painter(this->imageType == ImageType::Color ? this->annotateTab->getAnnotatedColorImage() : this->annotateTab->getAnnotatedDepthToColorColorizedImage());
-	QPainter painter(this->imageType == ImageType::Color ? &humanPixmapScaled : &humanPixmapScaled);
+	QPainter painter(&humanPixmapScaled);
 
 	painter.setPen(QPen(Qt::magenta, 8, Qt::SolidLine, Qt::RoundCap));
 	for (auto it : *this->annotateTab->getAnnotations()) {
