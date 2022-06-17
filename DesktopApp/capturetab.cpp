@@ -211,6 +211,10 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->parent->ui.saveVideoButton->setEnabled(false);
 		this->parent->ui.saveButtonCaptureTab->setEnabled(false);
 		this->parent->ui.annotateButtonCaptureTab->setEnabled(false);
+		this->parent->ui.radioButton->setEnabled(false);
+		this->parent->ui.radioButton2->setEnabled(false);
+		this->parent->ui.radioButton3->setEnabled(false);
+		this->parent->ui.radioButton4->setEnabled(false);
 
 		this->parent->ui.progressBar->setVisible(true);
 		this->parent->ui.progressBar->setValue(1);
@@ -588,6 +592,10 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	this->parent->ui.saveButtonCaptureTab->setEnabled(true);
 	this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
 	this->parent->ui.progressBar->setVisible(false);
+	this->parent->ui.radioButton->setEnabled(true);
+	this->parent->ui.radioButton2->setEnabled(true);
+	this->parent->ui.radioButton3->setEnabled(true);
+	this->parent->ui.radioButton4->setEnabled(true);
 	this->isUploading = false;
 
 	// Move to annotate tab which index is 4
