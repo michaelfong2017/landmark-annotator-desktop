@@ -151,6 +151,7 @@ void QNetworkClient::uploadImage(cv::Mat image, const QObject* receiver, const c
 
     QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/api/v1/upload")));
     request.setRawHeader("Authorization", this->userToken.toUtf8());
+    request.setTransferTimeout(25000);
 
     QHttpMultiPart* multipart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 
@@ -180,6 +181,7 @@ void QNetworkClient::bindImageUrl(int patientId, QString url, const QObject* rec
     QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/images"));
     request.setRawHeader("Authorization", userToken.toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setTransferTimeout(10000);
 
     QJsonObject obj;
     obj["patientId"] = patientId;
@@ -199,6 +201,7 @@ void QNetworkClient::findLandmarkPredictions(int imageId, const QObject* receive
 
     QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1").arg(imageId)));
     request.setRawHeader("Authorization", userToken.toUtf8());
+    request.setTransferTimeout(10000);
 
     qDebug() << QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1").arg(imageId));
 

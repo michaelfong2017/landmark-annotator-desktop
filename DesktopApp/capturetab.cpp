@@ -572,18 +572,18 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		//qDebug() << f;
 
 		switch (i) {
-			case 0: annotateTab->predictedCX = f == 0.0f ? 240.0f : f; break;
-			case 1: annotateTab->predictedCY = f == 0.0f ? 70.0f : f; break;
-			case 2: annotateTab->predictedA1X = f == 0.0f ? 220.0f : f; break;
-			case 3: annotateTab->predictedA1Y = f == 0.0f ? 130.0f : f; break;
-			case 4: annotateTab->predictedA2X = f == 0.0f ? 260.0f : f; break;
-			case 5: annotateTab->predictedA2Y = f == 0.0f ? 130.0f : f; break;
-			case 6: annotateTab->predictedB1X = f == 0.0f ? 220.0f : f; break;
-			case 7: annotateTab->predictedB1Y = f == 0.0f ? 165.0f : f; break;
-			case 8: annotateTab->predictedB2X = f == 0.0f ? 260.0f : f; break;
-			case 9: annotateTab->predictedB2Y = f == 0.0f ? 165.0f : f; break;
-			case 10: annotateTab->predictedDX = f == 0.0f ? 240.0f : f; break;
-			case 11: annotateTab->predictedDY = f == 0.0f ? 185.0f : f; break;
+			case 0: annotateTab->predictedCX = f; break;
+			case 1: annotateTab->predictedCY = f; break;
+			case 2: annotateTab->predictedA1X = f; break;
+			case 3: annotateTab->predictedA1Y = f; break;
+			case 4: annotateTab->predictedA2X = f; break;
+			case 5: annotateTab->predictedA2Y = f; break;
+			case 6: annotateTab->predictedB1X = f; break;
+			case 7: annotateTab->predictedB1Y = f; break;
+			case 8: annotateTab->predictedB2X = f; break;
+			case 9: annotateTab->predictedB2Y = f; break;
+			case 10: annotateTab->predictedDX = f; break;
+			case 11: annotateTab->predictedDY = f; break;
 		}
 	}
 
