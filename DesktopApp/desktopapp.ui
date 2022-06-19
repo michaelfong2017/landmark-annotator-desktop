@@ -583,7 +583,7 @@ color: rgb(255, 0, 5);
       <string notr="true">QScrollBar {height:0px; width:0px;}</string>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="graphicsViewAnnotation_2">
+    <widget class="QGraphicsView" name="graphicsViewImageUrl">
      <property name="geometry">
       <rect>
        <x>80</x>

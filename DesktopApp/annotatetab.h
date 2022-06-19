@@ -39,6 +39,7 @@ public:
     float* getScalingFactor();
     std::map<std::string, QVector3D>* getAnnotations3D();
     void computeMetrics();
+    void setAiImageUrl(QString aiImageUrl);
 
     // Landmark predictions
     // Conceptually should be private but in order to avoid long script, public is used.
@@ -71,6 +72,9 @@ private:
     DragAndDropGraphicsScene* colorScene;
     DragAndDropGraphicsScene* depthToColorScene;
     float scalingFactor;
+
+    QString aiImageUrl;
+
     void drawAnnotations();
     QJsonDocument getAnnotationsJson();
 
@@ -82,6 +86,7 @@ private:
 
 private slots:
     void onConfirmLandmarks(QNetworkReply* reply);
+    void onDownloadImage(QNetworkReply* reply);
 };
 
 // Helper functions

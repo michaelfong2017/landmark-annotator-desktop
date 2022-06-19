@@ -210,6 +210,18 @@ void QNetworkClient::findLandmarkPredictions(int imageId, const QObject* receive
     manager->get(request);
 }
 
+void QNetworkClient::downloadImage(QString imageUrl, const QObject* receiver, const char* member) {
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    QNetworkRequest request(imageUrl);
+    request.setRawHeader("Authorization", userToken.toUtf8());
+    request.setTransferTimeout(10000);
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
+
+    manager->get(request);
+}
+
 void QNetworkClient::confirmLandmarks(int imageId, QString aiOriginResult, const QObject* receiver, const char* member) {
 
     qDebug() << "confirmLandmarks";

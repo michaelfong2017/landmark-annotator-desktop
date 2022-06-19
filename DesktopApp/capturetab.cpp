@@ -550,6 +550,8 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	QJsonObject obj = jsonResponse.object();
 	int imageId = obj["id"].toInt();
 	QString aiImageUrl = obj["aiImageUrl"].toString();
+	this->parent->annotateTab->setAiImageUrl(aiImageUrl);
+
 	QString aiOriginResult = obj["aiOriginResult"].toString();
 
 	qDebug() << "imageId:" << imageId;

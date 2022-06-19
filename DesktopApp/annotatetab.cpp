@@ -163,6 +163,10 @@ void AnnotateTab::reloadCurrentImage() {
 		return;
 	}
 
+	/** Display ai image from url */
+	QNetworkClient::getInstance().downloadImage(this->aiImageUrl, this, SLOT(onDownloadImage(QNetworkReply*)));
+	/** Display ai image from url END */
+
 	///** New plane calculation */
 	//float* p;
 	//p = KinectEngine::getInstance().findPlaneEquationCoefficients(this->depthToColorImage);
@@ -294,6 +298,11 @@ void AnnotateTab::reloadCurrentImage() {
 cv::Mat AnnotateTab::getDepthToColorImage()
 {
 	return this->depthToColorImage;
+}
+
+void AnnotateTab::setAiImageUrl(QString aiImageUrl)
+{
+	this->aiImageUrl = aiImageUrl;
 }
 
 void AnnotateTab::drawAnnotations() {
@@ -432,4 +441,24 @@ void AnnotateTab::onConfirmLandmarks(QNetworkReply* reply) {
 		LandmarksConfirmedDialog dialog;
 		dialog.exec();
 	}
+}
+
+void AnnotateTab::onDownloadImage(QNetworkReply* reply) {
+	qDebug() << "onDownloadImage";
+
+	QByteArray response_data = reply->readAll();
+	reply->deleteLater();
+
+	QPixmap pixmap;
+	pixmap.loadFromData(response_data);
+
+	int width, height;
+	width = this->parent->ui.graphicsViewImageUrl->width();
+	height = this->parent->ui.graphicsViewImageUrl->height();
+
+	QPixmap pixmapScaled = pixmap.scaled(width, height, Qt::KeepAspectRatio);
+	QGraphicsScene* scene = new QGraphicsScene(this);
+	scene->addPixmap(pixmapScaled);
+	this->parent->ui.graphicsViewImageUrl->setScene(scene);
+	this->parent->ui.graphicsViewImageUrl->show();
 }
