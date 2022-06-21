@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LandmarksConfirmedDialogUI</class>
- <widget class="QDialog" name="LandmarksConfirmedDialogUI">
+ <class>TwoLinesDialogUI</class>
+ <widget class="QDialog" name="TwoLinesDialogUI">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -55,7 +55,7 @@
     <enum>Qt::LeftToRight</enum>
    </property>
    <property name="text">
-    <string>Landmarks confirmed!</string>
+    <string>&lt;line1&gt;</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

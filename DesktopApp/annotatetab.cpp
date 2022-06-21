@@ -438,7 +438,8 @@ void AnnotateTab::onConfirmLandmarks(QNetworkReply* reply) {
 
 	if (!aiImageUrl.isEmpty()) {
 		// Success
-		LandmarksConfirmedDialog dialog;
+		TwoLinesDialog dialog;
+		dialog.setLine1("Landmarks confirmed!");
 		dialog.exec();
 	}
 }

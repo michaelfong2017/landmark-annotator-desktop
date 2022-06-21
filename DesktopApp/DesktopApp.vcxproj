@@ -119,14 +119,12 @@
     <ClCompile Include="annotatetab.cpp" />
     <ClCompile Include="capturetab.cpp" />
     <ClCompile Include="createnewpatientdialog.cpp" />
-    <ClCompile Include="devicemovingdialog.cpp" />
     <ClCompile Include="draganddropgraphicsscene.cpp" />
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="kinectengine.cpp" />
-    <ClCompile Include="landmarksconfirmed.cpp" />
+    <ClCompile Include="twolinesdialog.cpp" />
     <ClCompile Include="logintab.cpp" />
     <ClCompile Include="patient.cpp" />
-    <ClCompile Include="patientexistsdialog.cpp" />
     <ClCompile Include="patientlisttab.cpp" />
     <ClCompile Include="patienttab.cpp" />
     <ClCompile Include="qnetworkclient.cpp" />
@@ -142,9 +140,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <QtUic Include="devicemovingdialog.ui" />
-    <QtUic Include="landmarksconfirmeddialog.ui" />
-    <QtUic Include="patientexistsdialog.ui" />
+    <QtUic Include="twolinesdialog.ui" />
     <QtUic Include="saveimagedialog.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -163,13 +159,11 @@
     <QtMoc Include="createnewpatientdialog.h" />
     <QtMoc Include="patienttab.h" />
     <QtMoc Include="qnetworkclient.h" />
-    <QtMoc Include="patientexistsdialog.h" />
-    <QtMoc Include="landmarksconfirmed.h" />
+    <QtMoc Include="twolinesdialog.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />
     <QtMoc Include="alignmenttab.h" />
-    <QtMoc Include="devicemovingdialog.h" />
     <ClInclude Include="draganddropgraphicsscene.h" />
     <ClInclude Include="helper.h" />
     <ClInclude Include="patient.h" />

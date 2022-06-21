@@ -12,6 +12,7 @@
 #include <opencv2/opencv.hpp>
 #include "util/networkutil.h"
 #include "qnetworkclient.h"
+#include "twolinesdialog.h"
 
 class CaptureTab: public QWidget
 {

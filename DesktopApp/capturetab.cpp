@@ -1,6 +1,5 @@
 #include "capturetab.h"
 #include "saveimagedialog.h"
-#include "devicemovingdialog.h"
 #include "kinectengine.h"
 #include <Windows.h>
 
@@ -490,7 +489,9 @@ void CaptureTab::alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX
 	//qDebug() << "alertIfMoving - " << gyroX << ", " << gyroY << ", " << gyroZ << ", " << accX << ", " << accY << ", " << accZ;
 
 	if (abs(accX) > 1.0f || abs(accY) > 1.0f || abs(accZ + 9.81) > 1.0f) {
-		DeviceMovingDialog dialog(this);
+		TwoLinesDialog dialog;
+		dialog.setLine1("Azure Kinect sensor is being moved.");
+		dialog.setLine2("Please press OK and keep it stationary.");
 		dialog.exec();
 	}
 }

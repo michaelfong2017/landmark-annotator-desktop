@@ -12,7 +12,7 @@
 #include "capturetab.h"
 #include <QtNetwork>
 #include "qnetworkclient.h"
-#include "landmarksconfirmed.h"
+#include "twolinesdialog.h"
 
 enum class ImageType {Color, DepthToColor};
 

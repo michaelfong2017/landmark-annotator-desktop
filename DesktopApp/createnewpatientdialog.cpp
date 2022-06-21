@@ -115,7 +115,8 @@ void CreateNewPatientDialog::onCheckNewPatient(QNetworkReply* reply) {
     else {
         qDebug() << "Patient exists. No data are uploaded.";
 
-        PatientExistsDialog dialog;
+        TwoLinesDialog dialog;
+        dialog.setLine1("Patient already exists.");
         dialog.exec();
 
         QDialog::accept();
