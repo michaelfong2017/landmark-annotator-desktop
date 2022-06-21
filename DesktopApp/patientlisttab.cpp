@@ -27,6 +27,26 @@ PatientListTab::PatientListTab(DesktopApp* parent)
         // Re-fetch data
         this->onEnterTab();
 		});
+
+    /** Patient list table pagination */
+    QObject::connect(this->parent->ui.patientListTab->findChild<QPushButton*>("patientListPreviousPageButton"), &QPushButton::clicked, [this]() {
+        //qDebug() << "Previous page button clicked";
+        if (currentPageIndex != 0) {
+            currentPageIndex--;
+        }
+
+        // Re-fetch data
+        this->onEnterTab();
+        });
+
+    QObject::connect(this->parent->ui.patientListTab->findChild<QPushButton*>("patientListNextPageButton"), &QPushButton::clicked, [this]() {
+        //qDebug() << "Next page button clicked";
+        currentPageIndex++;
+
+        // Re-fetch data
+        this->onEnterTab();
+        });
+    /** Patient list table pagination END */
 }
 
 DesktopApp* PatientListTab::getParent()
@@ -78,8 +98,20 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     qDebug() << jsonArray;
     qDebug() << "Number of returned items:" << jsonArray.size();
 
+    while (ROWS_PER_PAGE * this->currentPageIndex >= jsonArray.size()) {
+        if (currentPageIndex != 0) {
+            this->currentPageIndex--;
+        }
+    }
 
-    foreach(const QJsonValue &value, jsonArray) {
+    this->parent->ui.patientListTab->findChild<QLabel*>("patientListPageLabel")->setText(QString("Page %1").arg(currentPageIndex+1));
+
+    for (int i = ROWS_PER_PAGE * this->currentPageIndex; i < ROWS_PER_PAGE * (this->currentPageIndex + 1); i++) {
+        if (i > jsonArray.size() - 1) {
+            break;
+        }
+        
+        QJsonValue value = jsonArray.at(i);
         QJsonObject obj = value.toObject();
         //qDebug() << obj["name"].toString();
         //qDebug() << obj["sex"].toString();

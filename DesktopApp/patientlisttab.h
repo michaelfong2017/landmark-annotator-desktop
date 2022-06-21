@@ -23,6 +23,8 @@ private:
     QTableView* tableView;
     QStandardItemModel* patientListDataModel;
     std::vector<int> patientIdVector;
+    int currentPageIndex = 0;
+    const int ROWS_PER_PAGE = 20;
 
 private slots:
     void onFetchPatientList(QNetworkReply* reply);
