@@ -44,13 +44,36 @@ DesktopApp::DesktopApp(QWidget* parent)
 
 	if (this->ui.tabWidget->currentIndex() == 2) captureTab->timer->start(0);
 
+	/** Must login to begin */
+	this->ui.tabWidget->setTabEnabled(1, false);
+	this->ui.tabWidget->setTabEnabled(2, false);
+	this->ui.tabWidget->setTabEnabled(3, false);
+	this->ui.tabWidget->setTabEnabled(4, false);
+	/** Must login to begin END */
+
+	/** Hide unused Alignment tab */
+	this->ui.tabWidget->setTabEnabled(5, false);
+	this->ui.tabWidget->setTabVisible(5, false);
+	/** Hide unused Alignment tab END */
+	/** Hide unused bottom buttons in Analysis tab */
+	this->ui.horizontalLayout_3->setEnabled(false);
+	/** Hide unused bottom buttons in Analysis tab END */
+
 	QObject::connect(ui.tabWidget, &QTabWidget::currentChanged, [this]() {
 		switch (this->ui.tabWidget->currentIndex()) {
 		case 0:
-			// current tab is loginTab
+			// current tab is loginTab	
 			break;
 		case 1:
 			// current tab is patientListTab
+
+			/** Re-enable the tabs after login */
+			this->ui.tabWidget->setTabEnabled(1, true);
+			this->ui.tabWidget->setTabEnabled(2, true);
+			this->ui.tabWidget->setTabEnabled(3, true);
+			this->ui.tabWidget->setTabEnabled(4, true);
+			/** Re-enable the tabs after login END */
+
 			this->patientListTab->onEnterTab();
 			break;
 		case 2:
@@ -63,17 +86,12 @@ DesktopApp::DesktopApp(QWidget* parent)
 			break;
 		case 4:
 			// current tab is annotateTab
-			if (this->captureTab->getRecorder()->getRecordingStatus()) //If capture tab is recording
-				this->ui.tabWidget->setCurrentIndex(3);
 			this->captureTab->timer->stop();
 			break;
 		case 5:
 			// current tab is alignmentTab
-			if (this->captureTab->getRecorder()->getRecordingStatus()) //If capture tab is recording
-				this->ui.tabWidget->setCurrentIndex(3);
 			break;
 		default:
-			this->ui.tabWidget->setCurrentIndex(0);
 			break;
 		}
 		});

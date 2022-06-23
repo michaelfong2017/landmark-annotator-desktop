@@ -48,6 +48,14 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			QString dateTimeString = Helper::getCurrentDateTimeString();
 			QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
 
+			/** Re-enable changing tab */
+			this->parent->ui.tabWidget->setTabEnabled(0, true);
+			this->parent->ui.tabWidget->setTabEnabled(1, true);
+			this->parent->ui.tabWidget->setTabEnabled(2, true);
+			this->parent->ui.tabWidget->setTabEnabled(4, true);
+			this->parent->ui.tabWidget->setTabEnabled(5, true);
+			/** Re-enable changing tab END */
+
 			// Modify UI to disable recording status
 			this->parent->ui.recordingIndicatorText->setVisible(false);
 			this->parent->ui.recordingElapsedTime->setVisible(false);
@@ -80,6 +88,14 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		}
 		else {
 			// Current status is NOT recording
+
+			/** Disable changing tab */
+			this->parent->ui.tabWidget->setTabEnabled(0, false);
+			this->parent->ui.tabWidget->setTabEnabled(1, false);
+			this->parent->ui.tabWidget->setTabEnabled(2, false);
+			this->parent->ui.tabWidget->setTabEnabled(4, false);
+			this->parent->ui.tabWidget->setTabEnabled(5, false);
+			/** Disable changing tab END */
 
 			// Modify UI to indicate recording status
 			this->parent->ui.recordingIndicatorText->setVisible(true);
@@ -214,6 +230,13 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->parent->ui.radioButton2->setEnabled(false);
 		this->parent->ui.radioButton3->setEnabled(false);
 		this->parent->ui.radioButton4->setEnabled(false);
+		/** Disable changing tab */
+		this->parent->ui.tabWidget->setTabEnabled(0, false);
+		this->parent->ui.tabWidget->setTabEnabled(1, false);
+		this->parent->ui.tabWidget->setTabEnabled(2, false);
+		this->parent->ui.tabWidget->setTabEnabled(4, false);
+		this->parent->ui.tabWidget->setTabEnabled(5, false);
+		/** Disable changing tab END */
 
 		this->parent->ui.progressBar->setVisible(true);
 		this->parent->ui.progressBar->setValue(1);
@@ -599,6 +622,13 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	this->parent->ui.radioButton2->setEnabled(true);
 	this->parent->ui.radioButton3->setEnabled(true);
 	this->parent->ui.radioButton4->setEnabled(true);
+	/** Re-enable changing tab */
+	this->parent->ui.tabWidget->setTabEnabled(0, true);
+	this->parent->ui.tabWidget->setTabEnabled(1, true);
+	this->parent->ui.tabWidget->setTabEnabled(2, true);
+	this->parent->ui.tabWidget->setTabEnabled(4, true);
+	this->parent->ui.tabWidget->setTabEnabled(5, true);
+	/** Re-enable changing tab END */
 	this->isUploading = false;
 
 	// Move to annotate tab which index is 4
