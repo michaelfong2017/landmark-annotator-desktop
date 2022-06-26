@@ -90,6 +90,7 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     tableView->show();
 
     QByteArray response_data = reply->readAll();
+
     QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
 
     QJsonObject jsonObject = jsonResponse.object();
