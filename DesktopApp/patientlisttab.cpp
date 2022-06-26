@@ -99,7 +99,7 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     qDebug() << jsonArray;
     qDebug() << "Number of returned items:" << jsonArray.size();
 
-    while (ROWS_PER_PAGE * this->currentPageIndex >= jsonArray.size()) {
+    while (jsonArray.size() != 0 && ROWS_PER_PAGE * this->currentPageIndex >= jsonArray.size()) {
         if (currentPageIndex != 0) {
             this->currentPageIndex--;
         }

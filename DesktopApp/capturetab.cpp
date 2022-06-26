@@ -155,6 +155,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/** Assume that capture is all successful, otherwise print a warning. */
 		if (color.empty() || depth.empty() || colorToDepth.empty() || depthToColor.empty()) {
 			qWarning() << "capturetab captureButton - one of the captured images is null";
+			TwoLinesDialog dialog;
+			dialog.setLine1("Capture failed!");
+			dialog.exec();
 			return;
 		}
 		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
@@ -526,8 +529,41 @@ void CaptureTab::onManagerFinished(QNetworkReply* reply)
 
 void CaptureTab::onUploadImage(QNetworkReply* reply) {
 	qDebug() << "onUploadImage";
-	this->parent->ui.progressBar->setValue(33);
+	
 	QString url = reply->readAll();
+
+	/** TIMEOUT */
+	if (url == nullptr) {
+		TwoLinesDialog dialog;
+		dialog.setLine1("Analysis Step 1 Timeout!");
+		dialog.exec();
+
+		/******/
+		this->parent->ui.progressBar->setValue(1);
+		this->parent->ui.progressBar->setVisible(false);
+		this->parent->ui.captureButton->setEnabled(true);
+		this->parent->ui.saveVideoButton->setEnabled(true);
+		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
+		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
+		this->parent->ui.radioButton->setEnabled(true);
+		this->parent->ui.radioButton2->setEnabled(true);
+		this->parent->ui.radioButton3->setEnabled(true);
+		this->parent->ui.radioButton4->setEnabled(true);
+		/** Re-enable changing tab */
+		this->parent->ui.tabWidget->setTabEnabled(0, true);
+		this->parent->ui.tabWidget->setTabEnabled(1, true);
+		this->parent->ui.tabWidget->setTabEnabled(2, true);
+		this->parent->ui.tabWidget->setTabEnabled(4, true);
+		this->parent->ui.tabWidget->setTabEnabled(5, true);
+		/** Re-enable changing tab END */
+		this->isUploading = false;
+		/******/
+
+		return;
+	}
+	/** TIMEOUT END */
+
+	this->parent->ui.progressBar->setValue(33);
 
 	qDebug() << url;
 
@@ -535,6 +571,9 @@ void CaptureTab::onUploadImage(QNetworkReply* reply) {
 
 	if (url.contains("error")) {
 		qCritical() << "onUploadImage received error reply!";
+		TwoLinesDialog dialog;
+		dialog.setLine1("onUploadImage received error reply!");
+		dialog.exec();
 		return;
 	}
 
@@ -543,9 +582,42 @@ void CaptureTab::onUploadImage(QNetworkReply* reply) {
 
 void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
 	qDebug() << "onBindImageUrl";
-	this->parent->ui.progressBar->setValue(66);
+	
 	QByteArray response_data = reply->readAll();
 	reply->deleteLater();
+
+	/** TIMEOUT */
+	if (response_data == nullptr) {
+		TwoLinesDialog dialog;
+		dialog.setLine1("Analysis Step 2 Timeout!");
+		dialog.exec();
+
+		/******/
+		this->parent->ui.progressBar->setValue(1);
+		this->parent->ui.progressBar->setVisible(false);
+		this->parent->ui.captureButton->setEnabled(true);
+		this->parent->ui.saveVideoButton->setEnabled(true);
+		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
+		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
+		this->parent->ui.radioButton->setEnabled(true);
+		this->parent->ui.radioButton2->setEnabled(true);
+		this->parent->ui.radioButton3->setEnabled(true);
+		this->parent->ui.radioButton4->setEnabled(true);
+		/** Re-enable changing tab */
+		this->parent->ui.tabWidget->setTabEnabled(0, true);
+		this->parent->ui.tabWidget->setTabEnabled(1, true);
+		this->parent->ui.tabWidget->setTabEnabled(2, true);
+		this->parent->ui.tabWidget->setTabEnabled(4, true);
+		this->parent->ui.tabWidget->setTabEnabled(5, true);
+		/** Re-enable changing tab END */
+		this->isUploading = false;
+		/******/
+
+		return;
+	}
+	/** TIMEOUT END */
+
+	this->parent->ui.progressBar->setValue(66);
 
 	QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
 
@@ -566,6 +638,37 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 
 	QByteArray response_data = reply->readAll();
 	reply->deleteLater();
+
+	/** TIMEOUT */
+	if (response_data == nullptr) {
+		TwoLinesDialog dialog;
+		dialog.setLine1("Analysis Step 3 Timeout!");
+		dialog.exec();
+
+		/******/
+		this->parent->ui.progressBar->setValue(1);
+		this->parent->ui.progressBar->setVisible(false);
+		this->parent->ui.captureButton->setEnabled(true);
+		this->parent->ui.saveVideoButton->setEnabled(true);
+		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
+		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
+		this->parent->ui.radioButton->setEnabled(true);
+		this->parent->ui.radioButton2->setEnabled(true);
+		this->parent->ui.radioButton3->setEnabled(true);
+		this->parent->ui.radioButton4->setEnabled(true);
+		/** Re-enable changing tab */
+		this->parent->ui.tabWidget->setTabEnabled(0, true);
+		this->parent->ui.tabWidget->setTabEnabled(1, true);
+		this->parent->ui.tabWidget->setTabEnabled(2, true);
+		this->parent->ui.tabWidget->setTabEnabled(4, true);
+		this->parent->ui.tabWidget->setTabEnabled(5, true);
+		/** Re-enable changing tab END */
+		this->isUploading = false;
+		/******/
+
+		return;
+	}
+	/** TIMEOUT END */
 
 	QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
 
