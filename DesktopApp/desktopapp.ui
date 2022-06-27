@@ -158,7 +158,7 @@
       <rect>
        <x>40</x>
        <y>20</y>
-       <width>171</width>
+       <width>1101</width>
        <height>51</height>
       </rect>
      </property>
@@ -172,9 +172,9 @@
     <widget class="QPushButton" name="createNewPatientButton">
      <property name="geometry">
       <rect>
-       <x>990</x>
+       <x>940</x>
        <y>750</y>
-       <width>151</width>
+       <width>201</width>
        <height>51</height>
       </rect>
      </property>
@@ -185,56 +185,62 @@
       <string>Create New Patient</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="patientListPreviousPageButton">
+    <widget class="QWidget" name="">
      <property name="geometry">
       <rect>
        <x>40</x>
        <y>750</y>
-       <width>151</width>
+       <width>511</width>
        <height>51</height>
       </rect>
      </property>
-     <property name="styleSheet">
-      <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Previous page</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="patientListNextPageButton">
-     <property name="geometry">
-      <rect>
-       <x>360</x>
-       <y>750</y>
-       <width>151</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Next page</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="patientListPageLabel">
-     <property name="geometry">
-      <rect>
-       <x>200</x>
-       <y>750</y>
-       <width>151</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Page 1</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QPushButton" name="patientListPreviousPageButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Previous page</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="patientListPageLabel">
+        <property name="styleSheet">
+         <string notr="true">font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Page 1</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="patientListNextPageButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Next page</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
    <widget class="QWidget" name="patientTab">
@@ -245,58 +251,10 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>100</y>
+       <y>90</y>
        <width>1100</width>
-       <height>621</height>
+       <height>631</height>
       </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="patientName">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>30</y>
-       <width>371</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Name: Jerry Tam</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="patientAge">
-     <property name="geometry">
-      <rect>
-       <x>460</x>
-       <y>30</y>
-       <width>111</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Age: XX</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="patientSubjectNumber">
-     <property name="geometry">
-      <rect>
-       <x>680</x>
-       <y>30</y>
-       <width>371</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Subject Number: </string>
      </property>
     </widget>
     <widget class="QPushButton" name="captureNewButton">
@@ -314,6 +272,48 @@
      <property name="text">
       <string>Capture New</string>
      </property>
+    </widget>
+    <widget class="QWidget" name="">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>20</y>
+       <width>1101</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QLabel" name="patientName">
+        <property name="styleSheet">
+         <string notr="true">font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Name: Jerry Tam</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="patientAge">
+        <property name="styleSheet">
+         <string notr="true">font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Age: XX</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="patientSubjectNumber">
+        <property name="styleSheet">
+         <string notr="true">font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Subject Number: </string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
    <widget class="QWidget" name="captureTab">
