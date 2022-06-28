@@ -198,6 +198,9 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
     QDir path = QDir((dir.absolutePath()) + "/" + patientIdToSaveFolderPath[patientIdVector[row]]);
 
     this->parent->savePath = path;
+    /** Handle Chinese name when saving video */
+    this->parent->tempVideoSavePath = QDir((dir.absolutePath()) + "/" + "tempVideoSaveFolder");
+    /** Handle Chinese name when saving video END */
     qDebug() << "DIR:::" << path;
     
     /** Use map with patientId as the key and save folder path as the value END */

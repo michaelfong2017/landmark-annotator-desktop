@@ -39,15 +39,21 @@ void Recorder::prepareRecorder() {
 		DEPTH_IMAGE_HEIGHT
 	);
 
+	/** Handle Chinese name when saving video */
+	QString tempVisitFolderPath = Helper::getVisitFolderPath(this->parent->tempVideoSavePath);
+	this->tempColorOutputFilename = tempVisitFolderPath + "/recording_color_" + dateTimeString + ".mp4";
+	this->tempDepthOutputFilename = tempVisitFolderPath + "/recording_depth_" + dateTimeString + ".mp4";
+	/** Handle Chinese name when saving video END */
+
 	this->colorVideoWriter = new cv::VideoWriter(
-		this->colorOutputFilename.toStdString(),
+		tempColorOutputFilename.toStdString(),
 		cv::VideoWriter::fourcc('H', '2', '6', '4'),
 		VIDEOWRITER_FPS,
 		colorSize
 	);
 
 	this->depthVideoWriter = new cv::VideoWriter(
-		this->depthOutputFilename.toStdString(),
+		tempDepthOutputFilename.toStdString(),
 		cv::VideoWriter::fourcc('H', '2', '6', '4'),
 		VIDEOWRITER_FPS,
 		depthSize
@@ -64,6 +70,15 @@ void Recorder::stopRecorder() {
 
 	this->colorVideoWriter->release();
 	this->depthVideoWriter->release();
+
+	/** Handle Chinese name when saving video */
+	QFile cfile(this->tempColorOutputFilename);
+	cfile.rename(this->colorOutputFilename);
+	QFile dfile(this->tempDepthOutputFilename);
+	dfile.rename(this->depthOutputFilename);
+	QDir tempDir(this->parent->tempVideoSavePath);
+	tempDir.removeRecursively();
+	/** Handle Chinese name when saving video END */
 }
 
 cv::VideoWriter* Recorder::getColorVideoWriter() { return this->colorVideoWriter; }

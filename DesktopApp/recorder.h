@@ -21,6 +21,8 @@ private:
 	cv::VideoWriter* depthVideoWriter;
 	QString colorOutputFilename;
 	QString depthOutputFilename;
+	QString tempColorOutputFilename;
+	QString tempDepthOutputFilename;
 
 public:
 	QTimer* timer;
