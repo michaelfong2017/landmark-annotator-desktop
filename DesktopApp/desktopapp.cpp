@@ -56,7 +56,10 @@ DesktopApp::DesktopApp(QWidget* parent)
 	this->ui.tabWidget->setTabVisible(5, false);
 	/** Hide unused Alignment tab END */
 	/** Hide unused bottom buttons in Analysis tab */
-	this->ui.horizontalLayout_3->setEnabled(false);
+	//this->ui.horizontalLayout_3->setEnabled(false);
+	this->ui.reportButton->setVisible(false);
+	this->ui.annotateButtonAnnotateTab->setVisible(false);
+	this->ui.saveButtonAnnotateTab->setVisible(false);
 	/** Hide unused bottom buttons in Analysis tab END */
 
 	QObject::connect(ui.tabWidget, &QTabWidget::currentChanged, [this]() {
