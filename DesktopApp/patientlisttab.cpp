@@ -199,7 +199,7 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
 
     this->parent->savePath = path;
     /** Handle Chinese name when saving video */
-    this->parent->tempVideoSavePath = QDir((dir.absolutePath()) + "/" + "tempVideoSaveFolder");
+    this->parent->tempVideoSavePath = QDir("/tempVideoSaveFolder");
     /** Handle Chinese name when saving video END */
     qDebug() << "DIR:::" << path;
     
