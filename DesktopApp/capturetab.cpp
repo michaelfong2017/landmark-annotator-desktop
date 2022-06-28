@@ -103,7 +103,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			this->parent->ui.captureTab->setStyleSheet("#captureTab {border: 2px solid red}");
 
 			this->recorder->prepareRecorder();
-			this->parent->ui.saveVideoButton->setText("Stop Recording");
+			this->parent->ui.saveVideoButton->setText("Stop");
 
 			// Disable analysis button
 			this->parent->ui.annotateButtonCaptureTab->setEnabled(false);
@@ -792,7 +792,7 @@ void CaptureTab::setCaptureFilepath(QString captureFilepath) { this->captureFile
 cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 
 	// RANSAC
-	int k = 8;
+	int k = 6;
 	int threshold = 15;
 
 	int iterationCount = 0;
@@ -809,116 +809,17 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 	float PointTwo[2];
 	float PointThree[2];
 
-	//int rows = depthToColorImage.rows;
-	//int cols = depthToColorImage.cols;
-	//const int MAX_DEPTH_VALUE = 5500; // Depth sensor maximum is 5XXXmm
-	//const int NUM_OF_INTERVALS = 12;
-	//const int SIZE_OF_INTERVALS = 500;
-	//int countOfDepthValues[NUM_OF_INTERVALS] = { 0 };
-
-	//std::vector<std::vector<std::pair<int, int>>> v;
-	//for (int i = 0; i < NUM_OF_INTERVALS; i++) {
-	//	std::vector<std::pair<int, int>> s;
-	//	v.push_back(s);
-	//}
-	//for (int y = 0; y < rows; y++) {
-	//	for (int x = 0; x < cols; x++) {
-	//		uint16_t d = depthToColorImage.at<uint16_t>(y, x);
-	//		if (d == 0) {
-	//			countOfDepthValues[0]++;
-	//			v[0].push_back({ x, y });
-	//		}
-	//		else {
-	//			int i = (int)((d - 1) / SIZE_OF_INTERVALS) + 1;
-	//			countOfDepthValues[i]++;
-	//			v[i].push_back({ x, y });
-	//		}
-	//	}
-	//}
-	//for (int i = 0; i < NUM_OF_INTERVALS; i++) {
-	//	if (i == 0) {
-	//		qDebug() << "countOfDepth[0] = " << countOfDepthValues[0];
-	//	}
-	//	else {
-	//		qDebug() << "countOfDepth[" << (i - 1) * SIZE_OF_INTERVALS + 1 << " - " << i * SIZE_OF_INTERVALS << "] = " << countOfDepthValues[i];
-	//	}
-	//}
-	//int largestCount = -1;
-	//int largestIndex = -1;
-	//for (int i = 1; i < NUM_OF_INTERVALS; i++) {
-	//	if (countOfDepthValues[i] > largestCount) {
-	//		largestCount = countOfDepthValues[i];
-	//		largestIndex = i;
-	//	}
-	//}
-	//
-	//cv::Mat out = cv::Mat::zeros(depthToColorImage.rows, depthToColorImage.cols, CV_16UC1);
-	//for (int i = 0; i < largestCount; i++) {
-	//	qDebug() << v[largestIndex][i].first;
-	//	out.at<uint16_t>(v[largestIndex][i].second, v[largestIndex][i].first) = 5000;
-	//}
-
-	
-	//std::pair<int, int> Pair1;
-	//std::pair<int, int> Pair2;
-	//std::pair<int, int> Pair3;
-	//srand((unsigned)time(0));
-	//while (iterationCount <= k) {
-	//	
-	//	inlierCount = outlierCount = 0;
-
-	//	// First point
-	//	while (true) {
-	//		Pair1 = v[largestIndex][rand() % largestCount];
-	//		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(Pair1.first, Pair1.second, depthToColorImage);
-	//		if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
-	//			continue;
-	//		}
-	//		else {
-	//			break;
-	//		}
-	//	}
-
-	//	// Second point
-	//	while (true) {
-	//		Pair2 = v[largestIndex][rand() % largestCount];
-	//		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(Pair2.first, Pair2.second, depthToColorImage);
-	//		if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
-	//			continue;
-	//		}
-	//		if (sqrt(pow(Pair2.first - Pair1.first, 2) + pow(Pair2.second - Pair1.second, 2) * 1.0) <= 150) {
-	//			continue;
-	//		}
-	//		break;
-	//	}
-
-	//	// Third point
-	//	while (true) {
-	//		Pair3 = v[largestIndex][rand() % largestCount];
-	//		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(Pair3.first, Pair3.second, depthToColorImage);
-	//		if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
-	//			continue;
-	//		}
-	//		if (sqrt(pow(Pair3.first - Pair1.first, 2) + pow(Pair3.second - Pair1.second, 2) * 1.0) <= 150) {
-	//			continue;
-	//		}
-	//		if (sqrt(pow(Pair3.first - Pair2.first, 2) + pow(Pair3.second - Pair2.second, 2) * 1.0) <= 150) {
-	//			continue;
-	//		}
-	//		break;
-	//	}
-	//}
-
 	srand((unsigned)time(0));
+
 	while (iterationCount <= k) {
 		
 		inlierCount = 0;
 
 		// First point
 		while (true) {
-			PointOne[0] = rand() % depthToColorImage.cols; // ?Integer division by zero.
+			PointOne[0] = rand() % depthToColorImage.cols;
 			PointOne[1] = rand() % depthToColorImage.rows;
-			if (PointOne[0] < 100 && PointOne[0] > 1180) {
+			if (PointOne[0] < 200 && PointOne[0] > 1080) {
 				continue;
 			}
 			if (PointOne[0] > 490 && PointOne[0] < 790) {
@@ -937,7 +838,7 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 		while (true) {
 			PointTwo[0] = rand() % depthToColorImage.cols;
 			PointTwo[1] = rand() % depthToColorImage.rows;
-			if (PointTwo[0] < 100 && PointTwo[0] > 1180) {
+			if (PointTwo[0] < 200 && PointTwo[0] > 1080) {
 				continue;
 			}
 			if (PointTwo[0] > 490 && PointTwo[0] < 790) {
@@ -947,7 +848,7 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 			if (vector3D_2.x() == 0.0f && vector3D_2.y() == 0.0f && vector3D_2.z() == 0.0f) {
 				continue;
 			}
-			if (sqrt(pow(PointTwo[0] - PointOne[0], 2) + pow(PointTwo[1] - PointOne[1], 2) * 1.0) <= 150) {
+			if (sqrt(pow(PointTwo[0] - PointOne[0], 2) + pow(PointTwo[1] - PointOne[1], 2) * 1.0) <= 100) {
 				continue;
 			}
 			break;
@@ -957,7 +858,7 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 		while (true) {
 			PointThree[0] = rand() % depthToColorImage.cols;
 			PointThree[1] = rand() % depthToColorImage.rows;
-			if (PointThree[0] < 100 && PointThree[0] > 1180) {
+			if (PointThree[0] < 200 && PointThree[0] > 1080) {
 				continue;
 			}
 			if (PointThree[0] > 490 && PointThree[0] < 790) {
@@ -967,10 +868,10 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 			if (vector3D_3.x() == 0.0f && vector3D_3.y() == 0.0f && vector3D_3.z() == 0.0f) {
 				continue;
 			}
-			if (sqrt(pow(PointThree[0] - PointOne[0], 2) + pow(PointThree[1] - PointOne[1], 2) * 1.0) <= 150) {
+			if (sqrt(pow(PointThree[0] - PointOne[0], 2) + pow(PointThree[1] - PointOne[1], 2) * 1.0) <= 100) {
 				continue;
 			}
-			if (sqrt(pow(PointThree[0] - PointTwo[0], 2) + pow(PointThree[1] - PointTwo[1], 2) * 1.0) <= 150) {
+			if (sqrt(pow(PointThree[0] - PointTwo[0], 2) + pow(PointThree[1] - PointTwo[1], 2) * 1.0) <= 100) {
 				continue;
 			}
 			break;
@@ -996,6 +897,9 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 		for (int y = 0; y < depthToColorImage.rows; y+=2) {
 			for (int x = 0; x < depthToColorImage.cols; x+=2) {
 				if (x > 490 && x < 790) {
+					continue;
+				}
+				if (x < 200 || x > 1080) {
 					continue;
 				}
 				QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, depthToColorImage);

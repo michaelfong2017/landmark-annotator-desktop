@@ -28,8 +28,14 @@
      <height>881</height>
     </rect>
    </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="styleSheet">
-    <string notr="true">font: 8pt &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="currentIndex">
     <number>0</number>
@@ -48,7 +54,7 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
       <string>Username</string>
@@ -64,7 +70,7 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
       <string>Password</string>
@@ -79,8 +85,19 @@
        <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>MS Shell Dlg 2</family>
+       <pointsize>-1</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>false</underline>
+       <stylestrategy>PreferAntialias</stylestrategy>
+      </font>
+     </property>
      <property name="styleSheet">
-      <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
       <string>Login</string>
@@ -115,21 +132,12 @@
        <height>111</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <family>MS Shell Dlg 2</family>
-       <pointsize>28</pointsize>
-       <weight>9</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-       <underline>false</underline>
-      </font>
-     </property>
      <property name="cursor">
       <cursorShape>ArrowCursor</cursorShape>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 75 28pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 50px &quot;MS Shell Dlg 2&quot;;
+</string>
      </property>
      <property name="text">
       <string>Wukong</string>
@@ -163,7 +171,7 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 30px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
       <string>Patient List</string>
@@ -174,18 +182,18 @@
       <rect>
        <x>940</x>
        <y>750</y>
-       <width>201</width>
-       <height>51</height>
+       <width>200</width>
+       <height>50</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
-      <string>Create New Patient</string>
+      <string>New Patient</string>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -204,7 +212,7 @@
          </sizepolicy>
         </property>
         <property name="styleSheet">
-         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+         <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
         </property>
         <property name="text">
          <string>Previous page</string>
@@ -214,7 +222,7 @@
       <item>
        <widget class="QLabel" name="patientListPageLabel">
         <property name="styleSheet">
-         <string notr="true">font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
+         <string notr="true">font: 24px &quot;MS Shell Dlg 2&quot;;</string>
         </property>
         <property name="text">
          <string>Page 1</string>
@@ -233,7 +241,7 @@
          </sizepolicy>
         </property>
         <property name="styleSheet">
-         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+         <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
         </property>
         <property name="text">
          <string>Next page</string>
@@ -260,20 +268,20 @@
     <widget class="QPushButton" name="captureNewButton">
      <property name="geometry">
       <rect>
-       <x>990</x>
+       <x>940</x>
        <y>750</y>
-       <width>151</width>
-       <height>51</height>
+       <width>200</width>
+       <height>50</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
       <string>Capture New</string>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -285,8 +293,14 @@
      <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
        <widget class="QLabel" name="patientName">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>1</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
-         <string notr="true">font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
+         <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
         </property>
         <property name="text">
          <string>Name: Jerry Tam</string>
@@ -295,8 +309,14 @@
       </item>
       <item>
        <widget class="QLabel" name="patientAge">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>1</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
-         <string notr="true">font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
+         <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
         </property>
         <property name="text">
          <string>Age: XX</string>
@@ -305,11 +325,23 @@
       </item>
       <item>
        <widget class="QLabel" name="patientSubjectNumber">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>2</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
-         <string notr="true">font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
+         <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
         </property>
         <property name="text">
          <string>Subject Number: </string>
+        </property>
+        <property name="scaledContents">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -352,15 +384,18 @@
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>460</x>
-       <y>730</y>
-       <width>321</width>
+       <x>400</x>
+       <y>720</y>
+       <width>431</width>
        <height>39</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QRadioButton" name="radioButton">
+        <property name="styleSheet">
+         <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
         <property name="text">
          <string>Color</string>
         </property>
@@ -368,6 +403,9 @@
       </item>
       <item>
        <widget class="QRadioButton" name="radioButton2">
+        <property name="styleSheet">
+         <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
         <property name="text">
          <string>Depth</string>
         </property>
@@ -375,6 +413,9 @@
       </item>
       <item>
        <widget class="QRadioButton" name="radioButton3">
+        <property name="styleSheet">
+         <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
         <property name="text">
          <string>Color to Depth</string>
         </property>
@@ -382,6 +423,9 @@
       </item>
       <item>
        <widget class="QRadioButton" name="radioButton4">
+        <property name="styleSheet">
+         <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
         <property name="text">
          <string>Depth to Color</string>
         </property>
@@ -405,11 +449,14 @@
     <widget class="QLabel" name="saveInfoCaptureTab">
      <property name="geometry">
       <rect>
-       <x>466</x>
-       <y>790</y>
-       <width>311</width>
-       <height>61</height>
+       <x>396</x>
+       <y>810</y>
+       <width>421</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
       <string/>
@@ -431,7 +478,7 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;
+      <string notr="true">font: 75 18px &quot;MS Shell Dlg 2&quot;;
 color: rgb(255, 0, 5);
 </string>
      </property>
@@ -445,11 +492,23 @@ color: rgb(255, 0, 5);
      </property>
      <property name="geometry">
       <rect>
-       <x>790</x>
-       <y>820</y>
-       <width>91</width>
-       <height>23</height>
+       <x>820</x>
+       <y>810</y>
+       <width>121</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>MS Shell Dlg 2</family>
+       <pointsize>-1</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
       <string>Show In Explorer</string>
@@ -491,15 +550,27 @@ color: rgb(255, 0, 5);
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>440</x>
-       <y>760</y>
-       <width>442</width>
-       <height>25</height>
+       <x>400</x>
+       <y>770</y>
+       <width>451</width>
+       <height>31</height>
       </rect>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="captureButton">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
         <property name="text">
          <string>Capture</string>
         </property>
@@ -510,6 +581,15 @@ color: rgb(255, 0, 5);
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
         <property name="text">
          <string>Save</string>
         </property>
@@ -517,8 +597,17 @@ color: rgb(255, 0, 5);
       </item>
       <item>
        <widget class="QPushButton" name="saveVideoButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
         <property name="text">
-         <string>Start Recording</string>
+         <string>Record</string>
         </property>
        </widget>
       </item>
@@ -527,6 +616,15 @@ color: rgb(255, 0, 5);
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
         <property name="text">
          <string>Analysis</string>
         </property>
@@ -534,6 +632,15 @@ color: rgb(255, 0, 5);
       </item>
       <item>
        <widget class="QProgressBar" name="progressBar">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
         <property name="value">
          <number>24</number>
         </property>
@@ -676,7 +783,7 @@ color: rgb(255, 0, 5);
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
       <string>Confirm</string>

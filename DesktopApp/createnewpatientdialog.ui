@@ -28,9 +28,12 @@
     <rect>
      <x>533</x>
      <y>350</y>
-     <width>71</width>
+     <width>111</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Height (cm):</string>
@@ -41,9 +44,12 @@
     <rect>
      <x>40</x>
      <y>180</y>
-     <width>45</width>
+     <width>81</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Email:</string>
@@ -54,9 +60,12 @@
     <rect>
      <x>40</x>
      <y>30</y>
-     <width>61</width>
+     <width>81</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Name*:</string>
@@ -77,9 +86,12 @@
     <rect>
      <x>533</x>
      <y>30</y>
-     <width>91</width>
+     <width>131</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Subject Number:</string>
@@ -90,9 +102,12 @@
     <rect>
      <x>533</x>
      <y>400</y>
-     <width>71</width>
+     <width>111</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Weight (kg):</string>
@@ -101,9 +116,9 @@
   <widget class="QTextEdit" name="subjectNumberInput">
    <property name="geometry">
     <rect>
-     <x>660</x>
+     <x>680</x>
      <y>30</y>
-     <width>301</width>
+     <width>281</width>
      <height>29</height>
     </rect>
    </property>
@@ -111,9 +126,9 @@
   <widget class="QTextEdit" name="nationalityInput">
    <property name="geometry">
     <rect>
-     <x>660</x>
+     <x>680</x>
      <y>130</y>
-     <width>301</width>
+     <width>281</width>
      <height>29</height>
     </rect>
    </property>
@@ -121,9 +136,9 @@
   <widget class="QTextEdit" name="socialSecurityInput">
    <property name="geometry">
     <rect>
-     <x>660</x>
+     <x>680</x>
      <y>80</y>
-     <width>301</width>
+     <width>281</width>
      <height>29</height>
     </rect>
    </property>
@@ -166,9 +181,12 @@
     <rect>
      <x>533</x>
      <y>300</y>
-     <width>51</width>
+     <width>121</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Gender:</string>
@@ -189,9 +207,12 @@
     <rect>
      <x>533</x>
      <y>80</y>
-     <width>121</width>
+     <width>141</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Social Security Number:</string>
@@ -202,9 +223,12 @@
     <rect>
      <x>40</x>
      <y>80</y>
-     <width>45</width>
+     <width>81</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Phone:</string>
@@ -223,15 +247,18 @@
   <widget class="QWidget" name="horizontalLayoutWidget_2">
    <property name="geometry">
     <rect>
-     <x>613</x>
+     <x>663</x>
      <y>300</y>
-     <width>194</width>
+     <width>301</width>
      <height>39</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="sexInput">
     <item>
      <widget class="QRadioButton" name="male">
+      <property name="styleSheet">
+       <string notr="true">font: 10px &quot;MS Shell Dlg 2&quot;;</string>
+      </property>
       <property name="text">
        <string>Male</string>
       </property>
@@ -239,6 +266,9 @@
     </item>
     <item>
      <widget class="QRadioButton" name="female">
+      <property name="styleSheet">
+       <string notr="true">font: 10px &quot;MS Shell Dlg 2&quot;;</string>
+      </property>
       <property name="text">
        <string>Female</string>
       </property>
@@ -251,9 +281,12 @@
     <rect>
      <x>533</x>
      <y>180</y>
-     <width>61</width>
+     <width>81</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Address:</string>
@@ -264,9 +297,12 @@
     <rect>
      <x>533</x>
      <y>130</y>
-     <width>61</width>
+     <width>131</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Country:</string>
@@ -277,9 +313,12 @@
     <rect>
      <x>120</x>
      <y>230</y>
-     <width>341</width>
-     <height>201</height>
+     <width>351</width>
+     <height>211</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
   </widget>
   <widget class="QLabel" name="idLabel">
@@ -287,9 +326,12 @@
     <rect>
      <x>40</x>
      <y>130</y>
-     <width>71</width>
+     <width>81</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>ID Number*:</string>
@@ -364,7 +406,7 @@
    </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(255, 0, 0);
-font: 13pt &quot;MS Shell Dlg 2&quot;;</string>
+font: 14px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>(Note: Surname_FirstName)</string>
