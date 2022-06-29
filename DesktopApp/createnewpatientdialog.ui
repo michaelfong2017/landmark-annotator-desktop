@@ -22,6 +22,9 @@
      <height>29</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+   </property>
   </widget>
   <widget class="QLabel" name="heightLabel">
    <property name="geometry">
@@ -80,6 +83,9 @@
      <height>29</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+   </property>
   </widget>
   <widget class="QLabel" name="subjectNumberLabel">
    <property name="geometry">
@@ -122,6 +128,9 @@
      <height>29</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+   </property>
   </widget>
   <widget class="QTextEdit" name="nationalityInput">
    <property name="geometry">
@@ -132,6 +141,9 @@
      <height>29</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+   </property>
   </widget>
   <widget class="QTextEdit" name="socialSecurityInput">
    <property name="geometry">
@@ -141,6 +153,9 @@
      <width>281</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
   </widget>
   <widget class="QLabel" name="dobLabel">
@@ -165,6 +180,9 @@
      <height>101</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+   </property>
   </widget>
   <widget class="QTextEdit" name="weightInput">
    <property name="geometry">
@@ -174,6 +192,9 @@
      <width>301</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
   </widget>
   <widget class="QLabel" name="sexLabel">
@@ -200,6 +221,9 @@
      <width>348</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
   </widget>
   <widget class="QLabel" name="socialSecurityLabel">
@@ -243,6 +267,9 @@
      <height>29</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+   </property>
   </widget>
   <widget class="QWidget" name="horizontalLayoutWidget_2">
    <property name="geometry">
@@ -257,7 +284,7 @@
     <item>
      <widget class="QRadioButton" name="male">
       <property name="styleSheet">
-       <string notr="true">font: 10px &quot;MS Shell Dlg 2&quot;;</string>
+       <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
       </property>
       <property name="text">
        <string>Male</string>
@@ -267,7 +294,7 @@
     <item>
      <widget class="QRadioButton" name="female">
       <property name="styleSheet">
-       <string notr="true">font: 10px &quot;MS Shell Dlg 2&quot;;</string>
+       <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
       </property>
       <property name="text">
        <string>Female</string>
@@ -345,6 +372,9 @@
      <width>301</width>
      <height>29</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
   </widget>
   <widget class="QDialogButtonBox" name="buttonBox">

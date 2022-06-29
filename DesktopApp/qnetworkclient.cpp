@@ -1,5 +1,6 @@
 #include "qnetworkclient.h"
 #include "stdafx.h"
+#include <twolinesdialog.h>
 
 QNetworkClient::QNetworkClient() : QWidget() {
     
@@ -36,7 +37,9 @@ void QNetworkClient::onLogin(QNetworkReply* reply) {
     QJsonObject obj = jsonResponse.object();
  
     if (obj.contains("error")) {
-        qDebug() << "Failed login";
+        TwoLinesDialog dialog;
+        dialog.setLine1("Information incorrect!");
+        dialog.exec();
     }
     else {
         this->userToken = QString::fromStdString("Bearer " + response_data.toStdString());
