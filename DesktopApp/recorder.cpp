@@ -77,7 +77,8 @@ void Recorder::stopRecorder() {
 	QFile dfile(this->tempDepthOutputFilename);
 	dfile.rename(this->depthOutputFilename);
 	QDir tempDir(this->parent->tempVideoSavePath);
-	tempDir.removeRecursively();
+
+	qDebug() << "tempDir: " << tempDir;
 	/** Handle Chinese name when saving video END */
 }
 
