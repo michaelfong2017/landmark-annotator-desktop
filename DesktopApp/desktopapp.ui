@@ -113,7 +113,7 @@
       </rect>
      </property>
      <property name="text">
-      <string/>
+      <string>isl512gp@gmail.com</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="passwordLineEdit">
@@ -126,7 +126,7 @@
       </rect>
      </property>
      <property name="text">
-      <string/>
+      <string>123456</string>
      </property>
     </widget>
     <widget class="QLabel" name="titleLabel">
@@ -499,7 +499,7 @@ color: rgb(255, 0, 5);
      <property name="geometry">
       <rect>
        <x>820</x>
-       <y>810</y>
+       <y>795</y>
        <width>121</width>
        <height>41</height>
       </rect>
@@ -517,7 +517,7 @@ color: rgb(255, 0, 5);
       <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
-      <string>Show In Explorer</string>
+      <string>Show in Explorer</string>
      </property>
     </widget>
     <widget class="QLabel" name="recordingGif">

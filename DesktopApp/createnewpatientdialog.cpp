@@ -7,7 +7,16 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
 
 	this->parent = parent;
 
-	ui.buttonBox->addButton("Add", QDialogButtonBox::AcceptRole);
+    QPushButton* b = ui.buttonBox->addButton("Add", QDialogButtonBox::AcceptRole);
+    b->setDefault(false);
+    b->setAutoDefault(false);
+    b->setFocusPolicy(Qt::NoFocus);
+
+    QPushButton* b2 = ui.buttonBox->addButton("", QDialogButtonBox::HelpRole);
+    b2->setDefault(true);
+    b2->setAutoDefault(true);
+
+    disconnect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 
 	QObject::connect(ui.buttonBox, &QDialogButtonBox::accepted, [this]() {
         bool isPatientDataValid = true;
@@ -16,14 +25,14 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
         QDate dob;
 
         // Validate mandatory fields
-        if ((name = ui.nameInput->toPlainText().toStdString()) != "") {
+        if ((name = ui.nameInput->text().toStdString()) != "") {
             patient.setName(name);
         }
         else isPatientDataValid = false;
 
         /** HKID card number seems to be the unique key of a patient in the database.
           * This also seems to correspond to the id (patientId) returned in response. */
-        if ((hkid = ui.idInput->toPlainText().toStdString()) != "") {
+        if ((hkid = ui.idInput->text().toStdString()) != "") {
             patient.setHKID(hkid);
         }
         else isPatientDataValid = false;
@@ -36,19 +45,19 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
         dob = ui.dobInput->selectedDate();
         patient.setDOB(dob);
 
-        socialSecurityNumber = ui.socialSecurityInput->toPlainText().toStdString();
+        socialSecurityNumber = ui.socialSecurityInput->text().toStdString();
         patient.setSocialSecurityNumber(socialSecurityNumber);
 
-        subjectNumber = ui.subjectNumberInput->toPlainText().toStdString();
+        subjectNumber = ui.subjectNumberInput->text().toStdString();
         patient.setSubjectNumber(subjectNumber);
 
-        phone = ui.phoneInput->toPlainText().toStdString();
+        phone = ui.phoneInput->text().toStdString();
         patient.setPhoneNumber(phone);
 
-        email = ui.emailInput->toPlainText().toStdString();
+        email = ui.emailInput->text().toStdString();
         patient.setEmail(email);
 
-        nationality = ui.nationalityInput->toPlainText().toStdString();
+        nationality = ui.nationalityInput->text().toStdString();
         patient.setNationality(nationality);
 
         address = ui.addressInput->toPlainText().toStdString();
@@ -58,8 +67,8 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
         else if (ui.female->isChecked()) patient.setSex(Sex::Female);
         else patient.setSex(Sex::Undefined);
 
-        std::string height = ui.heightInput->toPlainText().toStdString();
-        std::string weight = ui.weightInput->toPlainText().toStdString();
+        std::string height = ui.heightInput->text().toStdString();
+        std::string weight = ui.weightInput->text().toStdString();
         if (height != "" && weight != "") {
             try {
                 // Height and weight should be a number

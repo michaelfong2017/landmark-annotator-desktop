@@ -13,24 +13,11 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QTextEdit" name="emailInput">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>180</y>
-     <width>348</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="heightLabel">
    <property name="geometry">
     <rect>
      <x>533</x>
-     <y>350</y>
+     <y>230</y>
      <width>111</width>
      <height>29</height>
     </rect>
@@ -47,8 +34,8 @@
     <rect>
      <x>40</x>
      <y>180</y>
-     <width>81</width>
-     <height>29</height>
+     <width>80</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -63,8 +50,8 @@
     <rect>
      <x>40</x>
      <y>30</y>
-     <width>81</width>
-     <height>29</height>
+     <width>80</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -72,19 +59,6 @@
    </property>
    <property name="text">
     <string>Name*:</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="nameInput">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>30</y>
-     <width>348</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
   </widget>
   <widget class="QLabel" name="subjectNumberLabel">
@@ -107,7 +81,7 @@
    <property name="geometry">
     <rect>
      <x>533</x>
-     <y>400</y>
+     <y>280</y>
      <width>111</width>
      <height>29</height>
     </rect>
@@ -119,52 +93,13 @@
     <string>Weight (kg):</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="subjectNumberInput">
-   <property name="geometry">
-    <rect>
-     <x>680</x>
-     <y>30</y>
-     <width>281</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="nationalityInput">
-   <property name="geometry">
-    <rect>
-     <x>680</x>
-     <y>130</y>
-     <width>281</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="socialSecurityInput">
-   <property name="geometry">
-    <rect>
-     <x>680</x>
-     <y>80</y>
-     <width>281</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="dobLabel">
    <property name="geometry">
     <rect>
      <x>40</x>
      <y>220</y>
-     <width>71</width>
-     <height>29</height>
+     <width>80</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="text">
@@ -174,23 +109,10 @@
   <widget class="QTextEdit" name="addressInput">
    <property name="geometry">
     <rect>
-     <x>613</x>
-     <y>180</y>
-     <width>348</width>
-     <height>101</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="weightInput">
-   <property name="geometry">
-    <rect>
-     <x>660</x>
-     <y>400</y>
-     <width>301</width>
-     <height>29</height>
+     <x>610</x>
+     <y>345</y>
+     <width>350</width>
+     <height>100</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -201,7 +123,7 @@
    <property name="geometry">
     <rect>
      <x>533</x>
-     <y>300</y>
+     <y>180</y>
      <width>121</width>
      <height>29</height>
     </rect>
@@ -211,19 +133,6 @@
    </property>
    <property name="text">
     <string>Gender:</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="idInput">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>130</y>
-     <width>348</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
   </widget>
   <widget class="QLabel" name="socialSecurityLabel">
@@ -247,8 +156,8 @@
     <rect>
      <x>40</x>
      <y>80</y>
-     <width>81</width>
-     <height>29</height>
+     <width>80</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -258,25 +167,12 @@
     <string>Phone:</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="phoneInput">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>80</y>
-     <width>348</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
-   </property>
-  </widget>
   <widget class="QWidget" name="horizontalLayoutWidget_2">
    <property name="geometry">
     <rect>
-     <x>663</x>
-     <y>300</y>
-     <width>301</width>
+     <x>713</x>
+     <y>180</y>
+     <width>251</width>
      <height>39</height>
     </rect>
    </property>
@@ -307,7 +203,7 @@
    <property name="geometry">
     <rect>
      <x>533</x>
-     <y>180</y>
+     <y>340</y>
      <width>81</width>
      <height>29</height>
     </rect>
@@ -353,8 +249,8 @@
     <rect>
      <x>40</x>
      <y>130</y>
-     <width>81</width>
-     <height>29</height>
+     <width>80</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -364,25 +260,12 @@
     <string>ID Number*:</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="heightInput">
-   <property name="geometry">
-    <rect>
-     <x>660</x>
-     <y>350</y>
-     <width>301</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
-   </property>
-  </widget>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>860</x>
+     <x>720</x>
      <y>480</y>
-     <width>101</width>
+     <width>241</width>
      <height>31</height>
     </rect>
    </property>
@@ -440,6 +323,96 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>(Note: Surname_FirstName)</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="nameInput">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>30</y>
+     <width>350</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="phoneInput">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>80</y>
+     <width>350</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="idInput">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>130</y>
+     <width>350</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="emailInput">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>180</y>
+     <width>350</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="subjectNumberInput">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>30</y>
+     <width>280</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="socialSecurityInput">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>80</y>
+     <width>280</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="nationalityInput">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>130</y>
+     <width>280</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="heightInput">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>230</y>
+     <width>280</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="weightInput">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>280</y>
+     <width>280</width>
+     <height>30</height>
+    </rect>
    </property>
   </widget>
  </widget>

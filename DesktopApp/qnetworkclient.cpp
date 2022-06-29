@@ -54,7 +54,7 @@ void QNetworkClient::onLogin(QNetworkReply* reply) {
 void QNetworkClient::fetchPatientList(const QObject* receiver, const char* member) {
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients?MaxResultCount=500"));
+    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients?MaxResultCount=500&Category=Passed"));
     request.setRawHeader("Authorization", this->userToken.toUtf8());
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
