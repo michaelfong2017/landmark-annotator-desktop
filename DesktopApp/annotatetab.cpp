@@ -341,7 +341,8 @@ std::map<std::string, QPointF>* AnnotateTab::getAnnotations() {
 void AnnotateTab::setAnnotationsText() {
 	QString text = "";
 	for (auto it : this->annotations3D) {
-		int x = it.second.x(), y = it.second.y(), z = it.second.z();
+		std::string key = it.first;
+		int x = this->annotations[key].x() * this->scalingFactor, y = this->annotations[key].y() * this->scalingFactor, z = it.second.z();
 		std::string plain_s = "Point " + it.first + ": (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")\n";
 		QString str = QString::fromUtf8(plain_s.c_str());
 		text.append(str);
