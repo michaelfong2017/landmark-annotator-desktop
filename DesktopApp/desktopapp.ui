@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>911</height>
+    <height>920</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -24,8 +24,8 @@
     <rect>
      <x>30</x>
      <y>20</y>
-     <width>1191</width>
-     <height>881</height>
+     <width>1220</width>
+     <height>880</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -47,8 +47,8 @@
     <widget class="QLabel" name="usernameLabel">
      <property name="geometry">
       <rect>
-       <x>340</x>
-       <y>229</y>
+       <x>400</x>
+       <y>289</y>
        <width>141</width>
        <height>31</height>
       </rect>
@@ -57,14 +57,14 @@
       <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
-      <string>Username</string>
+      <string>Username: </string>
      </property>
     </widget>
     <widget class="QLabel" name="passwordLabel">
      <property name="geometry">
       <rect>
-       <x>340</x>
-       <y>299</y>
+       <x>400</x>
+       <y>359</y>
        <width>141</width>
        <height>31</height>
       </rect>
@@ -73,14 +73,14 @@
       <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="text">
-      <string>Password</string>
+      <string>Password: </string>
      </property>
     </widget>
     <widget class="QPushButton" name="loginButton">
      <property name="geometry">
       <rect>
-       <x>440</x>
-       <y>380</y>
+       <x>500</x>
+       <y>440</y>
        <width>131</width>
        <height>41</height>
       </rect>
@@ -106,28 +106,34 @@
     <widget class="QLineEdit" name="usernameLineEdit">
      <property name="geometry">
       <rect>
-       <x>482</x>
-       <y>229</y>
+       <x>540</x>
+       <y>289</y>
        <width>181</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="text">
+      <string>isl512gp@gmail.com</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="passwordLineEdit">
      <property name="geometry">
       <rect>
-       <x>480</x>
-       <y>300</y>
+       <x>540</x>
+       <y>360</y>
        <width>181</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="text">
+      <string>123456</string>
      </property>
     </widget>
     <widget class="QLabel" name="titleLabel">
      <property name="geometry">
       <rect>
-       <x>340</x>
-       <y>90</y>
+       <x>410</x>
+       <y>150</y>
        <width>321</width>
        <height>111</height>
       </rect>
@@ -136,7 +142,7 @@
       <cursorShape>ArrowCursor</cursorShape>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 50px &quot;MS Shell Dlg 2&quot;;
+      <string notr="true">font: 60px &quot;MS Shell Dlg 2&quot;;
 </string>
      </property>
      <property name="text">
@@ -450,7 +456,7 @@
      <property name="geometry">
       <rect>
        <x>396</x>
-       <y>810</y>
+       <y>800</y>
        <width>421</width>
        <height>41</height>
       </rect>
@@ -551,7 +557,7 @@ color: rgb(255, 0, 5);
      <property name="geometry">
       <rect>
        <x>400</x>
-       <y>770</y>
+       <y>760</y>
        <width>451</width>
        <height>31</height>
       </rect>

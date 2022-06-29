@@ -5,7 +5,7 @@ QNetworkClient::QNetworkClient() : QWidget() {
     
 }
 
-void QNetworkClient::login(QTabWidget* qTabWidget) {
+void QNetworkClient::login(QTabWidget* qTabWidget, QString username, QString password) {
     this->qTabWidget = qTabWidget;
 
     // Login
@@ -14,9 +14,11 @@ void QNetworkClient::login(QTabWidget* qTabWidget) {
     QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/account/login"));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
+    qDebug() << username << password;
+
     QJsonObject obj;
-    obj["account"] = "isl512gp@gmail.com";
-    obj["password"] = "123456";
+    obj["account"] = username;
+    obj["password"] = password;
     QByteArray data = QJsonDocument(obj).toJson();
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onLogin(QNetworkReply*)));
@@ -25,17 +27,31 @@ void QNetworkClient::login(QTabWidget* qTabWidget) {
     // returns userToken, needs to be stored
 }
 void QNetworkClient::onLogin(QNetworkReply* reply) {
-    this->userToken = QString::fromStdString("Bearer " + reply->readAll().toStdString());
-    qDebug() << this->userToken;
+
+    QByteArray response_data = reply->readAll();
+    qDebug() << response_data;
+
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
+    qDebug() << jsonResponse;
+    QJsonObject obj = jsonResponse.object();
+ 
+    if (obj.contains("error")) {
+        qDebug() << "Failed login";
+    }
+    else {
+        this->userToken = QString::fromStdString("Bearer " + response_data.toStdString());
+        qDebug() << this->userToken;
+        qTabWidget->setCurrentIndex(1);
+    }
+
     reply->deleteLater();
 
-    qTabWidget->setCurrentIndex(1);
 }
 
 void QNetworkClient::fetchPatientList(const QObject* receiver, const char* member) {
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients?MaxResultCount=300"));
+    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients?MaxResultCount=500"));
     request.setRawHeader("Authorization", this->userToken.toUtf8());
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
@@ -133,9 +149,9 @@ void QNetworkClient::fetchExistingImagesOfPatient(int patientId, const QObject* 
     // Get Image List
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    //qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=300").arg(patientId);
+    //qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId);
 
-    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=300").arg(patientId)));
+    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId)));
     request.setRawHeader("Authorization", userToken.toUtf8());
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);

@@ -11,6 +11,8 @@
 DesktopApp::DesktopApp(QWidget* parent)
 	: QWidget(parent)
 {
+
+	this->setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
 	ui.setupUi(this);
 
 	KinectEngine::getInstance().configDevice();

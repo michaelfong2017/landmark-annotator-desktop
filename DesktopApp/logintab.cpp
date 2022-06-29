@@ -11,9 +11,9 @@ LoginTab::LoginTab(DesktopApp* parent)
 		QString username = this->parent->ui.loginTab->findChild<QLineEdit*>("usernameLineEdit")->text();
 		QString password = this->parent->ui.loginTab->findChild<QLineEdit*>("passwordLineEdit")->text();
 
-		qDebug() << username << password;
+		//qDebug() << username << password;
 
-		QNetworkClient::getInstance().login(this->parent->ui.tabWidget);
+		QNetworkClient::getInstance().login(this->parent->ui.tabWidget, username, password);
 	});
 }
 

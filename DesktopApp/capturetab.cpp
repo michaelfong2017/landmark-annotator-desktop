@@ -62,7 +62,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			this->parent->ui.captureTab->setStyleSheet("");
 
 			this->recorder->stopRecorder();
-			this->parent->ui.saveVideoButton->setText("Start Recording");
+			this->parent->ui.saveVideoButton->setText("Record");
 
 			this->parent->ui.saveInfoCaptureTab->setText("Recording is saved under\n" + visitFolderPath + "\nat " + dateTimeString);
 
