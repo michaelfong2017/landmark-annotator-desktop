@@ -15,6 +15,7 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
     QPushButton* b2 = ui.buttonBox->addButton("", QDialogButtonBox::HelpRole);
     b2->setDefault(true);
     b2->setAutoDefault(true);
+    b2->setVisible(false);
 
     disconnect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 
