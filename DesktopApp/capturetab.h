@@ -72,6 +72,12 @@ private:
     void alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ);
     void onManagerFinished(QNetworkReply* reply);
 
+    /** For sending findLandmarkPredictions() more than once */
+    int landmarkRequestSent = 0;
+    int MAX_LANDMARK_REQUEST_SENT = 3;
+    int currentImageId;
+    /** For sending findLandmarkPredictions() more than once END */
+
 private slots:
     void onUploadImage(QNetworkReply* reply);
     void onBindImageUrl(QNetworkReply* reply);

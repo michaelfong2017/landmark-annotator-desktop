@@ -628,7 +628,12 @@ void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
 
 	qDebug() << "Sleep 3 seconds";
 
-	Sleep(3000);
+	Sleep(2000);
+
+	/** For sending findLandmarkPredictions() more than once */
+	this->currentImageId = imageId;
+	this->landmarkRequestSent = 1;
+	/** For sending findLandmarkPredictions() more than once END */
 
 	QNetworkClient::getInstance().findLandmarkPredictions(imageId, this, SLOT(onFindLandmarkPredictions(QNetworkReply*)));
 }
@@ -639,8 +644,23 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	QByteArray response_data = reply->readAll();
 	reply->deleteLater();
 
+	QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
+	qDebug() << jsonResponse;
+
+	QJsonObject obj = jsonResponse.object();
+	QString aiImageUrl = obj["aiImageUrl"].toString();
+
 	/** TIMEOUT */
-	if (response_data == nullptr) {
+	if (response_data == nullptr || aiImageUrl == nullptr) {
+		/** For sending findLandmarkPredictions() more than once */
+		if (landmarkRequestSent < MAX_LANDMARK_REQUEST_SENT) {
+			Sleep(2000);
+			landmarkRequestSent++;
+			QNetworkClient::getInstance().findLandmarkPredictions(this->currentImageId, this, SLOT(onFindLandmarkPredictions(QNetworkReply*)));
+			return;
+		}
+		/** For sending findLandmarkPredictions() more than once END */
+
 		TwoLinesDialog dialog;
 		dialog.setLine1("Analysis Step 3 Timeout!");
 		dialog.exec();
@@ -670,13 +690,7 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	}
 	/** TIMEOUT END */
 
-	QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
-
-	qDebug() << jsonResponse;
-
-	QJsonObject obj = jsonResponse.object();
 	int imageId = obj["id"].toInt();
-	QString aiImageUrl = obj["aiImageUrl"].toString();
 	this->parent->annotateTab->setAiImageUrl(aiImageUrl);
 
 	QString aiOriginResult = obj["aiOriginResult"].toString();
