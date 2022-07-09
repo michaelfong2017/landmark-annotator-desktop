@@ -26,6 +26,7 @@ public:
     void clear();
 
     bool openDevice();
+    bool isDeviceOpen = false;
     void closeDevice();
     void configDevice();
 

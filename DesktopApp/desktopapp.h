@@ -9,7 +9,6 @@
 #include <k4a/k4a.hpp>
 #include "stdafx.h"
 #include "patient.h"
-#include "twolinesdialog.h"
 
 // Forward declaration to break circular dependency
 // Since DesktopApp have member variables of type <PatientData | View | Capture | Annotate | Alignment>Tab

@@ -59,11 +59,13 @@ bool KinectEngine::openDevice()
 		return false;
 	}
 
+	isDeviceOpen = true;
 	return true;
 }
 void KinectEngine::closeDevice()
 {
 	k4a_device_close(this->device);
+	isDeviceOpen = false;
 	this->device = NULL;
 }
 void KinectEngine::configDevice()

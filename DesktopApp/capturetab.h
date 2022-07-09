@@ -74,7 +74,7 @@ private:
 
     /** For sending findLandmarkPredictions() more than once */
     int landmarkRequestSent = 0;
-    int MAX_LANDMARK_REQUEST_SENT = 3;
+    int MAX_LANDMARK_REQUEST_SENT = 5;
     int currentImageId;
     /** For sending findLandmarkPredictions() more than once END */
 

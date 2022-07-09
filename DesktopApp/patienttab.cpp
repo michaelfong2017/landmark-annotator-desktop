@@ -19,6 +19,22 @@ PatientTab::PatientTab(DesktopApp* parent)
 
     QObject::connect(this->parent->ui.patientTab->findChild<QPushButton*>("captureNewButton"), &QPushButton::clicked, [this]() {
         qDebug() << "captureNewButton clicked";
+
+        bool isDeviceOpen = KinectEngine::getInstance().isDeviceOpen;
+        
+        if (!isDeviceOpen) {
+            KinectEngine::getInstance().configDevice();
+            bool isSuccess = KinectEngine::getInstance().openDevice();
+
+            if (!isSuccess) {
+                TwoLinesDialog dialog;
+                dialog.setLine1("Kinect device cannot be opened!");
+                dialog.setLine2("Please check it and try again.");
+                dialog.exec();
+                return;
+            }
+        }
+
         this->parent->ui.tabWidget->setCurrentIndex(3);
         });
 }

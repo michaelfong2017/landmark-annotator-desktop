@@ -9,9 +9,8 @@ DragAndDropGraphicsScene::DragAndDropGraphicsScene( AnnotateTab* annotateTab, Im
 
 	qDebug() << "DragAndDropGraphicsScene";
 
-	this->addPixmap(QPixmap::fromImage(this->imageType == ImageType::Color ? *this->annotateTab->getAnnotatedColorImage() : *this->annotateTab->getAnnotatedDepthToColorColorizedImage()));
+	QPixmap qPixmap = QPixmap::fromImage(this->imageType == ImageType::Color ? *this->annotateTab->getAnnotatedColorImage() : *this->annotateTab->getAnnotatedDepthToColorColorizedImage());
 
-	/** Human cut shape */
 	int width, height;
 	if (this->imageType == ImageType::Color) {
 		width = this->annotateTab->getParent()->ui.graphicsViewAnnotation->width();
@@ -26,12 +25,12 @@ DragAndDropGraphicsScene::DragAndDropGraphicsScene( AnnotateTab* annotateTab, Im
 	}
 
 	/** Human cut shape Start */
-	QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape.png");
-	QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
+	//QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape.png");
+	//QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
 	/** Human cut shape END */
 
 	// Draw annotations if any
-	QPainter painter(&humanPixmapScaled);
+	QPainter painter(&qPixmap);
 
 	painter.setPen(QPen(Qt::magenta, 8, Qt::SolidLine, Qt::RoundCap));
 	for (auto it : *this->annotateTab->getAnnotations()) {
@@ -56,7 +55,7 @@ DragAndDropGraphicsScene::DragAndDropGraphicsScene( AnnotateTab* annotateTab, Im
 
 	painter.end();
 
-	this->addPixmap(humanPixmapScaled);
+	this->addPixmap(qPixmap);
 	this->annotateTab->computeMetrics();
 	this->annotateTab->setAnnotationsText();
 }
@@ -107,45 +106,63 @@ void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 		(*this->annotateTab->getAnnotations3D())[this->pointKey].setY(vector3D.y());
 		(*this->annotateTab->getAnnotations3D())[this->pointKey].setZ(vector3D.z());
 
-		if (this->imageType == ImageType::Color) {
-			this->annotateTab->getColorScene()->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedColorImage()));
-			this->annotateTab->getDepthToColorScene()->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedDepthToColorColorizedImage()));
-		}
-
-		if (this->imageType == ImageType::DepthToColor) {
-			this->annotateTab->getColorScene()->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedColorImage()));
-			this->annotateTab->getDepthToColorScene()->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedDepthToColorColorizedImage()));
-		}
+		QPixmap colorQPixmap, depthQPixmap;
+		colorQPixmap = QPixmap::fromImage(*this->annotateTab->getAnnotatedColorImage());
+		depthQPixmap = QPixmap::fromImage(*this->annotateTab->getAnnotatedDepthToColorColorizedImage());
 
 		/** Human cut shape */
-		int width = this->annotateTab->getParent()->ui.graphicsViewAnnotation->width();
-		int height = this->annotateTab->getParent()->ui.graphicsViewAnnotation->height();
-		QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape.png");
-		QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
+		//int width = this->annotateTab->getParent()->ui.graphicsViewAnnotation->width();
+		//int height = this->annotateTab->getParent()->ui.graphicsViewAnnotation->height();
+		//QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape.png");
+		//QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
 		/** Human cut shape END */
 
-		QPainter painter(&humanPixmapScaled);
+		QPainter colorPainter(&colorQPixmap);
+		QPainter depthPainter(&depthQPixmap);
 
-		painter.setPen(QPen(Qt::magenta, 8, Qt::SolidLine, Qt::RoundCap));
+		// color
+		colorPainter.setPen(QPen(Qt::magenta, 8, Qt::SolidLine, Qt::RoundCap));
 		for(auto it: *this->annotateTab->getAnnotations()) {
-			painter.drawPoint(it.second.x(), it.second.y());
+			colorPainter.drawPoint(it.second.x(), it.second.y());
 		}
-		painter.setPen(QPen(Qt::white, 2, Qt::SolidLine, Qt::RoundCap));
+		colorPainter.setPen(QPen(Qt::white, 2, Qt::SolidLine, Qt::RoundCap));
 		for(auto it: *this->annotateTab->getAnnotations()) {
-			painter.drawText(it.second.x(), it.second.y(), QString::fromStdString(it.first));
+			colorPainter.drawText(it.second.x(), it.second.y(), QString::fromStdString(it.first));
 
 		}
-		painter.setPen(QPen(Qt::white , 0.5, Qt::DashLine, Qt::RoundCap));
-		painter.drawLine(
+		colorPainter.setPen(QPen(Qt::white , 0.5, Qt::DashLine, Qt::RoundCap));
+		colorPainter.drawLine(
 			(*this->annotateTab->getAnnotations())["A1"].x(), (*this->annotateTab->getAnnotations())["A1"].y(),
 			(*this->annotateTab->getAnnotations())["A2"].x(), (*this->annotateTab->getAnnotations())["A2"].y()
 		);
-		painter.drawLine(
+		colorPainter.drawLine(
 			(*this->annotateTab->getAnnotations())["B1"].x(), (*this->annotateTab->getAnnotations())["B1"].y(),
 			(*this->annotateTab->getAnnotations())["B2"].x(), (*this->annotateTab->getAnnotations())["B2"].y()
 		);
-		painter.end();
+		colorPainter.end();
+		// color END
 
+		// depthToColor
+		depthPainter.setPen(QPen(Qt::magenta, 8, Qt::SolidLine, Qt::RoundCap));
+		for (auto it : *this->annotateTab->getAnnotations()) {
+			depthPainter.drawPoint(it.second.x(), it.second.y());
+		}
+		depthPainter.setPen(QPen(Qt::white, 2, Qt::SolidLine, Qt::RoundCap));
+		for (auto it : *this->annotateTab->getAnnotations()) {
+			depthPainter.drawText(it.second.x(), it.second.y(), QString::fromStdString(it.first));
+
+		}
+		depthPainter.setPen(QPen(Qt::white, 0.5, Qt::DashLine, Qt::RoundCap));
+		depthPainter.drawLine(
+			(*this->annotateTab->getAnnotations())["A1"].x(), (*this->annotateTab->getAnnotations())["A1"].y(),
+			(*this->annotateTab->getAnnotations())["A2"].x(), (*this->annotateTab->getAnnotations())["A2"].y()
+		);
+		depthPainter.drawLine(
+			(*this->annotateTab->getAnnotations())["B1"].x(), (*this->annotateTab->getAnnotations())["B1"].y(),
+			(*this->annotateTab->getAnnotations())["B2"].x(), (*this->annotateTab->getAnnotations())["B2"].y()
+		);
+		depthPainter.end();
+		// depthToColor END
 		
 		if (this->imageType == ImageType::Color) {
 			//this->addPixmap(humanPixmapScaled);
@@ -158,8 +175,8 @@ void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 			//this->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedDepthToColorColorizedImage()));
 		}
 
-		this->annotateTab->getColorScene()->addPixmap(humanPixmapScaled);
-		this->annotateTab->getDepthToColorScene()->addPixmap(humanPixmapScaled);
+		this->annotateTab->getColorScene()->addPixmap(colorQPixmap);
+		this->annotateTab->getDepthToColorScene()->addPixmap(depthQPixmap);
 
 		this->annotateTab->computeMetrics();
 		this->annotateTab->setAnnotationsText();

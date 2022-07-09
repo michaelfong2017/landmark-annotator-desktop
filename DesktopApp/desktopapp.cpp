@@ -15,17 +15,6 @@ DesktopApp::DesktopApp(QWidget* parent)
 	//this->setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
 	ui.setupUi(this);
 
-	KinectEngine::getInstance().configDevice();
-	bool isOpen = KinectEngine::getInstance().openDevice();
-	while (!isOpen) {
-		TwoLinesDialog dialog;
-		dialog.setLine1("Kinect device cannot be opened!");
-		dialog.setLine2("Please check it and try again.");
-		dialog.exec();
-		KinectEngine::getInstance().closeDevice();
-		isOpen = KinectEngine::getInstance().openDevice();
-	}
-
 	// Test refactoring
 	// 
 	//KinectEngine::getInstance().captureImages();

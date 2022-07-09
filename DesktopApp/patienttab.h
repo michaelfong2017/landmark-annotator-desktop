@@ -5,6 +5,8 @@
 #include "stdafx.h"
 #include "desktopapp.h"
 #include "qnetworkclient.h"
+#include <kinectengine.h>
+#include <twolinesdialog.h>
 
 class PatientTab : public QWidget
 {
