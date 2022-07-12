@@ -12,6 +12,19 @@ void KinectEngine::clear()
 	this->device = NULL;
 	this->config = K4A_DEVICE_CONFIG_INIT_DISABLE_ALL;
 }
+bool KinectEngine::isDeviceConnected() {
+	uint32_t device_count = k4a_device_get_installed_count();
+	return device_count != 0;
+}
+bool KinectEngine::isDeviceOpened() {
+	if (isDeviceConnected()) {
+		return this->deviceOpenedBefore;
+	}
+	else {
+		this->deviceOpenedBefore = false;
+		return false;
+	}
+}
 bool KinectEngine::openDevice()
 {
 	// Shallow copy
@@ -59,13 +72,13 @@ bool KinectEngine::openDevice()
 		return false;
 	}
 
-	isDeviceOpen = true;
+	this->deviceOpenedBefore = true;
 	return true;
 }
 void KinectEngine::closeDevice()
 {
 	k4a_device_close(this->device);
-	isDeviceOpen = false;
+	this->deviceOpenedBefore = false;
 	this->device = NULL;
 }
 void KinectEngine::configDevice()

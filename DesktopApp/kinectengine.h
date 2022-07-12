@@ -25,8 +25,9 @@ public:
 
     void clear();
 
+    bool isDeviceConnected();
+    bool isDeviceOpened();
     bool openDevice();
-    bool isDeviceOpen = false;
     void closeDevice();
     void configDevice();
 
@@ -68,6 +69,7 @@ private:
     KinectEngine();
 
     k4a_device_t device = NULL;
+    bool deviceOpenedBefore = false;
     k4a_device_configuration_t config = K4A_DEVICE_CONFIG_INIT_DISABLE_ALL;
     k4a_calibration_t calibration;
     k4a_capture_t capture;
