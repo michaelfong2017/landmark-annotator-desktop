@@ -201,7 +201,7 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
     /** Handle Chinese name when saving video */
     this->parent->tempVideoSavePath = QDir("/tempVideoSaveFolder");
     /** Handle Chinese name when saving video END */
-    qDebug() << "DIR:::" << path;
+    qDebug() << "Selected patient DIR:::" << path;
     
     /** Use map with patientId as the key and save folder path as the value END */
 
@@ -214,16 +214,19 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
             index = patientListDataModel->index(row, i);
             data = patientListDataModel->data(index).toString();
             this->parent->patientTab->setName(data);
+            qDebug() << "Selected Name is" << data;
             break;
         case 2:
             index = patientListDataModel->index(row, i);
             data = patientListDataModel->data(index).toString();
             this->parent->patientTab->setAge(data);
+            qDebug() << "Selected Age is" << data;
             break;
         case 4:
             index = patientListDataModel->index(row, i);
             data = patientListDataModel->data(index).toString();
             this->parent->patientTab->setSubjectNumber(data);
+            qDebug() << "Selected Subject number is" << data;
             break;
         }
        
