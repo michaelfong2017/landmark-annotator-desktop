@@ -232,6 +232,8 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
        
     }
 
+    this->parent->ui.tabWidget->setTabEnabled(2, true);
+
     this->parent->ui.tabWidget->setCurrentIndex(2);
 }
 

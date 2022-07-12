@@ -71,9 +71,6 @@ DesktopApp::DesktopApp(QWidget* parent)
 
 			/** Re-enable the tabs after login */
 			this->ui.tabWidget->setTabEnabled(1, true);
-			this->ui.tabWidget->setTabEnabled(2, true);
-			this->ui.tabWidget->setTabEnabled(3, true);
-			this->ui.tabWidget->setTabEnabled(4, true);
 			/** Re-enable the tabs after login END */
 
 			this->patientListTab->onEnterTab();

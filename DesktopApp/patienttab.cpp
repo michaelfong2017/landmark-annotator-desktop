@@ -41,6 +41,8 @@ PatientTab::PatientTab(DesktopApp* parent)
             }
         }
 
+        this->parent->ui.tabWidget->setTabEnabled(3, true);
+        this->parent->ui.tabWidget->setTabEnabled(4, true);
         this->parent->ui.tabWidget->setCurrentIndex(3);
         });
 }
