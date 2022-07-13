@@ -261,6 +261,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		std::vector<cv::Mat>channels3(4);
 		cv::split(FourChannelPNG, channels3);
 
+
+		// channelsForColor2 = BGR
 		for (int i = 0; i < 1280 * 720; i++) {
 			channels3[0].at<uint16_t>(i) = (channelsForColor2[2].at<uint8_t>(i) << 8) | channelsForColor2[1].at<uint8_t>(i);
 			channels3[1].at<uint16_t>(i) = (channelsForColor2[0].at<uint8_t>(i) << 8);
