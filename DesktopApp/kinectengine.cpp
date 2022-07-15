@@ -112,7 +112,7 @@ void KinectEngine::captureImages()
 	this->k4aImageLock.unlock();
 }
 
-void KinectEngine::queueIMUSample()
+bool KinectEngine::queueIMUSample()
 {
 	k4a_imu_sample_t imuSample;
 
@@ -124,7 +124,10 @@ void KinectEngine::queueIMUSample()
 		while (this->gyroSampleQueue.size() > MAX_GYROSCOPE_QUEUE_SIZE) this->gyroSampleQueue.pop_front();
 		while (this->accSampleQueue.size() > MAX_ACCELEROMETER_QUEUE_SIZE) this->accSampleQueue.pop_front();
 
-		break;
+		return true;
+
+	default:
+		return false;
 	}
 }
 

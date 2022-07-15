@@ -32,7 +32,7 @@ public:
     void configDevice();
 
     void captureImages();
-    void queueIMUSample();
+    bool queueIMUSample();
     void readAllImages(cv::Mat& colorImage, cv::Mat& depthImage, cv::Mat& colorToDepthImage, cv::Mat& depthToColorImage);
     void readColorAndDepthImages(cv::Mat& colorImage, cv::Mat& depthImage);
     void readColorImage(cv::Mat& colorImage, k4a_image_t k4aColorImage = NULL);

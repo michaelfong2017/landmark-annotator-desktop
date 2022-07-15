@@ -282,6 +282,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 	QObject::connect(timer, &QTimer::timeout, [this]() {
 		//qDebug() << "timer connect start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
+		if (!KinectEngine::getInstance().isDeviceOpened()) {
+			return;
+		}
 
 		KinectEngine::getInstance().captureImages();
 		cv::Mat color, depth;
@@ -368,11 +371,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/*
 		* IMU sample
 		*/
-		KinectEngine::getInstance().queueIMUSample();
+		bool queueIMUSuccess = KinectEngine::getInstance().queueIMUSample();
 		std::deque<k4a_float3_t> gyroSampleQueue = KinectEngine::getInstance().getGyroSampleQueue();
 		std::deque<k4a_float3_t> accSampleQueue = KinectEngine::getInstance().getAccSampleQueue();
 
-		if (!gyroSampleQueue.empty() && !accSampleQueue.empty()) {
+		if (queueIMUSuccess && !gyroSampleQueue.empty() && !accSampleQueue.empty()) {
 			//qDebug() << "timer connect 17: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 			/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved */
 			alertIfMoving(
