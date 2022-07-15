@@ -7,6 +7,7 @@
 #include <QtNetwork>
 #include <vector>
 #include "patienttab.h"
+#include "helper.h"
 
 class PatientListTab : public QWidget
 {
@@ -22,7 +23,6 @@ private:
     DesktopApp* parent;
     QTableView* tableView;
     QStandardItemModel* patientListDataModel;
-    std::vector<int> patientIdVector;
     int currentPageIndex = 0;
     const int ROWS_PER_PAGE = 20;
 

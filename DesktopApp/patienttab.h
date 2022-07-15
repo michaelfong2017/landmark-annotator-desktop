@@ -7,6 +7,7 @@
 #include "qnetworkclient.h"
 #include <kinectengine.h>
 #include <twolinesdialog.h>
+#include "helper.h"
 
 class PatientTab : public QWidget
 {

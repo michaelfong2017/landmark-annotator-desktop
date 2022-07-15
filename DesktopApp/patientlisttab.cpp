@@ -7,7 +7,7 @@ PatientListTab::PatientListTab(DesktopApp* parent)
 	this->parent = parent;
 
     tableView = this->parent->ui.patientListTab->findChild<QTableView*>("tableView");
-    patientListDataModel = new QStandardItemModel(0, 5, this);
+    patientListDataModel = new QStandardItemModel(0, 7, this);
     tableView->setModel(this->patientListDataModel);
 
     tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -66,9 +66,9 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     patientListDataModel->clear();
 
     /** Headers */
-    QStringList headerLabels = { "Name", "Sex", "Age", "PhoneNumber", "SubjectNumber" };
+    QStringList headerLabels = { "Patient ID", "Name", "Sex", "Age", "Phone Number", "Subject Number", "Creation Time"};
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 7; i++)
     {
         QString text = headerLabels.at(i);
         QStandardItem* item = new QStandardItem(text);
@@ -80,9 +80,9 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     }
 
     /** This must be put here (below) */
-    for (int col = 0; col < 5; col++)
+    for (int col = 0; col < 7; col++)
     {
-        tableView->setColumnWidth(col, 200);
+        tableView->setColumnWidth(col, 166);
     }
     /** This must be put here (below) END */
     /** Headers END */
@@ -124,26 +124,23 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
         patientIdToSaveFolderPath.insert_or_assign(obj["patientId"].toInt(), obj["name"].toString() + "_" + obj["birthday"].toString() + "_" + obj["idCard"].toString());
         /** Construct a map with patientId as the key and save folder path as the value END */
 
-        /** Store patientId of each patient in memory for later processing */
-        int patientId;
-        patientId = obj["patientId"].toInt();
-        //qDebug() << "patientId is " << patientId;
-        patientIdVector.push_back(patientId);
-        /** Store patientId of each patient in memory for later processing END */
 
         QList<QStandardItem*> itemList;
         QStandardItem* item;
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 7; i++)
         {
             QString text;
             switch (i) {
                 case 0:
-                    text = obj["name"].toString();
-                 break;
+                    text = QString::number(obj["patientId"].toInt());
+                    break;
                 case 1:
-                    text = obj["sexTxt"].toString();
+                    text = obj["name"].toString();
                     break;
                 case 2:
+                    text = obj["sexTxt"].toString();
+                    break;
+                case 3:
                 {
                     if (obj["birthday"].toString().isEmpty()) {
                         text = QString();
@@ -164,11 +161,15 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
                     text = QString::number(age);
                     break;
                 }
-                case 3:
+                case 4:
                     text = obj["phoneNumber"].toString();
                     break;
-                case 4:
+                case 5:
                     text = obj["subjectNumber"].toString();
+                    break;
+                case 6:
+                    text = obj["relationTime"].toString();
+                    text = Helper::convertFetchedDateTime(text);
                     break;
             }
             item = new QStandardItem(text);
@@ -182,20 +183,27 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
 
         QModelIndex curIndex = patientListDataModel->index(patientListDataModel->rowCount() - 1, 0);
     }
+    // Sort by creation date in descending order, and hide patientId column
+    patientListDataModel->sort(6, Qt::DescendingOrder);
+    tableView->hideColumn(0);
+    // Sort and hide END
     reply->deleteLater();
 
 }
 
 void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
     int row = tableView->currentIndex().row();
-    qDebug() << "Selected patientId is" << patientIdVector[row];
+    QModelIndex curIndex = patientListDataModel->index(row, 0);
+    
+    int currentPatientId = patientListDataModel->data(curIndex).toInt();
+    qDebug() << "Selected patientId is" << currentPatientId;
 
-    this->parent->patientTab->setCurrentPatientId(patientIdVector[row]);
+    this->parent->patientTab->setCurrentPatientId(currentPatientId);
 
     /** Use the map with patientId as the key and save folder path as the value */
     QDir dir(QCoreApplication::applicationDirPath());
     dir.cdUp();
-    QDir path = QDir((dir.absolutePath()) + "/" + patientIdToSaveFolderPath[patientIdVector[row]]);
+    QDir path = QDir((dir.absolutePath()) + "/" + patientIdToSaveFolderPath[currentPatientId]);
 
     this->parent->savePath = path;
     /** Handle Chinese name when saving video */
@@ -205,24 +213,24 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
     
     /** Use map with patientId as the key and save folder path as the value END */
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 6; i++)
     {
         QString data;
         QModelIndex index;
         switch (i) {
-        case 0:
+        case 1:
             index = patientListDataModel->index(row, i);
             data = patientListDataModel->data(index).toString();
             this->parent->patientTab->setName(data);
             qDebug() << "Selected Name is" << data;
             break;
-        case 2:
+        case 3:
             index = patientListDataModel->index(row, i);
             data = patientListDataModel->data(index).toString();
             this->parent->patientTab->setAge(data);
             qDebug() << "Selected Age is" << data;
             break;
-        case 4:
+        case 5:
             index = patientListDataModel->index(row, i);
             data = patientListDataModel->data(index).toString();
             this->parent->patientTab->setSubjectNumber(data);
