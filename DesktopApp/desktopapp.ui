@@ -516,7 +516,7 @@
      </widget>
      <widget class="QWidget" name="patientTab">
       <attribute name="title">
-       <string>Patient</string>
+       <string>Image list</string>
       </attribute>
       <widget class="QTableView" name="tableViewPatient">
        <property name="geometry">
