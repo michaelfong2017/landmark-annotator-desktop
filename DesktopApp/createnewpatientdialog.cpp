@@ -133,7 +133,9 @@ void CreateNewPatientDialog::onCheckNewPatient(QNetworkReply* reply) {
     }
 }
 
-void CreateNewPatientDialog::onUploadNewPatient(QNetworkReply* reply) {
+void CreateNewPatientDialog::onUploadNewPatient(QNetworkReply* reply) 
+{
+    qDebug() << "onUploadNewPatient";
     qDebug() << reply->readAll();
     reply->deleteLater();
 

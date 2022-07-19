@@ -20,8 +20,15 @@ public:
     void setCurrentPatientId(int currentPatientId);
     int getCurrentPatientId();
     void setName(QString name);
+    void setSex(QString sex);
     void setAge(QString age);
+    void setPhoneNumber(QString phoneNumber);
     void setSubjectNumber(QString subjectNumber);
+    void setIdCard(QString idCard);
+    void setSin(QString sin);
+    void setEmail(QString email);
+    void setAddress(QString address);
+    void setRemark(QString remark);
 
 private:
     DesktopApp* parent;
@@ -29,8 +36,15 @@ private:
     QStandardItemModel* patientDataModel;
     int currentPatientId;
     QString name;
+    QString sex;
     QString age;
+    QString phoneNumber;
     QString subjectNumber;
+    QString idCard;
+    QString sin;
+    QString email;
+    QString address;
+    QString remark;
 
 private slots:
     void onFetchExistingImagesOfPatient(QNetworkReply* reply);

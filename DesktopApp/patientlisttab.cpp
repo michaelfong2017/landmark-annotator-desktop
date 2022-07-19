@@ -66,9 +66,9 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     patientListDataModel->clear();
 
     /** Headers */
-    QStringList headerLabels = { "Patient ID", "Name", "Sex", "Age", "Phone Number", "Subject Number", "Creation Time"};
+    QStringList headerLabels = { "Patient ID", "Name", "Sex", "Age", "Phone Number", "Subject Number", "Creation Time", "idCard", "sin", "email", "address", "remark"};
 
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 12; i++)
     {
         QString text = headerLabels.at(i);
         QStandardItem* item = new QStandardItem(text);
@@ -80,7 +80,7 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     }
 
     /** This must be put here (below) */
-    for (int col = 0; col < 7; col++)
+    for (int col = 0; col < 12; col++)
     {
         tableView->setColumnWidth(col, 166);
     }
@@ -127,7 +127,7 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
 
         QList<QStandardItem*> itemList;
         QStandardItem* item;
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 12; i++)
         {
             QString text;
             switch (i) {
@@ -171,6 +171,21 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
                     text = obj["relationTime"].toString();
                     text = Helper::convertFetchedDateTime(text);
                     break;
+                case 7:
+                    text = obj["idCard"].toString();
+                    break;
+                case 8:
+                    text = obj["sin"].toString();
+                    break;
+                case 9:
+                    text = obj["email"].toString();
+                    break;
+                case 10:
+                    text = obj["address"].toString();
+                    break;
+                case 11:
+                    text = obj["remark"].toString();
+                    break;
             }
             item = new QStandardItem(text);
             QFont fn = item->font();
@@ -186,6 +201,12 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     // Sort by creation date in descending order, and hide patientId column
     patientListDataModel->sort(6, Qt::DescendingOrder);
     tableView->hideColumn(0);
+
+    tableView->hideColumn(7);
+    tableView->hideColumn(8);
+    tableView->hideColumn(9);
+    tableView->hideColumn(10);
+    tableView->hideColumn(11);
     // Sort and hide END
     reply->deleteLater();
 
@@ -213,31 +234,54 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
     
     /** Use map with patientId as the key and save folder path as the value END */
 
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 12; i++)
     {
         QString data;
         QModelIndex index;
+        index = patientListDataModel->index(row, i);
+        data = patientListDataModel->data(index).toString();
         switch (i) {
         case 1:
-            index = patientListDataModel->index(row, i);
-            data = patientListDataModel->data(index).toString();
             this->parent->patientTab->setName(data);
             qDebug() << "Selected Name is" << data;
             break;
+        case 2:
+            this->parent->patientTab->setSex(data);
+            qDebug() << "Selected Sex is" << data;
+            break;
         case 3:
-            index = patientListDataModel->index(row, i);
-            data = patientListDataModel->data(index).toString();
             this->parent->patientTab->setAge(data);
             qDebug() << "Selected Age is" << data;
             break;
+        case 4:
+            this->parent->patientTab->setPhoneNumber(data);
+            qDebug() << "Selected Phone Number is" << data;
+            break;
         case 5:
-            index = patientListDataModel->index(row, i);
-            data = patientListDataModel->data(index).toString();
             this->parent->patientTab->setSubjectNumber(data);
             qDebug() << "Selected Subject number is" << data;
             break;
+        case 7:
+            this->parent->patientTab->setIdCard(data);
+            qDebug() << "Selected ID Card is" << data;
+            break;
+        case 8:
+            this->parent->patientTab->setSin(data);
+            qDebug() << "Selected Social Security Number is" << data;
+            break;
+        case 9:
+            this->parent->patientTab->setEmail(data);
+            qDebug() << "Selected Email is" << data;
+            break;
+        case 10:
+            this->parent->patientTab->setAddress(data);
+            qDebug() << "Selected Address is" << data;
+            break;
+        case 11:
+            this->parent->patientTab->setRemark(data);
+            qDebug() << "Selected Remark is" << data;
+            break;
         }
-       
     }
 
     this->parent->ui.tabWidget->setTabEnabled(2, true);

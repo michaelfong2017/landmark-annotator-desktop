@@ -97,6 +97,9 @@ void QNetworkClient::checkNewPatient(Patient patient, const QObject* receiver, c
     obj["subjectNumber"] = QString::fromStdString(patient.getSubjectNumber());
     obj["email"] = QString::fromStdString(patient.getEmail());
     obj["address"] = QString::fromStdString(patient.getAddress());
+    /**
+    * Not sure whether height and weight can be uploaded. Currently not uploaded.
+    */
     QByteArray data = QJsonDocument(obj).toJson();
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
@@ -151,6 +154,8 @@ void QNetworkClient::uploadNewPatient(Patient patient, const QObject* receiver, 
 void QNetworkClient::fetchExistingImagesOfPatient(int patientId, const QObject* receiver, const char* member) {
     // Get Image List
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    qDebug() << "fetchExistingImagesOfPatient";
 
     //qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId);
 

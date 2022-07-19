@@ -75,14 +75,49 @@ void PatientTab::setName(QString name)
     this->name = name;
 }
 
+void PatientTab::setSex(QString sex)
+{
+    this->sex = sex;
+}
+
 void PatientTab::setAge(QString age)
 {
     this->age = age;
 }
 
+void PatientTab::setPhoneNumber(QString phoneNumber)
+{
+    this->phoneNumber = phoneNumber;
+}
+
 void PatientTab::setSubjectNumber(QString subjectNumber)
 {
     this->subjectNumber = subjectNumber;
+}
+
+void PatientTab::setIdCard(QString idCard)
+{
+    this->idCard = idCard;
+}
+
+void PatientTab::setSin(QString sin)
+{
+    this->sin = sin;
+}
+
+void PatientTab::setEmail(QString email)
+{
+    this->email = email;
+}
+
+void PatientTab::setAddress(QString address)
+{
+    this->address = address;
+}
+
+void PatientTab::setRemark(QString remark)
+{
+    this->remark = remark;
 }
 
 void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
