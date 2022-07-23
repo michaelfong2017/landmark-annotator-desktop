@@ -41,6 +41,9 @@
     <QtMoc Include="twolinesdialog.h" />
     <QtMoc Include="saveimagedialog.h" />
     <QtMoc Include="alignmenttab.h" />
+    <QtMoc Include="noteditabledelegate.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="desktopapp.qrc" />

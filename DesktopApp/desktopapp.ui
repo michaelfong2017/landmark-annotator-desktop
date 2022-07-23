@@ -634,7 +634,7 @@
       <widget class="QGraphicsView" name="graphicsViewImage">
        <property name="geometry">
         <rect>
-         <x>320</x>
+         <x>70</x>
          <y>410</y>
          <width>591</width>
          <height>301</height>
@@ -910,6 +910,19 @@ color: rgb(255, 0, 5);
          </widget>
         </item>
        </layout>
+      </widget>
+      <widget class="QTableView" name="tableViewSelectImage">
+       <property name="geometry">
+        <rect>
+         <x>680</x>
+         <y>410</y>
+         <width>421</width>
+         <height>301</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="annotateTab">

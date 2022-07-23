@@ -13,6 +13,7 @@
 #include "util/networkutil.h"
 #include "qnetworkclient.h"
 #include "twolinesdialog.h"
+#include "noteditabledelegate.h"
 
 class CaptureTab: public QWidget
 {
@@ -78,10 +79,18 @@ private:
     int currentImageId;
     /** For sending findLandmarkPredictions() more than once END */
 
+    /** Select image table view */
+    int selectedImageIndex = -1;
+    int imageBeingAnalyzedTableViewRow = -1;
+    int storedTableViewRow = -1;
+    QTableView* tableView;
+    QStandardItemModel* dataModel;
+    /** Select image table view END */
+
 private slots:
     void onUploadImage(QNetworkReply* reply);
     void onBindImageUrl(QNetworkReply* reply);
     void onFindLandmarkPredictions(QNetworkReply* reply);
+    void onSlotRowClicked(const QModelIndex& index);
 };
-
 #endif

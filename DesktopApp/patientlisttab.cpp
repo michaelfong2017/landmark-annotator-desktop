@@ -7,7 +7,7 @@ PatientListTab::PatientListTab(DesktopApp* parent)
 	this->parent = parent;
 
     tableView = this->parent->ui.patientListTab->findChild<QTableView*>("tableView");
-    patientListDataModel = new QStandardItemModel(0, 7, this);
+    patientListDataModel = new QStandardItemModel(0, 12, this);
     tableView->setModel(this->patientListDataModel);
 
     tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);

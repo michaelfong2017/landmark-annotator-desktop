@@ -31,6 +31,55 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	this->parent->ui.showInExplorer->hide();
 	this->captureFilepath = QString();
 
+	/** Select image table view */
+	tableView = this->parent->ui.captureTab->findChild<QTableView*>("tableViewSelectImage");
+	dataModel = new QStandardItemModel(0, 3, this);
+	tableView->setModel(this->dataModel);
+
+	/** Set only the "Image Type" column editable */
+	//tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	for (int c = 0; c < dataModel->columnCount(); c++)
+	{
+		if (c != 1)
+			tableView->setItemDelegateForColumn(c, new NotEditableDelegate(tableView));
+	}
+
+	//tableView->horizontalHeader()->setStretchLastSection(true);
+	tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+	/** Set only the "Image Type" column editable END */
+
+	/** Handle click row */
+	bool value = connect(tableView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(onSlotRowClicked(const QModelIndex&)));
+	/** Handle click row END */
+	/** Select image table view END */
+
+	// Clear data and re-fetch all data every time
+	dataModel->clear();
+
+	/** Headers */
+	QStringList headerLabels = { "index", "Image Type", "Creation Time" };
+
+	for (int i = 0; i < 3; i++)
+	{
+		QString text = headerLabels.at(i);
+		QStandardItem* item = new QStandardItem(text);
+		QFont fn = item->font();
+		fn.setPointSize(11);
+		item->setFont(fn);
+
+		dataModel->setHorizontalHeaderItem(i, item);
+	}
+
+	/** This must be put here (below) */
+	tableView->setColumnWidth(1, 150);
+	tableView->setColumnWidth(2, tableView->width() - 150 - 50);
+	/** This must be put here (below) END */
+	/** Headers END */
+
+	tableView->hideColumn(0);
+
+	tableView->show();
+
 	QObject::connect(this->parent->ui.saveButtonCaptureTab, &QPushButton::clicked, [this]() {
 		if (this->isUploading) {
 			return;
@@ -171,6 +220,34 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		cv::waitKey(0);
 		cv::destroyWindow("ransac");*/
 
+		/** Insert index to data model */
+		QList<QStandardItem*> itemList;
+		QStandardItem* dataItem;
+		for (int i = 0; i < 3; i++)
+		{
+			QString text;
+			switch (i) {
+			case 0:
+				text = QString::number(dataModel->rowCount());
+				break;
+			case 1:
+				text = "(Please edit)";
+				break;
+			case 2:
+				QDateTime dateTime = dateTime.currentDateTime();
+				text = dateTime.toString("yyyy-MM-dd HH:mm:ss");
+				break;
+			}
+			dataItem = new QStandardItem(text);
+			QFont fn = dataItem->font();
+			fn.setPointSize(11);
+			dataItem->setFont(fn);
+			itemList << dataItem;
+		}
+
+		dataModel->insertRow(0, itemList);
+		/** Insert index to data model END */
+
 		/*
 		* Display captured images
 		*/
@@ -240,6 +317,10 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->parent->ui.tabWidget->setTabEnabled(4, false);
 		this->parent->ui.tabWidget->setTabEnabled(5, false);
 		/** Disable changing tab END */
+
+		/** Select image table view update UI to green background, showing successful image analysis */
+		storedTableViewRow = imageBeingAnalyzedTableViewRow;
+		/** Select image table view update UI to green background, showing successful image analysis END */
 
 		this->parent->ui.progressBar->setVisible(true);
 		this->parent->ui.progressBar->setValue(1);
@@ -735,6 +816,14 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		}
 	}
 
+	/** Select image table view update UI to green background, showing successful image analysis */
+	for (int i = 0; i < dataModel->columnCount(); i++) {
+		QModelIndex index;
+		index = dataModel->index(storedTableViewRow, i);
+		dataModel->setData(index, QColor(Qt::green), Qt::BackgroundRole);
+	}
+	/** Select image table view update UI to green background, showing successful image analysis END */
+
 	this->parent->ui.captureButton->setEnabled(true);
 	this->parent->ui.saveVideoButton->setEnabled(true);
 	this->parent->ui.saveButtonCaptureTab->setEnabled(true);
@@ -983,4 +1072,17 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 
 	return out;
 
+}
+
+void CaptureTab::onSlotRowClicked(const QModelIndex& index) {
+	int row = tableView->currentIndex().row();
+
+	/** Select image table view update UI to green background, showing successful image analysis */
+	imageBeingAnalyzedTableViewRow = row;
+	/** Select image table view update UI to green background, showing successful image analysis END */
+
+	QModelIndex curIndex = dataModel->index(row, 0);
+
+	selectedImageIndex = dataModel->data(curIndex).toInt();
+	qDebug() << "Selected image index is" << selectedImageIndex;
 }
