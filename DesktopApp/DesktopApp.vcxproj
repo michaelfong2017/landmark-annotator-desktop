@@ -161,6 +161,7 @@
     <QtMoc Include="qnetworkclient.h" />
     <QtMoc Include="twolinesdialog.h" />
     <QtMoc Include="noteditabledelegate.h" />
+    <ClInclude Include="capturehistory.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />

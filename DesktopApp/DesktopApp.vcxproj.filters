@@ -27,6 +27,9 @@
     <ClInclude Include="helper.h" />
     <ClInclude Include="patient.h" />
     <ClInclude Include="recorder.h" />
+    <ClInclude Include="capturehistory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="desktopapp.h" />

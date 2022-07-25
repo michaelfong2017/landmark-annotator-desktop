@@ -48,9 +48,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 	/** Set only the "Image Type" column editable END */
 
-	/** Handle click row */
-	bool value = connect(tableView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(onSlotRowClicked(const QModelIndex&)));
-	/** Handle click row END */
+	/** Handle row selection, including up/down arrow press */
+	bool value = connect(tableView->selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(onSlotRowSelected(const QModelIndex&, const QModelIndex&)));
+	/** Handle row selection END */
+
+	tableView->setTabKeyNavigation(false);
 	/** Select image table view END */
 
 	// Clear data and re-fetch all data every time
@@ -248,9 +250,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		dataModel->insertRow(0, itemList);
 		/** Insert index to data model END */
 
-		/*
-		* Display captured images
-		*/
+
 		this->qColorImage = convertColorCVToQImage(color);
 		this->qDepthImage = convertDepthCVToQImage(depth);
 		this->qColorToDepthImage = convertColorToDepthCVToQImage(colorToDepth);
@@ -259,41 +259,22 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(depthToColor);
 		// For annotatetab instead END
 
-		QImage image;
+		/** Store histories of images for selection */
+		CaptureHistory captureHistory;
+		captureHistory.capturedColorImage = capturedColorImage;
+		captureHistory.capturedDepthImage = capturedDepthImage;
+		captureHistory.capturedColorToDepthImage = capturedColorToDepthImage;
+		captureHistory.capturedDepthToColorImage = capturedDepthToColorImage;
+		captureHistory.RANSACImage = RANSACImage;
+		captureHistory.qColorImage = qColorImage;
+		captureHistory.qDepthImage = qDepthImage;
+		captureHistory.qColorToDepthImage = qColorToDepthImage;
+		captureHistory.qDepthToColorImage = qDepthToColorImage;
+		captureHistory.qDepthToColorColorizedImage = qDepthToColorColorizedImage;
+		captureHistories.push_back(captureHistory);
+		/** Store histories of images for selection END */
 
-		// only for initial state
-		if (this->parent->ui.radioButton->isChecked()) {
-			image = this->getQColorImage();
-		}
-		else if (this->parent->ui.radioButton2->isChecked()) {
-			image = this->getQDepthImage();
-		}
-		else if (this->parent->ui.radioButton3->isChecked()) {
-			image = this->getQColorToDepthImage();
-		}
-		else {
-			image = this->getQDepthToColorImage();
-		}
-
-		int width = this->parent->ui.graphicsViewImage->width();
-		int height = this->parent->ui.graphicsViewImage->height();
-
-		QImage imageScaled = image.scaled(width, height, Qt::KeepAspectRatio);
-
-		// Deallocate heap memory used by previous GGraphicsScene object
-		if (this->parent->ui.graphicsViewImage->scene()) {
-			delete this->parent->ui.graphicsViewImage->scene();
-		}
-
-		QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
-		QGraphicsScene* scene = new QGraphicsScene;
-		scene->addItem(item);
-
-		this->parent->ui.graphicsViewImage->setScene(scene);
-		this->parent->ui.graphicsViewImage->show();
-		/*
-		* Display captured images END
-		*/
+		displayCapturedImages();
 		});
 
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
@@ -1074,8 +1055,43 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 
 }
 
-void CaptureTab::onSlotRowClicked(const QModelIndex& index) {
-	int row = tableView->currentIndex().row();
+void CaptureTab::displayCapturedImages() {
+	QImage image;
+
+	// only for initial state
+	if (this->parent->ui.radioButton->isChecked()) {
+		image = this->getQColorImage();
+	}
+	else if (this->parent->ui.radioButton2->isChecked()) {
+		image = this->getQDepthImage();
+	}
+	else if (this->parent->ui.radioButton3->isChecked()) {
+		image = this->getQColorToDepthImage();
+	}
+	else {
+		image = this->getQDepthToColorImage();
+	}
+
+	int width = this->parent->ui.graphicsViewImage->width();
+	int height = this->parent->ui.graphicsViewImage->height();
+
+	QImage imageScaled = image.scaled(width, height, Qt::KeepAspectRatio);
+
+	// Deallocate heap memory used by previous GGraphicsScene object
+	if (this->parent->ui.graphicsViewImage->scene()) {
+		delete this->parent->ui.graphicsViewImage->scene();
+	}
+
+	QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
+	QGraphicsScene* scene = new QGraphicsScene;
+	scene->addItem(item);
+
+	this->parent->ui.graphicsViewImage->setScene(scene);
+	this->parent->ui.graphicsViewImage->show();
+}
+
+void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex& previous) {
+	int row = current.row();
 
 	/** Select image table view update UI to green background, showing successful image analysis */
 	imageBeingAnalyzedTableViewRow = row;
@@ -1085,4 +1101,18 @@ void CaptureTab::onSlotRowClicked(const QModelIndex& index) {
 
 	selectedImageIndex = dataModel->data(curIndex).toInt();
 	qDebug() << "Selected image index is" << selectedImageIndex;
+
+	CaptureHistory captureHistory = captureHistories[selectedImageIndex];
+	capturedColorImage = captureHistory.capturedColorImage;
+	capturedDepthImage = captureHistory.capturedDepthImage;
+	capturedColorToDepthImage = captureHistory.capturedColorToDepthImage;
+	capturedDepthToColorImage = captureHistory.capturedDepthToColorImage;
+	RANSACImage = captureHistory.RANSACImage;
+	qColorImage = captureHistory.qColorImage;
+	qDepthImage = captureHistory.qDepthImage;
+	qColorToDepthImage = captureHistory.qColorToDepthImage;
+	qDepthToColorImage = captureHistory.qDepthToColorImage;
+	qDepthToColorColorizedImage = captureHistory.qDepthToColorColorizedImage;
+
+	displayCapturedImages();
 }

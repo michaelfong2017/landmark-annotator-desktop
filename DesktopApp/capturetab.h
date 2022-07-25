@@ -14,6 +14,7 @@
 #include "qnetworkclient.h"
 #include "twolinesdialog.h"
 #include "noteditabledelegate.h"
+#include "capturehistory.h"
 
 class CaptureTab: public QWidget
 {
@@ -62,6 +63,10 @@ private:
 
     cv::Mat RANSACImage;
 
+    /** Store histories of images for selection */
+    std::vector<CaptureHistory> captureHistories;
+    /** Store histories of images for selection END */
+
     int captureCount;
     Recorder* recorder;
     QString captureFilepath;
@@ -72,6 +77,7 @@ private:
     void registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image);
     void alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ);
     void onManagerFinished(QNetworkReply* reply);
+    void displayCapturedImages();
 
     /** For sending findLandmarkPredictions() more than once */
     int landmarkRequestSent = 0;
@@ -91,6 +97,6 @@ private slots:
     void onUploadImage(QNetworkReply* reply);
     void onBindImageUrl(QNetworkReply* reply);
     void onFindLandmarkPredictions(QNetworkReply* reply);
-    void onSlotRowClicked(const QModelIndex& index);
+    void onSlotRowSelected(const QModelIndex& current, const QModelIndex& previous);
 };
 #endif
