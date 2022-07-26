@@ -63,6 +63,9 @@ private:
 
     cv::Mat RANSACImage;
 
+    int imageType = -1; // Update on image selection
+    int imageTypeBeingAnalyzed = -1; // Update on analysis button pressed
+
     /** Store histories of images for selection */
     std::vector<CaptureHistory> captureHistories;
     /** Store histories of images for selection END */

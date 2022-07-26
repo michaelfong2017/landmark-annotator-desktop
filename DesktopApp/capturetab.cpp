@@ -36,13 +36,14 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	dataModel = new QStandardItemModel(0, 3, this);
 	tableView->setModel(this->dataModel);
 
+	tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
 	/** Set only the "Image Type" column editable */
-	//tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	for (int c = 0; c < dataModel->columnCount(); c++)
-	{
-		if (c != 1)
-			tableView->setItemDelegateForColumn(c, new NotEditableDelegate(tableView));
-	}
+	//for (int c = 0; c < dataModel->columnCount(); c++)
+	//{
+	//	if (c != 1)
+	//		tableView->setItemDelegateForColumn(c, new NotEditableDelegate(tableView));
+	//}
 
 	//tableView->horizontalHeader()->setStretchLastSection(true);
 	tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -194,6 +195,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		if (this->isUploading) {
 			return;
 		}
+
+		this->imageType = this->parent->ui.imageTypeComboBox->currentText().split("-")[0].trimmed().toInt();
+
 		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
 		// Shallow copy
@@ -233,7 +237,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 				text = QString::number(dataModel->rowCount());
 				break;
 			case 1:
-				text = "(Please edit)";
+				text = QString::number(imageType);
 				break;
 			case 2:
 				QDateTime dateTime = dateTime.currentDateTime();
@@ -261,6 +265,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		/** Store histories of images for selection */
 		CaptureHistory captureHistory;
+		captureHistory.imageType = imageType;
 		captureHistory.capturedColorImage = capturedColorImage;
 		captureHistory.capturedDepthImage = capturedDepthImage;
 		captureHistory.capturedColorToDepthImage = capturedColorToDepthImage;
@@ -302,6 +307,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/** Select image table view update UI to green background, showing successful image analysis */
 		storedTableViewRow = imageBeingAnalyzedTableViewRow;
 		/** Select image table view update UI to green background, showing successful image analysis END */
+		/** Store the image type of the image being analyzed */
+		imageTypeBeingAnalyzed = imageType;
+		/** Store the image type of the image being analyzed END */
 
 		this->parent->ui.progressBar->setVisible(true);
 		this->parent->ui.progressBar->setValue(1);
@@ -601,6 +609,14 @@ void CaptureTab::onUploadImage(QNetworkReply* reply) {
 
 	/** TIMEOUT */
 	if (url == nullptr) {
+		/** Select image table view update UI to red background, showing unsuccessful image analysis */
+		for (int i = 0; i < dataModel->columnCount(); i++) {
+			QModelIndex index;
+			index = dataModel->index(storedTableViewRow, i);
+			dataModel->setData(index, QColor(Qt::red), Qt::BackgroundRole);
+		}
+		/** Select image table view update UI to red background, showing unsuccessful image analysis END */
+
 		TwoLinesDialog dialog;
 		dialog.setLine1("Analysis Step 1 Timeout!");
 		dialog.exec();
@@ -644,7 +660,7 @@ void CaptureTab::onUploadImage(QNetworkReply* reply) {
 		return;
 	}
 
-	QNetworkClient::getInstance().bindImageUrl(this->parent->patientTab->getCurrentPatientId(), url, this, SLOT(onBindImageUrl(QNetworkReply*)));
+	QNetworkClient::getInstance().bindImageUrl(this->parent->patientTab->getCurrentPatientId(), url, this->imageTypeBeingAnalyzed, this, SLOT(onBindImageUrl(QNetworkReply*)));
 }
 
 void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
@@ -655,6 +671,14 @@ void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
 
 	/** TIMEOUT */
 	if (response_data == nullptr) {
+		/** Select image table view update UI to red background, showing unsuccessful image analysis */
+		for (int i = 0; i < dataModel->columnCount(); i++) {
+			QModelIndex index;
+			index = dataModel->index(storedTableViewRow, i);
+			dataModel->setData(index, QColor(Qt::red), Qt::BackgroundRole);
+		}
+		/** Select image table view update UI to red background, showing unsuccessful image analysis END */
+
 		TwoLinesDialog dialog;
 		dialog.setLine1("Analysis Step 2 Timeout!");
 		dialog.exec();
@@ -727,6 +751,14 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 			return;
 		}
 		/** For sending findLandmarkPredictions() more than once END */
+
+		/** Select image table view update UI to red background, showing unsuccessful image analysis */
+		for (int i = 0; i < dataModel->columnCount(); i++) {
+			QModelIndex index;
+			index = dataModel->index(storedTableViewRow, i);
+			dataModel->setData(index, QColor(Qt::red), Qt::BackgroundRole);
+		}
+		/** Select image table view update UI to red background, showing unsuccessful image analysis END */
 
 		TwoLinesDialog dialog;
 		dialog.setLine1("Analysis Step 3 Timeout!");
@@ -1103,6 +1135,7 @@ void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex
 	qDebug() << "Selected image index is" << selectedImageIndex;
 
 	CaptureHistory captureHistory = captureHistories[selectedImageIndex];
+	imageType = captureHistory.imageType;
 	capturedColorImage = captureHistory.capturedColorImage;
 	capturedDepthImage = captureHistory.capturedDepthImage;
 	capturedColorToDepthImage = captureHistory.capturedColorToDepthImage;

@@ -924,6 +924,67 @@ color: rgb(255, 0, 5);
         <string notr="true"/>
        </property>
       </widget>
+      <widget class="QComboBox" name="imageTypeComboBox">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>730</y>
+         <width>151</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string>7 - Back analysis</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>8 - Left side</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>9 - Right side</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>10 - Other</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>710</y>
+         <width>161</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>MS Shell Dlg 2</family>
+         <pointsize>14</pointsize>
+         <weight>9</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+         <strikeout>false</strikeout>
+         <kerning>true</kerning>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 0, 0);
+font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Select image type (before capture):</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="annotateTab">
       <attribute name="title">

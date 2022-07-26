@@ -5,6 +5,7 @@
 #include <opencv2/opencv.hpp>
 
 struct CaptureHistory {
+    int imageType;
     cv::Mat capturedColorImage;
     cv::Mat capturedDepthImage;
     cv::Mat capturedColorToDepthImage;

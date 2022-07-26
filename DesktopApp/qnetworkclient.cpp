@@ -196,7 +196,7 @@ void QNetworkClient::uploadImage(cv::Mat image, const QObject* receiver, const c
     manager->post(request, multipart);
 }
 
-void QNetworkClient::bindImageUrl(int patientId, QString url, const QObject* receiver, const char* member) {
+void QNetworkClient::bindImageUrl(int patientId, QString url, int imageType, const QObject* receiver, const char* member) {
 
     qDebug() << "bindImageUrl";
 
@@ -210,7 +210,7 @@ void QNetworkClient::bindImageUrl(int patientId, QString url, const QObject* rec
     QJsonObject obj;
     obj["patientId"] = patientId;
     obj["url"] = url;
-    obj["imageType"] = 7;
+    obj["imageType"] = imageType;
     obj["imageName"] = "test.png";
 
     QByteArray data = QJsonDocument(obj).toJson();

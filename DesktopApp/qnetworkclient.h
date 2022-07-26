@@ -29,7 +29,7 @@ public:
     void uploadNewPatient(Patient patient, const QObject* receiver, const char* member);
     void fetchExistingImagesOfPatient(int patientId, const QObject* receiver, const char* member);
     void uploadImage(cv::Mat image, const QObject* receiver, const char* member);
-    void bindImageUrl(int patientId, QString url, const QObject* receiver, const char* member);
+    void bindImageUrl(int patientId, QString url, int imageType, const QObject* receiver, const char* member);
     void findLandmarkPredictions(int imageId, const QObject* receiver, const char* member);
     void downloadImage(QString imageUrl, const QObject* receiver, const char* member);
     void confirmLandmarks(int imageId, QString aiOriginResult, const QObject* receiver, const char* member);
