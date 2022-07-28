@@ -456,7 +456,24 @@ void CaptureTab::clearCaptureHistories() {
 	for (int i = 0; i < captureHistories.size(); i++) {
 		dataModel->removeRow(0, QModelIndex());
 	}
+
 	captureHistories.clear();
+
+	/** Reset variables stored in CaptureTab */
+	capturedColorImage.release();
+	capturedDepthImage.release();
+	capturedColorToDepthImage.release();
+	capturedDepthToColorImage.release();
+	qColorImage = QImage();
+	qDepthImage = QImage();
+	qColorToDepthImage = QImage();
+	qDepthToColorImage = QImage();
+	qDepthToColorColorizedImage = QImage();
+	RANSACImage.release();
+	imageType = -1; // Update on image selection
+	imageName = "";
+	imageTypeBeingAnalyzed = -1; // Update on analysis button pressed
+	/** Reset variables stored in CaptureTab END */
 
 	// Deallocate heap memory used by previous GGraphicsScene object
 	if (this->parent->ui.graphicsViewImage->scene()) {
@@ -752,8 +769,14 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 
 	/** TIMEOUT */
 	if (response_data == nullptr) {
-
-		qDebug() << "No responses received";
+		/** For sending findLandmarkPredictions() more than once */
+		if (landmarkRequestSent < MAX_LANDMARK_REQUEST_SENT) {
+			Sleep(2500);
+			landmarkRequestSent++;
+			QNetworkClient::getInstance().findLandmarkPredictions(this->currentImageId, this, SLOT(onFindLandmarkPredictions(QNetworkReply*)));
+			return;
+		}
+		/** For sending findLandmarkPredictions() more than once END */
 
 		/** Select image table view update UI to red background, showing unsuccessful image analysis */
 		for (int i = 0; i < dataModel->columnCount(); i++) {
@@ -767,6 +790,7 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		dialog.setLine1("Analysis Step 3 Timeout!");
 		dialog.exec();
 
+		/******/
 		this->parent->ui.progressBar->setValue(1);
 		this->parent->ui.progressBar->setVisible(false);
 		this->parent->ui.captureButton->setEnabled(true);
@@ -785,25 +809,11 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		this->parent->ui.tabWidget->setTabEnabled(5, true);
 		/** Re-enable changing tab END */
 		this->isUploading = false;
+		/******/
 
 		return;
 	}
-
-	if (aiImageUrl == nullptr) {
-
-		qDebug() << "No predictions received";
-
-		if (landmarkRequestSent < MAX_LANDMARK_REQUEST_SENT) {
-			Sleep(2500);
-			landmarkRequestSent++;
-			QNetworkClient::getInstance().findLandmarkPredictions(this->currentImageId, this, SLOT(onFindLandmarkPredictions(QNetworkReply*)));
-			return;
-		}
-		else {
-			qDebug() << "No predictions received. Give up";
-		}
-
-	}
+	/** TIMEOUT END */
 
 	int imageId = obj["id"].toInt();
 	this->parent->annotateTab->setAiImageUrl(aiImageUrl);

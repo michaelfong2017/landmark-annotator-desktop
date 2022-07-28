@@ -191,7 +191,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string/>
+              <string>isl512gp@gmail.com</string>
              </property>
             </widget>
            </item>
@@ -286,7 +286,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string/>
+              <string>123456</string>
              </property>
             </widget>
            </item>
@@ -953,7 +953,7 @@ color: rgb(255, 0, 5);
        </item>
        <item>
         <property name="text">
-         <string>100 - Other</string>
+         <string>10 - Other</string>
         </property>
        </item>
       </widget>
