@@ -3,6 +3,8 @@
 #include "kinectengine.h"
 #include <Windows.h>
 
+const int COLUMN_COUNT = 4;
+
 CaptureTab::CaptureTab(DesktopApp* parent)
 {
 	this->parent = parent;
@@ -33,7 +35,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 	/** Select image table view */
 	tableView = this->parent->ui.captureTab->findChild<QTableView*>("tableViewSelectImage");
-	dataModel = new QStandardItemModel(0, 3, this);
+	dataModel = new QStandardItemModel(0, COLUMN_COUNT, this);
 	tableView->setModel(this->dataModel);
 
 	tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -49,6 +51,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 	/** Set only the "Image Type" column editable END */
 
+	tableView->verticalHeader()->hide();
+
 	/** Handle row selection, including up/down arrow press */
 	bool value = connect(tableView->selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(onSlotRowSelected(const QModelIndex&, const QModelIndex&)));
 	/** Handle row selection END */
@@ -60,9 +64,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	dataModel->clear();
 
 	/** Headers */
-	QStringList headerLabels = { "index", "Image Type", "Creation Time" };
+	QStringList headerLabels = { "", "index", "Image Type", "Creation Time" };
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < COLUMN_COUNT; i++)
 	{
 		QString text = headerLabels.at(i);
 		QStandardItem* item = new QStandardItem(text);
@@ -74,12 +78,13 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	}
 
 	/** This must be put here (below) */
-	tableView->setColumnWidth(1, 150);
-	tableView->setColumnWidth(2, tableView->width() - 150 - 50);
+	tableView->setColumnWidth(0, 18);
+	tableView->setColumnWidth(2, 150);
+	tableView->setColumnWidth(3, tableView->width() - 150 - 50);
 	/** This must be put here (below) END */
 	/** Headers END */
 
-	tableView->hideColumn(0);
+	tableView->hideColumn(1);
 
 	tableView->show();
 
@@ -225,18 +230,21 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/** Insert index to data model */
 		QList<QStandardItem*> itemList;
 		QStandardItem* dataItem;
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < COLUMN_COUNT; i++)
 		{
 			QString text;
 			switch (i) {
 			case 0:
-				text = QString::number(dataModel->rowCount());
+				text = QString::number(dataModel->rowCount() + 1);
 				break;
 			case 1:
+				text = QString::number(dataModel->rowCount());
+				break;
+			case 2:
 				//text = QString::number(imageType);
 				text = imageName;
 				break;
-			case 2:
+			case 3:
 				QDateTime dateTime = dateTime.currentDateTime();
 				text = dateTime.toString("yyyy-MM-dd HH:mm:ss");
 				break;
