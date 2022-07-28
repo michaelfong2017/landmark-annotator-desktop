@@ -1,4 +1,5 @@
 #include "patienttab.h"
+#include "capturetab.h"
 
 PatientTab::PatientTab(DesktopApp* parent)
 {
@@ -41,6 +42,9 @@ PatientTab::PatientTab(DesktopApp* parent)
             }
         }
 
+        // need to clear list
+        this->parent->captureTab->clearCaptureHistories();
+
         this->parent->ui.tabWidget->setTabEnabled(3, true);
         this->parent->ui.tabWidget->setTabEnabled(4, true);
         this->parent->ui.tabWidget->setCurrentIndex(3);
@@ -62,6 +66,7 @@ void PatientTab::onEnterTab() {
 
 }
 
+
 void PatientTab::setCurrentPatientId(int currentPatientId) {
     this->currentPatientId = currentPatientId;
 }
@@ -69,6 +74,15 @@ void PatientTab::setCurrentPatientId(int currentPatientId) {
 int PatientTab::getCurrentPatientId() {
     return this->currentPatientId;
 }
+
+void PatientTab::setCurrentPatientName(QString currentPatientName) {
+    this->currentPatientName = currentPatientName;
+}
+
+QString PatientTab::getCurrentPatientName() {
+    return this->currentPatientName;
+}
+
 
 void PatientTab::setName(QString name)
 {
@@ -125,14 +139,14 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
     patientDataModel->clear();
 
     /** Headers */
-    QStringList headerLabels = { "Audit Date", "URL" };
+    QStringList headerLabels = { "Audit Date", "Image" };
 
     for (int i = 0; i < 2; i++)
     {
         QString text = headerLabels.at(i);
         QStandardItem* item = new QStandardItem(text);
         QFont fn = item->font();
-        fn.setPointSize(11);
+        fn.setPixelSize(14);
         item->setFont(fn);
 
         patientDataModel->setHorizontalHeaderItem(i, item);
@@ -172,7 +186,7 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
 
                 item = new QStandardItem(text);
                 QFont fn = item->font();
-                fn.setPointSize(11);
+                fn.setPixelSize(14);
 
                 item->setFont(fn);
             }
@@ -183,7 +197,7 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
 
                 item = new QStandardItem(text);
                 QFont fn = item->font();
-                fn.setPointSize(11);
+                fn.setPixelSize(14);
 
                 fn.setUnderline(true);
 

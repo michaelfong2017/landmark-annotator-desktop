@@ -6,6 +6,7 @@
 
 struct CaptureHistory {
     int imageType;
+    QString imageName;
     cv::Mat capturedColorImage;
     cv::Mat capturedDepthImage;
     cv::Mat capturedColorToDepthImage;

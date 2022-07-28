@@ -21,7 +21,7 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 	this->parent->ui.graphicsViewAnnotation2->setScene(this->depthToColorScene);
 	this->parent->ui.graphicsViewAnnotation2->show();
 
-	QObject::connect(this->parent->ui.saveButtonAnnotateTab, &QPushButton::clicked, [this]() {
+	/*QObject::connect(this->parent->ui.saveButtonAnnotateTab, &QPushButton::clicked, [this]() {
 		QString dateTimeString = Helper::getCurrentDateTimeString();
 		QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
 		QString colorSavePath = visitFolderPath + "/landmarks_color_" + dateTimeString + ".png";
@@ -51,7 +51,7 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 		jsonFile.write(document.toJson());
 
 		this->parent->ui.saveInfoAnnotateTab->setText("Images saved as " + colorSavePath + " and " + depthToColorSavePath);
-		});
+		});*/
 
 	QObject::connect(this->parent->ui.confirmLandmarksButton, &QPushButton::clicked, [this]() {
 		qDebug() << "confirmLandmarksButton clicked";
@@ -343,14 +343,35 @@ void AnnotateTab::setAnnotationsText() {
 	for (auto it : this->annotations3D) {
 		std::string key = it.first;
 		int x = this->annotations[key].x() * this->scalingFactor, y = this->annotations[key].y() * this->scalingFactor, z = it.second.z();
-		std::string plain_s = "Point " + it.first + ": (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")\n";
+		
+		std::string PointName = "";
+		if (it.first == "A1") {
+			PointName = "Left Inf Scapular Angle (A1)";
+		}
+		else if ((it.first == "A2")) {
+			PointName = "Right Inf Scapular Angle (A2)";
+		}
+		else if ((it.first == "B1")) {
+			PointName = "Left PIIS (B1)";
+		}
+		else if ((it.first == "B2")) {
+			PointName = "Right PIIS (B2)";
+		}
+		else if ((it.first == "C")) {
+			PointName = "C7 (C)";
+		}
+		else if ((it.first == "D")) {
+			PointName = "TOC (D)";
+		}
+
+		std::string plain_s = PointName + ": (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")\n";
 		QString str = QString::fromUtf8(plain_s.c_str());
 		text.append(str);
 	}
 
-	text.append(QString::fromStdString("Distance d ( D - C ): " + std::to_string(this->distance1) + " cm\n"));
-	text.append(QString::fromStdString("Alpha: " + std::to_string(this->angle1) + " degree\n"));
-	text.append(QString::fromStdString("Beta: " + std::to_string(this->angle2) + " degree\n"));
+	text.append(QString::fromStdString("Distance - Central Shift: " + std::to_string(this->distance1) + " mm\n"));
+	text.append(QString::fromStdString("Imbalance - Pelvic: " + std::to_string(this->angle1) + " degree\n"));
+	text.append(QString::fromStdString("Imbalance - Scapular: " + std::to_string(this->angle2) + " degree\n"));
 
 	this->parent->ui.annotationsText->setText(text);
 }
@@ -409,16 +430,16 @@ std::map<std::string, QVector3D>* AnnotateTab::getAnnotations3D() {
 
 void AnnotateTab::computeMetrics() {
 	const float PI = 3.14159265;
-	this->distance1 = (this->annotations3D["D"].x() - this->annotations3D["C"].x()) / 10;
+	this->distance1 = (this->annotations3D["C"].x() - this->annotations3D["D"].x());
 
 	//Angle between b1-b2 line and xy-plane
-	float yDiff = this->annotations3D["B1"].y() - this->annotations3D["B2"].y();
+	float yDiff = this->annotations3D["B2"].y() - this->annotations3D["B1"].y();
 	//float xyDistance = std::sqrt(std::pow(this->annotations3D["b1"].x() - this->annotations3D["b2"].x(), 2) + std::pow(this->annotations3D["b1"].y() - this->annotations3D["b2"].y(), 2));
 	float xDistance = this->annotations3D["B2"].x() - this->annotations3D["B1"].x();
 	this->angle1 = std::atan(yDiff / xDistance) * 180 / PI;
 
 	//Angle between c1-c2 line and xy-plane
-	yDiff = this->annotations3D["A1"].y() - this->annotations3D["A2"].y();
+	yDiff = this->annotations3D["A2"].y() - this->annotations3D["A1"].y();
 	//xyDistance = std::sqrt(std::pow(this->annotations3D["c1"].x() - this->annotations3D["c2"].x(), 2) + std::pow(this->annotations3D["c1"].y() - this->annotations3D["c2"].y(), 2));
 	xDistance = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
 	this->angle2 = std::atan(yDiff / xDistance) * 180 / PI;

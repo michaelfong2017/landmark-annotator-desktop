@@ -67,7 +67,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		QString text = headerLabels.at(i);
 		QStandardItem* item = new QStandardItem(text);
 		QFont fn = item->font();
-		fn.setPointSize(11);
+		fn.setPixelSize(14);
 		item->setFont(fn);
 
 		dataModel->setHorizontalHeaderItem(i, item);
@@ -176,8 +176,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		}
 		});
 
-	/** Michael Fong Show In Explorer
-	BEGIN */
 	QObject::connect(this->parent->ui.showInExplorer, &QPushButton::clicked, [this]() {
 		QString filepath = this->getCaptureFilepath();
 
@@ -188,8 +186,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		QProcess* process = new QProcess(this);
 		process->startDetached("explorer.exe", args);
 		});
-	/** Michael Fong Show In Explorer
-	END */
 
 	QObject::connect(this->parent->ui.captureButton, &QPushButton::clicked, [this]() {
 		if (this->isUploading) {
@@ -197,7 +193,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		}
 
 		this->imageType = this->parent->ui.imageTypeComboBox->currentText().split("-")[0].trimmed().toInt();
-
+		this->imageName = this->parent->ui.imageTypeComboBox->currentText();
 		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
 		// Shallow copy
@@ -237,7 +233,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 				text = QString::number(dataModel->rowCount());
 				break;
 			case 1:
-				text = QString::number(imageType);
+				//text = QString::number(imageType);
+				text = imageName;
 				break;
 			case 2:
 				QDateTime dateTime = dateTime.currentDateTime();
@@ -246,7 +243,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			}
 			dataItem = new QStandardItem(text);
 			QFont fn = dataItem->font();
-			fn.setPointSize(11);
+			fn.setPixelSize(14);
 			dataItem->setFont(fn);
 			itemList << dataItem;
 		}
@@ -266,6 +263,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/** Store histories of images for selection */
 		CaptureHistory captureHistory;
 		captureHistory.imageType = imageType;
+		captureHistory.imageName = imageName;
 		captureHistory.capturedColorImage = capturedColorImage;
 		captureHistory.capturedDepthImage = capturedDepthImage;
 		captureHistory.capturedColorToDepthImage = capturedColorToDepthImage;
@@ -288,21 +286,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		}
 		qDebug() << "Analysis button clicked";
 		this->isUploading = true;
-		this->parent->ui.captureButton->setEnabled(false);
-		this->parent->ui.saveVideoButton->setEnabled(false);
-		this->parent->ui.saveButtonCaptureTab->setEnabled(false);
-		this->parent->ui.annotateButtonCaptureTab->setEnabled(false);
-		this->parent->ui.radioButton->setEnabled(false);
-		this->parent->ui.radioButton2->setEnabled(false);
-		this->parent->ui.radioButton3->setEnabled(false);
-		this->parent->ui.radioButton4->setEnabled(false);
-		/** Disable changing tab */
-		this->parent->ui.tabWidget->setTabEnabled(0, false);
-		this->parent->ui.tabWidget->setTabEnabled(1, false);
-		this->parent->ui.tabWidget->setTabEnabled(2, false);
-		this->parent->ui.tabWidget->setTabEnabled(4, false);
-		this->parent->ui.tabWidget->setTabEnabled(5, false);
-		/** Disable changing tab END */
+		
+		this->disableButtonsForUploading();
 
 		/** Select image table view update UI to green background, showing successful image analysis */
 		storedTableViewRow = imageBeingAnalyzedTableViewRow;
@@ -310,9 +295,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/** Store the image type of the image being analyzed */
 		imageTypeBeingAnalyzed = imageType;
 		/** Store the image type of the image being analyzed END */
-
-		this->parent->ui.progressBar->setVisible(true);
-		this->parent->ui.progressBar->setValue(1);
 
 		/* Convert to the special 4 channels image and upload */
 		cv::Mat color3 = this->capturedColorImage;
@@ -469,11 +451,70 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 }
 
+void CaptureTab::clearCaptureHistories() {
+	qDebug() << "How many records: " << captureHistories.size();
+	for (int i = 0; i < captureHistories.size(); i++) {
+		dataModel->removeRow(0, QModelIndex());
+	}
+	captureHistories.clear();
+
+	// Deallocate heap memory used by previous GGraphicsScene object
+	if (this->parent->ui.graphicsViewImage->scene()) {
+		delete this->parent->ui.graphicsViewImage->scene();
+	}
+	this->parent->ui.patientNameInCapture->setText("Current Patient: " + this->parent->patientTab->getCurrentPatientName());
+
+}
+
 void CaptureTab::setDefaultCaptureMode() {
 	parent->ui.radioButton->setChecked(true);
 	parent->ui.radioButton2->setChecked(false);
 	parent->ui.radioButton3->setChecked(false);
 	parent->ui.radioButton4->setChecked(false);
+}
+
+void CaptureTab::disableButtonsForUploading() {
+
+	this->parent->ui.progressBar->setVisible(true);
+	this->parent->ui.progressBar->setValue(1);
+
+	this->parent->ui.captureButton->setEnabled(false);
+	this->parent->ui.saveVideoButton->setEnabled(false);
+	this->parent->ui.saveButtonCaptureTab->setEnabled(false);
+	this->parent->ui.annotateButtonCaptureTab->setEnabled(false);
+	this->parent->ui.radioButton->setEnabled(false);
+	this->parent->ui.radioButton2->setEnabled(false);
+	this->parent->ui.radioButton3->setEnabled(false);
+	this->parent->ui.radioButton4->setEnabled(false);
+
+	this->parent->ui.tabWidget->setTabEnabled(0, false);
+	this->parent->ui.tabWidget->setTabEnabled(1, false);
+	this->parent->ui.tabWidget->setTabEnabled(2, false);
+	this->parent->ui.tabWidget->setTabEnabled(4, false);
+	this->parent->ui.tabWidget->setTabEnabled(5, false);
+	
+}
+
+void CaptureTab::enableButtonsForUploading() {
+
+	this->parent->ui.progressBar->setValue(1);
+	this->parent->ui.progressBar->setVisible(false);
+
+	this->parent->ui.captureButton->setEnabled(true);
+	this->parent->ui.saveVideoButton->setEnabled(true);
+	this->parent->ui.saveButtonCaptureTab->setEnabled(true);
+	this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
+	this->parent->ui.radioButton->setEnabled(true);
+	this->parent->ui.radioButton2->setEnabled(true);
+	this->parent->ui.radioButton3->setEnabled(true);
+	this->parent->ui.radioButton4->setEnabled(true);
+
+	this->parent->ui.tabWidget->setTabEnabled(0, true);
+	this->parent->ui.tabWidget->setTabEnabled(1, true);
+	this->parent->ui.tabWidget->setTabEnabled(2, true);
+	this->parent->ui.tabWidget->setTabEnabled(4, true);
+	this->parent->ui.tabWidget->setTabEnabled(5, true);
+
 }
 
 void CaptureTab::registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image) {
@@ -591,8 +632,8 @@ void CaptureTab::alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX
 
 	if (abs(accX) > 1.0f || abs(accY) > 1.0f || abs(accZ + 9.81) > 1.0f) {
 		TwoLinesDialog dialog;
-		dialog.setLine1("Azure Kinect sensor not at level.");
-		dialog.setLine2("Please press OK and keep it stationary.");
+		dialog.setLine1("Azure Kinect sensor not horizontally level.");
+		dialog.setLine2("Please adjust the sensor and press OK.");
 		dialog.exec();
 	}
 }
@@ -621,24 +662,8 @@ void CaptureTab::onUploadImage(QNetworkReply* reply) {
 		dialog.setLine1("Analysis Step 1 Timeout!");
 		dialog.exec();
 
-		/******/
-		this->parent->ui.progressBar->setValue(1);
-		this->parent->ui.progressBar->setVisible(false);
-		this->parent->ui.captureButton->setEnabled(true);
-		this->parent->ui.saveVideoButton->setEnabled(true);
-		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
-		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
-		this->parent->ui.radioButton->setEnabled(true);
-		this->parent->ui.radioButton2->setEnabled(true);
-		this->parent->ui.radioButton3->setEnabled(true);
-		this->parent->ui.radioButton4->setEnabled(true);
-		/** Re-enable changing tab */
-		this->parent->ui.tabWidget->setTabEnabled(0, true);
-		this->parent->ui.tabWidget->setTabEnabled(1, true);
-		this->parent->ui.tabWidget->setTabEnabled(2, true);
-		this->parent->ui.tabWidget->setTabEnabled(4, true);
-		this->parent->ui.tabWidget->setTabEnabled(5, true);
-		/** Re-enable changing tab END */
+		this->enableButtonsForUploading();
+
 		this->isUploading = false;
 		/******/
 
@@ -683,24 +708,8 @@ void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
 		dialog.setLine1("Analysis Step 2 Timeout!");
 		dialog.exec();
 
-		/******/
-		this->parent->ui.progressBar->setValue(1);
-		this->parent->ui.progressBar->setVisible(false);
-		this->parent->ui.captureButton->setEnabled(true);
-		this->parent->ui.saveVideoButton->setEnabled(true);
-		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
-		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
-		this->parent->ui.radioButton->setEnabled(true);
-		this->parent->ui.radioButton2->setEnabled(true);
-		this->parent->ui.radioButton3->setEnabled(true);
-		this->parent->ui.radioButton4->setEnabled(true);
-		/** Re-enable changing tab */
-		this->parent->ui.tabWidget->setTabEnabled(0, true);
-		this->parent->ui.tabWidget->setTabEnabled(1, true);
-		this->parent->ui.tabWidget->setTabEnabled(2, true);
-		this->parent->ui.tabWidget->setTabEnabled(4, true);
-		this->parent->ui.tabWidget->setTabEnabled(5, true);
-		/** Re-enable changing tab END */
+		this->enableButtonsForUploading();
+
 		this->isUploading = false;
 		/******/
 
@@ -717,7 +726,7 @@ void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
 	QJsonObject obj = jsonResponse.object();
 	int imageId = obj["id"].toInt();
 
-	qDebug() << "Sleep 3 seconds";
+	qDebug() << "Sleep 2 seconds";
 
 	Sleep(2000);
 
@@ -742,15 +751,9 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	QString aiImageUrl = obj["aiImageUrl"].toString();
 
 	/** TIMEOUT */
-	if (response_data == nullptr || aiImageUrl == nullptr) {
-		/** For sending findLandmarkPredictions() more than once */
-		if (landmarkRequestSent < MAX_LANDMARK_REQUEST_SENT) {
-			Sleep(2000);
-			landmarkRequestSent++;
-			QNetworkClient::getInstance().findLandmarkPredictions(this->currentImageId, this, SLOT(onFindLandmarkPredictions(QNetworkReply*)));
-			return;
-		}
-		/** For sending findLandmarkPredictions() more than once END */
+	if (response_data == nullptr) {
+
+		qDebug() << "No responses received";
 
 		/** Select image table view update UI to red background, showing unsuccessful image analysis */
 		for (int i = 0; i < dataModel->columnCount(); i++) {
@@ -764,7 +767,6 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		dialog.setLine1("Analysis Step 3 Timeout!");
 		dialog.exec();
 
-		/******/
 		this->parent->ui.progressBar->setValue(1);
 		this->parent->ui.progressBar->setVisible(false);
 		this->parent->ui.captureButton->setEnabled(true);
@@ -783,11 +785,25 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		this->parent->ui.tabWidget->setTabEnabled(5, true);
 		/** Re-enable changing tab END */
 		this->isUploading = false;
-		/******/
 
 		return;
 	}
-	/** TIMEOUT END */
+
+	if (aiImageUrl == nullptr) {
+
+		qDebug() << "No predictions received";
+
+		if (landmarkRequestSent < MAX_LANDMARK_REQUEST_SENT) {
+			Sleep(2500);
+			landmarkRequestSent++;
+			QNetworkClient::getInstance().findLandmarkPredictions(this->currentImageId, this, SLOT(onFindLandmarkPredictions(QNetworkReply*)));
+			return;
+		}
+		else {
+			qDebug() << "No predictions received. Give up";
+		}
+
+	}
 
 	int imageId = obj["id"].toInt();
 	this->parent->annotateTab->setAiImageUrl(aiImageUrl);
@@ -803,15 +819,12 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	}
 
 	AnnotateTab* annotateTab = this->parent->annotateTab;
-
 	annotateTab->imageId = imageId;
 
-	// This no longer works
 	QStringList list = aiOriginResult.split(",");
 	for (int i = 0; i < list.size(); i++) {
 		QString chopped = list[i].remove("[").remove("]");
 		float f = chopped.toFloat();
-		//qDebug() << f;
 
 		switch (i) {
 			case 0: annotateTab->predictedCX = f; break;
@@ -837,22 +850,8 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	}
 	/** Select image table view update UI to green background, showing successful image analysis END */
 
-	this->parent->ui.captureButton->setEnabled(true);
-	this->parent->ui.saveVideoButton->setEnabled(true);
-	this->parent->ui.saveButtonCaptureTab->setEnabled(true);
-	this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
-	this->parent->ui.progressBar->setVisible(false);
-	this->parent->ui.radioButton->setEnabled(true);
-	this->parent->ui.radioButton2->setEnabled(true);
-	this->parent->ui.radioButton3->setEnabled(true);
-	this->parent->ui.radioButton4->setEnabled(true);
-	/** Re-enable changing tab */
-	this->parent->ui.tabWidget->setTabEnabled(0, true);
-	this->parent->ui.tabWidget->setTabEnabled(1, true);
-	this->parent->ui.tabWidget->setTabEnabled(2, true);
-	this->parent->ui.tabWidget->setTabEnabled(4, true);
-	this->parent->ui.tabWidget->setTabEnabled(5, true);
-	/** Re-enable changing tab END */
+	this->enableButtonsForUploading();
+
 	this->isUploading = false;
 
 	// Move to annotate tab which index is 4
@@ -1071,9 +1070,9 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 
 			float distance = KinectEngine::getInstance().findDistanceBetween3DPointAndPlane(vector3D.x(), vector3D.y(), vector3D.z(), PlaneA, PlaneB, PlaneC, PlaneD);
 			out.at<uint16_t>(y, x) = distance;
-			if (distance <= threshold) {
+			/*if (distance <= threshold) {
 				out.at<uint16_t>(y, x) = 5000;
-			}
+			}*/
 			if (distance > maxDistance) {
 				maxDistance = distance;
 			}
@@ -1123,6 +1122,11 @@ void CaptureTab::displayCapturedImages() {
 }
 
 void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex& previous) {
+	
+	if (this->isUploading) {
+		return;
+	}
+	
 	int row = current.row();
 
 	/** Select image table view update UI to green background, showing successful image analysis */
@@ -1136,6 +1140,7 @@ void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex
 
 	CaptureHistory captureHistory = captureHistories[selectedImageIndex];
 	imageType = captureHistory.imageType;
+	imageName = captureHistory.imageName;
 	capturedColorImage = captureHistory.capturedColorImage;
 	capturedDepthImage = captureHistory.capturedDepthImage;
 	capturedColorToDepthImage = captureHistory.capturedColorToDepthImage;

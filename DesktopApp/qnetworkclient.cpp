@@ -213,6 +213,8 @@ void QNetworkClient::bindImageUrl(int patientId, QString url, int imageType, con
     obj["imageType"] = imageType;
     obj["imageName"] = "test.png";
 
+    qDebug() << "patientID: " << patientId << " imageType: " << imageType;
+
     QByteArray data = QJsonDocument(obj).toJson();
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);

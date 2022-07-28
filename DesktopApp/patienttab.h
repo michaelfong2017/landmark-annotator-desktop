@@ -19,6 +19,8 @@ public:
     void onEnterTab();
     void setCurrentPatientId(int currentPatientId);
     int getCurrentPatientId();
+    void setCurrentPatientName(QString currentPatientName);
+    QString getCurrentPatientName();
     void setName(QString name);
     void setSex(QString sex);
     void setAge(QString age);
@@ -35,6 +37,7 @@ private:
     QTableView* tableView;
     QStandardItemModel* patientDataModel;
     int currentPatientId;
+    QString currentPatientName;
     QString name;
     QString sex;
     QString age;

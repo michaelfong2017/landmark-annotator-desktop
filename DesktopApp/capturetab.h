@@ -44,6 +44,8 @@ public:
     QImage getQDepthToColorImage();
     QImage getQDepthToColorColorizedImage();
 
+    void clearCaptureHistories();
+
 private:
     DesktopApp* parent;
 
@@ -64,6 +66,7 @@ private:
     cv::Mat RANSACImage;
 
     int imageType = -1; // Update on image selection
+    QString imageName = "";
     int imageTypeBeingAnalyzed = -1; // Update on analysis button pressed
 
     /** Store histories of images for selection */
@@ -77,6 +80,8 @@ private:
     QNetworkAccessManager manager;
     bool noImageCaptured;
     void setDefaultCaptureMode();
+    void disableButtonsForUploading();
+    void enableButtonsForUploading();
     void registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image);
     void alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ);
     void onManagerFinished(QNetworkReply* reply);
@@ -85,6 +90,7 @@ private:
     /** For sending findLandmarkPredictions() more than once */
     int landmarkRequestSent = 0;
     int MAX_LANDMARK_REQUEST_SENT = 5;
+    std::string currentCapturingPatientName;
     int currentImageId;
     /** For sending findLandmarkPredictions() more than once END */
 

@@ -66,14 +66,14 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     patientListDataModel->clear();
 
     /** Headers */
-    QStringList headerLabels = { "Patient ID", "Name", "Sex", "Age", "Phone Number", "Subject Number", "Creation Time", "idCard", "sin", "email", "address", "remark"};
+    QStringList headerLabels = { "Patient ID", "Name", "Gender", "Age", "Phone Number", "Subject Number", "Creation Time", "idCard", "sin", "email", "address", "remark"};
 
     for (int i = 0; i < 12; i++)
     {
         QString text = headerLabels.at(i);
         QStandardItem* item = new QStandardItem(text);
         QFont fn = item->font();
-        fn.setPointSize(11);
+        fn.setPixelSize(14);
         item->setFont(fn);
 
         patientListDataModel->setHorizontalHeaderItem(i, item);
@@ -189,7 +189,7 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
             }
             item = new QStandardItem(text);
             QFont fn = item->font();
-            fn.setPointSize(11);
+            fn.setPixelSize(14);
             item->setFont(fn);
             itemList << item;
         }
@@ -217,9 +217,14 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
     QModelIndex curIndex = patientListDataModel->index(row, 0);
     
     int currentPatientId = patientListDataModel->data(curIndex).toInt();
-    qDebug() << "Selected patientId is" << currentPatientId;
+    qDebug() << "Selected patientId is" << currentPatientId << "";
 
+
+    QModelIndex curIndex2 = patientListDataModel->index(row, 1);
     this->parent->patientTab->setCurrentPatientId(currentPatientId);
+
+    QString name = patientListDataModel->data(curIndex2).toString();
+    this->parent->patientTab->setCurrentPatientName(name);
 
     /** Use the map with patientId as the key and save folder path as the value */
     QDir dir(QCoreApplication::applicationDirPath());
