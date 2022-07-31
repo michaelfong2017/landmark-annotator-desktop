@@ -142,6 +142,8 @@ void QNetworkClient::uploadNewPatient(Patient patient, const QObject* receiver, 
     obj["subjectNumber"] = QString::fromStdString(patient.getSubjectNumber());
     obj["email"] = QString::fromStdString(patient.getEmail());
     obj["address"] = QString::fromStdString(patient.getAddress());
+    obj["country"] = QString::fromStdString(patient.getNationality());
+    obj["remarks"] = QString::fromStdString(patient.getRemarks());
     QByteArray data = QJsonDocument(obj).toJson();
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);

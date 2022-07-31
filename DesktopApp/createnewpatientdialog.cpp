@@ -17,12 +17,28 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
     b2->setAutoDefault(true);
     b2->setVisible(false);
 
+    /** Birthday dropdown */
+    for (int i = 1; i <= 31; i++) {
+        QString number = QString("%1").arg(i, 2, 10, QChar('0'));
+        ui.dayComboBox->addItem(number);
+    }
+    for (int i = 1; i <= 12; i++) {
+        QString number = QString("%1").arg(i, 2, 10, QChar('0'));
+        ui.monthComboBox->addItem(number);
+    }
+    int currentYear = QDate::currentDate().year();
+    for (int i = currentYear - 120; i <= currentYear; i++) {
+        QString number = QString("%1").arg(i, 2, 10, QChar('0'));
+        ui.yearComboBox->addItem(number);
+    }
+    /** Birthday dropdown END */
+
     disconnect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 
 	QObject::connect(ui.buttonBox, &QDialogButtonBox::accepted, [this]() {
         bool isPatientDataValid = true;
 
-        std::string name, hkid, phone, email, subjectNumber, socialSecurityNumber, nationality, address;
+        std::string name, hkid, phone, email, subjectNumber, socialSecurityNumber, nationality, address, country, remarks;
         QDate dob;
 
         // Validate mandatory fields
@@ -38,14 +54,12 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
         }
         else isPatientDataValid = false;
 
-        // Parse date of birth (DOB)
-        qDebug() << "ui.dobInput->selectedDate()" << ui.dobInput->selectedDate().toString("yyyy.MM.dd");
-        //else isPatientDataValid = false;
-
         // Optional fields
-        dob = ui.dobInput->selectedDate();
+        dob.setDate(ui.yearComboBox->currentText().toInt(), ui.monthComboBox->currentText().toInt(), ui.dayComboBox->currentText().toInt());
         patient.setDOB(dob);
 
+        qDebug() << dob;
+        
         socialSecurityNumber = ui.socialSecurityInput->text().toStdString();
         patient.setSocialSecurityNumber(socialSecurityNumber);
 
@@ -63,6 +77,9 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
 
         address = ui.addressInput->toPlainText().toStdString();
         patient.setAddress(address);
+
+        remarks = ui.remarksInput->toPlainText().toStdString();
+        patient.setRemarks(remarks);
 
         if (ui.male->isChecked()) patient.setSex(Sex::Male);
         else if (ui.female->isChecked()) patient.setSex(Sex::Female);

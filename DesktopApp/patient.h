@@ -15,6 +15,7 @@ private:
 	std::string socialSecurityNumber;
 	std::string nationality;
 	std::string address;
+	std::string remarks;
 	Sex sex = Sex::Undefined;
 	float height;
 	float weight;
@@ -31,6 +32,7 @@ public:
 	void setSocialSecurityNumber(std::string);
 	void setNationality(std::string);
 	void setAddress(std::string);
+	void setRemarks(std::string);
 	void setSex(Sex);
 	void setHeight(float);
 	void setWeight(float);
@@ -46,6 +48,7 @@ public:
 	std::string getSocialSecurityNumber();
 	std::string getNationality();
 	std::string getAddress();
+	std::string getRemarks();
 	Sex getSex();
 	float getHeight();
 	float getWeight();
