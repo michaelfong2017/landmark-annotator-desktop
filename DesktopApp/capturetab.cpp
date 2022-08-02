@@ -1151,7 +1151,7 @@ void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex
 	imageBeingAnalyzedTableViewRow = row;
 	/** Select image table view update UI to green background, showing successful image analysis END */
 
-	QModelIndex curIndex = dataModel->index(row, 0);
+	QModelIndex curIndex = dataModel->index(row, 1);
 
 	selectedImageIndex = dataModel->data(curIndex).toInt();
 	qDebug() << "Selected image index is" << selectedImageIndex;
