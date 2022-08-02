@@ -411,7 +411,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
      <x>270</x>
      <y>230</y>
      <width>69</width>
-     <height>22</height>
+     <height>16</height>
     </rect>
    </property>
   </widget>
@@ -421,7 +421,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
      <x>150</x>
      <y>230</y>
      <width>69</width>
-     <height>22</height>
+     <height>16</height>
     </rect>
    </property>
   </widget>
@@ -431,7 +431,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
      <x>400</x>
      <y>230</y>
      <width>69</width>
-     <height>22</height>
+     <height>16</height>
     </rect>
    </property>
   </widget>
