@@ -99,7 +99,7 @@
      <x>40</x>
      <y>220</y>
      <width>80</width>
-     <height>30</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -411,7 +411,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
      <x>270</x>
      <y>230</y>
      <width>69</width>
-     <height>16</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -421,7 +421,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
      <x>150</x>
      <y>230</y>
      <width>69</width>
-     <height>16</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -431,7 +431,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
      <x>400</x>
      <y>230</y>
      <width>69</width>
-     <height>16</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -468,9 +468,9 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>220</y>
+     <y>231</y>
      <width>21</width>
-     <height>31</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -484,9 +484,9 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
    <property name="geometry">
     <rect>
      <x>120</x>
-     <y>220</y>
+     <y>230</y>
      <width>31</width>
-     <height>31</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -500,9 +500,9 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
    <property name="geometry">
     <rect>
      <x>360</x>
-     <y>220</y>
+     <y>231</y>
      <width>41</width>
-     <height>31</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="styleSheet">
