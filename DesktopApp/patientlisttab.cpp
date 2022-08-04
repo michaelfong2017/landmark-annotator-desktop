@@ -224,13 +224,12 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
 
 void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
     int row = tableView->currentIndex().row();
-    QModelIndex curIndex = patientListDataModel->index(row, 0);
+    QModelIndex curIndex = patientListDataModel->index(row, 1);
     
     int currentPatientId = patientListDataModel->data(curIndex).toInt();
     qDebug() << "Selected patientId is" << currentPatientId << "";
 
-
-    QModelIndex curIndex2 = patientListDataModel->index(row, 1);
+    QModelIndex curIndex2 = patientListDataModel->index(row, 2);
     this->parent->patientTab->setCurrentPatientId(currentPatientId);
 
     QString name = patientListDataModel->data(curIndex2).toString();

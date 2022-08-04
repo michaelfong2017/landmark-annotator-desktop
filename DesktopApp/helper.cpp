@@ -36,6 +36,10 @@ QString Helper::getVisitFolderPath(QDir parentDir) {
 
 QString Helper::convertFetchedDateTime(QString text)
 {
+    if (text == "") {
+        return "ERROR";
+    }
+
     QString dateStr = text.split("T")[0];
     QString timeStr = text.split("T")[1].split(".")[0];
 
