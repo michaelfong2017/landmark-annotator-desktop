@@ -325,21 +325,21 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="phoneInput">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>130</y>
-     <width>350</width>
-     <height>30</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLineEdit" name="idInput">
    <property name="geometry">
     <rect>
      <x>120</x>
      <y>80</y>
+     <width>350</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="phoneInput">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>130</y>
      <width>350</width>
      <height>30</height>
     </rect>

@@ -833,7 +833,7 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	qDebug() << "aiOriginResult:" << aiOriginResult;
 
 	if (aiOriginResult == "") {
-		aiOriginResult = "[[640.0, 200.0], [580.0, 300.0], [700.0, 300.0], [580.0, 500.0], [700.0, 500.0], [640.0, 600.0]]";
+		aiOriginResult = "[[640.0, 200.0], [700.0, 300.0], [580.0, 300.0], [700.0, 500.0], [580.0, 500.0], [640.0, 600.0]]";
 	}
 
 	AnnotateTab* annotateTab = this->parent->annotateTab;
@@ -847,14 +847,14 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		switch (i) {
 			case 0: annotateTab->predictedCX = f; break;
 			case 1: annotateTab->predictedCY = f; break;
-			case 2: annotateTab->predictedA1X = f; break;
-			case 3: annotateTab->predictedA1Y = f; break;
-			case 4: annotateTab->predictedA2X = f; break;
-			case 5: annotateTab->predictedA2Y = f; break;
-			case 6: annotateTab->predictedB1X = f; break;
-			case 7: annotateTab->predictedB1Y = f; break;
-			case 8: annotateTab->predictedB2X = f; break;
-			case 9: annotateTab->predictedB2Y = f; break;
+			case 2: annotateTab->predictedA2X = f; break;
+			case 3: annotateTab->predictedA2Y = f; break;
+			case 4: annotateTab->predictedA1X = f; break;
+			case 5: annotateTab->predictedA1Y = f; break;
+			case 6: annotateTab->predictedB2X = f; break;
+			case 7: annotateTab->predictedB2Y = f; break;
+			case 8: annotateTab->predictedB1X = f; break;
+			case 9: annotateTab->predictedB1Y = f; break;
 			case 10: annotateTab->predictedDX = f; break;
 			case 11: annotateTab->predictedDY = f; break;
 		}

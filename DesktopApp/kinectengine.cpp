@@ -554,9 +554,10 @@ float* KinectEngine::findPlaneEquationCoefficients(cv::Mat depthToColorImage) {
 	return out;
 }
 
-float* KinectEngine::findPlaneEquationCoefficients(float x1, float y1,
-	float z1, float x2,
-	float y2, float z2,
+// https://www.youtube.com/watch?v=rL9UXzZYYo4&ab_channel=TheOrganicChemistryTutor
+float* KinectEngine::findPlaneEquationCoefficients(
+	float x1, float y1,	float z1, 
+	float x2, float y2, float z2,
 	float x3, float y3, float z3)
 {
 	float out[4];
@@ -579,9 +580,10 @@ float* KinectEngine::findPlaneEquationCoefficients(float x1, float y1,
 	return out;
 }
 
-float KinectEngine::findDistanceBetween3DPointAndPlane(float x1, float y1,
-	float z1, float a,
-	float b, float c,
+// https://www.cuemath.com/geometry/distance-between-point-and-plane/
+float KinectEngine::findDistanceBetween3DPointAndPlane(
+	float x1, float y1,	float z1, 
+	float a, float b, float c,
 	float d) {
 	d = fabs((a * x1 + b * y1 +
 		c * z1 + d));
