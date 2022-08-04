@@ -62,11 +62,11 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 		QPointF second;
 
 		// C
-		second = this->annotations.at("C");
+		second = this->annotationsOnRight.at("C");
 		x = second.x();
 		y = second.y();
-		x *= this->scalingFactor;
-		y *= this->scalingFactor;
+		x *= this->scalingFactorForRight;
+		y *= this->scalingFactorForRight;
 
 		// One decimal place, e.g., 170.0
 		aiOriginResult += QString("%1").arg(x, 0, 'f', 1);
@@ -76,11 +76,11 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 		// C END
 
 		// A1
-		second = this->annotations.at("A1");
+		second = this->annotationsOnRight.at("A1");
 		x = second.x();
 		y = second.y();
-		x *= this->scalingFactor;
-		y *= this->scalingFactor;
+		x *= this->scalingFactorForRight;
+		y *= this->scalingFactorForRight;
 
 		// One decimal place, e.g., 170.0
 		aiOriginResult += QString("%1").arg(x, 0, 'f', 1);
@@ -90,11 +90,11 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 		// A1 END
 
 		// A2
-		second = this->annotations.at("A2");
+		second = this->annotationsOnRight.at("A2");
 		x = second.x();
 		y = second.y();
-		x *= this->scalingFactor;
-		y *= this->scalingFactor;
+		x *= this->scalingFactorForRight;
+		y *= this->scalingFactorForRight;
 
 		// One decimal place, e.g., 170.0
 		aiOriginResult += QString("%1").arg(x, 0, 'f', 1);
@@ -104,11 +104,11 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 		// A2 END
 
 		// B1
-		second = this->annotations.at("B1");
+		second = this->annotationsOnRight.at("B1");
 		x = second.x();
 		y = second.y();
-		x *= this->scalingFactor;
-		y *= this->scalingFactor;
+		x *= this->scalingFactorForRight;
+		y *= this->scalingFactorForRight;
 
 		// One decimal place, e.g., 170.0
 		aiOriginResult += QString("%1").arg(x, 0, 'f', 1);
@@ -118,11 +118,11 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 		// B1 END
 
 		// B2
-		second = this->annotations.at("B2");
+		second = this->annotationsOnRight.at("B2");
 		x = second.x();
 		y = second.y();
-		x *= this->scalingFactor;
-		y *= this->scalingFactor;
+		x *= this->scalingFactorForRight;
+		y *= this->scalingFactorForRight;
 
 		// One decimal place, e.g., 170.0
 		aiOriginResult += QString("%1").arg(x, 0, 'f', 1);
@@ -132,11 +132,11 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 		// B2 END
 
 		// D
-		second = this->annotations.at("D");
+		second = this->annotationsOnRight.at("D");
 		x = second.x();
 		y = second.y();
-		x *= this->scalingFactor;
-		y *= this->scalingFactor;
+		x *= this->scalingFactorForRight;
+		y *= this->scalingFactorForRight;
 
 		// One decimal place, e.g., 170.0
 		aiOriginResult += QString("%1").arg(x, 0, 'f', 1);
@@ -153,7 +153,7 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 
 void AnnotateTab::reloadCurrentImage() {
 	// Remove existing annotations in annotations member variable
-	for (auto it : this->annotations) this->annotations[it.first] = QPointF();
+	for (auto it : this->annotationsOnRight) this->annotationsOnRight[it.first] = QPointF();
 	// Remove existing annotations in annotations member variable END
 
 	this->depthToColorImage = this->parent->captureTab->getCapturedDepthToColorImage().clone();
@@ -164,78 +164,13 @@ void AnnotateTab::reloadCurrentImage() {
 	}
 
 	/** Display ai image from url */
-	QNetworkClient::getInstance().downloadImage(this->aiImageUrl, this, SLOT(onDownloadImage(QNetworkReply*)));
+	//QNetworkClient::getInstance().downloadImage(this->aiImageUrl, this, SLOT(onDownloadImage(QNetworkReply*)));
 	/** Display ai image from url END */
-
-	///** New plane calculation */
-	//float* p;
-	//p = KinectEngine::getInstance().findPlaneEquationCoefficients(this->depthToColorImage);
-	///** New plane calculation END */
-
-	///** Calculate plane equation and distance to plane of each 3D point */
-	///**** Get the 3D coordinates of 3 reference points that are assumed to lie on the plane. */
-	//// HARD CODED VALUES
-	//float x1_2D = 360.0f;
-	//float y1_2D = 360.0f;
-	//float x2_2D = 750.0f;
-	//float y2_2D = 250.0f;
-	//float x3_2D = 750.0f;
-	//float y3_2D = 470.0f;
-	//// HARD CODED VALUES END
-
-	//QVector3D vector3D_1 = KinectEngine::getInstance().query3DPoint(x1_2D, y1_2D, this->depthToColorImage);
-	//QVector3D vector3D_2 = KinectEngine::getInstance().query3DPoint(x2_2D, y2_2D, this->depthToColorImage);
-	//QVector3D vector3D_3 = KinectEngine::getInstance().query3DPoint(x3_2D, y3_2D, this->depthToColorImage);
-
-	///**** Get the 3D coordinates of 3 reference points that are assumed to lie on the plane. END */
-	//float* abcd;
-	//abcd = KinectEngine::getInstance().findPlaneEquationCoefficients(
-	//	vector3D_1.x(), vector3D_1.y(), vector3D_1.z(),
-	//	vector3D_2.x(), vector3D_2.y(), vector3D_2.z(),
-	//	vector3D_3.x(), vector3D_3.y(), vector3D_3.z()
-	//);
-
-	//float a = abcd[0];
-	//float b = abcd[1];
-	//float c = abcd[2];
-	//float d = abcd[3];
-
-	//qDebug() << "Equation of plane is " << a << " x + " << b
-	//	<< " y + " << c << " z + " << d << " = 0.";
-
-	//cv::Mat out = cv::Mat::zeros(depthToColorImage.rows, depthToColorImage.cols, CV_16UC1);
-	//float maxDistance = 0.0f;
-	//for (int y = 0; y < depthToColorImage.rows; y++) {
-	//	for (int x = 0; x < depthToColorImage.cols; x++) {
-	//		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->depthToColorImage);
-	//		
-	//		if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
-	//			out.at<uint16_t>(y, x) = 0.0f;
-	//			continue;
-	//		}
-
-	//		float distance = KinectEngine::getInstance().findDistanceBetween3DPointAndPlane(vector3D.x(), vector3D.y(), vector3D.z(), a, b, c, d);
-	//		out.at<uint16_t>(y, x) = distance;
-	//		
-	//		if (distance > maxDistance) {
-	//			maxDistance = distance;
-	//		}
-	//	}
-	//}
-
-	//QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
-	//QString depthSavePath = QDir(visitFolderPath).filePath("out.png");
-
-	//cv::Mat temp;
-	//out.convertTo(temp, CV_8U, 255.0 / maxDistance, 0.0);
-
-	//cv::imwrite(depthSavePath.toStdString(), temp);
-
-	///** Calculate plane equation and distance to plane of each 3D point END */
 
 	this->qColorImage = this->parent->captureTab->getQColorImage().copy();
 	this->qDepthToColorColorizedImage = this->parent->captureTab->getQDepthToColorColorizedImage().copy();
 
+	// scale both images according to displaying window size
 	int width = this->parent->ui.graphicsViewAnnotation->width();
 	int height = this->parent->ui.graphicsViewAnnotation->height();
 	this->annotatedColorImage = this->qColorImage.copy().scaled(width, height, Qt::KeepAspectRatio);
@@ -244,25 +179,19 @@ void AnnotateTab::reloadCurrentImage() {
 	height = this->parent->ui.graphicsViewAnnotation2->height();
 	this->annotatedDepthToColorColorizedImage = this->qDepthToColorColorizedImage.copy().scaled(width, height, Qt::KeepAspectRatio);
 
-
 	// Reset annotations
-	this->scalingFactor = std::min(this->qDepthToColorColorizedImage.width() / (float)this->annotatedDepthToColorColorizedImage.width(), this->qDepthToColorColorizedImage.height() / (float)this->annotatedDepthToColorColorizedImage.height());
+	this->scalingFactorForRight = std::min(this->qDepthToColorColorizedImage.width() / (float)this->annotatedDepthToColorColorizedImage.width(), this->qDepthToColorColorizedImage.height() / (float)this->annotatedDepthToColorColorizedImage.height());
+	this->scalingFactorFromRightToLeft = this->annotatedColorImage.width() / (float)this->annotatedDepthToColorColorizedImage.width();
+	qDebug() << "Scale from Depth to Color:" << scalingFactorFromRightToLeft;
 
-	this->annotations.clear();
+	this->annotationsOnRight.clear();
 
-	//this->annotations.insert({ "C", QPointF(240.0f, 70.0f) });
-	//this->annotations.insert({ "A1", QPointF(220.0f, 130.0f) });
-	//this->annotations.insert({ "A2", QPointF(260.0f, 130.0f) });
-	//this->annotations.insert({ "B1", QPointF(220.0f, 165.0f) });
-	//this->annotations.insert({ "B2", QPointF(260.0f, 165.0f) });
-	//this->annotations.insert({ "D", QPointF(240.0f, 185.0f) });
-
-	this->annotations.insert({ "C", QPointF(predictedCX / scalingFactor, predictedCY / scalingFactor) });
-	this->annotations.insert({ "A1", QPointF(predictedA1X / scalingFactor, predictedA1Y / scalingFactor) });
-	this->annotations.insert({ "A2", QPointF(predictedA2X / scalingFactor, predictedA2Y / scalingFactor) });
-	this->annotations.insert({ "B1", QPointF(predictedB1X / scalingFactor, predictedB1Y / scalingFactor) });
-	this->annotations.insert({ "B2", QPointF(predictedB2X / scalingFactor, predictedB2Y / scalingFactor) });
-	this->annotations.insert({ "D", QPointF(predictedDX / scalingFactor, predictedDY / scalingFactor) });
+	this->annotationsOnRight.insert({ "C", QPointF(predictedCX / scalingFactorForRight, predictedCY / scalingFactorForRight) });
+	this->annotationsOnRight.insert({ "A1", QPointF(predictedA1X / scalingFactorForRight, predictedA1Y / scalingFactorForRight) });
+	this->annotationsOnRight.insert({ "A2", QPointF(predictedA2X / scalingFactorForRight, predictedA2Y / scalingFactorForRight) });
+	this->annotationsOnRight.insert({ "B1", QPointF(predictedB1X / scalingFactorForRight, predictedB1Y / scalingFactorForRight) });
+	this->annotationsOnRight.insert({ "B2", QPointF(predictedB2X / scalingFactorForRight, predictedB2Y / scalingFactorForRight) });
+	this->annotationsOnRight.insert({ "D", QPointF(predictedDX / scalingFactorForRight, predictedDY / scalingFactorForRight) });
 
 	int x, y;
 
@@ -273,11 +202,11 @@ void AnnotateTab::reloadCurrentImage() {
 	//qDebug() << this->qDepthToColorColorizedImage.width() / (float)this->annotatedDepthToColorColorizedImage.width();
 	//qDebug() << this->qDepthToColorColorizedImage.height() / (float)this->annotatedDepthToColorColorizedImage.height();
 
-	for (auto it : this->annotations) {
+	for (auto it : this->annotationsOnRight) {
 		x = it.second.x();
 		y = it.second.y();
-		x *= this->scalingFactor;
-		y *= this->scalingFactor;
+		x *= this->scalingFactorForRight;
+		y *= this->scalingFactorForRight;
 		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->depthToColorImage);
 
 		if (this->annotations3D.find(it.first) == this->annotations3D.end()) {
@@ -335,14 +264,14 @@ QImage* AnnotateTab::getAnnotatedDepthToColorColorizedImage() {
 }
 
 std::map<std::string, QPointF>* AnnotateTab::getAnnotations() {
-	return &this->annotations;
+	return &this->annotationsOnRight;
 }
 
 void AnnotateTab::setAnnotationsText() {
 	QString text = "";
 	for (auto it : this->annotations3D) {
 		std::string key = it.first;
-		int x = this->annotations[key].x() * this->scalingFactor, y = this->annotations[key].y() * this->scalingFactor, z = it.second.z();
+		int x = this->annotationsOnRight[key].x() * this->scalingFactorForRight, y = this->annotationsOnRight[key].y() * this->scalingFactorForRight, z = it.second.z();
 		
 		std::string PointName = "";
 		if (it.first == "A1") {
@@ -395,10 +324,10 @@ QJsonDocument AnnotateTab::getAnnotationsJson() {
 	QJsonObject emptyJsonObject{};
 	QJsonDocument document;
 
-	if (!this->annotations["A1"].isNull()) {
+	if (!this->annotationsOnRight["A1"].isNull()) {
 		QJsonObject coordinates;
 
-		for (auto it : this->annotations) {
+		for (auto it : this->annotationsOnRight) {
 			QJsonObject coordinate;
 			coordinate.insert("x", it.second.x());
 			coordinate.insert("y", it.second.y());
@@ -421,7 +350,7 @@ DragAndDropGraphicsScene* AnnotateTab::getDepthToColorScene() {
 }
 
 float* AnnotateTab::getScalingFactor() {
-	return &this->scalingFactor;
+	return &this->scalingFactorForRight;
 }
 
 std::map<std::string, QVector3D>* AnnotateTab::getAnnotations3D() {
@@ -466,6 +395,9 @@ void AnnotateTab::onConfirmLandmarks(QNetworkReply* reply) {
 	}
 }
 
+
+// Useful for fake X-ray image
+/*
 void AnnotateTab::onDownloadImage(QNetworkReply* reply) {
 	qDebug() << "onDownloadImage";
 
@@ -484,4 +416,4 @@ void AnnotateTab::onDownloadImage(QNetworkReply* reply) {
 	scene->addPixmap(pixmapScaled);
 	this->parent->ui.graphicsViewImageUrl->setScene(scene);
 	this->parent->ui.graphicsViewImageUrl->show();
-}
+}*/

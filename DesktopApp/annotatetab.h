@@ -41,6 +41,8 @@ public:
     void computeMetrics();
     void setAiImageUrl(QString aiImageUrl);
 
+    float scalingFactorFromRightToLeft;
+
     // Landmark predictions
     // Conceptually should be private but in order to avoid long script, public is used.
     int imageId;
@@ -66,12 +68,12 @@ private:
 
     QImage annotatedColorImage;
     QImage annotatedDepthToColorColorizedImage;
-    std::map<std::string, QPointF> annotations;
+    std::map<std::string, QPointF> annotationsOnRight;
     std::map<std::string, QVector3D> annotations3D;
     DesktopApp* parent;
     DragAndDropGraphicsScene* colorScene;
     DragAndDropGraphicsScene* depthToColorScene;
-    float scalingFactor;
+    float scalingFactorForRight;
 
     QString aiImageUrl;
 
@@ -86,7 +88,7 @@ private:
 
 private slots:
     void onConfirmLandmarks(QNetworkReply* reply);
-    void onDownloadImage(QNetworkReply* reply);
+    //void onDownloadImage(QNetworkReply* reply);
 };
 
 // Helper functions

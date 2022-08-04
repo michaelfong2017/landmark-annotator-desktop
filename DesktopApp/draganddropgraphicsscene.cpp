@@ -32,26 +32,52 @@ DragAndDropGraphicsScene::DragAndDropGraphicsScene( AnnotateTab* annotateTab, Im
 	// Draw annotations if any
 	QPainter painter(&qPixmap);
 
-	painter.setPen(QPen(Qt::magenta, 8, Qt::SolidLine, Qt::RoundCap));
-	for (auto it : *this->annotateTab->getAnnotations()) {
-		if (!it.second.isNull()) painter.drawPoint(it.second.x(), it.second.y());
+	if (this->imageType == ImageType::Color)
+	{
+		painter.setPen(QPen(Qt::magenta, 10, Qt::SolidLine, Qt::RoundCap));
+		for (auto it : *this->annotateTab->getAnnotations()) {
+			if (!it.second.isNull()) painter.drawPoint(it.second.x() * this->annotateTab->scalingFactorFromRightToLeft, it.second.y() * this->annotateTab->scalingFactorFromRightToLeft);
+		}
+
+		painter.setPen(QPen(Qt::white, 4, Qt::SolidLine, Qt::RoundCap));
+		for (auto it : *this->annotateTab->getAnnotations()) {
+			if (!it.second.isNull()) painter.drawText(it.second.x() * this->annotateTab->scalingFactorFromRightToLeft, it.second.y() * this->annotateTab->scalingFactorFromRightToLeft, QString::fromStdString(it.first));
+		}
+
+		painter.setPen(QPen(Qt::white, 0.5, Qt::DashLine, Qt::RoundCap));
+		painter.drawLine(
+			(*this->annotateTab->getAnnotations())["A1"].x() * this->annotateTab->scalingFactorFromRightToLeft, (*this->annotateTab->getAnnotations())["A1"].y() * this->annotateTab->scalingFactorFromRightToLeft,
+			(*this->annotateTab->getAnnotations())["A2"].x() * this->annotateTab->scalingFactorFromRightToLeft, (*this->annotateTab->getAnnotations())["A2"].y() * this->annotateTab->scalingFactorFromRightToLeft
+		);
+
+		painter.drawLine(
+			(*this->annotateTab->getAnnotations())["B1"].x() * this->annotateTab->scalingFactorFromRightToLeft, (*this->annotateTab->getAnnotations())["B1"].y() * this->annotateTab->scalingFactorFromRightToLeft,
+			(*this->annotateTab->getAnnotations())["B2"].x() * this->annotateTab->scalingFactorFromRightToLeft, (*this->annotateTab->getAnnotations())["B2"].y() * this->annotateTab->scalingFactorFromRightToLeft
+		);
 	}
+	else if (this->imageType == ImageType::DepthToColor) 
+	{
+		painter.setPen(QPen(Qt::magenta, 8, Qt::SolidLine, Qt::RoundCap));
+		for (auto it : *this->annotateTab->getAnnotations()) {
+			if (!it.second.isNull()) painter.drawPoint(it.second.x(), it.second.y());
+		}
 
-	painter.setPen(QPen(Qt::white, 2, Qt::SolidLine, Qt::RoundCap));
-	for (auto it : *this->annotateTab->getAnnotations()) {
-		if (!it.second.isNull()) painter.drawText(it.second.x(), it.second.y(), QString::fromStdString(it.first));
+		painter.setPen(QPen(Qt::white, 2, Qt::SolidLine, Qt::RoundCap));
+		for (auto it : *this->annotateTab->getAnnotations()) {
+			if (!it.second.isNull()) painter.drawText(it.second.x(), it.second.y(), QString::fromStdString(it.first));
+		}
+
+		painter.setPen(QPen(Qt::white, 0.5, Qt::DashLine, Qt::RoundCap));
+		painter.drawLine(
+			(*this->annotateTab->getAnnotations())["A1"].x(), (*this->annotateTab->getAnnotations())["A1"].y(),
+			(*this->annotateTab->getAnnotations())["A2"].x(), (*this->annotateTab->getAnnotations())["A2"].y()
+		);
+
+		painter.drawLine(
+			(*this->annotateTab->getAnnotations())["B1"].x(), (*this->annotateTab->getAnnotations())["B1"].y(),
+			(*this->annotateTab->getAnnotations())["B2"].x(), (*this->annotateTab->getAnnotations())["B2"].y()
+		);
 	}
-
-	painter.setPen(QPen(Qt::white, 0.5, Qt::DashLine, Qt::RoundCap));
-	painter.drawLine(
-		(*this->annotateTab->getAnnotations())["A1"].x(), (*this->annotateTab->getAnnotations())["A1"].y(),
-		(*this->annotateTab->getAnnotations())["A2"].x(), (*this->annotateTab->getAnnotations())["A2"].y()
-	);
-
-	painter.drawLine(
-		(*this->annotateTab->getAnnotations())["B1"].x(), (*this->annotateTab->getAnnotations())["B1"].y(),
-		(*this->annotateTab->getAnnotations())["B2"].x(), (*this->annotateTab->getAnnotations())["B2"].y()
-	);
 
 	painter.end();
 
@@ -62,6 +88,12 @@ DragAndDropGraphicsScene::DragAndDropGraphicsScene( AnnotateTab* annotateTab, Im
 
 void DragAndDropGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	float x = event->scenePos().x(), y = event->scenePos().y();
+
+	if (this->imageType == ImageType::Color) {
+		y = y / this->annotateTab->scalingFactorFromRightToLeft;
+		x = x / this->annotateTab->scalingFactorFromRightToLeft;
+	}
+
 	this->isPoint = false;
 	this->pointKey = "";
 
@@ -95,6 +127,16 @@ void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 		this->annotateTab->recopyAnnotatedImage();
 
 		float x = event->scenePos().x(), y = event->scenePos().y();
+		
+		if (this->imageType == ImageType::Color) {
+			// convert back to color window coordinates
+			y = y / this->annotateTab->scalingFactorFromRightToLeft;
+			x = x / this->annotateTab->scalingFactorFromRightToLeft;
+			qDebug() << "Color Drop: " << x << ", " << y;
+		}else if (this->imageType == ImageType::DepthToColor) {
+			qDebug() << "Depth Drop: " << x << ", " << y;
+		}
+
 		(*this->annotateTab->getAnnotations())[this->pointKey].setX(x);
 		(*this->annotateTab->getAnnotations())[this->pointKey].setY(y);
 
@@ -121,23 +163,23 @@ void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 		QPainter depthPainter(&depthQPixmap);
 
 		// color
-		colorPainter.setPen(QPen(Qt::magenta, 8, Qt::SolidLine, Qt::RoundCap));
+		colorPainter.setPen(QPen(Qt::magenta, 10, Qt::SolidLine, Qt::RoundCap));
 		for(auto it: *this->annotateTab->getAnnotations()) {
-			colorPainter.drawPoint(it.second.x(), it.second.y());
+			colorPainter.drawPoint(it.second.x() * this->annotateTab->scalingFactorFromRightToLeft, it.second.y() * this->annotateTab->scalingFactorFromRightToLeft);
 		}
-		colorPainter.setPen(QPen(Qt::white, 2, Qt::SolidLine, Qt::RoundCap));
+		colorPainter.setPen(QPen(Qt::white, 4, Qt::SolidLine, Qt::RoundCap));
 		for(auto it: *this->annotateTab->getAnnotations()) {
-			colorPainter.drawText(it.second.x(), it.second.y(), QString::fromStdString(it.first));
+			colorPainter.drawText(it.second.x() * this->annotateTab->scalingFactorFromRightToLeft, it.second.y() * this->annotateTab->scalingFactorFromRightToLeft, QString::fromStdString(it.first));
 
 		}
 		colorPainter.setPen(QPen(Qt::white , 0.5, Qt::DashLine, Qt::RoundCap));
 		colorPainter.drawLine(
-			(*this->annotateTab->getAnnotations())["A1"].x(), (*this->annotateTab->getAnnotations())["A1"].y(),
-			(*this->annotateTab->getAnnotations())["A2"].x(), (*this->annotateTab->getAnnotations())["A2"].y()
+			(*this->annotateTab->getAnnotations())["A1"].x() * this->annotateTab->scalingFactorFromRightToLeft, (*this->annotateTab->getAnnotations())["A1"].y() * this->annotateTab->scalingFactorFromRightToLeft,
+			(*this->annotateTab->getAnnotations())["A2"].x() * this->annotateTab->scalingFactorFromRightToLeft, (*this->annotateTab->getAnnotations())["A2"].y() * this->annotateTab->scalingFactorFromRightToLeft
 		);
 		colorPainter.drawLine(
-			(*this->annotateTab->getAnnotations())["B1"].x(), (*this->annotateTab->getAnnotations())["B1"].y(),
-			(*this->annotateTab->getAnnotations())["B2"].x(), (*this->annotateTab->getAnnotations())["B2"].y()
+			(*this->annotateTab->getAnnotations())["B1"].x() * this->annotateTab->scalingFactorFromRightToLeft, (*this->annotateTab->getAnnotations())["B1"].y() * this->annotateTab->scalingFactorFromRightToLeft,
+			(*this->annotateTab->getAnnotations())["B2"].x() * this->annotateTab->scalingFactorFromRightToLeft, (*this->annotateTab->getAnnotations())["B2"].y() * this->annotateTab->scalingFactorFromRightToLeft
 		);
 		colorPainter.end();
 		// color END
@@ -163,17 +205,7 @@ void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 		);
 		depthPainter.end();
 		// depthToColor END
-		
-		if (this->imageType == ImageType::Color) {
-			//this->addPixmap(humanPixmapScaled);
-			//this->annotateTab->getDepthToColorScene()->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedDepthToColorColorizedImage()));
-		}
 
-		if (this->imageType == ImageType::DepthToColor) {
-			//this->addPixmap(humanPixmapScaled2);
-			//this->annotateTab->getColorScene()->addPixmap(humanPixmapScaled2);
-			//this->addPixmap(QPixmap::fromImage(*this->annotateTab->getAnnotatedDepthToColorColorizedImage()));
-		}
 
 		this->annotateTab->getColorScene()->addPixmap(colorQPixmap);
 		this->annotateTab->getDepthToColorScene()->addPixmap(depthQPixmap);
