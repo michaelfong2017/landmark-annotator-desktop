@@ -2,11 +2,6 @@
 #define RECORDER
 
 #define MAX_RECORDING_SECONDS 10
-#define VIDEOWRITER_FPS 30
-#define COLOR_IMAGE_WIDTH 1280
-#define COLOR_IMAGE_HEIGHT 720 
-#define DEPTH_IMAGE_WIDTH 640
-#define DEPTH_IMAGE_HEIGHT 576
 
 #include "stdafx.h"
 #include "desktopapp.h"

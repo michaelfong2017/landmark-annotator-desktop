@@ -6,6 +6,12 @@
 #include "stdafx.h"
 #include <utility>
 
+#define VIDEOWRITER_FPS 30
+#define COLOR_IMAGE_WIDTH 1920
+#define COLOR_IMAGE_HEIGHT 1080 
+#define DEPTH_IMAGE_WIDTH 640
+#define DEPTH_IMAGE_HEIGHT 576
+
 #define MAX_GYROSCOPE_QUEUE_SIZE 30
 #define MAX_ACCELEROMETER_QUEUE_SIZE 30
 

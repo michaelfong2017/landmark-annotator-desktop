@@ -1,4 +1,5 @@
 #include "recorder.h"
+#include "kinectengine.h"
 
 Recorder::Recorder(DesktopApp* parent) {
 	this->isRecording = false;

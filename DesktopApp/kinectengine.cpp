@@ -87,7 +87,14 @@ void KinectEngine::configDevice()
 	k4a_device_configuration_t& config = this->config;
 	config.camera_fps = K4A_FRAMES_PER_SECOND_30;
 	config.color_format = K4A_IMAGE_FORMAT_COLOR_BGRA32;
-	config.color_resolution = K4A_COLOR_RESOLUTION_720P;
+	switch (COLOR_IMAGE_WIDTH) {
+		case 1920:
+			config.color_resolution = K4A_COLOR_RESOLUTION_1080P;
+			break;
+		case 1280:
+			config.color_resolution = K4A_COLOR_RESOLUTION_720P;
+			break;
+	}
 	config.depth_mode = K4A_DEPTH_MODE_NFOV_UNBINNED;
 	config.depth_delay_off_color_usec = 0;
 }

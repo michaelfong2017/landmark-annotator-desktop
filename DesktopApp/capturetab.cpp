@@ -317,13 +317,16 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		std::vector<cv::Mat>channelsForDepth2(1);
 		cv::split(normalizedDepthToColor, channelsForDepth2);
 
-		cv::Mat FourChannelPNG = cv::Mat::ones(720, 1280, CV_16UC4);;
+		int width = COLOR_IMAGE_WIDTH;
+		int height = COLOR_IMAGE_HEIGHT;
+
+		cv::Mat FourChannelPNG = cv::Mat::ones(height, width, CV_16UC4);;
 		std::vector<cv::Mat>channels3(4);
 		cv::split(FourChannelPNG, channels3);
 
 
 		// channelsForColor2 = BGR
-		for (int i = 0; i < 1280 * 720; i++) {
+		for (int i = 0; i < width * height; i++) {
 			channels3[0].at<uint16_t>(i) = (channelsForColor2[2].at<uint8_t>(i) << 8) | channelsForColor2[1].at<uint8_t>(i);
 			channels3[1].at<uint16_t>(i) = (channelsForColor2[0].at<uint8_t>(i) << 8);
 		}
@@ -833,7 +836,14 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	qDebug() << "aiOriginResult:" << aiOriginResult;
 
 	if (aiOriginResult == "") {
-		aiOriginResult = "[[640.0, 200.0], [700.0, 300.0], [580.0, 300.0], [700.0, 500.0], [580.0, 500.0], [640.0, 600.0]]";
+		switch (COLOR_IMAGE_WIDTH) {
+		case 1920:
+			aiOriginResult = "[[960.0, 300.0], [1050.0, 450.0], [870.0, 450.0], [1050.0, 750.0], [870.0, 750.0], [960.0, 900.0]]";
+			break;
+		case 1280:
+			aiOriginResult = "[[640.0, 200.0], [700.0, 300.0], [580.0, 300.0], [700.0, 500.0], [580.0, 500.0], [640.0, 600.0]]";
+			break;
+		}
 	}
 
 	AnnotateTab* annotateTab = this->parent->annotateTab;
