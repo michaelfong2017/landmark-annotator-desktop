@@ -20,6 +20,9 @@ class KinectEngine : public QWidget
     Q_OBJECT
 
 public:
+    // COLOR_IMAGE_CROP_WIDTH_PER_SIDE can be set to 0 to disable such crop
+    int COLOR_IMAGE_CROP_WIDTH_PER_SIDE = (COLOR_IMAGE_WIDTH - COLOR_IMAGE_HEIGHT) / 2;
+
     static KinectEngine& getInstance() {
         static KinectEngine instance;
         return instance;

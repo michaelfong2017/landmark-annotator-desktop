@@ -352,7 +352,13 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		KinectEngine::getInstance().captureImages();
 		cv::Mat color, depth;
 		KinectEngine::getInstance().readColorAndDepthImages(color, depth);
+		int cropPerSide = KinectEngine::getInstance().COLOR_IMAGE_CROP_WIDTH_PER_SIDE;
 		QImage qColor = convertColorCVToQImage(color);
+
+		// Crop left and right
+		qColor = qColor.copy(cropPerSide, 0, COLOR_IMAGE_WIDTH - 2 * cropPerSide, COLOR_IMAGE_HEIGHT);
+		// Crop left and right END
+
 		QImage qDepth = convertDepthCVToColorizedQImage(depth);
 
 		// Recording time elapsed
@@ -380,6 +386,15 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			/** Human cut shape */
 			QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape4.png");
 			QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
+
+			// Crop left and right
+			// Don't crop human cut shape if the original image also does not need the crop
+			if (KinectEngine::getInstance().COLOR_IMAGE_CROP_WIDTH_PER_SIDE != 0) {
+				cropPerSide = (humanPixmapScaled.width() - humanPixmapScaled.height()) / 2;
+				humanPixmapScaled = humanPixmapScaled.copy(cropPerSide, 0, humanPixmapScaled.width() - 2 * cropPerSide, humanPixmapScaled.height());
+			}
+			// Crop left and right END
+
 			scene->addPixmap(humanPixmapScaled);
 			/** Human cut shape END */
 
