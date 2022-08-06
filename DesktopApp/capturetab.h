@@ -15,6 +15,7 @@
 #include "twolinesdialog.h"
 #include "noteditabledelegate.h"
 #include "capturehistory.h"
+#include "clipgraphicsscene.h"
 
 class CaptureTab: public QWidget
 {

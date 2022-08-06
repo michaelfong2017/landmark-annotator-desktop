@@ -19,6 +19,9 @@
     <ClCompile Include="desktopapp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="clipgraphicsscene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -28,6 +31,9 @@
     <ClInclude Include="patient.h" />
     <ClInclude Include="recorder.h" />
     <ClInclude Include="capturehistory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clipgraphicsscene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

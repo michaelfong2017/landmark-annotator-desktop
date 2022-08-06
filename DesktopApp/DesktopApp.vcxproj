@@ -118,6 +118,7 @@
     <ClCompile Include="alignmenttab.cpp" />
     <ClCompile Include="annotatetab.cpp" />
     <ClCompile Include="capturetab.cpp" />
+    <ClCompile Include="clipgraphicsscene.cpp" />
     <ClCompile Include="createnewpatientdialog.cpp" />
     <ClCompile Include="draganddropgraphicsscene.cpp" />
     <ClCompile Include="helper.cpp" />
@@ -162,6 +163,7 @@
     <QtMoc Include="twolinesdialog.h" />
     <QtMoc Include="noteditabledelegate.h" />
     <ClInclude Include="capturehistory.h" />
+    <ClInclude Include="clipgraphicsscene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />
