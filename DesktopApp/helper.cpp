@@ -37,7 +37,7 @@ QString Helper::getVisitFolderPath(QDir parentDir) {
 QString Helper::convertFetchedDateTime(QString text)
 {
     if (text == "") {
-        return "ERROR";
+        return "No Audit Date";
     }
 
     QString dateStr = text.split("T")[0];
