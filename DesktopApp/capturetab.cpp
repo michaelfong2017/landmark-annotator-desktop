@@ -974,6 +974,9 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 
 	srand((unsigned)time(0));
 
+	int IgnoreLeftAndRightPixel = 200;
+	int IgnoreMiddlePixel = 200;
+
 	while (iterationCount <= k) {
 		
 		inlierCount = 0;
@@ -982,10 +985,10 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 		while (true) {
 			PointOne[0] = rand() % depthToColorImage.cols;
 			PointOne[1] = rand() % depthToColorImage.rows;
-			if (PointOne[0] < 200 && PointOne[0] > 1080) {
+			if (PointOne[0] < IgnoreLeftAndRightPixel && PointOne[0] > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
 				continue;
 			}
-			if (PointOne[0] > 490 && PointOne[0] < 790) {
+			if (PointOne[0] > 860 && PointOne[0] < 1060) {
 				continue;
 			}
 			QVector3D vector3D_1 = KinectEngine::getInstance().query3DPoint(PointOne[0], PointOne[1], depthToColorImage);
@@ -1001,10 +1004,10 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 		while (true) {
 			PointTwo[0] = rand() % depthToColorImage.cols;
 			PointTwo[1] = rand() % depthToColorImage.rows;
-			if (PointTwo[0] < 200 && PointTwo[0] > 1080) {
+			if (PointTwo[0] < IgnoreLeftAndRightPixel && PointTwo[0] > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
 				continue;
 			}
-			if (PointTwo[0] > 490 && PointTwo[0] < 790) {
+			if (PointTwo[0] > 860 && PointTwo[0] < 1060) {
 				continue;
 			}
 			QVector3D vector3D_2 = KinectEngine::getInstance().query3DPoint(PointTwo[0], PointTwo[1], depthToColorImage);
@@ -1021,10 +1024,10 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 		while (true) {
 			PointThree[0] = rand() % depthToColorImage.cols;
 			PointThree[1] = rand() % depthToColorImage.rows;
-			if (PointThree[0] < 200 && PointThree[0] > 1080) {
+			if (PointThree[0] < IgnoreLeftAndRightPixel && PointThree[0] > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
 				continue;
 			}
-			if (PointThree[0] > 490 && PointThree[0] < 790) {
+			if (PointThree[0] > 860 && PointThree[0] < 1060) {
 				continue;
 			}
 			QVector3D vector3D_3 = KinectEngine::getInstance().query3DPoint(PointThree[0], PointThree[1], depthToColorImage);
@@ -1059,10 +1062,10 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 	
 		for (int y = 0; y < depthToColorImage.rows; y+=2) {
 			for (int x = 0; x < depthToColorImage.cols; x+=2) {
-				if (x > 490 && x < 790) {
+				if (x > 860 && x < 1060) {
 					continue;
 				}
-				if (x < 200 || x > 1080) {
+				if (x < IgnoreLeftAndRightPixel || x > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
 					continue;
 				}
 				QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, depthToColorImage);
