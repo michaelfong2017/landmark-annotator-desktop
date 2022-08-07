@@ -1012,10 +1012,10 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
       <widget class="QGraphicsView" name="graphicsViewAnnotation">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>736</width>
-         <height>414</height>
+         <x>50</x>
+         <y>20</y>
+         <width>550</width>
+         <height>742</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -1027,28 +1027,28 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
        <property name="geometry">
         <rect>
          <x>770</x>
-         <y>350</y>
+         <y>480</y>
          <width>471</width>
-         <height>411</height>
+         <height>110</height>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 18px &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
         <string/>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
        </property>
       </widget>
       <widget class="QGraphicsView" name="graphicsViewAnnotation2">
        <property name="geometry">
         <rect>
-         <x>770</x>
-         <y>30</y>
-         <width>480</width>
-         <height>270</height>
+         <x>820</x>
+         <y>20</y>
+         <width>320</width>
+         <height>432</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -1108,6 +1108,25 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
          </widget>
         </item>
        </layout>
+      </widget>
+      <widget class="QLabel" name="annotationsText2">
+       <property name="geometry">
+        <rect>
+         <x>770</x>
+         <y>590</y>
+         <width>471</width>
+         <height>150</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="alignmentTab">

@@ -122,19 +122,25 @@ void DragAndDropGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event) 
 void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 	if (this->isPoint) {
 
-		qDebug() << "Drop Event";
-
 		this->annotateTab->recopyAnnotatedImage();
 
 		float x = event->scenePos().x(), y = event->scenePos().y();
-		
+
 		if (this->imageType == ImageType::Color) {
 			// convert back to color window coordinates
 			y = y / this->annotateTab->scalingFactorFromRightToLeft;
 			x = x / this->annotateTab->scalingFactorFromRightToLeft;
-			qDebug() << "Color Drop: " << x << ", " << y;
+			qDebug() << "Drop Event : Color Drop: " << x << ", " << y;
 		}else if (this->imageType == ImageType::DepthToColor) {
-			qDebug() << "Depth Drop: " << x << ", " << y;
+			qDebug() << "Drop Event : Depth Drop: " << x << ", " << y;
+		}
+
+		if (x < 0 || y < 0) {
+			return;
+		}
+
+		if (x > this->annotateTab->getParent()->ui.graphicsViewAnnotation2->width() || y > this->annotateTab->getParent()->ui.graphicsViewAnnotation2->height()) {
+			return;
 		}
 
 		(*this->annotateTab->getAnnotations())[this->pointKey].setX(x);
@@ -142,8 +148,9 @@ void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 
 		x *= *this->annotateTab->getScalingFactor();
 		y *= *this->annotateTab->getScalingFactor();
+		//qDebug() << "Check: " << x << ". " << y;
 		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->annotateTab->getDepthToColorImage());
-
+		
 		(*this->annotateTab->getAnnotations3D())[this->pointKey].setX(vector3D.x());
 		(*this->annotateTab->getAnnotations3D())[this->pointKey].setY(vector3D.y());
 		(*this->annotateTab->getAnnotations3D())[this->pointKey].setZ(vector3D.z());

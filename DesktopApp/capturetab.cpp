@@ -202,14 +202,14 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
 		// Shallow copy
-		cv::Mat color = this->capturedColorImage;
+		/*cv::Mat color = this->capturedColorImage;
 		cv::Mat depth = this->capturedDepthImage;
 		cv::Mat colorToDepth = this->capturedColorToDepthImage;
-		cv::Mat depthToColor = this->capturedDepthToColorImage;
+		cv::Mat depthToColor = this->capturedDepthToColorImage;*/
 		//
 
 		/** Assume that capture is all successful, otherwise print a warning. */
-		if (color.empty() || depth.empty() || colorToDepth.empty() || depthToColor.empty()) {
+		if (this->capturedColorImage.empty() || this->capturedDepthImage.empty() || this->capturedColorToDepthImage.empty() || this->capturedDepthToColorImage.empty()) {
 			qWarning() << "capturetab captureButton - one of the captured images is null";
 			TwoLinesDialog dialog;
 			dialog.setLine1("Capture failed!");
@@ -220,7 +220,14 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
 		this->noImageCaptured = false;
 
-		this->RANSACImage = computeNormalizedDepthImage(depthToColor);
+		this->RANSACImage = computeNormalizedDepthImage(this->capturedDepthToColorImage);
+
+		// Cropping
+		float widthOfPatientBack = 800;
+		cv::Rect rect((COLOR_IMAGE_WIDTH / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 1080);
+		this->capturedColorImage = this->capturedColorImage(rect);
+		this->capturedDepthToColorImage = this->capturedDepthToColorImage(rect);
+		this->RANSACImage = this->RANSACImage(rect);
 
 		/*this->RANSACImage.convertTo(this->RANSACImage, CV_8U, 255.0 / 5000.0, 0.0);
 		cv::imshow("ransac", this->RANSACImage);
@@ -259,13 +266,12 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		dataModel->insertRow(0, itemList);
 		/** Insert index to data model END */
 
-
-		this->qColorImage = convertColorCVToQImage(color);
-		this->qDepthImage = convertDepthCVToQImage(depth);
-		this->qColorToDepthImage = convertColorToDepthCVToQImage(colorToDepth);
-		this->qDepthToColorImage = convertDepthToColorCVToQImage(depthToColor);
+		this->qColorImage = convertColorCVToQImage(this->capturedColorImage);
+		this->qDepthImage = convertDepthCVToQImage(this->capturedDepthImage);
+		this->qColorToDepthImage = convertColorToDepthCVToQImage(this->capturedColorToDepthImage);
+		this->qDepthToColorImage = convertDepthToColorCVToQImage(this->capturedDepthToColorImage);
 		// For annotatetab instead
-		this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(depthToColor);
+		this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(this->capturedDepthToColorImage);
 		// For annotatetab instead END
 
 		/** Store histories of images for selection */
@@ -317,12 +323,19 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		std::vector<cv::Mat>channelsForDepth2(1);
 		cv::split(normalizedDepthToColor, channelsForDepth2);
 
-		int width = COLOR_IMAGE_WIDTH;
-		int height = COLOR_IMAGE_HEIGHT;
+
+		int width = this->capturedColorImage.cols;
+		int height = this->capturedColorImage.rows;
+		//int width = COLOR_IMAGE_WIDTH;
+		//int height = COLOR_IMAGE_HEIGHT;
 
 		cv::Mat FourChannelPNG = cv::Mat::ones(height, width, CV_16UC4);;
 		std::vector<cv::Mat>channels3(4);
 		cv::split(FourChannelPNG, channels3);
+
+		qDebug() << "this->capturedColorImage" << this->capturedColorImage.cols;
+		qDebug() << "depthToColor3" << depthToColor3.cols;
+		qDebug() << "normalizedDepthToColor" << normalizedDepthToColor.cols;
 
 
 		// channelsForColor2 = BGR
@@ -335,7 +348,10 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		cv::merge(channels3, FourChannelPNG);
 
-		qDebug() << "Merging image completed";
+		qDebug() << "Merging image completed: " 
+			<< FourChannelPNG.cols << ", "
+			<< FourChannelPNG.rows << ", "
+			<< FourChannelPNG.channels();
 
 		QNetworkClient::getInstance().uploadImage(FourChannelPNG, this, SLOT(onUploadImage(QNetworkReply*)));
 		/* Convert to the special 4 channels image and upload END */
@@ -853,7 +869,9 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	if (aiOriginResult == "") {
 		switch (COLOR_IMAGE_WIDTH) {
 		case 1920:
-			aiOriginResult = "[[960.0, 300.0], [1050.0, 450.0], [870.0, 450.0], [1050.0, 750.0], [870.0, 750.0], [960.0, 900.0]]";
+			//aiOriginResult = "[[960.0, 300.0], [1050.0, 450.0], [870.0, 450.0], [1050.0, 750.0], [870.0, 750.0], [960.0, 900.0]]";
+			// Cropped version. 800 Width
+			aiOriginResult = "[[400.0, 300.0], [500.0, 450.0], [300.0, 450.0], [500.0, 750.0], [300.0, 750.0], [400.0, 900.0]]";
 			break;
 		case 1280:
 			aiOriginResult = "[[640.0, 200.0], [700.0, 300.0], [580.0, 300.0], [700.0, 500.0], [580.0, 500.0], [640.0, 600.0]]";

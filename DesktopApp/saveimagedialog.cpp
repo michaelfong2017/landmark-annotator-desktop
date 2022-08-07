@@ -50,6 +50,7 @@ SaveImageDialog::SaveImageDialog(CaptureTab* parent)
 			QImage img((uchar*) this->parent->getCapturedColorImage().data, 
 				this->parent->getCapturedColorImage().cols, 
 				this->parent->getCapturedColorImage().rows, 
+				this->parent->getCapturedColorImage().step,
 				QImage::Format_RGB32);
 			colorWriteSuccess = writer1.write(img);
 		}
@@ -67,13 +68,11 @@ SaveImageDialog::SaveImageDialog(CaptureTab* parent)
 			//cv::Mat temp;
 			//cvtColor(i, temp, cv::COLOR_BGRA2BGR);
 			//colorToDepthWriteSuccess = cv::imwrite(colorToDepthSavePath.toStdString(), temp);
-
 			QImage img((uchar*)this->parent->getCapturedColorToDepthImage().data,
 				this->parent->getCapturedColorToDepthImage().cols,
 				this->parent->getCapturedColorToDepthImage().rows,
 				QImage::Format_RGB32);
 			colorToDepthWriteSuccess = writer3.write(img);
-
 		}
 
 		if (ui.checkBoxDepthToColor->isChecked()) {
@@ -82,6 +81,7 @@ SaveImageDialog::SaveImageDialog(CaptureTab* parent)
 			QImage img((uchar*)this->parent->getCapturedDepthToColorImage().data,
 				this->parent->getCapturedDepthToColorImage().cols,
 				this->parent->getCapturedDepthToColorImage().rows,
+				this->parent->getCapturedDepthToColorImage().step,
 				QImage::Format_Grayscale16);
 			depthToColorWriteSuccess = writer4.write(img);
 		}

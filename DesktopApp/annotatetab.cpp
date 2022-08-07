@@ -269,6 +269,7 @@ std::map<std::string, QPointF>* AnnotateTab::getAnnotations() {
 
 void AnnotateTab::setAnnotationsText() {
 	QString text = "";
+	QString text2 = "";
 	for (auto it : this->annotations3D) {
 		std::string key = it.first;
 		int x = this->annotationsOnRight[key].x() * this->scalingFactorForRight, y = this->annotationsOnRight[key].y() * this->scalingFactorForRight, z = it.second.z();
@@ -295,7 +296,7 @@ void AnnotateTab::setAnnotationsText() {
 
 		std::string plain_s = PointName + ": (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")\n";
 		QString str = QString::fromUtf8(plain_s.c_str());
-		text.append(str);
+		text2.append(str);
 	}
 
 	text.append(QString::fromStdString("Distance - Central Shift: " + std::to_string(this->distance1) + " mm\n"));
@@ -303,6 +304,7 @@ void AnnotateTab::setAnnotationsText() {
 	text.append(QString::fromStdString("Imbalance - Scapular: " + std::to_string(this->angle2) + " degree\n"));
 
 	this->parent->ui.annotationsText->setText(text);
+	this->parent->ui.annotationsText2->setText(text2);
 }
 
 void AnnotateTab::recopyAnnotatedImage() {
@@ -359,18 +361,34 @@ std::map<std::string, QVector3D>* AnnotateTab::getAnnotations3D() {
 
 void AnnotateTab::computeMetrics() {
 	const float PI = 3.14159265;
+
+	// This is compute using 3D coordinates
+	//this->distance1 = (this->annotations3D["C"].x() - this->annotations3D["D"].x());
+
+	////Angle between b1-b2 line and xy-plane
+	//float yDiff = this->annotations3D["B2"].y() - this->annotations3D["B1"].y();
+	////float xyDistance = std::sqrt(std::pow(this->annotations3D["b1"].x() - this->annotations3D["b2"].x(), 2) + std::pow(this->annotations3D["b1"].y() - this->annotations3D["b2"].y(), 2));
+	//float xDistance = this->annotations3D["B2"].x() - this->annotations3D["B1"].x();
+	//this->angle1 = std::atan(yDiff / xDistance) * 180 / PI;
+
+	////Angle between c1-c2 line and xy-plane
+	//yDiff = this->annotations3D["A2"].y() - this->annotations3D["A1"].y();
+	////xyDistance = std::sqrt(std::pow(this->annotations3D["c1"].x() - this->annotations3D["c2"].x(), 2) + std::pow(this->annotations3D["c1"].y() - this->annotations3D["c2"].y(), 2));
+	//xDistance = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
+	//this->angle2 = std::atan(yDiff / xDistance) * 180 / PI;
+
+	// This is compute using 2D coordinates
 	this->distance1 = (this->annotations3D["C"].x() - this->annotations3D["D"].x());
 
+	// This is compute using 2D coordinates
 	//Angle between b1-b2 line and xy-plane
-	float yDiff = this->annotations3D["B2"].y() - this->annotations3D["B1"].y();
-	//float xyDistance = std::sqrt(std::pow(this->annotations3D["b1"].x() - this->annotations3D["b2"].x(), 2) + std::pow(this->annotations3D["b1"].y() - this->annotations3D["b2"].y(), 2));
-	float xDistance = this->annotations3D["B2"].x() - this->annotations3D["B1"].x();
+	float yDiff = this->annotationsOnRight["B2"].y() - this->annotationsOnRight["B1"].y();
+	float xDistance = this->annotationsOnRight["B2"].x() - this->annotationsOnRight["B1"].x();
 	this->angle1 = std::atan(yDiff / xDistance) * 180 / PI;
 
 	//Angle between c1-c2 line and xy-plane
-	yDiff = this->annotations3D["A2"].y() - this->annotations3D["A1"].y();
-	//xyDistance = std::sqrt(std::pow(this->annotations3D["c1"].x() - this->annotations3D["c2"].x(), 2) + std::pow(this->annotations3D["c1"].y() - this->annotations3D["c2"].y(), 2));
-	xDistance = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
+	yDiff = this->annotationsOnRight["A2"].y() - this->annotationsOnRight["A1"].y();
+	xDistance = this->annotationsOnRight["A2"].x() - this->annotationsOnRight["A1"].x();
 	this->angle2 = std::atan(yDiff / xDistance) * 180 / PI;
 }
 
