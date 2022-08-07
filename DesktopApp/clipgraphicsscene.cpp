@@ -1,7 +1,11 @@
 #include "clipgraphicsscene.h"
 
-ClipGraphicsScene::ClipGraphicsScene() {
+ClipGraphicsScene::ClipGraphicsScene(CaptureTab* captureTab, QGraphicsPixmapItem* pixmapItem) {
+	this->captureTab = captureTab;
 
+	this->addItem(pixmapItem);
+
+	qDebug() << "ClipGraphicsScene()";
 }
 
 void ClipGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {

@@ -592,9 +592,8 @@ void CaptureTab::registerRadioButtonOnClicked(QRadioButton* radioButton, QImage*
 			delete this->parent->ui.graphicsViewImage->scene();
 		}
 
-		QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
-		QGraphicsScene* scene = new ClipGraphicsScene();
-		scene->addItem(item);
+		QGraphicsPixmapItem* pixmapItem = new ClipGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
+		QGraphicsScene* scene = new ClipGraphicsScene(this, pixmapItem);
 
 		this->parent->ui.graphicsViewImage->setScene(scene);
 		this->parent->ui.graphicsViewImage->show();
@@ -1177,9 +1176,8 @@ void CaptureTab::displayCapturedImages() {
 		delete this->parent->ui.graphicsViewImage->scene();
 	}
 
-	QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
-	QGraphicsScene* scene = new ClipGraphicsScene();
-	scene->addItem(item);
+	QGraphicsPixmapItem* pixmapItem = new ClipGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
+	QGraphicsScene* scene = new ClipGraphicsScene(this, pixmapItem);
 
 	this->parent->ui.graphicsViewImage->setScene(scene);
 	this->parent->ui.graphicsViewImage->show();

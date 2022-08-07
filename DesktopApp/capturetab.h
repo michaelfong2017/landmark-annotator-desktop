@@ -16,6 +16,7 @@
 #include "noteditabledelegate.h"
 #include "capturehistory.h"
 #include "clipgraphicsscene.h"
+#include "clipgraphicspixmapitem.h"
 
 class CaptureTab: public QWidget
 {
