@@ -223,11 +223,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->RANSACImage = computeNormalizedDepthImage(this->capturedDepthToColorImage);
 
 		// Cropping
-		float widthOfPatientBack = 800;
+		/*float widthOfPatientBack = 800;
 		cv::Rect rect((COLOR_IMAGE_WIDTH / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 1080);
 		this->capturedColorImage = this->capturedColorImage(rect);
 		this->capturedDepthToColorImage = this->capturedDepthToColorImage(rect);
-		this->RANSACImage = this->RANSACImage(rect);
+		this->RANSACImage = this->RANSACImage(rect);*/
 
 		/*this->RANSACImage.convertTo(this->RANSACImage, CV_8U, 255.0 / 5000.0, 0.0);
 		cv::imshow("ransac", this->RANSACImage);
