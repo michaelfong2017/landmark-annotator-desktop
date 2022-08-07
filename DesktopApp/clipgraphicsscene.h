@@ -10,12 +10,12 @@ class ClipGraphicsScene : public QGraphicsScene {
 public:
 	ClipGraphicsScene(CaptureTab* captureTab, QGraphicsPixmapItem* pixmapItem);
 	void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
-	void dropEvent(QGraphicsSceneDragDropEvent* event) override;
-	void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
-	void dragMoveEvent(QGraphicsSceneDragDropEvent* event) override;
+	void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+	void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 
 private:
 	CaptureTab* captureTab;
+
 };
 
 #endif

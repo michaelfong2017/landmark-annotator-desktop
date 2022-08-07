@@ -525,6 +525,22 @@ void CaptureTab::clearCaptureHistories() {
 
 }
 
+QRect CaptureTab::corner(int number)
+{
+	switch (number) {
+	case 0:
+		return QRect(clip_rect.topLeft() + std::get<0>(handle_offsets), QSize(8, 8));
+	case 1:
+		return QRect(clip_rect.topRight() + std::get<1>(handle_offsets), QSize(8, 8));
+	case 2:
+		return QRect(clip_rect.bottomLeft() + std::get<2>(handle_offsets), QSize(8, 8));
+	case 3:
+		return QRect(clip_rect.bottomRight() + std::get<3>(handle_offsets), QSize(8, 8));
+	default:
+		return QRect();
+	}
+}
+
 void CaptureTab::setDefaultCaptureMode() {
 	parent->ui.radioButton->setChecked(true);
 	parent->ui.radioButton2->setChecked(false);
@@ -592,7 +608,7 @@ void CaptureTab::registerRadioButtonOnClicked(QRadioButton* radioButton, QImage*
 			delete this->parent->ui.graphicsViewImage->scene();
 		}
 
-		QGraphicsPixmapItem* pixmapItem = new ClipGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
+		QGraphicsPixmapItem* pixmapItem = new ClipGraphicsPixmapItem(QPixmap::fromImage(imageScaled), this);
 		QGraphicsScene* scene = new ClipGraphicsScene(this, pixmapItem);
 
 		this->parent->ui.graphicsViewImage->setScene(scene);
@@ -1171,12 +1187,19 @@ void CaptureTab::displayCapturedImages() {
 
 	QImage imageScaled = image.scaled(width, height, Qt::KeepAspectRatio);
 
+	/** Crop image */
+	this->largest_rect = QRect(0, 0, imageScaled.width(), imageScaled.height());
+	if (this->clip_rect.isNull()) {
+		this->clip_rect = QRect(0, 0, imageScaled.width(), imageScaled.height());
+	}
+	/** Crop image END */
+
 	// Deallocate heap memory used by previous GGraphicsScene object
 	if (this->parent->ui.graphicsViewImage->scene()) {
 		delete this->parent->ui.graphicsViewImage->scene();
 	}
 
-	QGraphicsPixmapItem* pixmapItem = new ClipGraphicsPixmapItem(QPixmap::fromImage(imageScaled));
+	QGraphicsPixmapItem* pixmapItem = new ClipGraphicsPixmapItem(QPixmap::fromImage(imageScaled), this);
 	QGraphicsScene* scene = new ClipGraphicsScene(this, pixmapItem);
 
 	this->parent->ui.graphicsViewImage->setScene(scene);

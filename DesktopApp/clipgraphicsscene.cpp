@@ -15,18 +15,20 @@ void ClipGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 
 }
 
-void ClipGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
+void ClipGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+{
 	float x = event->scenePos().x(), y = event->scenePos().y();
 
-	qDebug() << "dropEvent (x,y) = (" << x << "," << y << ")";
+	qDebug() << "mouseMoveEvent (x,y) = (" << x << "," << y << ")";
 
-	event->acceptProposedAction();
+	this->captureTab->clip_rect.setTopLeft(QPoint(x, y));
 }
 
-void ClipGraphicsScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event) {
-	event->acceptProposedAction();
-}
+void ClipGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+	float x = event->scenePos().x(), y = event->scenePos().y();
 
-void ClipGraphicsScene::dragMoveEvent(QGraphicsSceneDragDropEvent* event) {
-	event->acceptProposedAction();
+	qDebug() << "mouseReleaseEvent (x,y) = (" << x << "," << y << ")";
+
+	update();
 }
