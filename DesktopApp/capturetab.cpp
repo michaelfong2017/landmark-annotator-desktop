@@ -223,11 +223,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->RANSACImage = computeNormalizedDepthImage(this->capturedDepthToColorImage);
 
 		// Cropping
-		/*float widthOfPatientBack = 800;
+		float widthOfPatientBack = 800;
 		cv::Rect rect((COLOR_IMAGE_WIDTH / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 1080);
 		this->capturedColorImage = this->capturedColorImage(rect);
 		this->capturedDepthToColorImage = this->capturedDepthToColorImage(rect);
-		this->RANSACImage = this->RANSACImage(rect);*/
+		this->RANSACImage = this->RANSACImage(rect);
 
 		/*this->RANSACImage.convertTo(this->RANSACImage, CV_8U, 255.0 / 5000.0, 0.0);
 		cv::imshow("ransac", this->RANSACImage);
@@ -271,7 +271,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->qColorToDepthImage = convertColorToDepthCVToQImage(this->capturedColorToDepthImage);
 		this->qDepthToColorImage = convertDepthToColorCVToQImage(this->capturedDepthToColorImage);
 		// For annotatetab instead
-		this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(this->capturedDepthToColorImage);
+		//this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(this->capturedDepthToColorImage);
+		this->qDepthToColorColorizedImage = converDepthToColorCVToColorizedQImageDetailed(this->capturedDepthToColorImage);
 		// For annotatetab instead END
 
 		/** Store histories of images for selection */
@@ -326,17 +327,10 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		int width = this->capturedColorImage.cols;
 		int height = this->capturedColorImage.rows;
-		//int width = COLOR_IMAGE_WIDTH;
-		//int height = COLOR_IMAGE_HEIGHT;
 
 		cv::Mat FourChannelPNG = cv::Mat::ones(height, width, CV_16UC4);;
 		std::vector<cv::Mat>channels3(4);
 		cv::split(FourChannelPNG, channels3);
-
-		qDebug() << "this->capturedColorImage" << this->capturedColorImage.cols;
-		qDebug() << "depthToColor3" << depthToColor3.cols;
-		qDebug() << "normalizedDepthToColor" << normalizedDepthToColor.cols;
-
 
 		// channelsForColor2 = BGR
 		for (int i = 0; i < width * height; i++) {
@@ -494,7 +488,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 }
 
 void CaptureTab::clearCaptureHistories() {
-	qDebug() << "How many records: " << captureHistories.size();
+	//qDebug() << "How many records: " << captureHistories.size();
 	for (int i = 0; i < captureHistories.size(); i++) {
 		dataModel->removeRow(0, QModelIndex());
 	}

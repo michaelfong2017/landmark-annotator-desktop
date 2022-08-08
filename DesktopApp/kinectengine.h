@@ -96,6 +96,7 @@ QImage convertDepthCVToColorizedQImage(cv::Mat);
 QImage convertColorToDepthCVToQImage(cv::Mat);
 QImage convertDepthToColorCVToQImage(cv::Mat);
 QImage convertDepthToColorCVToColorizedQImage(cv::Mat);
+QImage converDepthToColorCVToColorizedQImageDetailed(cv::Mat);
 void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb);
 
 #endif

@@ -377,6 +377,8 @@ QImage convertDepthCVToColorizedQImage(cv::Mat cvImage) {
 	return qImage;
 }
 
+
+
 QImage convertColorToDepthCVToQImage(cv::Mat cvImage) {
 	return convertColorCVToQImage(cvImage);
 }
@@ -388,6 +390,65 @@ QImage convertDepthToColorCVToQImage(cv::Mat cvImage)
 
 QImage convertDepthToColorCVToColorizedQImage(cv::Mat cvImage) {
 	return convertDepthCVToColorizedQImage(cvImage);
+}
+
+QImage converDepthToColorCVToColorizedQImageDetailed(cv::Mat cvImage) {
+
+	if (cvImage.empty()) {
+		// QImage.isNull() will return true
+		return QImage();
+	}
+
+	cvImage.convertTo(cvImage, CV_8U, 255.0 / 5000.0, 0.0);
+
+	// mid point depth
+	int midX = cvImage.cols / 2;
+	int midY = cvImage.rows / 2;
+	uchar mid = cvImage.at<uchar>(midY, midX);
+	//qDebug() << "Mid Point Depth: " << mid;
+	float lower = 5.0;
+	float upper = 5.0;
+	float min = mid - lower;
+	float max = mid + lower;
+
+	if (min <= 0.0) {
+		min = 0.0;
+	}
+	if (max >= 255.0) {
+		max = 255.0;
+	}
+
+	for (int y = 0; y < cvImage.rows; y++)
+	{
+		for (int x = 0; x < cvImage.cols; x++)
+		{
+			uchar d = cvImage.at<uchar>(y, x);
+			if (d == 0.0) {
+				continue;
+			}
+
+			if (d < min) {
+				d = min;
+			}
+
+			if (d > max) {
+				d = max;
+			}
+
+			float result = ((d - min) / (max - min)) * 255;
+			cvImage.at<uchar>(y, x) = result;
+		}
+	}
+
+	/** Colorize depth image */
+	cv::Mat temp;
+	colorizeDepth(cvImage, temp);
+	/** Colorize depth image END */
+
+	QImage qImage((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+	qImage.bits();
+
+	return qImage;
 }
 
 void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb)
