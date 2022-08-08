@@ -139,7 +139,7 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
     patientDataModel->clear();
 
     /** Headers */
-    QStringList headerLabels = { "Audit Date", "Image" };
+    QStringList headerLabels = { "Captured Date", "Image" };
 
     for (int i = 0; i < 2; i++)
     {
@@ -181,7 +181,7 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
             if (i == 0) {
                 QString text;
 
-                text = obj["aiDiagnosisDate"].toString();
+                text = obj["takeDate"].toString();
                 text = Helper::convertFetchedDateTime(text);
 
                 item = new QStandardItem(text);
