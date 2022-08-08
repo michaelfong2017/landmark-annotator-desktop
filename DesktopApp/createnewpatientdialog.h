@@ -7,7 +7,7 @@
 #include "patientlisttab.h"
 #include "patient.h"
 #include "qnetworkclient.h"
-#include "patientexistsdialog.h"
+#include "twolinesdialog.h"
 
 class CreateNewPatientDialog : public QDialog
 {

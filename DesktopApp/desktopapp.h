@@ -38,8 +38,10 @@ public:
 
     std::queue<k4a_image_t> irImageQueue;
 
-    Patient patient;
     QDir savePath;
+    /** Handle Chinese name when saving video */
+    QDir tempVideoSavePath;
+    /** Handle Chinese name when saving video END */
 
     void setTextOnGraphicsViews(std::string text);
     QImage getQIRImage();

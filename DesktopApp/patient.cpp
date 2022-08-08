@@ -33,6 +33,10 @@ void Patient::setAddress(std::string address) {
 	this->address = address;
 }
 
+void Patient::setRemarks(std::string remarks) {
+	this->remarks = remarks;
+}
+
 void Patient::setSex(Sex sex) {
 	this->sex = sex;
 }
@@ -84,6 +88,10 @@ std::string Patient::getNationality() {
 
 std::string Patient::getAddress() {
 	return this->address;
+}
+
+std::string Patient::getRemarks() {
+	return this->remarks;
 }
 
 Sex Patient::getSex() {

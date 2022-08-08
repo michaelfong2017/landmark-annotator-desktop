@@ -27,37 +27,63 @@ SaveImageDialog::SaveImageDialog(CaptureTab* parent)
 
 		QString dateTimeString = Helper::getCurrentDateTimeString();
 		QString visitFolderPath = Helper::getVisitFolderPath(this->parent->getParent()->savePath);
-		Patient patient = this->parent->getParent()->patient;
-		QString colorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(patient.getSubjectNumber() + "_" + patient.getName() + "_" + dateTimeString.toStdString() + "_color.png"));
-		QString depthToColorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(patient.getSubjectNumber() + "_" + patient.getName() + "_" + dateTimeString.toStdString() + "_depth_aligned.png"));
-		QString depthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(patient.getSubjectNumber() + "_" + patient.getName() + "_" + dateTimeString.toStdString() + "_depth.png"));
-		QString colorToDepthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(patient.getSubjectNumber() + "_" + patient.getName() + "_" + dateTimeString.toStdString() + "_color_aligned.png"));
+		QString colorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color.png"));
+		QString depthToColorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth_aligned.png"));
+		QString depthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth.png"));
+		QString colorToDepthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color_aligned.png"));
+
+		qDebug() << "colorSavePath" << colorSavePath;
 
 		bool colorWriteSuccess = false;
 		bool depthWriteSuccess = false;
 		bool colorToDepthWriteSuccess = false;
 		bool depthToColorWriteSuccess = false;
 
+		QImageWriter writer1(colorSavePath);
+		QImageWriter writer2(depthSavePath);
+		QImageWriter writer3(colorToDepthSavePath);
+		QImageWriter writer4(depthToColorSavePath);
+
 		if (ui.checkBoxColor->isChecked()) {
-			cv::Mat i = this->parent->getCapturedColorImage();
-			colorWriteSuccess = cv::imwrite(colorSavePath.toStdString(), i);
+			//cv::Mat mat = this->parent->getCapturedColorImage();
+			//colorWriteSuccess = cv::imwrite(colorSavePath.toStdString(), i);
+			QImage img((uchar*) this->parent->getCapturedColorImage().data, 
+				this->parent->getCapturedColorImage().cols, 
+				this->parent->getCapturedColorImage().rows, 
+				this->parent->getCapturedColorImage().step,
+				QImage::Format_RGB32);
+			colorWriteSuccess = writer1.write(img);
 		}
 		if (ui.checkBoxDepth->isChecked()) {
-			cv::Mat i = this->parent->getCapturedDepthImage();
-			cv::imwrite(depthSavePath.toStdString(), i);
-
-			depthWriteSuccess = true;
+			//cv::Mat i = this->parent->getCapturedDepthImage();
+			//depthWriteSuccess = cv::imwrite(depthSavePath.toStdString(), i);
+			QImage img((uchar*)this->parent->getCapturedDepthImage().data,
+				this->parent->getCapturedDepthImage().cols,
+				this->parent->getCapturedDepthImage().rows,
+				QImage::Format_Grayscale16);
+			depthWriteSuccess = writer2.write(img);
 		}
 		if (ui.checkBoxColorToDepth->isChecked()) {
-			cv::Mat i = this->parent->getCapturedColorToDepthImage();
-			cv::Mat temp;
-			cvtColor(i, temp, cv::COLOR_BGRA2BGR);
-			colorToDepthWriteSuccess = cv::imwrite(colorToDepthSavePath.toStdString(), temp);
+			//cv::Mat i = this->parent->getCapturedColorToDepthImage();
+			//cv::Mat temp;
+			//cvtColor(i, temp, cv::COLOR_BGRA2BGR);
+			//colorToDepthWriteSuccess = cv::imwrite(colorToDepthSavePath.toStdString(), temp);
+			QImage img((uchar*)this->parent->getCapturedColorToDepthImage().data,
+				this->parent->getCapturedColorToDepthImage().cols,
+				this->parent->getCapturedColorToDepthImage().rows,
+				QImage::Format_RGB32);
+			colorToDepthWriteSuccess = writer3.write(img);
 		}
 
 		if (ui.checkBoxDepthToColor->isChecked()) {
-			cv::Mat i = this->parent->getCapturedDepthToColorImage();
-			depthToColorWriteSuccess = cv::imwrite(depthToColorSavePath.toStdString(), i);
+			//cv::Mat i = this->parent->getCapturedDepthToColorImage();
+			//depthToColorWriteSuccess = cv::imwrite(depthToColorSavePath.toStdString(), i);
+			QImage img((uchar*)this->parent->getCapturedDepthToColorImage().data,
+				this->parent->getCapturedDepthToColorImage().cols,
+				this->parent->getCapturedDepthToColorImage().rows,
+				this->parent->getCapturedDepthToColorImage().step,
+				QImage::Format_Grayscale16);
+			depthToColorWriteSuccess = writer4.write(img);
 		}
 
 		/** "Images saved under" */

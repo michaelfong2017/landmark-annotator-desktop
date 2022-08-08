@@ -12,6 +12,19 @@ void KinectEngine::clear()
 	this->device = NULL;
 	this->config = K4A_DEVICE_CONFIG_INIT_DISABLE_ALL;
 }
+bool KinectEngine::isDeviceConnected() {
+	uint32_t device_count = k4a_device_get_installed_count();
+	return device_count != 0;
+}
+bool KinectEngine::isDeviceOpened() {
+	if (isDeviceConnected()) {
+		return this->deviceOpenedBefore;
+	}
+	else {
+		this->deviceOpenedBefore = false;
+		return false;
+	}
+}
 bool KinectEngine::openDevice()
 {
 	// Shallow copy
@@ -59,11 +72,13 @@ bool KinectEngine::openDevice()
 		return false;
 	}
 
+	this->deviceOpenedBefore = true;
 	return true;
 }
 void KinectEngine::closeDevice()
 {
 	k4a_device_close(this->device);
+	this->deviceOpenedBefore = false;
 	this->device = NULL;
 }
 void KinectEngine::configDevice()
@@ -72,7 +87,14 @@ void KinectEngine::configDevice()
 	k4a_device_configuration_t& config = this->config;
 	config.camera_fps = K4A_FRAMES_PER_SECOND_30;
 	config.color_format = K4A_IMAGE_FORMAT_COLOR_BGRA32;
-	config.color_resolution = K4A_COLOR_RESOLUTION_720P;
+	switch (COLOR_IMAGE_WIDTH) {
+		case 1920:
+			config.color_resolution = K4A_COLOR_RESOLUTION_1080P;
+			break;
+		case 1280:
+			config.color_resolution = K4A_COLOR_RESOLUTION_720P;
+			break;
+	}
 	config.depth_mode = K4A_DEPTH_MODE_NFOV_UNBINNED;
 	config.depth_delay_off_color_usec = 0;
 }
@@ -97,7 +119,7 @@ void KinectEngine::captureImages()
 	this->k4aImageLock.unlock();
 }
 
-void KinectEngine::queueIMUSample()
+bool KinectEngine::queueIMUSample()
 {
 	k4a_imu_sample_t imuSample;
 
@@ -109,9 +131,10 @@ void KinectEngine::queueIMUSample()
 		while (this->gyroSampleQueue.size() > MAX_GYROSCOPE_QUEUE_SIZE) this->gyroSampleQueue.pop_front();
 		while (this->accSampleQueue.size() > MAX_ACCELEROMETER_QUEUE_SIZE) this->accSampleQueue.pop_front();
 
-		this->temperature = imuSample.temperature;
+		return true;
 
-		break;
+	default:
+		return false;
 	}
 }
 
@@ -354,6 +377,8 @@ QImage convertDepthCVToColorizedQImage(cv::Mat cvImage) {
 	return qImage;
 }
 
+
+
 QImage convertColorToDepthCVToQImage(cv::Mat cvImage) {
 	return convertColorCVToQImage(cvImage);
 }
@@ -365,6 +390,65 @@ QImage convertDepthToColorCVToQImage(cv::Mat cvImage)
 
 QImage convertDepthToColorCVToColorizedQImage(cv::Mat cvImage) {
 	return convertDepthCVToColorizedQImage(cvImage);
+}
+
+QImage converDepthToColorCVToColorizedQImageDetailed(cv::Mat cvImage) {
+
+	if (cvImage.empty()) {
+		// QImage.isNull() will return true
+		return QImage();
+	}
+
+	cvImage.convertTo(cvImage, CV_8U, 255.0 / 5000.0, 0.0);
+
+	// mid point depth
+	int midX = cvImage.cols / 2;
+	int midY = cvImage.rows / 2;
+	uchar mid = cvImage.at<uchar>(midY, midX);
+	//qDebug() << "Mid Point Depth: " << mid;
+	float lower = 5.0;
+	float upper = 5.0;
+	float min = mid - lower;
+	float max = mid + lower;
+
+	if (min <= 0.0) {
+		min = 0.0;
+	}
+	if (max >= 255.0) {
+		max = 255.0;
+	}
+
+	for (int y = 0; y < cvImage.rows; y++)
+	{
+		for (int x = 0; x < cvImage.cols; x++)
+		{
+			uchar d = cvImage.at<uchar>(y, x);
+			if (d == 0.0) {
+				continue;
+			}
+
+			if (d < min) {
+				d = min;
+			}
+
+			if (d > max) {
+				d = max;
+			}
+
+			float result = ((d - min) / (max - min)) * 255;
+			cvImage.at<uchar>(y, x) = result;
+		}
+	}
+
+	/** Colorize depth image */
+	cv::Mat temp;
+	colorizeDepth(cvImage, temp);
+	/** Colorize depth image END */
+
+	QImage qImage((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+	qImage.bits();
+
+	return qImage;
 }
 
 void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb)
@@ -461,14 +545,87 @@ std::deque<k4a_float3_t> KinectEngine::getAccSampleQueue()
 	return this->accSampleQueue;
 }
 
-float KinectEngine::getTemperature()
-{
-	return this->temperature;
+float* KinectEngine::findPlaneEquationCoefficients(cv::Mat depthToColorImage) {
+	float out[4];
+
+	int rows = depthToColorImage.rows;
+	int cols = depthToColorImage.cols;
+
+	/** The purpose for counting how many pixels are in each interval is to
+	* pick the top 2 intervals for sampling points which likely lie on the wall. */
+	/**
+	* Intervals should be 0, [1, 250], [251, 500], ... , [4751, 5000], [5001, 5250], [5251, 5500]
+	*/
+	const int MAX_DEPTH_VALUE = 5500; // Depth sensor maximum is 5XXXmm
+
+	const int NUM_OF_INTERVALS = 23;
+	const int SIZE_OF_INTERVALS = 250;
+	int countOfDepth[NUM_OF_INTERVALS] = { 0 };
+
+	std::vector<std::vector<std::pair<int, int>>> v;
+	for (int i = 0; i < NUM_OF_INTERVALS; i++) {
+		std::vector<std::pair<int, int>> s;
+		v.push_back(s);
+	}
+
+	for (int y = 0; y < rows; y++) {
+		for (int x = 0; x < cols; x++) {
+			uint16_t d = depthToColorImage.at<uint16_t>(y, x);
+
+			if (d == 0) {
+				countOfDepth[0]++;
+				v[0].push_back({ x, y });
+			}
+			else {
+				int i = (int)((d - 1) / SIZE_OF_INTERVALS) + 1;
+				countOfDepth[i]++;
+				v[i].push_back({ x, y });
+			}
+		}
+	}
+
+	for (int i = 0; i < NUM_OF_INTERVALS; i++) {
+		if (i == 0) {
+			qDebug() << "countOfDepth[0] = " << countOfDepth[0];
+		}
+		else {
+			qDebug() << "countOfDepth[" << (i-1)*SIZE_OF_INTERVALS + 1 << " - " << i*SIZE_OF_INTERVALS << "] = " << countOfDepth[i];
+		}
+	}
+	/**
+	* Intervals should be 0, [1, 250], [251, 500], ... , [4751, 5000]
+	* END */
+
+	/** Pick the top 2 intervals. Interval "0" is not considered. */
+	int largest = -1;
+	int secondLargest = -1;
+	int largestIndex = -1;
+	int secondLargestIndex = -1;
+	for (int i = 1; i < NUM_OF_INTERVALS; i++) {
+		if (countOfDepth[i] > largest) {
+			largest = countOfDepth[i];
+			largestIndex = i;
+		}
+		else if (countOfDepth[i] > secondLargest) {
+			secondLargest = countOfDepth[i];
+			secondLargestIndex = i;
+		}
+	}
+
+	qDebug() << "largest index is" << largestIndex;
+	qDebug() << "second largest index is" << secondLargestIndex;
+
+	qDebug() << "First set of sample points is" << v[largestIndex];
+	qDebug() << "Second set of sample points is" << v[secondLargestIndex];
+	/** Pick the top 2 intervals. Interval "0" is not considered. END */
+
+	return out;
 }
 
-float* KinectEngine::findPlaneEquationCoefficients(float x1, float y1,
-	float z1, float x2,
-	float y2, float z2,
+// https://www.youtube.com/watch?v=rL9UXzZYYo4&ab_channel=TheOrganicChemistryTutor
+float* KinectEngine::findPlaneEquationCoefficients(
+	float x1, float y1,	float z1, 
+	float x2, float y2, float z2,
 	float x3, float y3, float z3)
 {
 	float out[4];
@@ -491,9 +648,10 @@ float* KinectEngine::findPlaneEquationCoefficients(float x1, float y1,
 	return out;
 }
 
-float KinectEngine::findDistanceBetween3DPointAndPlane(float x1, float y1,
-	float z1, float a,
-	float b, float c,
+// https://www.cuemath.com/geometry/distance-between-point-and-plane/
+float KinectEngine::findDistanceBetween3DPointAndPlane(
+	float x1, float y1,	float z1, 
+	float a, float b, float c,
 	float d) {
 	d = fabs((a * x1 + b * y1 +
 		c * z1 + d));
@@ -502,4 +660,3 @@ float KinectEngine::findDistanceBetween3DPointAndPlane(float x1, float y1,
 
 	return d / e;
 }
-

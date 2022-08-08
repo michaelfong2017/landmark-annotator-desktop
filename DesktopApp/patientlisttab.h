@@ -7,6 +7,7 @@
 #include <QtNetwork>
 #include <vector>
 #include "patienttab.h"
+#include "helper.h"
 
 class PatientListTab : public QWidget
 {
@@ -16,12 +17,14 @@ public:
     PatientListTab(DesktopApp* parent);
     DesktopApp* getParent();
     void onEnterTab();
+    std::map<int, QString> patientIdToSaveFolderPath;
 
 private:
     DesktopApp* parent;
     QTableView* tableView;
     QStandardItemModel* patientListDataModel;
-    std::vector<int> patientIdVector;
+    int currentPageIndex = 0;
+    const int ROWS_PER_PAGE = 20;
 
 private slots:
     void onFetchPatientList(QNetworkReply* reply);

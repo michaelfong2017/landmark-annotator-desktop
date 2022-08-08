@@ -1,20 +1,25 @@
 #include "qnetworkclient.h"
 #include "stdafx.h"
+#include <twolinesdialog.h>
 
 QNetworkClient::QNetworkClient() : QWidget() {
     
 }
 
-void QNetworkClient::login() {
+void QNetworkClient::login(QTabWidget* qTabWidget, QString username, QString password) {
+    this->qTabWidget = qTabWidget;
+
     // Login
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
     QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/account/login"));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
+    qDebug() << username << password;
+
     QJsonObject obj;
-    obj["account"] = "isl512gp@gmail.com";
-    obj["password"] = "123456";
+    obj["account"] = username;
+    obj["password"] = password;
     QByteArray data = QJsonDocument(obj).toJson();
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onLogin(QNetworkReply*)));
@@ -23,14 +28,33 @@ void QNetworkClient::login() {
     // returns userToken, needs to be stored
 }
 void QNetworkClient::onLogin(QNetworkReply* reply) {
-    this->userToken = QString::fromStdString("Bearer " + reply->readAll().toStdString());
+
+    QByteArray response_data = reply->readAll();
+    qDebug() << response_data;
+
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
+    qDebug() << jsonResponse;
+    QJsonObject obj = jsonResponse.object();
+ 
+    if (obj.contains("error")) {
+        TwoLinesDialog dialog;
+        dialog.setLine1("Information incorrect!");
+        dialog.exec();
+    }
+    else {
+        this->userToken = QString::fromStdString("Bearer " + response_data.toStdString());
+        qDebug() << this->userToken;
+        qTabWidget->setCurrentIndex(1);
+    }
+
     reply->deleteLater();
+
 }
 
 void QNetworkClient::fetchPatientList(const QObject* receiver, const char* member) {
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients"));
+    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients?MaxResultCount=500&Category=Passed"));
     request.setRawHeader("Authorization", this->userToken.toUtf8());
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
@@ -54,10 +78,10 @@ void QNetworkClient::checkNewPatient(Patient patient, const QObject* receiver, c
         sex = 1;
         break;
     case Sex::Female:
-        sex = 0;
+        sex = 2;
         break;
     default:
-        sex = -1;
+        sex = 0;
         break;
     }
 
@@ -73,6 +97,9 @@ void QNetworkClient::checkNewPatient(Patient patient, const QObject* receiver, c
     obj["subjectNumber"] = QString::fromStdString(patient.getSubjectNumber());
     obj["email"] = QString::fromStdString(patient.getEmail());
     obj["address"] = QString::fromStdString(patient.getAddress());
+    /**
+    * Not sure whether height and weight can be uploaded. Currently not uploaded.
+    */
     QByteArray data = QJsonDocument(obj).toJson();
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
@@ -96,10 +123,10 @@ void QNetworkClient::uploadNewPatient(Patient patient, const QObject* receiver, 
         sex = 1;
         break;
     case Sex::Female:
-        sex = 0;
+        sex = 2;
         break;
     default:
-        sex = -1;
+        sex = 0;
         break;
     }
 
@@ -115,6 +142,8 @@ void QNetworkClient::uploadNewPatient(Patient patient, const QObject* receiver, 
     obj["subjectNumber"] = QString::fromStdString(patient.getSubjectNumber());
     obj["email"] = QString::fromStdString(patient.getEmail());
     obj["address"] = QString::fromStdString(patient.getAddress());
+    obj["country"] = QString::fromStdString(patient.getNationality());
+    obj["remarks"] = QString::fromStdString(patient.getRemarks());
     QByteArray data = QJsonDocument(obj).toJson();
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
@@ -128,12 +157,120 @@ void QNetworkClient::fetchExistingImagesOfPatient(int patientId, const QObject* 
     // Get Image List
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7").arg(patientId);
+    qDebug() << "fetchExistingImagesOfPatient";
 
-    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7").arg(patientId)));
+    //qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId);
+
+    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId)));
     request.setRawHeader("Authorization", userToken.toUtf8());
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
 
     manager->get(request);
+}
+
+void QNetworkClient::uploadImage(cv::Mat image, const QObject* receiver, const char* member) {
+
+    qDebug() << "uploadImage: " << image.channels();
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/api/v1/upload")));
+    request.setRawHeader("Authorization", this->userToken.toUtf8());
+    request.setTransferTimeout(25000);
+
+    QHttpMultiPart* multipart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+    QHttpPart imageArray;
+    imageArray.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));
+    imageArray.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"test.png\""));
+    QByteArray byteArray;
+    QBuffer buffer(&byteArray);
+
+    QImage qImage((const uchar*)image.data, image.cols, image.rows, image.step, QImage::Format_RGBA64);
+    qImage.bits();
+    qImage.save(&buffer, "PNG");
+    imageArray.setBody(byteArray);
+    multipart->append(imageArray);
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
+
+    manager->post(request, multipart);
+}
+
+void QNetworkClient::bindImageUrl(int patientId, QString url, int imageType, const QObject* receiver, const char* member) {
+
+    qDebug() << "bindImageUrl";
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/images"));
+    request.setRawHeader("Authorization", userToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setTransferTimeout(10000);
+
+    QJsonObject obj;
+    obj["patientId"] = patientId;
+    obj["url"] = url;
+    obj["imageType"] = imageType;
+    obj["imageName"] = "test.png";
+
+    qDebug() << "patientID: " << patientId << " imageType: " << imageType;
+
+    QByteArray data = QJsonDocument(obj).toJson();
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
+
+    manager->post(request, data);
+}
+
+void QNetworkClient::findLandmarkPredictions(int imageId, const QObject* receiver, const char* member) {
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1").arg(imageId)));
+    request.setRawHeader("Authorization", userToken.toUtf8());
+    request.setTransferTimeout(10000);
+
+    qDebug() << QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1").arg(imageId));
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
+
+    manager->get(request);
+}
+
+void QNetworkClient::downloadImage(QString imageUrl, const QObject* receiver, const char* member) {
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    QNetworkRequest request(imageUrl);
+    request.setRawHeader("Authorization", userToken.toUtf8());
+    request.setTransferTimeout(10000);
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
+
+    manager->get(request);
+}
+
+void QNetworkClient::confirmLandmarks(int imageId, QString aiOriginResult, const QObject* receiver, const char* member) {
+
+    qDebug() << "confirmLandmarks";
+    qDebug() << "imageId: " << imageId;
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1/audit").arg(imageId)));
+    request.setRawHeader("Authorization", userToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QJsonObject obj;
+    obj["result"] = aiOriginResult;
+    obj["conditionStatus"] = 1;
+    obj["describe"] = "null";
+    obj["addResult"] = "null";
+    obj["scoliosisType"] = 0;
+
+    QByteArray data = QJsonDocument(obj).toJson();
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
+
+    manager->put(request, data);
 }
