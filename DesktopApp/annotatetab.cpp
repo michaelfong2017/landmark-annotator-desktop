@@ -302,6 +302,7 @@ void AnnotateTab::setAnnotationsText() {
 	text.append(QString::fromStdString("Distance - Central Shift: " + std::to_string(this->distance1) + " mm\n"));
 	text.append(QString::fromStdString("Imbalance - Pelvic: " + std::to_string(this->angle1) + " degree\n"));
 	text.append(QString::fromStdString("Imbalance - Scapular: " + std::to_string(this->angle2) + " degree\n"));
+	text.append(QString::fromStdString("Angle - Trunk Rotation: " + std::to_string(this->trunkRotation) + " degree\n"));
 
 	this->parent->ui.annotationsText->setText(text);
 	this->parent->ui.annotationsText2->setText(text2);
@@ -390,6 +391,11 @@ void AnnotateTab::computeMetrics() {
 	yDiff = this->annotationsOnRight["A2"].y() - this->annotationsOnRight["A1"].y();
 	xDistance = this->annotationsOnRight["A2"].x() - this->annotationsOnRight["A1"].x();
 	this->angle2 = std::atan(yDiff / xDistance) * 180 / PI;
+
+	//Angle between x-diff and z-diff of A1 and A2
+	float xDiff = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
+	float zDiff = this->annotations3D["A1"].z() - this->annotations3D["A2"].z();
+	this->trunkRotation = std::atan(zDiff / xDiff) * 180 / PI;
 }
 
 void AnnotateTab::onConfirmLandmarks(QNetworkReply* reply) {

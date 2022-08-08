@@ -191,7 +191,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>isl512gp@gmail.com</string>
+              <string/>
              </property>
             </widget>
            </item>
@@ -286,7 +286,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>123456</string>
+              <string/>
              </property>
             </widget>
            </item>
@@ -1029,7 +1029,7 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
          <x>770</x>
          <y>480</y>
          <width>471</width>
-         <height>110</height>
+         <height>131</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -1113,9 +1113,9 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
        <property name="geometry">
         <rect>
          <x>770</x>
-         <y>590</y>
+         <y>609</y>
          <width>471</width>
-         <height>150</height>
+         <height>151</height>
         </rect>
        </property>
        <property name="styleSheet">
