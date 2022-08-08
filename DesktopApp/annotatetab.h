@@ -85,6 +85,7 @@ private:
     float distance2; // Distance between c1 and c2 in cm
     float angle1; // Distance between b1-b2 line and xy-plane in deg
     float angle2; // Angle between c1-c2 line and xy-plane in deg
+    float trunkRotation;
 
 private slots:
     void onConfirmLandmarks(QNetworkReply* reply);
