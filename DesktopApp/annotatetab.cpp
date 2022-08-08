@@ -411,7 +411,7 @@ void AnnotateTab::onConfirmLandmarks(QNetworkReply* reply) {
 	QJsonObject obj = jsonResponse.object();
 	QString aiImageUrl = obj["aiImageUrl"].toString();
 
-	if (!aiImageUrl.isEmpty()) {
+	if (!jsonResponse.isEmpty()) {
 		// Success
 		TwoLinesDialog dialog;
 		dialog.setLine1("Landmarks confirmed!");
