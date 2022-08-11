@@ -408,9 +408,9 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QComboBox" name="dayComboBox">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>260</x>
      <y>230</y>
-     <width>69</width>
+     <width>65</width>
      <height>21</height>
     </rect>
    </property>
@@ -420,7 +420,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
     <rect>
      <x>150</x>
      <y>230</y>
-     <width>69</width>
+     <width>65</width>
      <height>21</height>
     </rect>
    </property>
@@ -428,9 +428,9 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QComboBox" name="yearComboBox">
    <property name="geometry">
     <rect>
-     <x>400</x>
+     <x>380</x>
      <y>230</y>
-     <width>69</width>
+     <width>90</width>
      <height>21</height>
     </rect>
    </property>
@@ -467,7 +467,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLabel" name="ddLabel">
    <property name="geometry">
     <rect>
-     <x>240</x>
+     <x>230</x>
      <y>231</y>
      <width>21</width>
      <height>20</height>
@@ -499,7 +499,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLabel" name="yyyyLabel">
    <property name="geometry">
     <rect>
-     <x>360</x>
+     <x>340</x>
      <y>231</y>
      <width>41</width>
      <height>20</height>

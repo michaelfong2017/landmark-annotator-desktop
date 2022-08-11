@@ -273,7 +273,8 @@ void AnnotateTab::setAnnotationsText() {
 	for (auto it : this->annotations3D) {
 		std::string key = it.first;
 		int x = this->annotationsOnRight[key].x() * this->scalingFactorForRight, y = this->annotationsOnRight[key].y() * this->scalingFactorForRight, z = it.second.z();
-		
+		//int x = it.second.z(), y = it.second.y(), z = it.second.z();
+
 		std::string PointName = "";
 		if (it.first == "A1") {
 			PointName = "Left Inf Scapular Angle (A1)";
@@ -379,7 +380,15 @@ void AnnotateTab::computeMetrics() {
 	//this->angle2 = std::atan(yDiff / xDistance) * 180 / PI;
 
 	// This is compute using 2D coordinates
-	this->distance1 = (this->annotations3D["C"].x() - this->annotations3D["D"].x());
+	if (this->annotations3D["C"] == QVector3D(0, 0, 0) || this->annotations3D["D"] == QVector3D(0, 0, 0)) {
+		this->distance1 = 0;
+	}
+	else {
+		this->distance1 = - (this->annotations3D["D"].x() * (this->annotations3D["C"].z() / this->annotations3D["D"].z()) 
+			- this->annotations3D["C"].x());
+		//this->distance1 = (this->annotations3D["C"].x() - this->annotations3D["D"].x());
+	}
+	
 
 	// This is compute using 2D coordinates
 	//Angle between b1-b2 line and xy-plane
