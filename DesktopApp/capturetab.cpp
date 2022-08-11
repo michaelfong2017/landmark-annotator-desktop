@@ -848,26 +848,8 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		dialog.setLine1("Analysis Step 3 Timeout!");
 		dialog.exec();
 
-		/******/
-		this->parent->ui.progressBar->setValue(1);
-		this->parent->ui.progressBar->setVisible(false);
-		this->parent->ui.captureButton->setEnabled(true);
-		this->parent->ui.saveVideoButton->setEnabled(true);
-		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
-		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
-		this->parent->ui.radioButton->setEnabled(true);
-		this->parent->ui.radioButton2->setEnabled(true);
-		this->parent->ui.radioButton3->setEnabled(true);
-		this->parent->ui.radioButton4->setEnabled(true);
-		/** Re-enable changing tab */
-		this->parent->ui.tabWidget->setTabEnabled(0, true);
-		this->parent->ui.tabWidget->setTabEnabled(1, true);
-		this->parent->ui.tabWidget->setTabEnabled(2, true);
-		this->parent->ui.tabWidget->setTabEnabled(4, true);
-		this->parent->ui.tabWidget->setTabEnabled(5, true);
-		/** Re-enable changing tab END */
+		this->enableButtonsForUploading();
 		this->isUploading = false;
-		/******/
 
 		return;
 	}
@@ -900,12 +882,12 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		int w = this->capturedColorImage.cols;
 		int h = this->capturedColorImage.rows;
 		qDebug() << w << h;
-		std::string PtC = "[" + std::to_string(w/2) + ", 300.0],";
-		std::string PtA2 = "[500.0, 450.0],";
-		std::string PtA1 = "[300.0, 450.0],";
-		std::string PtB2 = "[500.0, 750.0],";
-		std::string PtB1 = "[300.0, 750.0],";
-		std::string PtD = "[400.0, 900.0]";
+		std::string PtC = "[" + std::to_string(w / 2) + ", " + std::to_string(h / 5) + "], ";
+		std::string PtA2 = "[" + std::to_string(2 * w / 3) + ", " + std::to_string(2 * h / 5) + "], ";
+		std::string PtA1 = "[" + std::to_string(w / 3) + ", " + std::to_string(2 * h / 5) + "], ";
+		std::string PtB2 = "[" + std::to_string(2 * w / 3) + ", " + std::to_string(3 * h / 5) + "], ";
+		std::string PtB1 = "[" + std::to_string(w / 3) + ", " + std::to_string(3 * h / 5) + "], ";
+		std::string PtD = "[" + std::to_string(w / 2) + ", " + std::to_string(4 * h / 5) + "], ";
 		std::string complete = "[" + PtC + PtA2 + PtA1 + PtB2 + PtB1 + PtD + "]";
 		aiOriginResult = QString::fromStdString(complete);
 	}
@@ -943,7 +925,6 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	/** Select image table view update UI to green background, showing successful image analysis END */
 
 	this->enableButtonsForUploading();
-
 	this->isUploading = false;
 
 	// Move to annotate tab which index is 4
