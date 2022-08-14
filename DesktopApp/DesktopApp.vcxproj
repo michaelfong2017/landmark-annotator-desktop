@@ -124,6 +124,7 @@
     <ClCompile Include="draganddropgraphicsscene.cpp" />
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="kinectengine.cpp" />
+    <ClCompile Include="reportdialog.cpp" />
     <ClCompile Include="twolinesdialog.cpp" />
     <ClCompile Include="logintab.cpp" />
     <ClCompile Include="patient.cpp" />
@@ -142,6 +143,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <QtUic Include="reportdialog.ui" />
     <QtUic Include="twolinesdialog.ui" />
     <QtUic Include="saveimagedialog.ui" />
   </ItemGroup>
@@ -166,6 +168,7 @@
     <ClInclude Include="capturehistory.h" />
     <ClInclude Include="clipgraphicspixmapitem.h" />
     <ClInclude Include="clipgraphicsscene.h" />
+    <QtMoc Include="reportdialog.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />
