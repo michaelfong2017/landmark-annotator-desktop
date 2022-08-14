@@ -272,7 +272,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->qDepthToColorImage = convertDepthToColorCVToQImage(this->capturedDepthToColorImage);
 		// For annotatetab instead
 		//this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(this->capturedDepthToColorImage);
-		this->qDepthToColorColorizedImage = converDepthToColorCVToColorizedQImageDetailed(this->capturedDepthToColorImage);
+		this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImageDetailed(this->capturedDepthToColorImage);
 		// For annotatetab instead END
 
 		/** Store histories of images for selection */
@@ -327,10 +327,17 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		int width = this->capturedColorImage.cols;
 		int height = this->capturedColorImage.rows;
+		//int width = COLOR_IMAGE_WIDTH;
+		//int height = COLOR_IMAGE_HEIGHT;
 
 		cv::Mat FourChannelPNG = cv::Mat::ones(height, width, CV_16UC4);;
 		std::vector<cv::Mat>channels3(4);
 		cv::split(FourChannelPNG, channels3);
+
+		qDebug() << "this->capturedColorImage" << this->capturedColorImage.cols;
+		qDebug() << "depthToColor3" << depthToColor3.cols;
+		qDebug() << "normalizedDepthToColor" << normalizedDepthToColor.cols;
+
 
 		// channelsForColor2 = BGR
 		for (int i = 0; i < width * height; i++) {
@@ -488,7 +495,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 }
 
 void CaptureTab::clearCaptureHistories() {
-	//qDebug() << "How many records: " << captureHistories.size();
+	qDebug() << "How many records: " << captureHistories.size();
 	for (int i = 0; i < captureHistories.size(); i++) {
 		dataModel->removeRow(0, QModelIndex());
 	}
@@ -841,26 +848,8 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		dialog.setLine1("Analysis Step 3 Timeout!");
 		dialog.exec();
 
-		/******/
-		this->parent->ui.progressBar->setValue(1);
-		this->parent->ui.progressBar->setVisible(false);
-		this->parent->ui.captureButton->setEnabled(true);
-		this->parent->ui.saveVideoButton->setEnabled(true);
-		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
-		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
-		this->parent->ui.radioButton->setEnabled(true);
-		this->parent->ui.radioButton2->setEnabled(true);
-		this->parent->ui.radioButton3->setEnabled(true);
-		this->parent->ui.radioButton4->setEnabled(true);
-		/** Re-enable changing tab */
-		this->parent->ui.tabWidget->setTabEnabled(0, true);
-		this->parent->ui.tabWidget->setTabEnabled(1, true);
-		this->parent->ui.tabWidget->setTabEnabled(2, true);
-		this->parent->ui.tabWidget->setTabEnabled(4, true);
-		this->parent->ui.tabWidget->setTabEnabled(5, true);
-		/** Re-enable changing tab END */
+		this->enableButtonsForUploading();
 		this->isUploading = false;
-		/******/
 
 		return;
 	}
@@ -875,17 +864,32 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	qDebug() << "aiImageUrl:" << aiImageUrl;
 	qDebug() << "aiOriginResult:" << aiOriginResult;
 
+	// hard code version
+	//if (aiOriginResult == "") {
+	//	switch (COLOR_IMAGE_WIDTH) {
+	//	case 1920:
+	//		//aiOriginResult = "[[960.0, 300.0], [1050.0, 450.0], [870.0, 450.0], [1050.0, 750.0], [870.0, 750.0], [960.0, 900.0]]";
+	//		// Cropped version. 800 Width
+	//		aiOriginResult = "[[400.0, 300.0], [500.0, 450.0], [300.0, 450.0], [500.0, 750.0], [300.0, 750.0], [400.0, 900.0]]";
+	//		break;
+	//	case 1280:
+	//		aiOriginResult = "[[640.0, 200.0], [700.0, 300.0], [580.0, 300.0], [700.0, 500.0], [580.0, 500.0], [640.0, 600.0]]";
+	//		break;
+	//	}
+	//}
+
 	if (aiOriginResult == "") {
-		switch (COLOR_IMAGE_WIDTH) {
-		case 1920:
-			//aiOriginResult = "[[960.0, 300.0], [1050.0, 450.0], [870.0, 450.0], [1050.0, 750.0], [870.0, 750.0], [960.0, 900.0]]";
-			// Cropped version. 800 Width
-			aiOriginResult = "[[400.0, 300.0], [500.0, 450.0], [300.0, 450.0], [500.0, 750.0], [300.0, 750.0], [400.0, 900.0]]";
-			break;
-		case 1280:
-			aiOriginResult = "[[640.0, 200.0], [700.0, 300.0], [580.0, 300.0], [700.0, 500.0], [580.0, 500.0], [640.0, 600.0]]";
-			break;
-		}
+		int w = this->capturedColorImage.cols;
+		int h = this->capturedColorImage.rows;
+		qDebug() << w << h;
+		std::string PtC = "[" + std::to_string(w / 2) + ", " + std::to_string(h / 5) + "], ";
+		std::string PtA2 = "[" + std::to_string(2 * w / 3) + ", " + std::to_string(2 * h / 5) + "], ";
+		std::string PtA1 = "[" + std::to_string(w / 3) + ", " + std::to_string(2 * h / 5) + "], ";
+		std::string PtB2 = "[" + std::to_string(2 * w / 3) + ", " + std::to_string(3 * h / 5) + "], ";
+		std::string PtB1 = "[" + std::to_string(w / 3) + ", " + std::to_string(3 * h / 5) + "], ";
+		std::string PtD = "[" + std::to_string(w / 2) + ", " + std::to_string(4 * h / 5) + "], ";
+		std::string complete = "[" + PtC + PtA2 + PtA1 + PtB2 + PtB1 + PtD + "]";
+		aiOriginResult = QString::fromStdString(complete);
 	}
 
 	AnnotateTab* annotateTab = this->parent->annotateTab;
@@ -921,7 +925,6 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	/** Select image table view update UI to green background, showing successful image analysis END */
 
 	this->enableButtonsForUploading();
-
 	this->isUploading = false;
 
 	// Move to annotate tab which index is 4

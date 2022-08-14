@@ -12,9 +12,11 @@ public:
 	void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 	void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+	std::map<int, QPointF> landmarksOnScreen;
 
 private:
 	CaptureTab* captureTab;
+	int pointKey;
 
 };
 

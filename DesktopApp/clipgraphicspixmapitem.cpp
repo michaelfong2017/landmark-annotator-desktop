@@ -8,13 +8,12 @@ ClipGraphicsPixmapItem::ClipGraphicsPixmapItem(const QPixmap& pixmap, CaptureTab
 
 void ClipGraphicsPixmapItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-	qDebug() << "paint()";
 	QPixmap pixmap = this->pixmap();
 	QRect rect = pixmap.rect();
 
 	painter->drawPixmap(rect, pixmap);
 
-	painter->setPen(QPen(QBrush(Qt::red), 5, Qt::DashLine));
+	painter->setPen(QPen(QBrush(Qt::red), 2, Qt::DashLine));
 	painter->drawRect(this->captureTab->clip_rect);
 
 	painter->setPen(QPen(QBrush(Qt::blue), 5, Qt::SolidLine));

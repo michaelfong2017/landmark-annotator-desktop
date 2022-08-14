@@ -273,7 +273,8 @@ void AnnotateTab::setAnnotationsText() {
 	for (auto it : this->annotations3D) {
 		std::string key = it.first;
 		int x = this->annotationsOnRight[key].x() * this->scalingFactorForRight, y = this->annotationsOnRight[key].y() * this->scalingFactorForRight, z = it.second.z();
-		
+		//int x = it.second.z(), y = it.second.y(), z = it.second.z();
+
 		std::string PointName = "";
 		if (it.first == "A1") {
 			PointName = "Left Inf Scapular Angle (A1)";
@@ -299,7 +300,16 @@ void AnnotateTab::setAnnotationsText() {
 		text2.append(str);
 	}
 
-	text.append(QString::fromStdString("Distance - Central Shift: " + std::to_string(this->distance1) + " mm\n"));
+	if (this->distance1 == -1) {
+		text.append(QString::fromStdString("Distance - Central Shift: Landmark C invalid \n"));
+	}
+	else if (this->distance1 == -2) {
+		text.append(QString::fromStdString("Distance - Central Shift: Landmark D invalid \n"));
+	}
+	else {
+		text.append(QString::fromStdString("Distance - Central Shift: " + std::to_string(this->distance1) + " mm\n"));
+	}
+	
 	text.append(QString::fromStdString("Imbalance - Pelvic: " + std::to_string(this->angle1) + " degree\n"));
 	text.append(QString::fromStdString("Imbalance - Scapular: " + std::to_string(this->angle2) + " degree\n"));
 	text.append(QString::fromStdString("Angle - Trunk Rotation: " + std::to_string(this->trunkRotation) + " degree\n"));
@@ -379,7 +389,19 @@ void AnnotateTab::computeMetrics() {
 	//this->angle2 = std::atan(yDiff / xDistance) * 180 / PI;
 
 	// This is compute using 2D coordinates
-	this->distance1 = (this->annotations3D["C"].x() - this->annotations3D["D"].x());
+	if (this->annotations3D["C"] == QVector3D(0, 0, 0)) {
+		this->distance1 = -1;
+	}
+	else if (this->annotations3D["D"] == QVector3D(0, 0, 0)) {
+		this->distance1 = -2;
+	}
+	else 
+	{
+		this->distance1 = - (this->annotations3D["D"].x() * (this->annotations3D["C"].z() / this->annotations3D["D"].z()) 
+			- this->annotations3D["C"].x());
+		//this->distance1 = (this->annotations3D["C"].x() - this->annotations3D["D"].x());
+	}
+	
 
 	// This is compute using 2D coordinates
 	//Angle between b1-b2 line and xy-plane

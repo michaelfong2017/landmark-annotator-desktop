@@ -377,8 +377,6 @@ QImage convertDepthCVToColorizedQImage(cv::Mat cvImage) {
 	return qImage;
 }
 
-
-
 QImage convertColorToDepthCVToQImage(cv::Mat cvImage) {
 	return convertColorCVToQImage(cvImage);
 }
@@ -392,24 +390,29 @@ QImage convertDepthToColorCVToColorizedQImage(cv::Mat cvImage) {
 	return convertDepthCVToColorizedQImage(cvImage);
 }
 
-QImage converDepthToColorCVToColorizedQImageDetailed(cv::Mat cvImage) {
-
+QImage convertDepthToColorCVToColorizedQImageDetailed(cv::Mat cvImage) {
 	if (cvImage.empty()) {
 		// QImage.isNull() will return true
 		return QImage();
 	}
 
+	// per unit is now (5000/255) mm = 19.6 mm
 	cvImage.convertTo(cvImage, CV_8U, 255.0 / 5000.0, 0.0);
 
 	// mid point depth
 	int midX = cvImage.cols / 2;
 	int midY = cvImage.rows / 2;
 	uchar mid = cvImage.at<uchar>(midY, midX);
-	//qDebug() << "Mid Point Depth: " << mid;
-	float lower = 5.0;
-	float upper = 5.0;
-	float min = mid - lower;
-	float max = mid + lower;
+
+	qDebug() << "Mid Point Depth: " << mid;
+	if (mid == 0) {
+		qDebug() << "Use closest";
+	}
+
+	float closeBound = 5.0; // 1 = 20mm, 5 = 1cm
+	float farBound = 7.5; // 15 = 2cm
+	float min = mid - closeBound;
+	float max = mid + farBound;
 
 	if (min <= 0.0) {
 		min = 0.0;
@@ -441,15 +444,28 @@ QImage converDepthToColorCVToColorizedQImageDetailed(cv::Mat cvImage) {
 	}
 
 	/** Colorize depth image */
-	cv::Mat temp;
-	colorizeDepth(cvImage, temp);
+	cv::Mat rgb;
+	colorizeDepth(cvImage, rgb);
 	/** Colorize depth image END */
 
-	QImage qImage((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+	
+	/*qDebug() << "Start";
+	std::vector<std::vector<cv::Point>> contours;
+	std::vector<cv::Vec4i> hierarchy;
+	qDebug() << "findContours";
+	cv::findContours(cvImage, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_NONE);
+	temp = cvImage.clone();
+	cv::drawContours(temp, contours, -1, cv::Scalar(255, 255, 255), 2);*/
+
+	//colorizeDepth(temp, temp);
+	//qDebug() << "temp:" << can.rows << can.cols << can.channels();
+	//QImage qImage((const uchar*)can.data, can.cols, can.rows, can.step, QImage::Format_Grayscale8);
+	QImage qImage((const uchar*)rgb.data, rgb.cols, rgb.rows, rgb.step, QImage::Format_RGB888);
 	qImage.bits();
 
 	return qImage;
 }
+
 
 void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb)
 {
@@ -475,6 +491,7 @@ void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb)
 			}
 
 			unsigned int H = 255 - ((uchar)maxDisp - d) * 280 / (uchar)maxDisp;
+			//unsigned int H = ((uchar)maxDisp - d) * 280 / (uchar)maxDisp; // red close, purple far
 			unsigned int hi = (H / 60) % 6;
 
 			float f = H / 60.f - H / 60;
