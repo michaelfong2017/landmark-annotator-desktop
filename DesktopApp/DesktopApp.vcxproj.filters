@@ -22,6 +22,9 @@
     <ClCompile Include="clipgraphicsscene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="clipgraphicspixmapitem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -34,6 +37,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="clipgraphicsscene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clipgraphicspixmapitem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

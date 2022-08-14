@@ -16,6 +16,7 @@
 #include "noteditabledelegate.h"
 #include "capturehistory.h"
 #include "clipgraphicsscene.h"
+#include "clipgraphicspixmapitem.h"
 
 class CaptureTab: public QWidget
 {
@@ -46,6 +47,15 @@ public:
     QImage getQDepthToColorColorizedImage();
 
     void clearCaptureHistories();
+
+    /** Crop image */
+    QRect largest_rect;
+    QRect clip_rect;
+    QPoint drag_offset = QPoint();
+    std::tuple<QPoint, QPoint, QPoint, QPoint> handle_offsets = std::make_tuple(QPoint(0, 0), QPoint(-8, 0), QPoint(0, -8), QPoint(-8, -8));
+
+    QRect corner(int number);
+    /** Crop image END */
 
 private:
     DesktopApp* parent;
