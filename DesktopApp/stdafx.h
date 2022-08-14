@@ -10,6 +10,7 @@
 #include <QTabWidget>
 #include <QPointF>
 #include <QGraphicsScene>
+#include <QPrinter>
 #include "qdebug.h"
 #include <k4a/k4a.hpp>
 #include <opencv2/opencv.hpp>
