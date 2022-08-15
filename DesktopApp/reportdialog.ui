@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>721</width>
-    <height>498</height>
+    <width>1050</width>
+    <height>957</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -47,247 +47,582 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-140</y>
+        <y>0</y>
         <width>1132</width>
-        <height>601</height>
+        <height>920</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QHBoxLayout" name="a_TitleLayout">
+         <property name="spacing">
+          <number>6</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SetDefaultConstraint</enum>
+         </property>
          <item>
-          <widget class="QLabel" name="label">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>50</height>
-            </size>
-           </property>
+          <widget class="QLabel" name="TitleLabel">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>50</height>
+             <height>100</height>
             </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>MS Shell Dlg 2</family>
+             <pointsize>-1</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+            </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+            <string notr="true">font: 40px &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(200, 200, 200);</string>
            </property>
            <property name="text">
-            <string>aaaaaaaaaaaaaaaaaaaaaaaaaaa</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_5">
-           <item>
-            <widget class="QLabel" name="label_2">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>bbbbbbbbbbbbbbbbbbbbbbb</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_3">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>cccccccccccccccccccccccccccccccccccccccccccccccc</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item alignment="Qt::AlignTop">
-          <widget class="QGraphicsView" name="graphicsView">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>80</width>
-             <height>80</height>
-            </size>
+            <string>脊椎侧弯检测报告</string>
            </property>
           </widget>
          </item>
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QHBoxLayout" name="b_ContentLayout" stretch="1,1">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_8">
+          <layout class="QVBoxLayout" name="LeftVerticalLayout" stretch="0,0,0">
            <item>
-            <widget class="QLabel" name="label_4">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>80</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
+            <layout class="QVBoxLayout" name="ResultAnalysis" stretch="1,1,1,1,1">
+             <item>
+              <widget class="QLabel" name="label_15">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>MS Shell Dlg 2</family>
+                 <pointsize>-1</pointsize>
+                 <weight>50</weight>
+                 <italic>false</italic>
+                 <bold>false</bold>
+                 <underline>false</underline>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(200, 200, 200);</string>
+               </property>
+               <property name="text">
+                <string>  結果分析 / Result Analysis</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="ParameterBox_3">
+               <item>
+                <widget class="QLabel" name="nameLabel_10">
+                 <property name="styleSheet">
+                  <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(225, 225, 225);</string>
+                 </property>
+                 <property name="text">
+                  <string>   胸椎侧弯部位</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="leftrightLabel_10">
+                 <property name="styleSheet">
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>variable: 左/右</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="paramterLabel_10">
+                 <property name="styleSheet">
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>variable: degree</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="ParameterBox_1">
+               <item>
+                <widget class="QLabel" name="nameLabel_8">
+                 <property name="styleSheet">
+                  <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(225, 225, 225);</string>
+                 </property>
+                 <property name="text">
+                  <string>   腰椎侧弯部位</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="leftrightLabel_9">
+                 <property name="styleSheet">
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>variable: 左/右</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="paramterLabel_8">
+                 <property name="styleSheet">
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>variable: degree</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="ParameterBox_2">
+               <item>
+                <widget class="QLabel" name="nameLabel_9">
+                 <property name="styleSheet">
+                  <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(225, 225, 225);</string>
+                 </property>
+                 <property name="text">
+                  <string>  TBD</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="leftrightLabel_7">
+                 <property name="styleSheet">
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>variable: 左/右</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="paramterLabel_9">
+                 <property name="styleSheet">
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>variable: degree</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="ParameterBox_4">
+               <item>
+                <widget class="QLabel" name="nameLabel_11">
+                 <property name="styleSheet">
+                  <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(225, 225, 225);</string>
+                 </property>
+                 <property name="text">
+                  <string>  TBD</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="leftrightLabel_11">
+                 <property name="styleSheet">
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>variable: 左/右</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="paramterLabel_11">
+                 <property name="styleSheet">
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>variable: degree</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
            </item>
            <item>
-            <widget class="QLabel" name="label_5">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>80</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
+            <layout class="QVBoxLayout" name="Image">
+             <item>
+              <widget class="QLabel" name="label_7">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="autoFillBackground">
+                <bool>false</bool>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(200, 200, 200);</string>
+               </property>
+               <property name="text">
+                <string>  示意圖 / Schematic</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGraphicsView" name="graphicsView"/>
+             </item>
+            </layout>
            </item>
            <item>
-            <widget class="QLabel" name="label_6">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>80</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_7">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>80</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_8">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>80</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
+            <layout class="QVBoxLayout" name="Signature">
+             <item>
+              <widget class="QLabel" name="label_17">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(200, 200, 200);</string>
+               </property>
+               <property name="text">
+                <string>  簽署 / Signature</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_21">
+               <property name="text">
+                <string>XXXXX</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_9"/>
+          <layout class="QVBoxLayout" name="RightVerticalLayout" stretch="0,1,1,0">
+           <item>
+            <layout class="QVBoxLayout" name="Comments">
+             <item>
+              <widget class="QLabel" name="label_6">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(200, 200, 200);</string>
+               </property>
+               <property name="text">
+                <string>  注釋與結論 / Notes &amp; Comments</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTextEdit" name="textEdit_2"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="Evaluation" stretch="0,0">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(200, 200, 200);</string>
+               </property>
+               <property name="text">
+                <string>  评估意见 / Recommendations</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,0,1,0,1,0">
+               <property name="leftMargin">
+                <number>10</number>
+               </property>
+               <property name="topMargin">
+                <number>10</number>
+               </property>
+               <property name="rightMargin">
+                <number>10</number>
+               </property>
+               <item>
+                <widget class="QRadioButton" name="radioButton">
+                 <property name="styleSheet">
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>正常</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_18">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+                 </property>
+                 <property name="text">
+                  <string>建议适度增加体育运动</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButton_3">
+                 <property name="styleSheet">
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>低</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_19">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+                 </property>
+                 <property name="text">
+                  <string>建议家长定期监测帮助孩子及早发现疾病风险，遇到不良體態，不良姿勢問題及時調理，糾正，並且增加運動訓練。 </string>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>false</bool>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButton_2">
+                 <property name="styleSheet">
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>高</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_20">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+                 </property>
+                 <property name="text">
+                  <string>建议及时就诊</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="PersonalInfo">
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(200, 200, 200);</string>
+               </property>
+               <property name="text">
+                <string>  基本信息 / Patient Information</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="NameLabel">
+               <property name="styleSheet">
+                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+               </property>
+               <property name="text">
+                <string>Name</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="PhoneLabel">
+               <property name="styleSheet">
+                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+               </property>
+               <property name="text">
+                <string>Phone</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="GenerLabel">
+               <property name="styleSheet">
+                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+               </property>
+               <property name="text">
+                <string>Gender</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="BirthLabel">
+               <property name="styleSheet">
+                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+               </property>
+               <property name="text">
+                <string>Date of birth</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="AgeLabel">
+               <property name="styleSheet">
+                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+               </property>
+               <property name="text">
+                <string>Age</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="WeightLabel">
+               <property name="styleSheet">
+                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+               </property>
+               <property name="text">
+                <string>Weight</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="HeightLabel">
+               <property name="styleSheet">
+                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+               </property>
+               <property name="text">
+                <string>Height</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="TechnicalSupport">
+             <item>
+              <widget class="QLabel" name="label_14">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(200, 200, 200);</string>
+               </property>
+               <property name="text">
+                <string>  技術支持 / Technical Support</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_16">
+               <property name="text">
+                <string>香港大學XXXXXXXXXXXXXXX</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout">
+        <layout class="QHBoxLayout" name="c_ButtonsBox">
          <property name="spacing">
           <number>6</number>
          </property>
