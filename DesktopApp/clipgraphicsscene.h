@@ -14,6 +14,9 @@ public:
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 	std::map<int, QPointF> landmarksOnScreen;
 
+protected:
+	bool ClipGraphicsScene::event(QEvent* event) override;
+
 private:
 	CaptureTab* captureTab;
 	int pointKey;
