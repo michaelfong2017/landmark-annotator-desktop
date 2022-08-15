@@ -1,4 +1,5 @@
 ﻿#include "clipgraphicsscene.h"
+#include <QTouchEvent>
 
 ClipGraphicsScene::ClipGraphicsScene(CaptureTab* captureTab, QGraphicsPixmapItem* pixmapItem) {
 	this->captureTab = captureTab;
@@ -6,6 +7,7 @@ ClipGraphicsScene::ClipGraphicsScene(CaptureTab* captureTab, QGraphicsPixmapItem
 	this->addItem(pixmapItem);
 
 	qDebug() << "ClipGraphicsScene()";
+
 }
 
 void ClipGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
@@ -96,4 +98,15 @@ void ClipGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 	this->pointKey = -1;
 
 	update();
+}
+
+bool ClipGraphicsScene::event(QEvent* e){
+	switch (e->type()) {
+		case QEvent::TouchBegin:
+			qDebug() << "touch!";
+			return true;
+		default:
+			// call base implementation
+			return QGraphicsScene::event(e);
+	}
 }
