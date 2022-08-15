@@ -495,7 +495,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 }
 
 void CaptureTab::clearCaptureHistories() {
-	qDebug() << "How many records: " << captureHistories.size();
+	qDebug() << "Clear records: " << captureHistories.size();
 	for (int i = 0; i < captureHistories.size(); i++) {
 		dataModel->removeRow(0, QModelIndex());
 	}
