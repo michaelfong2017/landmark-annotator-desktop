@@ -1,4 +1,4 @@
-#ifndef REPORTDIALOG_H
+﻿#ifndef REPORTDIALOG_H
 #define REPORTDIALOG_H
 
 #include <QtWidgets/QDialog>
@@ -12,8 +12,16 @@ class ReportDialog : public QDialog
 public:
 	ReportDialog();
 	Ui::ReportDialogUI ui;
+    void printWithPreview();
+
+signals:
+
+private slots:
+	void printDocument(QPrinter* printer);
 
 private:
+
+
 };
 
 #endif

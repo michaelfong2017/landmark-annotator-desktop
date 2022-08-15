@@ -16,9 +16,9 @@ LoginTab::LoginTab(DesktopApp* parent)
 
 		QNetworkClient::getInstance().login(this->parent->ui.tabWidget, username, password);
 
-		// Testing
-		ReportDialog dialog;
-		dialog.exec();
+		//// Testing
+		//ReportDialog dialog;
+		//dialog.exec();
 	});
 }
 

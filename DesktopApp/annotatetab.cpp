@@ -1,6 +1,7 @@
 #include "annotatetab.h"
 #include "draganddropgraphicsscene.h"
 #include "kinectengine.h"
+#include <reportdialog.h>
 
 QPointF getRandomPoint(int maxWidth, int maxHeight) {
 	int randX = rand() % (maxWidth + 1);
@@ -149,6 +150,13 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 
 		QNetworkClient::getInstance().confirmLandmarks(this->imageId, aiOriginResult, this, SLOT(onConfirmLandmarks(QNetworkReply*)));
 		});
+
+		QObject::connect(this->parent->ui.generateReportButton, &QPushButton::clicked, [this]() {
+			qDebug() << "generateReportButton clicked";
+			ReportDialog dialog;
+			dialog.exec();
+		});
+
 }
 
 void AnnotateTab::reloadCurrentImage() {
