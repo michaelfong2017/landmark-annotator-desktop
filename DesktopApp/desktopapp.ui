@@ -38,7 +38,7 @@
       <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="loginTab">
       <property name="sizePolicy">

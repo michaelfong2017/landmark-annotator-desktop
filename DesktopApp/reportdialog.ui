@@ -30,13 +30,25 @@
     <widget class="QScrollArea" name="scrollArea">
      <property name="minimumSize">
       <size>
-       <width>600</width>
+       <width>732</width>
        <height>900</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>1464</width>
+       <height>1800</height>
+      </size>
+     </property>
+     <property name="sizeIncrement">
+      <size>
+       <width>10</width>
+       <height>10</height>
       </size>
      </property>
      <property name="baseSize">
       <size>
-       <width>600</width>
+       <width>732</width>
        <height>900</height>
       </size>
      </property>
@@ -143,26 +155,53 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(225, 225, 225);</string>
                  </property>
                  <property name="text">
-                  <string>   胸椎侧弯部位</string>
+                  <string>  Central Shift:</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="leftrightLabel_10">
-                 <property name="styleSheet">
-                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+                <layout class="QHBoxLayout" name="horizontalLayout_9">
+                 <property name="leftMargin">
+                  <number>20</number>
+                 </property>
+                 <item>
+                  <widget class="QCheckBox" name="leftCheckBox1">
+                   <property name="styleSheet">
+                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
 </string>
-                 </property>
-                 <property name="text">
-                  <string>variable: 左/右</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
+                   </property>
+                   <property name="text">
+                    <string>左</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="rightCheckBox1">
+                   <property name="styleSheet">
+                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
+</string>
+                   </property>
+                   <property name="text">
+                    <string>右</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
                <item>
-                <widget class="QLabel" name="paramterLabel_10">
+                <widget class="QLabel" name="variable1Labe2">
                  <property name="styleSheet">
                   <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
 </string>
@@ -186,26 +225,53 @@ background-color: rgb(225, 225, 225);</string>
 background-color: rgb(225, 225, 225);</string>
                  </property>
                  <property name="text">
-                  <string>   腰椎侧弯部位</string>
+                  <string>   胸椎侧弯部位</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="leftrightLabel_9">
-                 <property name="styleSheet">
-                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+                <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="0,0">
+                 <property name="leftMargin">
+                  <number>20</number>
+                 </property>
+                 <item>
+                  <widget class="QCheckBox" name="leftCheckBox2">
+                   <property name="styleSheet">
+                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
 </string>
-                 </property>
-                 <property name="text">
-                  <string>variable: 左/右</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
+                   </property>
+                   <property name="text">
+                    <string>左</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="rightCheckBox2">
+                   <property name="styleSheet">
+                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
+</string>
+                   </property>
+                   <property name="text">
+                    <string>右</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
                <item>
-                <widget class="QLabel" name="paramterLabel_8">
+                <widget class="QLabel" name="variable1Label4">
                  <property name="styleSheet">
                   <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
 </string>
@@ -229,26 +295,53 @@ background-color: rgb(225, 225, 225);</string>
 background-color: rgb(225, 225, 225);</string>
                  </property>
                  <property name="text">
-                  <string>  TBD</string>
+                  <string>   腰椎侧弯部位</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="leftrightLabel_7">
-                 <property name="styleSheet">
-                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+                <layout class="QHBoxLayout" name="horizontalLayout_11">
+                 <property name="leftMargin">
+                  <number>20</number>
+                 </property>
+                 <item>
+                  <widget class="QCheckBox" name="leftCheckBox3">
+                   <property name="styleSheet">
+                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
 </string>
-                 </property>
-                 <property name="text">
-                  <string>variable: 左/右</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
+                   </property>
+                   <property name="text">
+                    <string>左</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="rightCheckBox3">
+                   <property name="styleSheet">
+                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
+</string>
+                   </property>
+                   <property name="text">
+                    <string>右</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
                <item>
-                <widget class="QLabel" name="paramterLabel_9">
+                <widget class="QLabel" name="variable1Label6">
                  <property name="styleSheet">
                   <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
 </string>
@@ -272,26 +365,53 @@ background-color: rgb(225, 225, 225);</string>
 background-color: rgb(225, 225, 225);</string>
                  </property>
                  <property name="text">
-                  <string>  TBD</string>
+                  <string>  Trunk Rotation:</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="leftrightLabel_11">
-                 <property name="styleSheet">
-                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
+                <layout class="QHBoxLayout" name="horizontalLayout_12">
+                 <property name="leftMargin">
+                  <number>20</number>
+                 </property>
+                 <item>
+                  <widget class="QCheckBox" name="leftCheckBox4">
+                   <property name="styleSheet">
+                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
 </string>
-                 </property>
-                 <property name="text">
-                  <string>variable: 左/右</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
+                   </property>
+                   <property name="text">
+                    <string>左</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="rightCheckBox4">
+                   <property name="styleSheet">
+                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
+</string>
+                   </property>
+                   <property name="text">
+                    <string>右</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
                <item>
-                <widget class="QLabel" name="paramterLabel_11">
+                <widget class="QLabel" name="variable1Label8">
                  <property name="styleSheet">
                   <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
 </string>
@@ -331,7 +451,20 @@ background-color: rgb(200, 200, 200);</string>
               </widget>
              </item>
              <item>
-              <widget class="QGraphicsView" name="graphicsView"/>
+              <widget class="QGraphicsView" name="graphicsView">
+               <property name="mouseTracking">
+                <bool>false</bool>
+               </property>
+               <property name="tabletTracking">
+                <bool>false</bool>
+               </property>
+               <property name="acceptDrops">
+                <bool>true</bool>
+               </property>
+               <property name="interactive">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -356,10 +489,17 @@ background-color: rgb(200, 200, 200);</string>
              </item>
              <item>
               <widget class="QLabel" name="label_21">
+               <property name="styleSheet">
+                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+               </property>
                <property name="text">
-                <string>XXXXX</string>
+                <string>  Enter Name:</string>
                </property>
               </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit"/>
              </item>
             </layout>
            </item>
@@ -520,81 +660,186 @@ background-color: rgb(200, 200, 200);</string>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="NameLabel">
-               <property name="styleSheet">
-                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+              <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,2">
+               <item>
+                <widget class="QLabel" name="label_8">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
 </string>
-               </property>
-               <property name="text">
-                <string>Name</string>
-               </property>
-              </widget>
+                 </property>
+                 <property name="text">
+                  <string>  姓名: </string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="NameLabel">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>Name</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
-              <widget class="QLabel" name="PhoneLabel">
-               <property name="styleSheet">
-                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+              <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,2">
+               <item>
+                <widget class="QLabel" name="label_9">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
 </string>
-               </property>
-               <property name="text">
-                <string>Phone</string>
-               </property>
-              </widget>
+                 </property>
+                 <property name="text">
+                  <string>  电话: </string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="PhoneLabel">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>Phone</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
-              <widget class="QLabel" name="GenerLabel">
-               <property name="styleSheet">
-                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+              <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,2">
+               <item>
+                <widget class="QLabel" name="label_10">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
 </string>
-               </property>
-               <property name="text">
-                <string>Gender</string>
-               </property>
-              </widget>
+                 </property>
+                 <property name="text">
+                  <string>  性別: </string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="GenerLabel">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>Gender</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
-              <widget class="QLabel" name="BirthLabel">
-               <property name="styleSheet">
-                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+              <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,2">
+               <item>
+                <widget class="QLabel" name="label_11">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
 </string>
-               </property>
-               <property name="text">
-                <string>Date of birth</string>
-               </property>
-              </widget>
+                 </property>
+                 <property name="text">
+                  <string>  出生日期: </string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="BirthLabel">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>Date of birth</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
-              <widget class="QLabel" name="AgeLabel">
-               <property name="styleSheet">
-                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+              <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,2">
+               <item>
+                <widget class="QLabel" name="label_12">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
 </string>
-               </property>
-               <property name="text">
-                <string>Age</string>
-               </property>
-              </widget>
+                 </property>
+                 <property name="text">
+                  <string>  年龄: </string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="AgeLabel">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>Age</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
-              <widget class="QLabel" name="WeightLabel">
-               <property name="styleSheet">
-                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+              <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,2">
+               <item>
+                <widget class="QLabel" name="label_13">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
 </string>
-               </property>
-               <property name="text">
-                <string>Weight</string>
-               </property>
-              </widget>
+                 </property>
+                 <property name="text">
+                  <string>  体重: </string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="WeightLabel">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>Weight</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
-              <widget class="QLabel" name="HeightLabel">
-               <property name="styleSheet">
-                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+              <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,2">
+               <item>
+                <widget class="QLabel" name="label_22">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
 </string>
-               </property>
-               <property name="text">
-                <string>Height</string>
-               </property>
-              </widget>
+                 </property>
+                 <property name="text">
+                  <string>  身高: </string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="HeightLabel">
+                 <property name="styleSheet">
+                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>Height</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>
@@ -618,9 +863,35 @@ background-color: rgb(200, 200, 200);</string>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_16">
+              <widget class="QLabel" name="label_4">
+               <property name="styleSheet">
+                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+               </property>
                <property name="text">
-                <string>香港大學XXXXXXXXXXXXXXX</string>
+                <string>  香港</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_16">
+               <property name="styleSheet">
+                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+               </property>
+               <property name="text">
+                <string>  香港大學矯形及創傷外科學系</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="styleSheet">
+                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
+</string>
+               </property>
+               <property name="text">
+                <string>  香港大學計算機科學系</string>
                </property>
               </widget>
              </item>

@@ -63,7 +63,6 @@ void PatientTab::onEnterTab() {
     this->parent->ui.patientTab->findChild<QLabel*>("patientName")->setText(QString("Name: %1").arg(name));
     this->parent->ui.patientTab->findChild<QLabel*>("patientAge")->setText(QString("Age: %1").arg(age));
     this->parent->ui.patientTab->findChild<QLabel*>("patientSubjectNumber")->setText(QString("Subject Number: %1").arg(subjectNumber));
-
 }
 
 
@@ -83,7 +82,6 @@ QString PatientTab::getCurrentPatientName() {
     return this->currentPatientName;
 }
 
-
 void PatientTab::setName(QString name)
 {
     this->name = name;
@@ -94,14 +92,39 @@ void PatientTab::setSex(QString sex)
     this->sex = sex;
 }
 
+QString PatientTab::getSex()
+{
+    return this->sex;
+}
+
 void PatientTab::setAge(QString age)
 {
     this->age = age;
 }
 
+QString PatientTab::getAge()
+{
+    return this->age;
+}
+
+void PatientTab::setDOB(QString dob)
+{
+    this->dob = dob;
+}
+
+QString PatientTab::getDOB()
+{
+    return this->dob;
+}
+
 void PatientTab::setPhoneNumber(QString phoneNumber)
 {
     this->phoneNumber = phoneNumber;
+}
+
+QString PatientTab::getPhoneNumber()
+{
+    return this->phoneNumber;
 }
 
 void PatientTab::setSubjectNumber(QString subjectNumber)
@@ -132,6 +155,26 @@ void PatientTab::setAddress(QString address)
 void PatientTab::setRemark(QString remark)
 {
     this->remark = remark;
+}
+
+void PatientTab::setWeight(QString weight)
+{
+    this->weight = weight;
+}
+
+QString PatientTab::getWeight()
+{
+    return this->weight;
+}
+
+void PatientTab::setHeight(QString height)
+{
+    this->height = height;
+}
+
+QString PatientTab::getHeight()
+{
+    return this->height;
 }
 
 void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {

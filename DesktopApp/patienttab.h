@@ -23,14 +23,23 @@ public:
     QString getCurrentPatientName();
     void setName(QString name);
     void setSex(QString sex);
+    QString getSex();
     void setAge(QString age);
+    QString getAge();
+    void setDOB(QString dob);
+    QString getDOB();
     void setPhoneNumber(QString phoneNumber);
+    QString getPhoneNumber();
     void setSubjectNumber(QString subjectNumber);
     void setIdCard(QString idCard);
     void setSin(QString sin);
     void setEmail(QString email);
     void setAddress(QString address);
     void setRemark(QString remark);
+    void setWeight(QString weight);
+    QString getWeight();
+    void setHeight(QString height);
+    QString getHeight();
 
 private:
     DesktopApp* parent;
@@ -41,6 +50,7 @@ private:
     QString name;
     QString sex;
     QString age;
+    QString dob;
     QString phoneNumber;
     QString subjectNumber;
     QString idCard;
@@ -48,6 +58,8 @@ private:
     QString email;
     QString address;
     QString remark;
+    QString weight;
+    QString height;
 
 private slots:
     void onFetchExistingImagesOfPatient(QNetworkReply* reply);

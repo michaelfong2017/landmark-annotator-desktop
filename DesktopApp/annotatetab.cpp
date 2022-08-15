@@ -153,7 +153,7 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 
 		QObject::connect(this->parent->ui.generateReportButton, &QPushButton::clicked, [this]() {
 			qDebug() << "generateReportButton clicked";
-			ReportDialog dialog;
+			ReportDialog dialog(this);
 			dialog.exec();
 		});
 
@@ -318,8 +318,8 @@ void AnnotateTab::setAnnotationsText() {
 		text.append(QString::fromStdString("Distance - Central Shift: " + std::to_string(this->distance1) + " mm\n"));
 	}
 	
-	text.append(QString::fromStdString("Imbalance - Pelvic: " + std::to_string(this->angle1) + " degree\n"));
 	text.append(QString::fromStdString("Imbalance - Scapular: " + std::to_string(this->angle2) + " degree\n"));
+	text.append(QString::fromStdString("Imbalance - Pelvic: " + std::to_string(this->angle1) + " degree\n"));
 	text.append(QString::fromStdString("Angle - Trunk Rotation: " + std::to_string(this->trunkRotation) + " degree\n"));
 
 	this->parent->ui.annotationsText->setText(text);

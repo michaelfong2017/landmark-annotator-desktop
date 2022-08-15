@@ -2,7 +2,7 @@
 #include "createnewpatientdialog.h"
 #include "qnetworkclient.h"
 
-const int COLUMN_COUNT = 13;
+const int COLUMN_COUNT = 16;
 
 PatientListTab::PatientListTab(DesktopApp* parent)
 {
@@ -70,7 +70,7 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     patientListDataModel->clear();
 
     /** Headers */
-    QStringList headerLabels = { "", "Patient ID", "Name", "Gender", "Age", "Phone Number", "Subject Number", "Creation Time", "idCard", "sin", "email", "address", "remark"};
+    QStringList headerLabels = { "", "Patient ID", "Name", "Gender", "Age", "Phone Number", "Subject Number", "Creation Time", "idCard", "sin", "email", "address", "remark", "dob", "weight", "height"};
 
     for (int i = 0; i < COLUMN_COUNT; i++)
     {
@@ -195,6 +195,15 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
                 case 12:
                     text = obj["remark"].toString();
                     break;
+                case 13:
+                    text = obj["birthday"].toString();
+                    break;
+                case 14:
+                    text = obj["weight"].toString();
+                    break;
+                case 15:
+                    text = obj["height"].toString();
+                    break;
             }
             item = new QStandardItem(text);
             QFont fn = item->font();
@@ -217,6 +226,9 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     tableView->hideColumn(10);
     tableView->hideColumn(11);
     tableView->hideColumn(12);
+    tableView->hideColumn(13);
+    tableView->hideColumn(14);
+    tableView->hideColumn(15);
     // Sort and hide END
     reply->deleteLater();
 
@@ -255,47 +267,59 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
         index = patientListDataModel->index(row, i);
         data = patientListDataModel->data(index).toString();
         switch (i) {
-        case 2:
-            this->parent->patientTab->setName(data);
-            qDebug() << "Selected Name is" << data;
-            break;
-        case 3:
-            this->parent->patientTab->setSex(data);
-            qDebug() << "Selected Sex is" << data;
-            break;
-        case 4:
-            this->parent->patientTab->setAge(data);
-            qDebug() << "Selected Age is" << data;
-            break;
-        case 5:
-            this->parent->patientTab->setPhoneNumber(data);
-            qDebug() << "Selected Phone Number is" << data;
-            break;
-        case 6:
-            this->parent->patientTab->setSubjectNumber(data);
-            qDebug() << "Selected Subject number is" << data;
-            break;
-        case 8:
-            this->parent->patientTab->setIdCard(data);
-            qDebug() << "Selected ID Card is" << data;
-            break;
-        case 9:
-            this->parent->patientTab->setSin(data);
-            qDebug() << "Selected Social Security Number is" << data;
-            break;
-        case 10:
-            this->parent->patientTab->setEmail(data);
-            qDebug() << "Selected Email is" << data;
-            break;
-        case 11:
-            this->parent->patientTab->setAddress(data);
-            qDebug() << "Selected Address is" << data;
-            break;
-        case 12:
-            this->parent->patientTab->setRemark(data);
-            qDebug() << "Selected Remark is" << data;
-            break;
-        }
+            case 2:
+                this->parent->patientTab->setName(data);
+                //qDebug() << "Selected Name is" << data;
+                break;
+            case 3:
+                this->parent->patientTab->setSex(data);
+                //qDebug() << "Selected Sex is" << data;
+                break;
+            case 4:
+                this->parent->patientTab->setAge(data);
+                //qDebug() << "Selected Age is" << data;
+                break;
+            case 5:
+                this->parent->patientTab->setPhoneNumber(data);
+                //qDebug() << "Selected Phone Number is" << data;
+                break;
+            case 6:
+                this->parent->patientTab->setSubjectNumber(data);
+                //qDebug() << "Selected Subject number is" << data;
+                break;
+            case 8:
+                this->parent->patientTab->setIdCard(data);
+                //qDebug() << "Selected ID Card is" << data;
+                break;
+            case 9:
+                this->parent->patientTab->setSin(data);
+                //qDebug() << "Selected Social Security Number is" << data;
+                break;
+            case 10:
+                this->parent->patientTab->setEmail(data);
+                //qDebug() << "Selected Email is" << data;
+                break;
+            case 11:
+                this->parent->patientTab->setAddress(data);
+                //qDebug() << "Selected Address is" << data;
+                break;
+            case 12:
+                this->parent->patientTab->setRemark(data);
+                //qDebug() << "Selected Remark is" << data;
+                break;
+            case 13:
+                this->parent->patientTab->setDOB(data);
+                qDebug() << "Selected DOB is" << data;
+                break;
+            case 14:
+                this->parent->patientTab->setWeight(data);
+                qDebug() << "Selected Weight is" << data;
+                break;
+            case 15:
+                this->parent->patientTab->setHeight(data);
+                qDebug() << "Selected Height is" << data;
+                break;
+            }
     }
 
     this->parent->ui.tabWidget->setTabEnabled(2, true);
