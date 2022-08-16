@@ -67,7 +67,7 @@
         <x>0</x>
         <y>0</y>
         <width>713</width>
-        <height>881</height>
+        <height>893</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -113,7 +113,7 @@ background-color: rgb(200, 200, 200);</string>
        <item>
         <layout class="QHBoxLayout" name="b_ContentLayout" stretch="1,1">
          <item>
-          <layout class="QVBoxLayout" name="LeftVerticalLayout" stretch="0,0,0">
+          <layout class="QVBoxLayout" name="LeftVerticalLayout" stretch="3,3,1">
            <item>
             <layout class="QVBoxLayout" name="ResultAnalysis" stretch="1,1,1,1,1">
              <item>
@@ -469,7 +469,7 @@ background-color: rgb(200, 200, 200);</string>
             </layout>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="Signature">
+            <layout class="QVBoxLayout" name="Signature" stretch="1,1">
              <item>
               <widget class="QLabel" name="label_17">
                <property name="sizePolicy">
@@ -488,18 +488,23 @@ background-color: rgb(200, 200, 200);</string>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_21">
-               <property name="styleSheet">
-                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+              <widget class="QGraphicsView" name="signView">
+               <property name="enabled">
+                <bool>true</bool>
                </property>
-               <property name="text">
-                <string>  Enter Name:</string>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
                </property>
               </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="lineEdit"/>
              </item>
             </layout>
            </item>
@@ -546,20 +551,23 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  评估意见 / Recommendations</string>
+                <string>  风险评估 / Risk &amp;  Recommendations</string>
                </property>
               </widget>
              </item>
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,0,1,0,1,0">
                <property name="leftMargin">
-                <number>10</number>
+                <number>8</number>
                </property>
                <property name="topMargin">
-                <number>10</number>
+                <number>5</number>
                </property>
                <property name="rightMargin">
-                <number>10</number>
+                <number>8</number>
+               </property>
+               <property name="bottomMargin">
+                <number>5</number>
                </property>
                <item>
                 <widget class="QRadioButton" name="radioButton">
@@ -568,7 +576,7 @@ background-color: rgb(200, 200, 200);</string>
 </string>
                  </property>
                  <property name="text">
-                  <string>正常</string>
+                  <string>正常 (Normal)</string>
                  </property>
                 </widget>
                </item>
@@ -578,7 +586,7 @@ background-color: rgb(200, 200, 200);</string>
                   <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
                  </property>
                  <property name="text">
-                  <string>建议适度增加体育运动</string>
+                  <string>建议适度增加体育运动。</string>
                  </property>
                  <property name="wordWrap">
                   <bool>true</bool>
@@ -592,7 +600,7 @@ background-color: rgb(200, 200, 200);</string>
 </string>
                  </property>
                  <property name="text">
-                  <string>低</string>
+                  <string>低 (Low)</string>
                  </property>
                 </widget>
                </item>
@@ -619,7 +627,7 @@ background-color: rgb(200, 200, 200);</string>
 </string>
                  </property>
                  <property name="text">
-                  <string>高</string>
+                  <string>高 (High)</string>
                  </property>
                 </widget>
                </item>
@@ -629,7 +637,7 @@ background-color: rgb(200, 200, 200);</string>
                   <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
                  </property>
                  <property name="text">
-                  <string>建议及时就诊</string>
+                  <string>建议及时就诊，到正规医院拍摄脊椎全长立体X光片和其他检查以确认，同时积极到专业康复机构进行脊椎侧弯康复治疗和训练，必要时进行支具矫形或手术治疗。</string>
                  </property>
                  <property name="wordWrap">
                   <bool>true</bool>
