@@ -41,7 +41,7 @@ public:
     void computeMetrics();
     void setAiImageUrl(QString aiImageUrl);
 
-    float scalingFactorFromRightToLeft;
+    float scalingFactorFromRightToLeft; // from Annotate Left Color Image to Right Depth image
 
     // Landmark predictions
     // Conceptually should be private but in order to avoid long script, public is used.
@@ -79,7 +79,7 @@ private:
     DesktopApp* parent;
     DragAndDropGraphicsScene* colorScene;
     DragAndDropGraphicsScene* depthToColorScene;
-    float scalingFactorForRight;
+    float scalingFactorForRight; // from capture tab to Annotate Right Depth image
 
     QString aiImageUrl;
 
