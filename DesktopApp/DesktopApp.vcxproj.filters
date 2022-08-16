@@ -1,24 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="alignmenttab.cpp" />
-    <ClCompile Include="annotatetab.cpp" />
-    <ClCompile Include="capturetab.cpp" />
-    <ClCompile Include="createnewpatientdialog.cpp" />
-    <ClCompile Include="draganddropgraphicsscene.cpp" />
-    <ClCompile Include="helper.cpp" />
-    <ClCompile Include="kinectengine.cpp" />
-    <ClCompile Include="twolinesdialog.cpp" />
-    <ClCompile Include="logintab.cpp" />
-    <ClCompile Include="patient.cpp" />
-    <ClCompile Include="patientlisttab.cpp" />
-    <ClCompile Include="patienttab.cpp" />
-    <ClCompile Include="qnetworkclient.cpp" />
-    <ClCompile Include="recorder.cpp" />
-    <ClCompile Include="saveimagedialog.cpp" />
-    <ClCompile Include="desktopapp.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="clipgraphicsscene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -28,14 +10,65 @@
     <ClCompile Include="reportdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="alignmenttab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="annotatetab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="capturetab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="createnewpatientdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="desktopapp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="draganddropgraphicsscene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="helper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="kinectengine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="logintab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="patient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="patientlisttab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="patienttab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qnetworkclient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="recorder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="saveimagedialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="twolinesdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scribblearea.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="util\networkutil.h" />
-    <ClInclude Include="draganddropgraphicsscene.h" />
-    <ClInclude Include="helper.h" />
-    <ClInclude Include="patient.h" />
-    <ClInclude Include="recorder.h" />
     <ClInclude Include="capturehistory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,24 +78,69 @@
     <ClInclude Include="clipgraphicspixmapitem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\networkutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="draganddropgraphicsscene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="patient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recorder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="desktopapp.h" />
-    <QtMoc Include="capturetab.h" />
-    <QtMoc Include="annotatetab.h" />
-    <QtMoc Include="kinectengine.h" />
-    <QtMoc Include="logintab.h" />
-    <QtMoc Include="patientlisttab.h" />
-    <QtMoc Include="createnewpatientdialog.h" />
-    <QtMoc Include="patienttab.h" />
-    <QtMoc Include="qnetworkclient.h" />
-    <QtMoc Include="twolinesdialog.h" />
-    <QtMoc Include="saveimagedialog.h" />
-    <QtMoc Include="alignmenttab.h" />
     <QtMoc Include="noteditabledelegate.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="reportdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="alignmenttab.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="annotatetab.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="capturetab.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="kinectengine.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="logintab.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="createnewpatientdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="desktopapp.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="patientlisttab.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="patienttab.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="qnetworkclient.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="saveimagedialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="twolinesdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="scribblearea.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -70,11 +148,19 @@
     <QtRcc Include="desktopapp.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="createnewpatientdialog.ui" />
-    <QtUic Include="desktopapp.ui" />
-    <QtUic Include="twolinesdialog.ui" />
-    <QtUic Include="saveimagedialog.ui" />
     <QtUic Include="reportdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="createnewpatientdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="desktopapp.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="twolinesdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="saveimagedialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

@@ -108,6 +108,9 @@ ReportDialog::ReportDialog(AnnotateTab* parent): QDialog(parent)
 		printWithPreview();
 	});
 	
+	QObject::connect(ui.clearButton, &QPushButton::clicked, [this]() {
+		ui.signView->clearImage();
+	});
 }
 
 //void ReportDialog::resizeEvent(QResizeEvent* event)
