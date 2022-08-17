@@ -155,7 +155,7 @@ void ReportDialog::printDocument(QPrinter* printer)
 	double scale = qMin(xscale, yscale);
 	painter.translate(double(printer->paperRect().x() + printer->pageRect().width() / 2), 
 		double(printer->paperRect().y() + printer->pageRect().height() / 2));
-	painter.scale(xscale, yscale);
+	painter.scale(scale, scale);
 	painter.translate(-w->width() / 2, -w->height() / 2);
 	w->render(&painter);
 
