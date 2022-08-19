@@ -51,19 +51,52 @@ void ClipGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
 	float x = event->scenePos().x(), y = event->scenePos().y();
 
-	//qDebug() << "mouseMoveEvent (x,y) = (" << x << "," << y << ")";
+	qDebug() << "mouseMoveEvent (x,y) = (" << x << "," << y << ")";
 
+	//qDebug() << "scene width, height:" << this->width() << ", " << this->height();
+
+	if (x < 0) x = 0;
+	if (x > this->width()) x = this->width();
+	if (y < 0) y = 0;
+	if (y > this->height()) y = this->height();
+
+	QRect clip_rect = this->captureTab->clip_rect;
+	int minL = 30; // min side length
 	switch (this->pointKey) {
 		case 0:
+			if (clip_rect.right() - x < minL) {
+				x = clip_rect.right() - minL;
+			}
+			if (clip_rect.bottom() - y < minL) {
+				y = clip_rect.bottom() - minL;
+			}
 			this->captureTab->clip_rect.setTopLeft(QPoint(x, y));
 			break;
 		case 1:
+			if (x - clip_rect.left() < minL) {
+				x = clip_rect.left() + minL;
+			}
+			if (clip_rect.bottom() - y < minL) {
+				y = clip_rect.bottom() - minL;
+			}
 			this->captureTab->clip_rect.setTopRight(QPoint(x, y));
 			break;
 		case 2:
+			if (x - clip_rect.left() < minL) {
+				x = clip_rect.left() + minL;
+			}
+			if (y - clip_rect.top() < minL) {
+				y = clip_rect.top() + minL;
+			}
 			this->captureTab->clip_rect.setBottomRight(QPoint(x, y));
 			break;
 		case 3:
+			if (clip_rect.right() - x < minL) {
+				x = clip_rect.right() - minL;
+			}
+			if (y - clip_rect.top() < minL) {
+				y = clip_rect.top() + minL;
+			}
 			this->captureTab->clip_rect.setBottomLeft(QPoint(x, y));
 			break;
 		default:

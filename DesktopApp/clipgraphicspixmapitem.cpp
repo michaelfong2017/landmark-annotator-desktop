@@ -13,10 +13,10 @@ void ClipGraphicsPixmapItem::paint(QPainter* painter, const QStyleOptionGraphics
 
 	painter->drawPixmap(rect, pixmap);
 
-	painter->setPen(QPen(QBrush(Qt::red), 2, Qt::DashLine));
+	painter->setPen(QPen(QBrush(Qt::red), 4, Qt::DashLine));
 	painter->drawRect(this->captureTab->clip_rect);
 
-	painter->setPen(QPen(QBrush(Qt::blue), 5, Qt::SolidLine));
+	painter->setPen(QPen(QBrush(Qt::blue), 4, Qt::SolidLine));
 	//painter->drawRect(this->captureTab->clip_rect);
 	for (int i = 0; i < 4; i++) {
 		painter->drawRect(this->captureTab->corner(i));
