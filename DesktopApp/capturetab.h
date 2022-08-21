@@ -55,6 +55,8 @@ public:
     std::tuple<QPoint, QPoint, QPoint, QPoint> handle_offsets = std::make_tuple(QPoint(0, 0), QPoint(-8, 0), QPoint(0, -8), QPoint(-8, -8));
 
     QRect corner(int number);
+
+    cv::Rect cropRect;
     /** Crop image END */
 
 private:

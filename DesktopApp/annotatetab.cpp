@@ -178,6 +178,12 @@ void AnnotateTab::reloadCurrentImage() {
 	this->qColorImage = this->parent->captureTab->getQColorImage().copy();
 	this->qDepthToColorColorizedImage = this->parent->captureTab->getQDepthToColorColorizedImage().copy();
 
+	/** Cropping part 2 */
+	cv::Rect cropRect = this->parent->captureTab->cropRect;
+	this->qColorImage = this->qColorImage.copy(cropRect.x, cropRect.y, cropRect.width, cropRect.height);
+	this->qDepthToColorColorizedImage = this->qDepthToColorColorizedImage.copy(cropRect.x, cropRect.y, cropRect.width, cropRect.height);
+	/** Cropping part 2 END */
+
 	// scale both images according to displaying window size
 	int width = this->parent->ui.graphicsViewAnnotation->width();
 	int height = this->parent->ui.graphicsViewAnnotation->height();

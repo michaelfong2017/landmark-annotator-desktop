@@ -311,6 +311,15 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		imageTypeBeingAnalyzed = imageType;
 		/** Store the image type of the image being analyzed END */
 
+		/** Cropping part 2 */
+		float cropUIToImageScale = (float)this->getCapturedColorImage().rows / this->parent->ui.graphicsViewImage->sceneRect().height();
+		cv::Rect rect(this->clip_rect.left() * cropUIToImageScale, this->clip_rect.top() * cropUIToImageScale, this->clip_rect.width() * cropUIToImageScale, this->clip_rect.height() * cropUIToImageScale);
+		this->capturedColorImage = this->capturedColorImage(rect);
+		this->capturedDepthToColorImage = this->capturedDepthToColorImage(rect);
+		this->RANSACImage = this->RANSACImage(rect);
+		this->cropRect = rect;
+		/** Cropping part 2 END */
+
 		/* Convert to the special 4 channels image and upload */
 		cv::Mat color3 = this->capturedColorImage;
 		std::vector<cv::Mat>channelsForColor2(3);

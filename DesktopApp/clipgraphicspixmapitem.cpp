@@ -13,6 +13,12 @@ void ClipGraphicsPixmapItem::paint(QPainter* painter, const QStyleOptionGraphics
 
 	painter->drawPixmap(rect, pixmap);
 
+	/** Disable cropping if selected display image is either qDepthImage or qColorToDepthImage */
+	if (this->captureTab->getParent()->ui.radioButton2->isChecked() || this->captureTab->getParent()->ui.radioButton3->isChecked()) {
+		return;
+	}
+	/** Disable cropping if selected display image is either qDepthImage or qColorToDepthImage END */
+
 	painter->setPen(QPen(QBrush(Qt::red), 4, Qt::DashLine));
 	painter->drawRect(this->captureTab->clip_rect);
 
