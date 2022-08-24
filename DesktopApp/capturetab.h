@@ -48,8 +48,13 @@ public:
 
     void clearCaptureHistories();
 
+    std::vector<CaptureHistory> getCaptureHistories();
+    void setCaptureHistories(int selectedImageIndex, CaptureHistory captureHistory);
+    int getSelectedImageIndex();
+
     /** Crop image */
-    QRect largest_rect;
+    int max_clip_width = 0;
+    int max_clip_height = 0;
     QRect clip_rect;
     QPoint drag_offset = QPoint();
     std::tuple<QPoint, QPoint, QPoint, QPoint> handle_offsets = std::make_tuple(QPoint(0, 0), QPoint(-8, 0), QPoint(0, -8), QPoint(-8, -8));

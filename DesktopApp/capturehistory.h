@@ -17,6 +17,7 @@ struct CaptureHistory {
     QImage qColorToDepthImage;
     QImage qDepthToColorImage;
     QImage qDepthToColorColorizedImage;
+    QRect clip_rect;
 };
 #endif
 #pragma once

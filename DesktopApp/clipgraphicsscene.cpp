@@ -62,6 +62,9 @@ void ClipGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
 	QRect clip_rect = this->captureTab->clip_rect;
 	int minL = 30; // min side length
+
+	int selectedImageIndex = this->captureTab->getSelectedImageIndex();
+	CaptureHistory captureHistory = this->captureTab->getCaptureHistories()[selectedImageIndex];
 	switch (this->pointKey) {
 		case 0:
 			if (clip_rect.right() - x < minL) {
@@ -71,6 +74,9 @@ void ClipGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 				y = clip_rect.bottom() - minL;
 			}
 			this->captureTab->clip_rect.setTopLeft(QPoint(x, y));
+			captureHistory.clip_rect = this->captureTab->clip_rect;
+			this->captureTab->setCaptureHistories(selectedImageIndex, captureHistory);
+			qDebug() << this->captureTab->getCaptureHistories()[selectedImageIndex].clip_rect;
 			break;
 		case 1:
 			if (x - clip_rect.left() < minL) {
@@ -80,6 +86,8 @@ void ClipGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 				y = clip_rect.bottom() - minL;
 			}
 			this->captureTab->clip_rect.setTopRight(QPoint(x, y));
+			captureHistory.clip_rect = this->captureTab->clip_rect;
+			this->captureTab->setCaptureHistories(selectedImageIndex, captureHistory);
 			break;
 		case 2:
 			if (x - clip_rect.left() < minL) {
@@ -89,6 +97,8 @@ void ClipGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 				y = clip_rect.top() + minL;
 			}
 			this->captureTab->clip_rect.setBottomRight(QPoint(x, y));
+			captureHistory.clip_rect = this->captureTab->clip_rect;
+			this->captureTab->setCaptureHistories(selectedImageIndex, captureHistory);
 			break;
 		case 3:
 			if (clip_rect.right() - x < minL) {
@@ -98,6 +108,8 @@ void ClipGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 				y = clip_rect.top() + minL;
 			}
 			this->captureTab->clip_rect.setBottomLeft(QPoint(x, y));
+			captureHistory.clip_rect = this->captureTab->clip_rect;
+			this->captureTab->setCaptureHistories(selectedImageIndex, captureHistory);
 			break;
 		default:
 			break;

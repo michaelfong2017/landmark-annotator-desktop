@@ -275,6 +275,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImageDetailed(this->capturedDepthToColorImage);
 		// For annotatetab instead END
 
+		/** Initialize clip_rect whenever a new image is captured */
+		int width = this->parent->ui.graphicsViewImage->width(), height = this->parent->ui.graphicsViewImage->height();
+		this->clip_rect = QRect(0, 0, max_clip_width, max_clip_height);
+		/** Initialize clip_rect whenever a new image is captured */
+
 		/** Store histories of images for selection */
 		CaptureHistory captureHistory;
 		captureHistory.imageType = imageType;
@@ -289,7 +294,10 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		captureHistory.qColorToDepthImage = qColorToDepthImage;
 		captureHistory.qDepthToColorImage = qDepthToColorImage;
 		captureHistory.qDepthToColorColorizedImage = qDepthToColorColorizedImage;
+		captureHistory.clip_rect = clip_rect;
 		captureHistories.push_back(captureHistory);
+
+		selectedImageIndex = captureHistories.size() - 1;
 		/** Store histories of images for selection END */
 
 		displayCapturedImages();
@@ -535,6 +543,21 @@ void CaptureTab::clearCaptureHistories() {
 
 }
 
+std::vector<CaptureHistory> CaptureTab::getCaptureHistories()
+{
+	return this->captureHistories;
+}
+
+void CaptureTab::setCaptureHistories(int selectedImageIndex, CaptureHistory captureHistory)
+{
+	this->captureHistories[selectedImageIndex] = captureHistory;
+}
+
+int CaptureTab::getSelectedImageIndex()
+{
+	return this->selectedImageIndex;
+}
+
 QRect CaptureTab::corner(int number)
 {
 	switch (number) {
@@ -578,6 +601,9 @@ void CaptureTab::disableButtonsForUploading() {
 	this->parent->ui.tabWidget->setTabEnabled(4, false);
 	this->parent->ui.tabWidget->setTabEnabled(5, false);
 	
+	/** Disable table view row selection */
+	tableView->setSelectionMode(QAbstractItemView::NoSelection);
+	/** Disable table view row selection END */
 }
 
 void CaptureTab::enableButtonsForUploading() {
@@ -600,6 +626,9 @@ void CaptureTab::enableButtonsForUploading() {
 	this->parent->ui.tabWidget->setTabEnabled(4, true);
 	this->parent->ui.tabWidget->setTabEnabled(5, true);
 
+	/** Enable table view row selection */
+	tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+	/** Enable table view row selection END */
 }
 
 void CaptureTab::registerRadioButtonOnClicked(QRadioButton* radioButton, QImage* image) {
@@ -1194,9 +1223,10 @@ void CaptureTab::displayCapturedImages() {
 	QImage imageScaled = image.scaled(width, height, Qt::KeepAspectRatio);
 
 	/** Crop image */
-	this->largest_rect = QRect(0, 0, imageScaled.width(), imageScaled.height());
-	if (this->clip_rect.isNull()) {
-		this->clip_rect = QRect(0, 0, imageScaled.width(), imageScaled.height());
+	if (clip_rect.isNull()) {
+		max_clip_width = imageScaled.width();
+		max_clip_height = imageScaled.height();
+		clip_rect = QRect(0, 0, max_clip_width, max_clip_height);
 	}
 	/** Crop image END */
 
@@ -1242,6 +1272,7 @@ void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex
 	qColorToDepthImage = captureHistory.qColorToDepthImage;
 	qDepthToColorImage = captureHistory.qDepthToColorImage;
 	qDepthToColorColorizedImage = captureHistory.qDepthToColorColorizedImage;
+	clip_rect = captureHistory.clip_rect;
 
 	displayCapturedImages();
 }
