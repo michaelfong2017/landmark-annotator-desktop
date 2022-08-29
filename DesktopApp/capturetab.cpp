@@ -861,18 +861,10 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	qDebug() << jsonResponse;
 
 	QJsonObject obj = jsonResponse.object();
-	QString aiImageUrl = obj["aiImageUrl"].toString();
+	QString landmarks = obj["aiOriginResult"].toString();
 
 	/** TIMEOUT */
 	if (response_data == nullptr) {
-		/** For sending findLandmarkPredictions() more than once */
-		if (landmarkRequestSent < MAX_LANDMARK_REQUEST_SENT) {
-			Sleep(2500);
-			landmarkRequestSent++;
-			QNetworkClient::getInstance().findLandmarkPredictions(this->currentImageId, this, SLOT(onFindLandmarkPredictions(QNetworkReply*)));
-			return;
-		}
-		/** For sending findLandmarkPredictions() more than once END */
 
 		/** Select image table view update UI to red background, showing unsuccessful image analysis */
 		for (int i = 0; i < dataModel->columnCount(); i++) {
@@ -893,13 +885,26 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	}
 	/** TIMEOUT END */
 
+	if (landmarks == "") {
+
+		qDebug() << "No landmarks";
+
+		/** For sending findLandmarkPredictions() more than once */
+		if (landmarkRequestSent < MAX_LANDMARK_REQUEST_SENT) {
+			Sleep(2500);
+			landmarkRequestSent++;
+			QNetworkClient::getInstance().findLandmarkPredictions(this->currentImageId, this, SLOT(onFindLandmarkPredictions(QNetworkReply*)));
+			return;
+		}
+		/** For sending findLandmarkPredictions() more than once END */
+	}
+
 	int imageId = obj["id"].toInt();
-	this->parent->annotateTab->setAiImageUrl(aiImageUrl);
+	//this->parent->annotateTab->setAiImageUrl(aiImageUrl);
 
 	QString aiOriginResult = obj["aiOriginResult"].toString();
 
 	qDebug() << "imageId:" << imageId;
-	qDebug() << "aiImageUrl:" << aiImageUrl;
 	qDebug() << "aiOriginResult:" << aiOriginResult;
 
 	// hard code version

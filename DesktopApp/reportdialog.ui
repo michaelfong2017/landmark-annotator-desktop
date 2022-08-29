@@ -882,6 +882,16 @@ background-color: rgb(200, 200, 200);</string>
          </item>
         </layout>
        </item>
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="styleSheet">
+          <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
+         </property>
+         <property name="text">
+          <string>此报告仅作为初筛结果，不作为诊断依据。</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
