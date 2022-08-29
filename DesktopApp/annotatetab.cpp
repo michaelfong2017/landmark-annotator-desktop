@@ -314,10 +314,10 @@ void AnnotateTab::setAnnotationsText() {
 		text2.append(str);
 	}
 
-	if (this->distance1 == -1) {
+	if (this->invalidDistance == 1) {
 		text.append(QString::fromStdString("Distance - Central Shift: Landmark C invalid \n"));
 	}
-	else if (this->distance1 == -2) {
+	else if (this->invalidDistance == 2) {
 		text.append(QString::fromStdString("Distance - Central Shift: Landmark D invalid \n"));
 	}
 	else {
@@ -404,13 +404,14 @@ void AnnotateTab::computeMetrics() {
 
 	// This is compute using 2D coordinates
 	if (this->annotations3D["C"] == QVector3D(0, 0, 0)) {
-		this->distance1 = -1;
+		this->invalidDistance = 1;
 	}
 	else if (this->annotations3D["D"] == QVector3D(0, 0, 0)) {
-		this->distance1 = -2;
+		this->invalidDistance = 2;
 	}
 	else 
 	{
+		this->invalidDistance = 0;
 		this->distance1 = - (this->annotations3D["D"].x() * (this->annotations3D["C"].z() / this->annotations3D["D"].z()) 
 			- this->annotations3D["C"].x());
 		//this->distance1 = (this->annotations3D["C"].x() - this->annotations3D["D"].x());
