@@ -927,9 +927,9 @@ color: rgb(255, 0, 5);
       <widget class="QComboBox" name="imageTypeComboBox">
        <property name="geometry">
         <rect>
-         <x>220</x>
+         <x>240</x>
          <y>730</y>
-         <width>151</width>
+         <width>121</width>
          <height>31</height>
         </rect>
        </property>
@@ -938,29 +938,29 @@ color: rgb(255, 0, 5);
        </property>
        <item>
         <property name="text">
-         <string>7 - Back analysis</string>
+         <string>Back analysis</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>8 - Left side</string>
+         <string>Left side</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>9 - Right side</string>
+         <string>Right side</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>10 - Other</string>
+         <string>Other</string>
         </property>
        </item>
       </widget>
       <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>80</x>
          <y>710</y>
          <width>161</width>
          <height>71</height>

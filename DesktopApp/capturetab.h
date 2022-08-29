@@ -104,6 +104,7 @@ private:
     void alertIfMoving(float gyroX, float gyroY, float gyroZ, float accX, float accY, float accZ);
     void onManagerFinished(QNetworkReply* reply);
     void displayCapturedImages();
+    int getImageTypeFromDescription(QString description);
 
     /** For sending findLandmarkPredictions() more than once */
     int landmarkRequestSent = 0;

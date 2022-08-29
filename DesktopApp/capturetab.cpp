@@ -197,8 +197,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			return;
 		}
 
-		this->imageType = this->parent->ui.imageTypeComboBox->currentText().split("-")[0].trimmed().toInt();
 		this->imageName = this->parent->ui.imageTypeComboBox->currentText();
+		this->imageType = getImageTypeFromDescription(this->imageName);
 		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
 		// Shallow copy
@@ -276,8 +276,12 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		// For annotatetab instead END
 
 		/** Initialize clip_rect whenever a new image is captured */
-		int width = this->parent->ui.graphicsViewImage->width(), height = this->parent->ui.graphicsViewImage->height();
-		this->clip_rect = QRect(0, 0, max_clip_width, max_clip_height);
+		int width = this->parent->ui.graphicsViewImage->width();
+		int height = this->parent->ui.graphicsViewImage->height();
+		QImage imageScaled = qColorImage.scaled(width, height, Qt::KeepAspectRatio);
+		max_clip_width = imageScaled.width();
+		max_clip_height = imageScaled.height();
+		clip_rect = QRect(0, 0, max_clip_width, max_clip_height);
 		/** Initialize clip_rect whenever a new image is captured */
 
 		/** Store histories of images for selection */
@@ -418,18 +422,35 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			scene->addItem(item);
 
 			/** Human cut shape */
-			QPixmap humanPixmap(":/DesktopApp/resources/HumanCutShape4.png");
-			QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
-
-			// Crop left and right
-			// Don't crop human cut shape if the original image also does not need the crop
-			if (KinectEngine::getInstance().COLOR_IMAGE_CROP_WIDTH_PER_SIDE != 0) {
-				cropPerSide = (humanPixmapScaled.width() - humanPixmapScaled.height()) / 2;
-				humanPixmapScaled = humanPixmapScaled.copy(cropPerSide, 0, humanPixmapScaled.width() - 2 * cropPerSide, humanPixmapScaled.height());
+			this->imageName = this->parent->ui.imageTypeComboBox->currentText();
+			this->imageType = getImageTypeFromDescription(this->imageName);
+			QString humanFilepath = "";
+			switch (this->imageType) {
+			case 7:
+				humanFilepath = ":/DesktopApp/resources/HumanCutShape4.png";
+				break;
+			case 8:
+				humanFilepath = ":/DesktopApp/resources/LeftHumanShape2.png";
+				break;
+			case 9:
+				humanFilepath = ":/DesktopApp/resources/RightHumanShape2.png";
+				break;
 			}
-			// Crop left and right END
 
-			scene->addPixmap(humanPixmapScaled);
+			if (this->imageType >= 7 && this->imageType <= 9) {
+				QPixmap humanPixmap(humanFilepath);
+				QPixmap humanPixmapScaled = humanPixmap.scaled(width, height, Qt::KeepAspectRatio);
+
+				// Crop left and right
+				// Don't crop human cut shape if the original image also does not need the crop
+				if (KinectEngine::getInstance().COLOR_IMAGE_CROP_WIDTH_PER_SIDE != 0) {
+					cropPerSide = (humanPixmapScaled.width() - humanPixmapScaled.height()) / 2;
+					humanPixmapScaled = humanPixmapScaled.copy(cropPerSide, 0, humanPixmapScaled.width() - 2 * cropPerSide, humanPixmapScaled.height());
+				}
+				// Crop left and right END
+
+				scene->addPixmap(humanPixmapScaled);
+			}
 			/** Human cut shape END */
 
 			this->parent->ui.graphicsViewVideo4->setScene(scene);
@@ -1222,14 +1243,6 @@ void CaptureTab::displayCapturedImages() {
 
 	QImage imageScaled = image.scaled(width, height, Qt::KeepAspectRatio);
 
-	/** Crop image */
-	if (clip_rect.isNull()) {
-		max_clip_width = imageScaled.width();
-		max_clip_height = imageScaled.height();
-		clip_rect = QRect(0, 0, max_clip_width, max_clip_height);
-	}
-	/** Crop image END */
-
 	// Deallocate heap memory used by previous GGraphicsScene object
 	if (this->parent->ui.graphicsViewImage->scene()) {
 		delete this->parent->ui.graphicsViewImage->scene();
@@ -1240,6 +1253,24 @@ void CaptureTab::displayCapturedImages() {
 
 	this->parent->ui.graphicsViewImage->setScene(scene);
 	this->parent->ui.graphicsViewImage->show();
+}
+
+int CaptureTab::getImageTypeFromDescription(QString description)
+{
+	int imageType = -1;
+	if (description == "Back analysis") {
+		imageType = 7;
+	}
+	else if (description == "Left side") {
+		imageType = 8;
+	}
+	else if (description == "Right side") {
+		imageType = 9;
+	}
+	else if (description == "Other") {
+		imageType = 10;
+	}
+	return imageType;
 }
 
 void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex& previous) {
