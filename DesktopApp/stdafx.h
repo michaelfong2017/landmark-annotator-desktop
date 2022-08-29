@@ -11,6 +11,7 @@
 #include <QPointF>
 #include <QGraphicsScene>
 #include <QPrinter>
+#include <QSettings>
 #include "qdebug.h"
 #include <k4a/k4a.hpp>
 #include <opencv2/opencv.hpp>
