@@ -10,18 +10,24 @@ ReportDialog::ReportDialog(AnnotateTab* parent): QDialog(parent)
 
 	this->setFixedSize(this->width(), this->height());
 
-	
-	ui.variable1Labe2->setText(QString::fromStdString(std::to_string(this->parent->distance1)));
-	if (this->parent->distance1 > 0) {
-		ui.rightCheckBox1->setChecked(true);
-	}
-	else if (this->parent->distance1 < 0) {
-		ui.leftCheckBox1->setChecked(true);
+	if (!this->parent->invalidDistance) {
+
+		ui.variable1Labe2->setText(QString::fromStdString(std::to_string(this->parent->distance1)));
+
+		if (this->parent->distance1 > 0) {
+			ui.rightCheckBox1->setChecked(true);
+		}
+		else if (this->parent->distance1 < 0) {
+			ui.leftCheckBox1->setChecked(true);
+		}
+		else {
+
+		}
 	}
 	else {
-
+		ui.variable1Labe2->setText(QString::fromStdString("Invalid"));
 	}
-	
+
 	ui.variable1Label4->setText(QString::fromStdString(std::to_string(this->parent->angle2)));
 	if (this->parent->angle2 > 0) {
 		ui.rightCheckBox2->setChecked(true);
@@ -54,7 +60,14 @@ ReportDialog::ReportDialog(AnnotateTab* parent): QDialog(parent)
 	else {
 
 	}
-
+	ui.leftCheckBox1->setEnabled(false);
+	ui.leftCheckBox2->setEnabled(false);
+	ui.leftCheckBox3->setEnabled(false);
+	ui.leftCheckBox4->setEnabled(false);
+	ui.rightCheckBox1->setEnabled(false);
+	ui.rightCheckBox2->setEnabled(false);
+	ui.rightCheckBox3->setEnabled(false);
+	ui.rightCheckBox4->setEnabled(false);
 
 	ui.NameLabel->setText(this->parent->getParent()->patientTab->getCurrentPatientName());
 	ui.PhoneLabel->setText(this->parent->getParent()->patientTab->getPhoneNumber());

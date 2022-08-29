@@ -155,7 +155,7 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(225, 225, 225);</string>
                  </property>
                  <property name="text">
-                  <string>  Central Shift:</string>
+                  <string>  左/右躯体偏移</string>
                  </property>
                 </widget>
                </item>
@@ -225,7 +225,7 @@ background-color: rgb(225, 225, 225);</string>
 background-color: rgb(225, 225, 225);</string>
                  </property>
                  <property name="text">
-                  <string>   胸椎侧弯部位</string>
+                  <string>  左/右侧高肩胛</string>
                  </property>
                 </widget>
                </item>
@@ -295,7 +295,7 @@ background-color: rgb(225, 225, 225);</string>
 background-color: rgb(225, 225, 225);</string>
                  </property>
                  <property name="text">
-                  <string>   腰椎侧弯部位</string>
+                  <string>  左/右骨盆倾斜</string>
                  </property>
                 </widget>
                </item>
@@ -365,7 +365,7 @@ background-color: rgb(225, 225, 225);</string>
 background-color: rgb(225, 225, 225);</string>
                  </property>
                  <property name="text">
-                  <string>  Trunk Rotation:</string>
+                  <string>  躯干旋转</string>
                  </property>
                 </widget>
                </item>
@@ -855,17 +855,6 @@ background-color: rgb(200, 200, 200);</string>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_4">
-               <property name="styleSheet">
-                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
-               </property>
-               <property name="text">
-                <string>  香港</string>
-               </property>
-              </widget>
-             </item>
-             <item>
               <widget class="QLabel" name="label_16">
                <property name="styleSheet">
                 <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
@@ -892,6 +881,16 @@ background-color: rgb(200, 200, 200);</string>
           </layout>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="styleSheet">
+          <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
+         </property>
+         <property name="text">
+          <string>此报告仅作为初筛结果，不作为诊断依据。</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

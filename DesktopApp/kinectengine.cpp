@@ -414,6 +414,7 @@ QImage convertDepthToColorCVToColorizedQImageDetailed(cv::Mat cvImage) {
 	float min = mid - closeBound;
 	float max = mid + farBound;
 
+	// min max cap
 	if (min <= 0.0) {
 		min = 0.0;
 	}
@@ -421,6 +422,7 @@ QImage convertDepthToColorCVToColorizedQImageDetailed(cv::Mat cvImage) {
 		max = 255.0;
 	}
 
+	// normalization according to given min max
 	for (int y = 0; y < cvImage.rows; y++)
 	{
 		for (int x = 0; x < cvImage.cols; x++)
@@ -443,9 +445,23 @@ QImage convertDepthToColorCVToColorizedQImageDetailed(cv::Mat cvImage) {
 		}
 	}
 
+	cv::Mat cannyImg;
+	cv::Canny(cvImage, cannyImg, 10, 15);
+
+	std::vector<std::vector<cv::Point>> contours;
+	std::vector<cv::Vec4i> hierarchy;
+	cv::findContours(cannyImg, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+
 	/** Colorize depth image */
 	cv::Mat rgb;
 	colorizeDepth(cvImage, rgb);
+
+	for (size_t i = 0; i < contours.size(); i++)
+	{
+		cv::Scalar color = cv::Scalar(255, 255, 255);
+		cv::drawContours(rgb, contours, (int)i, color, 2, cv::LINE_8, hierarchy, 0);
+	}
+
 	/** Colorize depth image END */
 
 	

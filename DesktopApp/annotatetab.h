@@ -61,6 +61,7 @@ public:
     // Landmark predictions END
 
     // Metrics
+    int invalidDistance;
     float distance1; // Distance between c and d in x-plane in mm
     float angle1; // Angle between b1-b2 line and xy-plane in deg
     float angle2; // Angle between a1-a2 line and xy-plane in deg
