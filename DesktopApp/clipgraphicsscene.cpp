@@ -145,13 +145,16 @@ void ClipGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 	update();
 }
 
-bool ClipGraphicsScene::event(QEvent* e){
-	switch (e->type()) {
-		case QEvent::TouchBegin:
-			qDebug() << "touch!";
-			return true;
-		default:
-			// call base implementation
-			return QGraphicsScene::event(e);
-	}
-}
+//bool ClipGraphicsScene::event(QEvent* e){
+//	switch (e->type()) {
+//		case QEvent::TouchBegin:
+//			mouseMoveEvent(e);
+//			return true;
+//		case QEvent::TouchEnd:
+//			mouseReleaseEvent(e);
+//			return true;
+//		default:
+//			 call base implementation
+//			return QGraphicsScene::event(e);
+//	}
+//}

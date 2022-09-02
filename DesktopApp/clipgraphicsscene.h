@@ -15,7 +15,7 @@ public:
 	std::map<int, QPointF> landmarksOnScreen;
 
 protected:
-	bool ClipGraphicsScene::event(QEvent* event) override;
+	//bool ClipGraphicsScene::event(QEvent* event) override;
 
 private:
 	CaptureTab* captureTab;

@@ -414,6 +414,9 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
      <height>21</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+   </property>
   </widget>
   <widget class="QComboBox" name="monthComboBox">
    <property name="geometry">
@@ -424,6 +427,9 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
      <height>21</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+   </property>
   </widget>
   <widget class="QComboBox" name="yearComboBox">
    <property name="geometry">
@@ -433,6 +439,9 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
      <width>90</width>
      <height>21</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
   </widget>
   <widget class="QLabel" name="remarksLabel">

@@ -12,6 +12,10 @@ LoginTab::LoginTab(DesktopApp* parent)
 	QString username = settings.value("login/username").toString();
 	QString password = settings.value("login/password").toString();
 
+	if (username != "" && password != "") {
+		this->parent->ui.rememberCheckBox->setChecked(true);
+	}
+
 	this->parent->ui.loginTab->findChild<QLineEdit*>("usernameLineEdit")->setText(username);
 	this->parent->ui.loginTab->findChild<QLineEdit*>("passwordLineEdit")->setText(password);
 
@@ -25,6 +29,11 @@ LoginTab::LoginTab(DesktopApp* parent)
 			QSettings settings("Wukong", "Wukong");
 			settings.setValue("login/username", username);
 			settings.setValue("login/password", password);
+		}
+		else {
+			QSettings settings("Wukong", "Wukong");
+			settings.setValue("login/username", "");
+			settings.setValue("login/password", "");
 		}
 
 		QNetworkClient::getInstance().login(this->parent->ui.tabWidget, username, password);
