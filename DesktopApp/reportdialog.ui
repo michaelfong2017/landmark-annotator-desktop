@@ -142,7 +142,7 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  結果分析 / Result Analysis</string>
+                <string>  结果分析 / Result Analysis</string>
                </property>
               </widget>
              </item>
@@ -446,7 +446,7 @@ background-color: rgb(225, 225, 225);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  示意圖 / Schematic</string>
+                <string>  示意图 / Schematic</string>
                </property>
               </widget>
              </item>
@@ -483,7 +483,7 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  簽署 / Signature</string>
+                <string>  签署 / Signature</string>
                </property>
               </widget>
              </item>
@@ -511,7 +511,7 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  注釋與結論 / Notes &amp; Comments</string>
+                <string>  注释与结论 / Notes &amp; Comments</string>
                </property>
               </widget>
              </item>
@@ -850,7 +850,7 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  技術支持 / Technical Support</string>
+                <string>  技术支持 / Technical Support</string>
                </property>
               </widget>
              </item>

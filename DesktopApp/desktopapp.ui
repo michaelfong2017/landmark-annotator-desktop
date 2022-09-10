@@ -58,7 +58,7 @@
 </string>
          </property>
          <property name="text">
-          <string>V 1.5</string>
+          <string>V 1.6</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
@@ -989,11 +989,17 @@ color: rgb(255, 0, 5);
       <widget class="QComboBox" name="imageTypeComboBox">
        <property name="geometry">
         <rect>
-         <x>240</x>
+         <x>180</x>
          <y>730</y>
-         <width>121</width>
-         <height>31</height>
+         <width>151</width>
+         <height>36</height>
         </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
        <property name="styleSheet">
         <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
@@ -1022,10 +1028,10 @@ color: rgb(255, 0, 5);
       <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
-         <x>80</x>
-         <y>710</y>
-         <width>161</width>
-         <height>71</height>
+         <x>71</x>
+         <y>730</y>
+         <width>111</width>
+         <height>36</height>
         </rect>
        </property>
        <property name="font">
@@ -1040,11 +1046,10 @@ color: rgb(255, 0, 5);
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 0, 0);
-font: 16px &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Select image type (before capture):</string>
+        <string>Analysis Type:</string>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -1064,6 +1069,23 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
         <string>TextLabel</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>766</y>
+         <width>261</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 0, 0);
+font: 16px &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>(Select before capturing image)</string>
        </property>
       </widget>
      </widget>
