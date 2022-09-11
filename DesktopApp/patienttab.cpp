@@ -279,10 +279,37 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
 
     qDebug() << "image format: " << image.format();
 
-    cv::Mat FourChannelPNG = cv::Mat(image.height(), image.width(), CV_16UC4, (void*)image.bits());
-
     QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
     QString savePath = QDir(visitFolderPath).filePath(QString::fromStdString("d2.png"));
 
-    cv::imwrite(savePath.toStdString(), FourChannelPNG);
+    image.save(savePath);
+
+    cv::Mat FourChannelPNG = cv::imread(savePath.toStdString(), -1);
+
+    int height = FourChannelPNG.rows;
+    int width = FourChannelPNG.cols;
+
+    qDebug() << "height: " << height << ", " << width;
+
+    std::vector<cv::Mat>channels(4);
+    cv::split(FourChannelPNG, channels);
+
+    /** ColorIMG */
+    cv::Mat ColorIMG = cv::Mat::zeros(height, width, CV_8UC3);
+    std::vector<cv::Mat>colorIMGChannels(3);
+    colorIMGChannels[0] = cv::Mat::zeros(height, width, CV_8UC1);
+    colorIMGChannels[1] = cv::Mat::zeros(height, width, CV_8UC1);
+    colorIMGChannels[2] = cv::Mat::zeros(height, width, CV_8UC1);
+
+    for (int i = 0; i < width * height; i++) {
+        colorIMGChannels[0].at<uint8_t>(i) = channels[1].at<uint16_t>(i) >> 8;
+        colorIMGChannels[1].at<uint8_t>(i) = channels[2].at<uint16_t>(i) % 256;
+        colorIMGChannels[2].at<uint8_t>(i) = channels[2].at<uint16_t>(i) >> 8;
+    }
+
+    cv::merge(colorIMGChannels, ColorIMG);
+
+    cv::imshow("RGB", ColorIMG);
+    /** ColorIMG END */
+
 }
