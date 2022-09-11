@@ -64,6 +64,7 @@ private:
 private slots:
     void onFetchExistingImagesOfPatient(QNetworkReply* reply);
     void onTableClicked(const QModelIndex& index);
+    void onDownloadImage(QNetworkReply* reply);
 };
 
 #endif

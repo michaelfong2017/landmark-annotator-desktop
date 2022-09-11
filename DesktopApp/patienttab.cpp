@@ -266,6 +266,23 @@ void PatientTab::onTableClicked(const QModelIndex& index)
 {
     if (index.isValid() && index.column() == 1) {
         QString url = index.data().toString();
-        QDesktopServices::openUrl(QUrl(url));
+        //QDesktopServices::openUrl(QUrl(url));
+
+        QNetworkClient::getInstance().downloadImage(url, this, SLOT(onDownloadImage(QNetworkReply*)));
     }
+}
+
+void PatientTab::onDownloadImage(QNetworkReply* reply) {
+    QByteArray imageData = reply->readAll();
+
+    QImage image = QImage::fromData(imageData);
+
+    qDebug() << "image format: " << image.format();
+
+    cv::Mat FourChannelPNG = cv::Mat(image.height(), image.width(), CV_16UC4, (void*)image.bits());
+
+    QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
+    QString savePath = QDir(visitFolderPath).filePath(QString::fromStdString("d2.png"));
+
+    cv::imwrite(savePath.toStdString(), FourChannelPNG);
 }
