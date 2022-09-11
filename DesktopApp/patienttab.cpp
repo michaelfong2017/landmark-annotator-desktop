@@ -312,4 +312,42 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
     cv::imshow("RGB", ColorIMG);
     /** ColorIMG END */
 
+    /** Depth 1 */
+    cv::Mat AlignedDepthIMG1 = cv::Mat::zeros(height, width, CV_16UC1);
+    std::vector<cv::Mat>alignedDepthIMG1Channels(1);
+    alignedDepthIMG1Channels[0] = cv::Mat::zeros(height, width, CV_16UC1);
+
+    for (int i = 0; i < width * height; i++) {
+        alignedDepthIMG1Channels[0].at<uint16_t>(i) = channels[0].at<uint16_t>(i);
+    }
+
+    cv::merge(alignedDepthIMG1Channels, AlignedDepthIMG1);
+
+    // Convert from 16 bit to 8 bit for display
+    cv::Mat AlignedDepthIMG1_8bit;
+    AlignedDepthIMG1.convertTo(AlignedDepthIMG1_8bit, CV_8U, 255.0 / 5000.0, 0.0);
+    // Convert from 16 bit to 8 bit for display END
+
+    cv::imshow("Depth1_8bit", AlignedDepthIMG1_8bit);
+    /** Depth 1 END */
+
+
+     /** Depth 2 */
+    cv::Mat AlignedDepthIMG2 = cv::Mat::zeros(height, width, CV_16UC1);
+    std::vector<cv::Mat>alignedDepthIMG2Channels(1);
+    alignedDepthIMG2Channels[0] = cv::Mat::zeros(height, width, CV_16UC1);
+
+    for (int i = 0; i < width * height; i++) {
+        alignedDepthIMG2Channels[0].at<uint16_t>(i) = channels[3].at<uint16_t>(i);
+    }
+
+    cv::merge(alignedDepthIMG2Channels, AlignedDepthIMG2);
+
+    // Convert from 16 bit to 8 bit for display
+    cv::Mat AlignedDepthIMG2_8bit;
+    AlignedDepthIMG2.convertTo(AlignedDepthIMG2_8bit, CV_8U, 255.0 / 5000.0, 0.0);
+    // Convert from 16 bit to 8 bit for display END
+
+    cv::imshow("Depth2_8bit", AlignedDepthIMG2_8bit);
+    /** Depth 2 END */
 }
