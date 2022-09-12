@@ -309,7 +309,7 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
 
     cv::merge(colorIMGChannels, ColorIMG);
 
-    cv::imshow("RGB", ColorIMG);
+    //cv::imshow("RGB", ColorIMG);
     /** ColorIMG END */
 
     /** Depth 1 */
@@ -328,7 +328,7 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
     AlignedDepthIMG1.convertTo(AlignedDepthIMG1_8bit, CV_8U, 255.0 / 5000.0, 0.0);
     // Convert from 16 bit to 8 bit for display END
 
-    cv::imshow("Depth1_8bit", AlignedDepthIMG1_8bit);
+    //cv::imshow("Depth1_8bit", AlignedDepthIMG1_8bit);
     /** Depth 1 END */
 
 
@@ -348,6 +348,18 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
     AlignedDepthIMG2.convertTo(AlignedDepthIMG2_8bit, CV_8U, 255.0 / 5000.0, 0.0);
     // Convert from 16 bit to 8 bit for display END
 
-    cv::imshow("Depth2_8bit", AlignedDepthIMG2_8bit);
+    //cv::imshow("Depth2_8bit", AlignedDepthIMG2_8bit);
     /** Depth 2 END */
+
+    /** Convert CV image to QImage */
+    QImage qColorImage = convertColorCVToQImage(ColorIMG);
+    QImage qDepthImage1 = convertDepthToColorCVToColorizedQImageDetailed(AlignedDepthIMG1); // 16 bit
+    QImage qDepthImage2 = convertDepthToColorCVToColorizedQImageDetailed(AlignedDepthIMG2); // 16 bit
+    /** Convert CV image to QImage END */
+
+    ShowImagesDialog dialog;
+    dialog.setQColorImage(qColorImage);
+    dialog.setQDepthImage1(qDepthImage1);
+    dialog.setQDepthImage2(qDepthImage2);
+    dialog.exec();
 }

@@ -126,6 +126,7 @@
     <ClCompile Include="kinectengine.cpp" />
     <ClCompile Include="reportdialog.cpp" />
     <ClCompile Include="scribblearea.cpp" />
+    <ClCompile Include="showimagesdialog.cpp" />
     <ClCompile Include="twolinesdialog.cpp" />
     <ClCompile Include="logintab.cpp" />
     <ClCompile Include="patient.cpp" />
@@ -145,6 +146,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <QtUic Include="reportdialog.ui" />
+    <QtUic Include="showimagesdialog.ui" />
     <QtUic Include="twolinesdialog.ui" />
     <QtUic Include="saveimagedialog.ui" />
   </ItemGroup>
@@ -171,6 +173,7 @@
     <ClInclude Include="clipgraphicsscene.h" />
     <QtMoc Include="reportdialog.h" />
     <QtMoc Include="scribblearea.h" />
+    <QtMoc Include="showimagesdialog.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />

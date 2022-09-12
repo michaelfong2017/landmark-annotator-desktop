@@ -67,6 +67,9 @@
     <ClCompile Include="scribblearea.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="showimagesdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="capturehistory.h">
@@ -143,6 +146,9 @@
     <QtMoc Include="scribblearea.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="showimagesdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="desktopapp.qrc" />
@@ -161,6 +167,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="saveimagedialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="showimagesdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
