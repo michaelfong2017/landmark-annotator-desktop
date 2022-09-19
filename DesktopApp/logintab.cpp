@@ -1,6 +1,4 @@
-#include "logintab.h"
-#include "qnetworkclient.h"
-#include "reportdialog.h"
+﻿#include "logintab.h"
 
 LoginTab::LoginTab(DesktopApp* parent)
 {
@@ -37,10 +35,43 @@ LoginTab::LoginTab(DesktopApp* parent)
 		}
 
 		QNetworkClient::getInstance().login(this->parent->ui.tabWidget, username, password);
+	});
 
-		//// Testing
-		//ReportDialog dialog;
-		//dialog.exec();
+	QObject::connect(parent->ui.offlineModeButton, &QPushButton::clicked, [this]() {
+		qDebug() << "offlineModeButton clicked";
+
+		if (!KinectEngine::getInstance().isDeviceConnected()) {
+			TwoLinesDialog dialog;
+			dialog.setLine1("Kinect device cannot be opened!");
+			dialog.setLine2("Please check it and try again.");
+			dialog.exec();
+			return;
+		}
+
+		if (!KinectEngine::getInstance().isDeviceOpened()) {
+			KinectEngine::getInstance().configDevice();
+			bool isSuccess = KinectEngine::getInstance().openDevice();
+
+			if (!isSuccess) {
+				TwoLinesDialog dialog;
+				dialog.setLine1("Kinect device cannot be opened!");
+				dialog.setLine2("Please check it and try again.");
+				dialog.exec();
+				return;
+			}
+		}
+
+		// NO NEED to clear capture histories
+		////
+
+		// Disable all tabs except capture tab in offline mode
+		this->parent->ui.tabWidget->setTabEnabled(3, true);
+		this->parent->ui.tabWidget->setTabEnabled(1, false);
+		this->parent->ui.tabWidget->setTabEnabled(2, false);
+		this->parent->ui.tabWidget->setTabEnabled(4, false);
+		this->parent->ui.tabWidget->setCurrentIndex(3);
+		this->parent->isOfflineMode = true;
+		this->parent->captureTab->onEnterOfflineMode();
 	});
 }
 

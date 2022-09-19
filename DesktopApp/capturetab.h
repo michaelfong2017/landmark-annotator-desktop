@@ -64,6 +64,9 @@ public:
     cv::Rect cropRect;
     /** Crop image END */
 
+    void onEnterOfflineMode();
+    void onExitOfflineMode();
+
 private:
     DesktopApp* parent;
 

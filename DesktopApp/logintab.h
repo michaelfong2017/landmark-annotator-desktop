@@ -4,6 +4,10 @@
 #include <QtWidgets/QWidget>
 #include "stdafx.h"
 #include "desktopapp.h"
+#include "qnetworkclient.h"
+#include "kinectengine.h"
+#include "twolinesdialog.h"
+#include "capturetab.h"
 
 class LoginTab : public QWidget
 {

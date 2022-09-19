@@ -70,6 +70,9 @@
     <ClCompile Include="showimagesdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="reportdialog_eng.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="capturehistory.h">
@@ -149,6 +152,9 @@
     <QtMoc Include="showimagesdialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="reportdialog_eng.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="desktopapp.qrc" />
@@ -170,6 +176,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="showimagesdialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="reportdialog_eng.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

@@ -56,10 +56,31 @@ DesktopApp::DesktopApp(QWidget* parent)
 	/** Hide unused Alignment tab END */
 	/** Hide unused bottom buttons in Analysis tab */
 	//this->ui.horizontalLayout_3->setEnabled(false)
+
+	/** Log out buttons in the tabs */
+	QObject::connect(ui.logOutButton1, &QPushButton::clicked, [this]() {
+		logOut();
+	});
+	QObject::connect(ui.logOutButton2, &QPushButton::clicked, [this]() {
+		logOut();
+		});
+	QObject::connect(ui.logOutButton3, &QPushButton::clicked, [this]() {
+		logOut();
+		});
+	QObject::connect(ui.logOutButton4, &QPushButton::clicked, [this]() {
+		logOut();
+		});
+	/** Log out buttons in the tabs END */
+
 	QObject::connect(ui.tabWidget, &QTabWidget::currentChanged, [this]() {
 		switch (this->ui.tabWidget->currentIndex()) {
 		case 0:
-			// current tab is loginTab	
+			// current tab is loginTab
+			if (isOfflineMode) {
+				ui.tabWidget->setTabEnabled(3, false);
+				isOfflineMode = false;
+				captureTab->onExitOfflineMode();
+			}
 			break;
 		case 1:
 			// current tab is patientListTab
@@ -90,6 +111,19 @@ DesktopApp::DesktopApp(QWidget* parent)
 		}
 		});
 
+}
+
+void DesktopApp::logOut()
+{
+	// need to clear list
+	captureTab->clearCaptureHistories();
+
+	this->ui.tabWidget->setTabEnabled(0, true);
+	this->ui.tabWidget->setTabEnabled(1, false);
+	this->ui.tabWidget->setTabEnabled(2, false);
+	this->ui.tabWidget->setTabEnabled(3, false);
+	this->ui.tabWidget->setTabEnabled(4, false);
+	this->ui.tabWidget->setCurrentIndex(0);
 }
 
 void DesktopApp::setTextOnGraphicsViews(std::string text) {

@@ -43,6 +43,9 @@ public:
     QDir tempVideoSavePath;
     /** Handle Chinese name when saving video END */
 
+    bool isOfflineMode = false;
+    void logOut();
+
     void setTextOnGraphicsViews(std::string text);
     QImage getQIRImage();
 };

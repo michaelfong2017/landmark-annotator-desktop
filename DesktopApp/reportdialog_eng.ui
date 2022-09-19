@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ReportDialogUI</class>
- <widget class="QDialog" name="ReportDialogUI">
+ <class>ReportDialog_EngUI</class>
+ <widget class="QDialog" name="ReportDialog_EngUI">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -100,11 +100,13 @@
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">font: 40px &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(200, 200, 200);</string>
+            <string notr="true">
+													font: 20px &quot;MS Shell Dlg 2&quot;;
+													background-color: rgb(200, 200, 200);
+												</string>
            </property>
            <property name="text">
-            <string>脊椎侧弯检测报告</string>
+            <string>Scoliosis Back Quantitative Analysis and Comparison Research Report</string>
            </property>
           </widget>
          </item>
@@ -138,8 +140,10 @@ background-color: rgb(200, 200, 200);</string>
                 </font>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(200, 200, 200);</string>
+                <string notr="true">
+																	font: 16px &quot;MS Shell Dlg 2&quot;;
+																	background-color: rgb(200, 200, 200);
+																</string>
                </property>
                <property name="text">
                 <string>  结果分析 / Result Analysis</string>
@@ -151,8 +155,10 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="nameLabel_10">
                  <property name="styleSheet">
-                  <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(225, 225, 225);</string>
+                  <string notr="true">
+																			font: 20px &quot;MS Shell Dlg 2&quot;;
+																			background-color: rgb(225, 225, 225);
+																		</string>
                  </property>
                  <property name="text">
                   <string>  左/右躯体偏移</string>
@@ -167,8 +173,9 @@ background-color: rgb(225, 225, 225);</string>
                  <item>
                   <widget class="QCheckBox" name="leftCheckBox1">
                    <property name="styleSheet">
-                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
-</string>
+                    <string notr="true">
+																					font: 14px &quot;MS Shell Dlg 2&quot;;
+																				</string>
                    </property>
                    <property name="text">
                     <string>左</string>
@@ -184,8 +191,9 @@ background-color: rgb(225, 225, 225);</string>
                  <item>
                   <widget class="QCheckBox" name="rightCheckBox1">
                    <property name="styleSheet">
-                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
-</string>
+                    <string notr="true">
+																					font: 14px &quot;MS Shell Dlg 2&quot;;
+																				</string>
                    </property>
                    <property name="text">
                     <string>右</string>
@@ -203,8 +211,9 @@ background-color: rgb(225, 225, 225);</string>
                <item>
                 <widget class="QLabel" name="variable1Labe2">
                  <property name="styleSheet">
-                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 16px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>variable: degree</string>
@@ -221,8 +230,10 @@ background-color: rgb(225, 225, 225);</string>
                <item>
                 <widget class="QLabel" name="nameLabel_8">
                  <property name="styleSheet">
-                  <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(225, 225, 225);</string>
+                  <string notr="true">
+																			font: 20px &quot;MS Shell Dlg 2&quot;;
+																			background-color: rgb(225, 225, 225);
+																		</string>
                  </property>
                  <property name="text">
                   <string>  左/右侧高肩胛</string>
@@ -237,8 +248,9 @@ background-color: rgb(225, 225, 225);</string>
                  <item>
                   <widget class="QCheckBox" name="leftCheckBox2">
                    <property name="styleSheet">
-                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
-</string>
+                    <string notr="true">
+																					font: 14px &quot;MS Shell Dlg 2&quot;;
+																				</string>
                    </property>
                    <property name="text">
                     <string>左</string>
@@ -254,8 +266,9 @@ background-color: rgb(225, 225, 225);</string>
                  <item>
                   <widget class="QCheckBox" name="rightCheckBox2">
                    <property name="styleSheet">
-                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
-</string>
+                    <string notr="true">
+																					font: 14px &quot;MS Shell Dlg 2&quot;;
+																				</string>
                    </property>
                    <property name="text">
                     <string>右</string>
@@ -273,8 +286,9 @@ background-color: rgb(225, 225, 225);</string>
                <item>
                 <widget class="QLabel" name="variable1Label4">
                  <property name="styleSheet">
-                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 16px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>variable: degree</string>
@@ -291,8 +305,10 @@ background-color: rgb(225, 225, 225);</string>
                <item>
                 <widget class="QLabel" name="nameLabel_9">
                  <property name="styleSheet">
-                  <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(225, 225, 225);</string>
+                  <string notr="true">
+																			font: 20px &quot;MS Shell Dlg 2&quot;;
+																			background-color: rgb(225, 225, 225);
+																		</string>
                  </property>
                  <property name="text">
                   <string>  左/右骨盆倾斜</string>
@@ -307,8 +323,9 @@ background-color: rgb(225, 225, 225);</string>
                  <item>
                   <widget class="QCheckBox" name="leftCheckBox3">
                    <property name="styleSheet">
-                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
-</string>
+                    <string notr="true">
+																					font: 14px &quot;MS Shell Dlg 2&quot;;
+																				</string>
                    </property>
                    <property name="text">
                     <string>左</string>
@@ -324,8 +341,9 @@ background-color: rgb(225, 225, 225);</string>
                  <item>
                   <widget class="QCheckBox" name="rightCheckBox3">
                    <property name="styleSheet">
-                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
-</string>
+                    <string notr="true">
+																					font: 14px &quot;MS Shell Dlg 2&quot;;
+																				</string>
                    </property>
                    <property name="text">
                     <string>右</string>
@@ -343,8 +361,9 @@ background-color: rgb(225, 225, 225);</string>
                <item>
                 <widget class="QLabel" name="variable1Label6">
                  <property name="styleSheet">
-                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 16px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>variable: degree</string>
@@ -361,8 +380,10 @@ background-color: rgb(225, 225, 225);</string>
                <item>
                 <widget class="QLabel" name="nameLabel_11">
                  <property name="styleSheet">
-                  <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(225, 225, 225);</string>
+                  <string notr="true">
+																			font: 20px &quot;MS Shell Dlg 2&quot;;
+																			background-color: rgb(225, 225, 225);
+																		</string>
                  </property>
                  <property name="text">
                   <string>  躯干旋转</string>
@@ -377,8 +398,9 @@ background-color: rgb(225, 225, 225);</string>
                  <item>
                   <widget class="QCheckBox" name="leftCheckBox4">
                    <property name="styleSheet">
-                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
-</string>
+                    <string notr="true">
+																					font: 14px &quot;MS Shell Dlg 2&quot;;
+																				</string>
                    </property>
                    <property name="text">
                     <string>左</string>
@@ -394,8 +416,9 @@ background-color: rgb(225, 225, 225);</string>
                  <item>
                   <widget class="QCheckBox" name="rightCheckBox4">
                    <property name="styleSheet">
-                    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;
-</string>
+                    <string notr="true">
+																					font: 14px &quot;MS Shell Dlg 2&quot;;
+																				</string>
                    </property>
                    <property name="text">
                     <string>右</string>
@@ -413,8 +436,9 @@ background-color: rgb(225, 225, 225);</string>
                <item>
                 <widget class="QLabel" name="variable1Label8">
                  <property name="styleSheet">
-                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 16px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>variable: degree</string>
@@ -442,8 +466,10 @@ background-color: rgb(225, 225, 225);</string>
                 <bool>false</bool>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(200, 200, 200);</string>
+                <string notr="true">
+																	font: 16px &quot;MS Shell Dlg 2&quot;;
+																	background-color: rgb(200, 200, 200);
+																</string>
                </property>
                <property name="text">
                 <string>  示意图 / Schematic</string>
@@ -479,8 +505,10 @@ background-color: rgb(200, 200, 200);</string>
                 </sizepolicy>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(200, 200, 200);</string>
+                <string notr="true">
+																	font: 16px &quot;MS Shell Dlg 2&quot;;
+																	background-color: rgb(200, 200, 200);
+																</string>
                </property>
                <property name="text">
                 <string>  签署 / Signature</string>
@@ -507,8 +535,10 @@ background-color: rgb(200, 200, 200);</string>
                 </sizepolicy>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(200, 200, 200);</string>
+                <string notr="true">
+																	font: 16px &quot;MS Shell Dlg 2&quot;;
+																	background-color: rgb(200, 200, 200);
+																</string>
                </property>
                <property name="text">
                 <string>  注释与结论 / Notes &amp; Comments</string>
@@ -531,8 +561,10 @@ background-color: rgb(200, 200, 200);</string>
                 </sizepolicy>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(200, 200, 200);</string>
+                <string notr="true">
+																	font: 16px &quot;MS Shell Dlg 2&quot;;
+																	background-color: rgb(200, 200, 200);
+																</string>
                </property>
                <property name="text">
                 <string>  风险评估 / Risk &amp;  Recommendations</string>
@@ -556,8 +588,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QRadioButton" name="radioButton">
                  <property name="styleSheet">
-                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 16px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>正常 (Normal)</string>
@@ -580,8 +613,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QRadioButton" name="radioButton_3">
                  <property name="styleSheet">
-                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 16px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>低 (Low)</string>
@@ -607,8 +641,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QRadioButton" name="radioButton_2">
                  <property name="styleSheet">
-                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 16px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>高 (High)</string>
@@ -643,8 +678,10 @@ background-color: rgb(200, 200, 200);</string>
                 </sizepolicy>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(200, 200, 200);</string>
+                <string notr="true">
+																	font: 16px &quot;MS Shell Dlg 2&quot;;
+																	background-color: rgb(200, 200, 200);
+																</string>
                </property>
                <property name="text">
                 <string>  基本信息 / Patient Information</string>
@@ -656,8 +693,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="label_8">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>  姓名: </string>
@@ -667,8 +705,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="NameLabel">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>Name</string>
@@ -682,8 +721,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="label_9">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>  电话: </string>
@@ -693,8 +733,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="PhoneLabel">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>Phone</string>
@@ -708,8 +749,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="label_10">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>  性別: </string>
@@ -719,8 +761,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="GenerLabel">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>Gender</string>
@@ -734,8 +777,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="label_11">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>  出生日期: </string>
@@ -745,8 +789,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="BirthLabel">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>Date of birth</string>
@@ -760,8 +805,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="label_12">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>  年龄: </string>
@@ -771,8 +817,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="AgeLabel">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>Age</string>
@@ -786,8 +833,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="label_13">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>  体重: </string>
@@ -797,8 +845,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="WeightLabel">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>Weight</string>
@@ -812,8 +861,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="label_22">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>  身高: </string>
@@ -823,8 +873,9 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="HeightLabel">
                  <property name="styleSheet">
-                  <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                  <string notr="true">
+																			font: 12px &quot;MS Shell Dlg 2&quot;;
+																		</string>
                  </property>
                  <property name="text">
                   <string>Height</string>
@@ -846,8 +897,10 @@ background-color: rgb(200, 200, 200);</string>
                 </sizepolicy>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(200, 200, 200);</string>
+                <string notr="true">
+																	font: 16px &quot;MS Shell Dlg 2&quot;;
+																	background-color: rgb(200, 200, 200);
+																</string>
                </property>
                <property name="text">
                 <string>  技术支持 / Technical Support</string>
@@ -857,8 +910,9 @@ background-color: rgb(200, 200, 200);</string>
              <item>
               <widget class="QLabel" name="label_16">
                <property name="styleSheet">
-                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                <string notr="true">
+																	font: 12px &quot;MS Shell Dlg 2&quot;;
+																</string>
                </property>
                <property name="text">
                 <string>  香港大學矯形及創傷外科學系</string>
@@ -868,8 +922,9 @@ background-color: rgb(200, 200, 200);</string>
              <item>
               <widget class="QLabel" name="label_3">
                <property name="styleSheet">
-                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
+                <string notr="true">
+																	font: 12px &quot;MS Shell Dlg 2&quot;;
+																</string>
                </property>
                <property name="text">
                 <string>  香港大學計算機科學系</string>
@@ -979,7 +1034,7 @@ background-color: rgb(200, 200, 200);</string>
   <connection>
    <sender>cancelButton</sender>
    <signal>clicked()</signal>
-   <receiver>ReportDialogUI</receiver>
+   <receiver>ReportDialog_EngUI</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

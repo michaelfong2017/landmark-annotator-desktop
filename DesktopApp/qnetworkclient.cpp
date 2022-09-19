@@ -14,6 +14,7 @@ void QNetworkClient::login(QTabWidget* qTabWidget, QString username, QString pas
 
     QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/account/login"));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setTransferTimeout(10000);
 
     qDebug() << username << password;
 
@@ -32,6 +33,15 @@ void QNetworkClient::onLogin(QNetworkReply* reply) {
     QByteArray response_data = reply->readAll();
     qDebug() << response_data;
 
+    /** TIMEOUT */
+    if (response_data == nullptr) {
+        TwoLinesDialog dialog;
+        dialog.setLine1("Login Timeout!");
+        dialog.exec();
+        return;
+    }
+    /** TIMEOUT END */
+
     QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
     qDebug() << jsonResponse;
     QJsonObject obj = jsonResponse.object();
@@ -45,6 +55,7 @@ void QNetworkClient::onLogin(QNetworkReply* reply) {
         this->userToken = QString::fromStdString("Bearer " + response_data.toStdString());
         qDebug() << this->userToken;
         qTabWidget->setCurrentIndex(1);
+        qTabWidget->setTabEnabled(0, false);
     }
 
     reply->deleteLater();

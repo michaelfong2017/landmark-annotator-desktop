@@ -106,7 +106,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
 
 			/** Re-enable changing tab */
-			this->parent->ui.tabWidget->setTabEnabled(0, true);
 			this->parent->ui.tabWidget->setTabEnabled(1, true);
 			this->parent->ui.tabWidget->setTabEnabled(2, true);
 			this->parent->ui.tabWidget->setTabEnabled(4, true);
@@ -147,7 +146,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			// Current status is NOT recording
 
 			/** Disable changing tab */
-			this->parent->ui.tabWidget->setTabEnabled(0, false);
 			this->parent->ui.tabWidget->setTabEnabled(1, false);
 			this->parent->ui.tabWidget->setTabEnabled(2, false);
 			this->parent->ui.tabWidget->setTabEnabled(4, false);
@@ -616,7 +614,8 @@ void CaptureTab::disableButtonsForUploading() {
 	this->parent->ui.radioButton3->setEnabled(false);
 	this->parent->ui.radioButton4->setEnabled(false);
 
-	this->parent->ui.tabWidget->setTabEnabled(0, false);
+	this->parent->ui.logOutButton3->setEnabled(false);
+
 	this->parent->ui.tabWidget->setTabEnabled(1, false);
 	this->parent->ui.tabWidget->setTabEnabled(2, false);
 	this->parent->ui.tabWidget->setTabEnabled(4, false);
@@ -641,7 +640,8 @@ void CaptureTab::enableButtonsForUploading() {
 	this->parent->ui.radioButton3->setEnabled(true);
 	this->parent->ui.radioButton4->setEnabled(true);
 
-	this->parent->ui.tabWidget->setTabEnabled(0, true);
+	this->parent->ui.logOutButton3->setEnabled(true);
+
 	this->parent->ui.tabWidget->setTabEnabled(1, true);
 	this->parent->ui.tabWidget->setTabEnabled(2, true);
 	this->parent->ui.tabWidget->setTabEnabled(4, true);
@@ -1276,6 +1276,52 @@ int CaptureTab::getImageTypeFromDescription(QString description)
 		imageType = 10;
 	}
 	return imageType;
+}
+
+void CaptureTab::onEnterOfflineMode()
+{
+	qDebug() << "CaptureTab::onEnterOfflineMode()";
+	this->parent->ui.captureButton->setEnabled(false);
+	this->parent->ui.saveVideoButton->setEnabled(false);
+	this->parent->ui.saveButtonCaptureTab->setEnabled(false);
+	this->parent->ui.annotateButtonCaptureTab->setEnabled(false);
+	this->parent->ui.radioButton->setEnabled(false);
+	this->parent->ui.radioButton2->setEnabled(false);
+	this->parent->ui.radioButton3->setEnabled(false);
+	this->parent->ui.radioButton4->setEnabled(false);
+
+	this->parent->ui.imageTypeComboBox->setEnabled(false);
+
+	// Disable log out button in offline mode
+	this->parent->ui.logOutButton3->setEnabled(false);
+	////
+
+	/** Disable table view row selection */
+	tableView->setSelectionMode(QAbstractItemView::NoSelection);
+	/** Disable table view row selection END */
+}
+
+void CaptureTab::onExitOfflineMode()
+{
+	qDebug() << "CaptureTab::onExitOfflineMode()";
+	this->parent->ui.captureButton->setEnabled(true);
+	this->parent->ui.saveVideoButton->setEnabled(true);
+	this->parent->ui.saveButtonCaptureTab->setEnabled(true);
+	this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
+	this->parent->ui.radioButton->setEnabled(true);
+	this->parent->ui.radioButton2->setEnabled(true);
+	this->parent->ui.radioButton3->setEnabled(true);
+	this->parent->ui.radioButton4->setEnabled(true);
+
+	this->parent->ui.imageTypeComboBox->setEnabled(true);
+
+	// Enable log out button in offline mode
+	this->parent->ui.logOutButton3->setEnabled(true);
+	////
+
+	/** Enable table view row selection */
+	tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+	/** Enable table view row selection END */
 }
 
 void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex& previous) {
