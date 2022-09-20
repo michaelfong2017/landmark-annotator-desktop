@@ -167,7 +167,7 @@ ReportDialog::ReportDialog(AnnotateTab* parent) : QDialog(parent)
 		ui.label_22->setText(chi_label_22);
 		ui.label_14->setText(chi_label_14);
 		ui.label_16->setText(chi_label_16);
-		ui.label_3->setText(chi_label_3);
+		//ui.label_3->setText(chi_label_3);
 
 		ui.label_4->setText(chi_label_4);
 
@@ -207,7 +207,7 @@ ReportDialog::ReportDialog(AnnotateTab* parent) : QDialog(parent)
 		ui.label_22->setStyleSheet(chi_style_label_22);
 		ui.label_14->setStyleSheet(chi_style_label_14);
 		ui.label_16->setStyleSheet(chi_style_label_16);
-		ui.label_3->setStyleSheet(chi_style_label_3);
+		//ui.label_3->setStyleSheet(chi_style_label_3);
 
 		ui.label_4->setStyleSheet(chi_style_label_4);
 		});
@@ -248,7 +248,7 @@ ReportDialog::ReportDialog(AnnotateTab* parent) : QDialog(parent)
 		ui.label_22->setText(eng_label_22);
 		ui.label_14->setText(eng_label_14);
 		ui.label_16->setText(eng_label_16);
-		ui.label_3->setText(eng_label_3);
+		//ui.label_3->setText(eng_label_3);
 
 		ui.label_4->setText(eng_label_4);
 
@@ -288,7 +288,7 @@ ReportDialog::ReportDialog(AnnotateTab* parent) : QDialog(parent)
 		ui.label_22->setStyleSheet(eng_style_label_22);
 		ui.label_14->setStyleSheet(eng_style_label_14);
 		ui.label_16->setStyleSheet(eng_style_label_16);
-		ui.label_3->setStyleSheet(eng_style_label_3);
+		//ui.label_3->setStyleSheet(eng_style_label_3);
 
 		ui.label_4->setStyleSheet(eng_style_label_4);
 		});
@@ -361,7 +361,7 @@ void ReportDialog::setAllChiLabelsFromUI()
 	chi_label_22 = ui.label_22->text();
 	chi_label_14 = ui.label_14->text();
 	chi_label_16 = ui.label_16->text();
-	chi_label_3 = ui.label_3->text();
+	//chi_label_3 = ui.label_3->text();
 
 	chi_label_4 = ui.label_4->text();
 
@@ -401,7 +401,7 @@ void ReportDialog::setAllChiLabelsFromUI()
 	chi_style_label_22 = ui.label_22->styleSheet();
 	chi_style_label_14 = ui.label_14->styleSheet();
 	chi_style_label_16 = ui.label_16->styleSheet();
-	chi_style_label_3 = ui.label_3->styleSheet();
+	//chi_style_label_3 = ui.label_3->styleSheet();
 
 	chi_style_label_4 = ui.label_4->styleSheet();
 }
@@ -446,7 +446,7 @@ void ReportDialog::setAllEngLabelsFromAnotherUI()
 	eng_label_22 = ui.label_22->text();
 	eng_label_14 = ui.label_14->text();
 	eng_label_16 = ui.label_16->text();
-	eng_label_3 = ui.label_3->text();
+	//eng_label_3 = ui.label_3->text();
 
 	eng_label_4 = ui.label_4->text();
 
@@ -486,7 +486,7 @@ void ReportDialog::setAllEngLabelsFromAnotherUI()
 	eng_style_label_22 = ui.label_22->styleSheet();
 	eng_style_label_14 = ui.label_14->styleSheet();
 	eng_style_label_16 = ui.label_16->styleSheet();
-	eng_style_label_3 = ui.label_3->styleSheet();
+	//eng_style_label_3 = ui.label_3->styleSheet();
 
 	eng_style_label_4 = ui.label_4->styleSheet();
 }

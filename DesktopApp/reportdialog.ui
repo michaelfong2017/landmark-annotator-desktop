@@ -100,7 +100,7 @@
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">font: 40px &quot;MS Shell Dlg 2&quot;;
+            <string notr="true">font: 29px &quot;MS Shell Dlg 2&quot;;
 background-color: rgb(200, 200, 200);</string>
            </property>
            <property name="text">
@@ -142,7 +142,7 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  结果分析 / Result Analysis</string>
+                <string>  结果分析</string>
                </property>
               </widget>
              </item>
@@ -151,7 +151,7 @@ background-color: rgb(200, 200, 200);</string>
                <item>
                 <widget class="QLabel" name="nameLabel_10">
                  <property name="styleSheet">
-                  <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
 background-color: rgb(225, 225, 225);</string>
                  </property>
                  <property name="text">
@@ -221,7 +221,7 @@ background-color: rgb(225, 225, 225);</string>
                <item>
                 <widget class="QLabel" name="nameLabel_8">
                  <property name="styleSheet">
-                  <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
 background-color: rgb(225, 225, 225);</string>
                  </property>
                  <property name="text">
@@ -291,7 +291,7 @@ background-color: rgb(225, 225, 225);</string>
                <item>
                 <widget class="QLabel" name="nameLabel_9">
                  <property name="styleSheet">
-                  <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
 background-color: rgb(225, 225, 225);</string>
                  </property>
                  <property name="text">
@@ -361,7 +361,7 @@ background-color: rgb(225, 225, 225);</string>
                <item>
                 <widget class="QLabel" name="nameLabel_11">
                  <property name="styleSheet">
-                  <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;
+                  <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;
 background-color: rgb(225, 225, 225);</string>
                  </property>
                  <property name="text">
@@ -446,7 +446,7 @@ background-color: rgb(225, 225, 225);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  示意图 / Schematic</string>
+                <string>  示意图</string>
                </property>
               </widget>
              </item>
@@ -483,7 +483,7 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  签署 / Signature</string>
+                <string>  签署</string>
                </property>
               </widget>
              </item>
@@ -511,7 +511,7 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  注释与结论 / Notes &amp; Comments</string>
+                <string>  注释与结论</string>
                </property>
               </widget>
              </item>
@@ -535,7 +535,7 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  风险评估 / Risk &amp;  Recommendations</string>
+                <string>  风险评估</string>
                </property>
               </widget>
              </item>
@@ -560,7 +560,7 @@ background-color: rgb(200, 200, 200);</string>
 </string>
                  </property>
                  <property name="text">
-                  <string>正常 (Normal)</string>
+                  <string>正常</string>
                  </property>
                 </widget>
                </item>
@@ -584,7 +584,7 @@ background-color: rgb(200, 200, 200);</string>
 </string>
                  </property>
                  <property name="text">
-                  <string>低 (Low)</string>
+                  <string>低</string>
                  </property>
                 </widget>
                </item>
@@ -611,7 +611,7 @@ background-color: rgb(200, 200, 200);</string>
 </string>
                  </property>
                  <property name="text">
-                  <string>高 (High)</string>
+                  <string>高</string>
                  </property>
                 </widget>
                </item>
@@ -647,7 +647,7 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  基本信息 / Patient Information</string>
+                <string>  基本信息</string>
                </property>
               </widget>
              </item>
@@ -850,29 +850,28 @@ background-color: rgb(200, 200, 200);</string>
 background-color: rgb(200, 200, 200);</string>
                </property>
                <property name="text">
-                <string>  技术支持 / Technical Support</string>
+                <string>  技术支持</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QLabel" name="label_16">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="styleSheet">
                 <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
 </string>
                </property>
                <property name="text">
-                <string>  香港大學矯形及創傷外科學系</string>
+                <string>  香港大學矯形及創傷外科學系 
+  香港大學計算機科學系</string>
                </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_3">
-               <property name="styleSheet">
-                <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;
-</string>
-               </property>
-               <property name="text">
-                <string>  香港大學計算機科學系</string>
+               <property name="wordWrap">
+                <bool>true</bool>
                </property>
               </widget>
              </item>

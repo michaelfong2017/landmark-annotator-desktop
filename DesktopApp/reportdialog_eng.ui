@@ -84,6 +84,12 @@
          </property>
          <item>
           <widget class="QLabel" name="TitleLabel">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -101,12 +107,15 @@
            </property>
            <property name="styleSheet">
             <string notr="true">
-													font: 20px &quot;MS Shell Dlg 2&quot;;
+													font: 21px &quot;MS Shell Dlg 2&quot;;
 													background-color: rgb(200, 200, 200);
 												</string>
            </property>
            <property name="text">
-            <string>Scoliosis Back Quantitative Analysis and Comparison Research Report</string>
+            <string> Scoliosis Back Quantitative Analysis and Comparison Research Report</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::AutoText</enum>
            </property>
           </widget>
          </item>
@@ -146,7 +155,7 @@
 																</string>
                </property>
                <property name="text">
-                <string>  结果分析 / Result Analysis</string>
+                <string>  Result Analysis</string>
                </property>
               </widget>
              </item>
@@ -156,12 +165,12 @@
                 <widget class="QLabel" name="nameLabel_10">
                  <property name="styleSheet">
                   <string notr="true">
-																			font: 20px &quot;MS Shell Dlg 2&quot;;
+																			font: 16px &quot;MS Shell Dlg 2&quot;;
 																			background-color: rgb(225, 225, 225);
 																		</string>
                  </property>
                  <property name="text">
-                  <string>  左/右躯体偏移</string>
+                  <string>  Central Shift</string>
                  </property>
                 </widget>
                </item>
@@ -178,7 +187,7 @@
 																				</string>
                    </property>
                    <property name="text">
-                    <string>左</string>
+                    <string>Left</string>
                    </property>
                    <property name="checkable">
                     <bool>true</bool>
@@ -196,7 +205,7 @@
 																				</string>
                    </property>
                    <property name="text">
-                    <string>右</string>
+                    <string>Right</string>
                    </property>
                    <property name="checkable">
                     <bool>true</bool>
@@ -231,12 +240,12 @@
                 <widget class="QLabel" name="nameLabel_8">
                  <property name="styleSheet">
                   <string notr="true">
-																			font: 20px &quot;MS Shell Dlg 2&quot;;
+																			font: 16px &quot;MS Shell Dlg 2&quot;;
 																			background-color: rgb(225, 225, 225);
 																		</string>
                  </property>
                  <property name="text">
-                  <string>  左/右侧高肩胛</string>
+                  <string>  Scapular Imbalance</string>
                  </property>
                 </widget>
                </item>
@@ -253,7 +262,7 @@
 																				</string>
                    </property>
                    <property name="text">
-                    <string>左</string>
+                    <string>Left</string>
                    </property>
                    <property name="checkable">
                     <bool>true</bool>
@@ -271,7 +280,7 @@
 																				</string>
                    </property>
                    <property name="text">
-                    <string>右</string>
+                    <string>Right</string>
                    </property>
                    <property name="checkable">
                     <bool>true</bool>
@@ -306,12 +315,12 @@
                 <widget class="QLabel" name="nameLabel_9">
                  <property name="styleSheet">
                   <string notr="true">
-																			font: 20px &quot;MS Shell Dlg 2&quot;;
+																			font: 16px &quot;MS Shell Dlg 2&quot;;
 																			background-color: rgb(225, 225, 225);
 																		</string>
                  </property>
                  <property name="text">
-                  <string>  左/右骨盆倾斜</string>
+                  <string>  Pelvic Imbalance</string>
                  </property>
                 </widget>
                </item>
@@ -328,7 +337,7 @@
 																				</string>
                    </property>
                    <property name="text">
-                    <string>左</string>
+                    <string>Left</string>
                    </property>
                    <property name="checkable">
                     <bool>true</bool>
@@ -346,7 +355,7 @@
 																				</string>
                    </property>
                    <property name="text">
-                    <string>右</string>
+                    <string>Right</string>
                    </property>
                    <property name="checkable">
                     <bool>true</bool>
@@ -381,12 +390,12 @@
                 <widget class="QLabel" name="nameLabel_11">
                  <property name="styleSheet">
                   <string notr="true">
-																			font: 20px &quot;MS Shell Dlg 2&quot;;
+																			font: 16px &quot;MS Shell Dlg 2&quot;;
 																			background-color: rgb(225, 225, 225);
 																		</string>
                  </property>
                  <property name="text">
-                  <string>  躯干旋转</string>
+                  <string>  Trunk Rotation</string>
                  </property>
                 </widget>
                </item>
@@ -403,7 +412,7 @@
 																				</string>
                    </property>
                    <property name="text">
-                    <string>左</string>
+                    <string>Left</string>
                    </property>
                    <property name="checkable">
                     <bool>true</bool>
@@ -421,7 +430,7 @@
 																				</string>
                    </property>
                    <property name="text">
-                    <string>右</string>
+                    <string>Right</string>
                    </property>
                    <property name="checkable">
                     <bool>true</bool>
@@ -472,7 +481,7 @@
 																</string>
                </property>
                <property name="text">
-                <string>  示意图 / Schematic</string>
+                <string>  Schematic</string>
                </property>
               </widget>
              </item>
@@ -511,7 +520,7 @@
 																</string>
                </property>
                <property name="text">
-                <string>  签署 / Signature</string>
+                <string>  Signature</string>
                </property>
               </widget>
              </item>
@@ -541,7 +550,7 @@
 																</string>
                </property>
                <property name="text">
-                <string>  注释与结论 / Notes &amp; Comments</string>
+                <string>  Notes &amp; Comments</string>
                </property>
               </widget>
              </item>
@@ -567,7 +576,7 @@
 																</string>
                </property>
                <property name="text">
-                <string>  风险评估 / Risk &amp;  Recommendations</string>
+                <string>  Risk &amp; Recommendations</string>
                </property>
               </widget>
              </item>
@@ -593,7 +602,7 @@
 																		</string>
                  </property>
                  <property name="text">
-                  <string>正常 (Normal)</string>
+                  <string>Normal</string>
                  </property>
                 </widget>
                </item>
@@ -603,7 +612,7 @@
                   <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
                  </property>
                  <property name="text">
-                  <string>建议适度增加体育运动。</string>
+                  <string>A moderate increase in physical activity is recommended.</string>
                  </property>
                  <property name="wordWrap">
                   <bool>true</bool>
@@ -618,7 +627,7 @@
 																		</string>
                  </property>
                  <property name="text">
-                  <string>低 (Low)</string>
+                  <string>Low</string>
                  </property>
                 </widget>
                </item>
@@ -628,7 +637,7 @@
                   <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
                  </property>
                  <property name="text">
-                  <string>建议家长定期监测帮助孩子及早发现疾病风险，遇到不良體態，不良姿勢問題及時調理，糾正，並且增加運動訓練。 </string>
+                  <string>It is recommended that parents monitor regularly to help children discover disease risks as early as possible, adjust and correct bad posture problems in a timely manner, and increase exercise training.</string>
                  </property>
                  <property name="scaledContents">
                   <bool>false</bool>
@@ -646,7 +655,7 @@
 																		</string>
                  </property>
                  <property name="text">
-                  <string>高 (High)</string>
+                  <string>High</string>
                  </property>
                 </widget>
                </item>
@@ -656,7 +665,7 @@
                   <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
                  </property>
                  <property name="text">
-                  <string>建议及时就诊，到正规医院拍摄脊椎全长立体X光片和其他检查以确认，同时积极到专业康复机构进行脊椎侧弯康复治疗和训练，必要时进行支具矫形或手术治疗。</string>
+                  <string>It is recommended to seek medical treatment in time, take full-length three-dimensional X-rays of the spine and other examinations in a regularly hospital for confirmation, and actively go to professional rehabilitation institutions for scoliosis rehabilitation and training, and brace orthopedics or surgical treatment if necessary.</string>
                  </property>
                  <property name="wordWrap">
                   <bool>true</bool>
@@ -684,7 +693,7 @@
 																</string>
                </property>
                <property name="text">
-                <string>  基本信息 / Patient Information</string>
+                <string>  Patient Information</string>
                </property>
               </widget>
              </item>
@@ -698,7 +707,7 @@
 																		</string>
                  </property>
                  <property name="text">
-                  <string>  姓名: </string>
+                  <string>  Name: </string>
                  </property>
                 </widget>
                </item>
@@ -726,7 +735,7 @@
 																		</string>
                  </property>
                  <property name="text">
-                  <string>  电话: </string>
+                  <string>  Tel: </string>
                  </property>
                 </widget>
                </item>
@@ -754,7 +763,7 @@
 																		</string>
                  </property>
                  <property name="text">
-                  <string>  性別: </string>
+                  <string>  Gender: </string>
                  </property>
                 </widget>
                </item>
@@ -782,7 +791,7 @@
 																		</string>
                  </property>
                  <property name="text">
-                  <string>  出生日期: </string>
+                  <string>  Birthday: </string>
                  </property>
                 </widget>
                </item>
@@ -810,7 +819,7 @@
 																		</string>
                  </property>
                  <property name="text">
-                  <string>  年龄: </string>
+                  <string>  Age: </string>
                  </property>
                 </widget>
                </item>
@@ -838,7 +847,7 @@
 																		</string>
                  </property>
                  <property name="text">
-                  <string>  体重: </string>
+                  <string>  Weight: </string>
                  </property>
                 </widget>
                </item>
@@ -866,7 +875,7 @@
 																		</string>
                  </property>
                  <property name="text">
-                  <string>  身高: </string>
+                  <string>  Height: </string>
                  </property>
                 </widget>
                </item>
@@ -903,7 +912,7 @@
 																</string>
                </property>
                <property name="text">
-                <string>  技术支持 / Technical Support</string>
+                <string>  Technical Support</string>
                </property>
               </widget>
              </item>
@@ -915,19 +924,12 @@
 																</string>
                </property>
                <property name="text">
-                <string>  香港大學矯形及創傷外科學系</string>
+                <string>  Department of Orthopaedics and Traumatology &amp; 
+  Department of Computer Science 
+  The University of Hong Kong</string>
                </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_3">
-               <property name="styleSheet">
-                <string notr="true">
-																	font: 12px &quot;MS Shell Dlg 2&quot;;
-																</string>
-               </property>
-               <property name="text">
-                <string>  香港大學計算機科學系</string>
+               <property name="wordWrap">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -943,7 +945,7 @@
           <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
          </property>
          <property name="text">
-          <string>此报告仅作为初筛结果，不作为诊断依据。</string>
+          <string>Note: This report is only for screening results and not for diagnosis evidence.</string>
          </property>
         </widget>
        </item>
