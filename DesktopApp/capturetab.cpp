@@ -195,6 +195,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			return;
 		}
 
+		/** UI */
+		disableButtonsForUploading();
+		this->parent->ui.progressBar->setValue(50);
+		/** UI END */
+
 		this->imageName = this->parent->ui.imageTypeComboBox->currentText();
 		this->imageType = getImageTypeFromDescription(this->imageName);
 		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
@@ -303,6 +308,10 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/** Store histories of images for selection END */
 
 		displayCapturedImages();
+
+		/** UI */
+		enableButtonsForUploading();
+		/** UI END */
 		});
 
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
@@ -324,6 +333,18 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/** Cropping part 2 */
 		float cropUIToImageScale = (float)this->getCapturedColorImage().rows / this->parent->ui.graphicsViewImage->sceneRect().height();
 		cv::Rect rect(this->clip_rect.left() * cropUIToImageScale, this->clip_rect.top() * cropUIToImageScale, this->clip_rect.width() * cropUIToImageScale, this->clip_rect.height() * cropUIToImageScale);
+
+		if (this->clip_rect.width() == this->max_clip_width) {
+			rect.width = this->getCapturedColorImage().cols;
+		}
+		if (this->clip_rect.width() == this->max_clip_width) {
+			rect.height = this->getCapturedColorImage().rows;
+		}
+
+		qDebug() << "croppppp original (width, height): (" << this->getCapturedColorImage().cols << ", " << this->getCapturedColorImage().rows << ")";
+		qDebug() << "croppppp cropUIToImageScale: " << cropUIToImageScale;
+		qDebug() << "croppppp rect(x, y, width, height): (" << rect.x << ", " << rect.y << ", " << rect.width << ", " << rect.height << ")";
+
 		this->capturedColorImage = this->capturedColorImage(rect);
 		this->capturedDepthToColorImage = this->capturedDepthToColorImage(rect);
 		this->RANSACImage = this->RANSACImage(rect);
