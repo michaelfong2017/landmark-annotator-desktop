@@ -2,6 +2,7 @@
 #include "saveimagedialog.h"
 #include "kinectengine.h"
 #include <Windows.h>
+#include "uploadrequest.h"
 
 const int COLUMN_COUNT = 4;
 
@@ -393,6 +394,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			<< FourChannelPNG.cols << ", "
 			<< FourChannelPNG.rows << ", "
 			<< FourChannelPNG.channels();
+
+		new uploadrequest(QNetworkClient::getInstance().userToken, "", 1, FourChannelPNG);
 
 		QNetworkClient::getInstance().uploadImage(FourChannelPNG, this, SLOT(onUploadImage(QNetworkReply*)));
 		/* Convert to the special 4 channels image and upload END */

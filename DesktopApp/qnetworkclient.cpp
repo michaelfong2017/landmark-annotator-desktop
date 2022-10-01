@@ -1,6 +1,7 @@
 #include "qnetworkclient.h"
 #include "stdafx.h"
 #include <twolinesdialog.h>
+#include "uploadrequest.h"
 
 QNetworkClient::QNetworkClient() : QWidget() {
     
@@ -170,7 +171,7 @@ void QNetworkClient::fetchExistingImagesOfPatient(int patientId, const QObject* 
 
     qDebug() << "fetchExistingImagesOfPatient";
 
-    //qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId);
+    qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId);
 
     QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId)));
     request.setRawHeader("Authorization", userToken.toUtf8());

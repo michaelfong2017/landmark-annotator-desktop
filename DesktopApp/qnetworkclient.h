@@ -33,10 +33,11 @@ public:
     void findLandmarkPredictions(int imageId, const QObject* receiver, const char* member);
     void downloadImage(QString imageUrl, const QObject* receiver, const char* member);
     void confirmLandmarks(int imageId, QString aiOriginResult, const QObject* receiver, const char* member);
+    QString userToken;
 
 private:
     QNetworkClient();
-    QString userToken;
+    
     QTabWidget* qTabWidget;
 
 private slots:

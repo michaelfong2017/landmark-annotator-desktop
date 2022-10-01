@@ -73,6 +73,9 @@
     <ClCompile Include="reportdialog_eng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="uploadrequest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="capturehistory.h">
@@ -153,6 +156,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="reportdialog_eng.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="uploadrequest.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

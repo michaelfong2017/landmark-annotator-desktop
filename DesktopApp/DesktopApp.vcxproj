@@ -136,6 +136,7 @@
     <ClCompile Include="qnetworkclient.cpp" />
     <ClCompile Include="recorder.cpp" />
     <ClCompile Include="saveimagedialog.cpp" />
+    <ClCompile Include="uploadrequest.cpp" />
     <QtRcc Include="desktopapp.qrc" />
     <QtUic Include="createnewpatientdialog.ui" />
     <QtUic Include="desktopapp.ui" />
@@ -178,6 +179,7 @@
     <QtMoc Include="showimagesdialog.h" />
     <QtMoc Include="reportdialog_eng.h" />
     <ClInclude Include="stdafx.h" />
+    <QtMoc Include="uploadrequest.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />
     <QtMoc Include="alignmenttab.h" />
