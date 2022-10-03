@@ -270,6 +270,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		}
 
 		dataModel->insertRow(0, itemList);
+
+		imageBeingAnalyzedTableViewRow = 0;
 		/** Insert index to data model END */
 
 		this->qColorImage = convertColorCVToQImage(this->capturedColorImage);
@@ -309,7 +311,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		selectedImageIndex = captureHistories.size() - 1;
 		/** Store histories of images for selection END */
-
 		displayCapturedImages();
 
 		/** UI */
@@ -815,7 +816,7 @@ void CaptureTab::onUploadImage(QNetworkReply* reply) {
 		for (int i = 0; i < dataModel->columnCount(); i++) {
 			QModelIndex index;
 			index = dataModel->index(storedTableViewRow, i);
-			dataModel->setData(index, QColor(Qt::red), Qt::BackgroundRole);
+			//dataModel->setData(index, QColor(Qt::red), Qt::BackgroundRole);
 		}
 		/** Select image table view update UI to red background, showing unsuccessful image analysis END */
 
@@ -861,7 +862,7 @@ void CaptureTab::onBindImageUrl(QNetworkReply* reply) {
 		for (int i = 0; i < dataModel->columnCount(); i++) {
 			QModelIndex index;
 			index = dataModel->index(storedTableViewRow, i);
-			dataModel->setData(index, QColor(Qt::red), Qt::BackgroundRole);
+			//dataModel->setData(index, QColor(Qt::red), Qt::BackgroundRole);
 		}
 		/** Select image table view update UI to red background, showing unsuccessful image analysis END */
 
@@ -918,7 +919,7 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 		for (int i = 0; i < dataModel->columnCount(); i++) {
 			QModelIndex index;
 			index = dataModel->index(storedTableViewRow, i);
-			dataModel->setData(index, QColor(Qt::red), Qt::BackgroundRole);
+			//dataModel->setData(index, QColor(Qt::red), Qt::BackgroundRole);
 		}
 		/** Select image table view update UI to red background, showing unsuccessful image analysis END */
 
@@ -1011,7 +1012,7 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	for (int i = 0; i < dataModel->columnCount(); i++) {
 		QModelIndex index;
 		index = dataModel->index(storedTableViewRow, i);
-		dataModel->setData(index, QColor(Qt::green), Qt::BackgroundRole);
+		//dataModel->setData(index, QColor(Qt::green), Qt::BackgroundRole);
 	}
 	/** Select image table view update UI to green background, showing successful image analysis END */
 
