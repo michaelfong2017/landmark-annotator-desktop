@@ -76,6 +76,9 @@
     <ClCompile Include="uploadrequest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="uploadprogressdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="capturehistory.h">
@@ -161,6 +164,9 @@
     <QtMoc Include="uploadrequest.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="uploadprogressdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="desktopapp.qrc" />
@@ -185,6 +191,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="reportdialog_eng.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="uploadprogressdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

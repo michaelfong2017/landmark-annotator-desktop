@@ -89,6 +89,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 	tableView->show();
 
+	this->uploadProgressDialog = new UploadProgressDialog;
+
 	QObject::connect(this->parent->ui.saveButtonCaptureTab, &QPushButton::clicked, [this]() {
 		if (this->isUploading) {
 			return;
@@ -320,9 +322,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			return;
 		}
 		qDebug() << "Analysis button clicked";
-		this->isUploading = true;
+		//this->isUploading = true;
 		
-		this->disableButtonsForUploading();
+		//this->disableButtonsForUploading();
 
 		/** Select image table view update UI to green background, showing successful image analysis */
 		storedTableViewRow = imageBeingAnalyzedTableViewRow;
@@ -395,7 +397,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			<< FourChannelPNG.rows << ", "
 			<< FourChannelPNG.channels();
 
-		new uploadrequest(QNetworkClient::getInstance().userToken, "", 1, FourChannelPNG);
+		int uploadNumber = dataModel->rowCount() - imageBeingAnalyzedTableViewRow;
+		new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(), uploadNumber, FourChannelPNG, this->uploadProgressDialog);
 
 		QNetworkClient::getInstance().uploadImage(FourChannelPNG, this, SLOT(onUploadImage(QNetworkReply*)));
 		/* Convert to the special 4 channels image and upload END */
@@ -1017,7 +1020,7 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 
 	// Move to annotate tab which index is 4
 	this->parent->annotateTab->reloadCurrentImage();
-	this->parent->ui.tabWidget->setCurrentIndex(4);
+	//this->parent->ui.tabWidget->setCurrentIndex(4);
 }
 
 cv::Mat CaptureTab::getCapturedColorImage() {

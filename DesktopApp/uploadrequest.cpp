@@ -1,14 +1,15 @@
 #include "uploadrequest.h"
 #include <qnetworkaccessmanager.h>
-#include <twolinesdialog.h>
 
-uploadrequest::uploadrequest(QString token, QString sign, int id, cv::Mat image) {
+uploadrequest::uploadrequest(QString userToken, QString signature, int patientId, int captureNumber, cv::Mat imageToSend, UploadProgressDialog* uploadProgressDialog) {
 	qDebug() << "uploadrequest";
 
-    userToken = token;
-	signature = sign;
-	patientId = id;
-	imageToSend = image;
+    this->userToken = signature;
+    this->signature = signature;
+    this->patientId = patientId;
+    this->captureNumber = captureNumber;
+    this->imageToSend = imageToSend;
+    this->uploadProgressDialog = uploadProgressDialog;
 
     uploadImageNormally(this, SLOT(onUploadImageNormally(QNetworkReply*)));
 
@@ -128,6 +129,10 @@ void uploadrequest::onUploadImageToAliyunCompleted(QNetworkReply* reply) {
 void uploadrequest::uploadImageNormally(const QObject* receiver, const char* member) {
     qDebug() << "uploadImage: " << imageToSend.channels();
 
+    uploadProgressDialog->show();
+    this->uploadNumber = ++uploadProgressDialog->latestUploadNumber;
+    uploadProgressDialog->onUploading(patientId, captureNumber);
+
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
     QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/api/v1/upload")));
@@ -161,12 +166,16 @@ void uploadrequest::onUploadImageNormally(QNetworkReply* reply) {
 
     /** TIMEOUT */
     if (url == nullptr) {
+        uploadProgressDialog->onFailed(this->uploadNumber);
+
         TwoLinesDialog dialog;
         dialog.setLine1("Analysis Step 1 Timeout!");
         dialog.exec();
         return;
     }
     /** TIMEOUT END */
+
+    uploadProgressDialog->onCompleted(this->uploadNumber);
 
     qDebug() << url;
 

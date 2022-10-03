@@ -17,6 +17,7 @@
 #include "capturehistory.h"
 #include "clipgraphicsscene.h"
 #include "clipgraphicspixmapitem.h"
+#include "uploadprogressdialog.h"
 
 class CaptureTab: public QWidget
 {
@@ -123,6 +124,8 @@ private:
     QTableView* tableView;
     QStandardItemModel* dataModel;
     /** Select image table view END */
+
+    UploadProgressDialog* uploadProgressDialog;
 
 private slots:
     void onUploadImage(QNetworkReply* reply);

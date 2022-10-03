@@ -5,6 +5,8 @@
 #include <opencv2/opencv.hpp>
 #include <QtWidgets/QWidget>
 #include <QtNetwork>
+#include <twolinesdialog.h>
+#include "uploadprogressdialog.h"
 
 class uploadrequest : public QWidget
 {
@@ -12,12 +14,16 @@ class uploadrequest : public QWidget
 	Q_OBJECT
 
 	public:
-		uploadrequest(QString, QString, int, cv::Mat);
+		uploadrequest(QString userToken, QString signature, int patientId, int captureNumber, cv::Mat imageToSend, UploadProgressDialog* uploadProgressDialog);
+	private:
 		QString userToken;
 		QString signature;
+		int patientId = -1;
+		int captureNumber = -1;
 		cv::Mat imageToSend;
-		int patientId = 0;
-	private:
+		UploadProgressDialog* uploadProgressDialog;
+		int uploadNumber;
+
 		void debugRequest(QNetworkRequest, QByteArray);
 		void getSignature();
 		void uploadImageToAliyun(const QObject* receiver, const char* member, QJsonDocument);
