@@ -1,14 +1,18 @@
 #include "uploadrequest.h"
 #include <qnetworkaccessmanager.h>
 
-uploadrequest::uploadrequest(QString userToken, QString signature, int patientId, int captureNumber, cv::Mat imageToSend, UploadProgressDialog* uploadProgressDialog) {
-	qDebug() << "uploadrequest";
+uploadrequest::uploadrequest(QString userToken, QString signature, int patientId, int type, QString imageName, cv::Mat imageToSend, int captureNumber, QString patientName, UploadProgressDialog* uploadProgressDialog) {
+	
+    qDebug() << "uploadrequest";
 
-    this->userToken = signature;
+    this->userToken = userToken;
     this->signature = signature;
     this->patientId = patientId;
-    this->captureNumber = captureNumber;
+    this->imageType = type;
+    this->imageName = imageName;
+    this->patientName = patientName;
     this->imageToSend = imageToSend;
+    this->captureNumber = captureNumber;
     this->uploadProgressDialog = uploadProgressDialog;
 
     uploadImageNormally(this, SLOT(onUploadImageNormally(QNetworkReply*)));
@@ -17,6 +21,7 @@ uploadrequest::uploadrequest(QString userToken, QString signature, int patientId
         getSignature();
     }*/
 }
+
 void uploadrequest::getSignature() {
 
     qDebug() << "getSignature()";
@@ -58,7 +63,6 @@ void uploadrequest::onSignatureReceived(QNetworkReply* reply) {
 
     uploadImageToAliyun(this, SLOT(onUploadImageToAliyunCompleted(QNetworkReply*)), jsonResponse);
 }
-
 
 void uploadrequest::uploadImageToAliyun(const QObject* receiver, const char* member, QJsonDocument json) {
 
@@ -131,7 +135,7 @@ void uploadrequest::uploadImageNormally(const QObject* receiver, const char* mem
 
     uploadProgressDialog->show();
     this->uploadNumber = ++uploadProgressDialog->latestUploadNumber;
-    uploadProgressDialog->onUploading(patientId, captureNumber);
+    uploadProgressDialog->onUploading(patientName, captureNumber);
 
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
@@ -162,10 +166,10 @@ void uploadrequest::onUploadImageNormally(QNetworkReply* reply) {
 
     qDebug() << "onUploadImageNormally";
 
-    QString url = reply->readAll();
+    receivedURL = reply->readAll();
 
     /** TIMEOUT */
-    if (url == nullptr) {
+    if (receivedURL == nullptr) {
         uploadProgressDialog->onFailed(this->uploadNumber);
 
         TwoLinesDialog dialog;
@@ -175,21 +179,66 @@ void uploadrequest::onUploadImageNormally(QNetworkReply* reply) {
     }
     /** TIMEOUT END */
 
-    uploadProgressDialog->onCompleted(this->uploadNumber);
-
-    qDebug() << url;
-
     reply->deleteLater();
 
-    if (url.contains("error")) {
-        qCritical() << "onUploadImage received error reply!";
+    if (receivedURL.contains("error")) {
+        qCritical() << "onUploadImageNormally() received error reply!";
         TwoLinesDialog dialog;
-        dialog.setLine1("onUploadImage received error reply!");
+        dialog.setLine1("Uploading Error 1");
         dialog.exec();
         return;
     }
 
-    //QNetworkClient::getInstance().bindImageUrl(this->parent->patientTab->getCurrentPatientId(), url, this->imageTypeBeingAnalyzed, this, SLOT(onBindImageUrl(QNetworkReply*)));
+    stageProgress = 1;
+    bindImageUrl(this, SLOT(onBindImageUrl(QNetworkReply*)));
+}
+
+void uploadrequest::bindImageUrl(const QObject* receiver, const char* member) {
+
+    qDebug() << "bindImageUrl";
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/images"));
+    request.setRawHeader("Authorization", userToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setTransferTimeout(10000);
+
+    QJsonObject obj;
+    obj["patientId"] = patientId;
+    obj["url"] = receivedURL;
+    obj["imageType"] = imageType;
+    obj["imageName"] = imageName;
+
+    qDebug() << "patientID: " << patientId << " imageType: " << imageType << " url: " << receivedURL;
+
+    QByteArray data = QJsonDocument(obj).toJson();
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
+
+    manager->post(request, data);
+}
+
+void uploadrequest::onBindImageUrl(QNetworkReply* reply) {
+
+    qDebug() << "onBindImageUrl";
+
+    QByteArray response_data = reply->readAll();
+    reply->deleteLater();
+
+    qDebug() << response_data;
+
+    /** TIMEOUT */
+    if (response_data == nullptr) {
+        TwoLinesDialog dialog;
+        dialog.setLine1("Uploading Error 2");
+        dialog.exec();
+        return;
+    }
+    /** TIMEOUT END */
+
+    stageProgress = 2;
+    uploadProgressDialog->onCompleted(this->uploadNumber);
 }
 
 void uploadrequest::debugRequest(QNetworkRequest request, QByteArray data = QByteArray())

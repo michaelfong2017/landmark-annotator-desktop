@@ -18,7 +18,7 @@ UploadProgressDialog::UploadProgressDialog()
 
 
     /** Headers */
-    QStringList headerLabels = { "Upload number", "Patient ID", "Capture number", "Progress" };
+    QStringList headerLabels = { "Upload number", "Patient Name", "Capture number", "Progress" };
 
     for (int i = 0; i < COLUMN_COUNT; i++)
     {
@@ -46,7 +46,7 @@ UploadProgressDialog::UploadProgressDialog()
 		});
 }
 
-void UploadProgressDialog::onUploading(int patientId, int captureNumber)
+void UploadProgressDialog::onUploading(QString patientName, int captureNumber)
 {
     qDebug() << "UploadProgressDialog onUploading";
 
@@ -60,7 +60,7 @@ void UploadProgressDialog::onUploading(int patientId, int captureNumber)
             text = QString::number(dataModel->rowCount() + 1);
             break;
         case 1:
-            text = QString::number(patientId);
+            text = patientName;
             break;
         case 2:
             text = QString::number(captureNumber);

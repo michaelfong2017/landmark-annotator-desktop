@@ -399,9 +399,13 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			<< FourChannelPNG.channels();
 
 		int uploadNumber = dataModel->rowCount() - imageBeingAnalyzedTableViewRow;
-		new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(), uploadNumber, FourChannelPNG, this->uploadProgressDialog);
 
-		QNetworkClient::getInstance().uploadImage(FourChannelPNG, this, SLOT(onUploadImage(QNetworkReply*)));
+		new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(), 
+			imageType, imageName, FourChannelPNG, 
+			uploadNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog);
+
+		//this->uploadProgressDialog->requests.push_back(r);
+		//QNetworkClient::getInstance().uploadImage(FourChannelPNG, this, SLOT(onUploadImage(QNetworkReply*)));
 		/* Convert to the special 4 channels image and upload END */
 
 		// Moving to annotate tab will be done after the series of requests is sent to obtain the landmark predictions */
