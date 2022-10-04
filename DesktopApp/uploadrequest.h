@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include <opencv2/opencv.hpp>
 #include <QtWidgets/QWidget>
-#include <QtNetwork>
 #include <twolinesdialog.h>
 #include "uploadprogressdialog.h"
 

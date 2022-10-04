@@ -6,7 +6,7 @@ PatientTab::PatientTab(DesktopApp* parent)
     this->parent = parent;
 
     tableView = this->parent->ui.patientTab->findChild<QTableView*>("tableViewPatient");
-    patientDataModel = new QStandardItemModel(0, 2, this);
+    patientDataModel = new QStandardItemModel(0, 4, this);
     tableView->setModel(this->patientDataModel);
 
     tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -182,9 +182,9 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
     patientDataModel->clear();
 
     /** Headers */
-    QStringList headerLabels = { "Captured Date", "Image" };
+    QStringList headerLabels = { "Captured Date", "Analysis", "Url", "Landmarks"};
 
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 4; i++)
     {
         QString text = headerLabels.at(i);
         QStandardItem* item = new QStandardItem(text);
@@ -196,9 +196,9 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
     }
 
     /** This must be put here (below) */
-    for (int col = 0; col < 2; col++)
+    for (int col = 0; col < 4; col++)
     {
-        tableView->setColumnWidth(col, 500);
+        tableView->setColumnWidth(col, 400);
     }
     /** This must be put here (below) END */
     /** Headers END */
@@ -213,13 +213,12 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
     QJsonObject jsonObject = jsonResponse.object();
     QJsonArray jsonArray = jsonObject["items"].toArray();
 
-
     foreach(const QJsonValue & value, jsonArray) {
         QJsonObject obj = value.toObject();
 
         QList<QStandardItem*> itemList;
         QStandardItem* item;
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 4; i++)
         {
             if (i == 0) {
                 QString text;
@@ -234,6 +233,24 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
                 item->setFont(fn);
             }
             else if (i == 1) {
+                QString text;
+
+                text = "View";
+
+                item = new QStandardItem(text);
+                QFont fn = item->font();
+                fn.setPixelSize(14);
+
+                fn.setUnderline(true);
+
+                item->setFont(fn);
+
+                QBrush brush;
+                QColor blue(Qt::blue);
+                brush.setColor(blue);
+                item->setForeground(brush);
+            }
+            else if (i == 2) {
                 QString text;
 
                 text = obj["url"].toString();
@@ -251,6 +268,17 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
                 brush.setColor(blue);
                 item->setForeground(brush);
             }
+            else if (i == 3) {
+                QString text;
+
+                text = obj["aiOriginResult"].toString();
+
+                item = new QStandardItem(text);
+                QFont fn = item->font();
+                fn.setPixelSize(14);
+
+                item->setFont(fn);
+            }
 
             itemList << item;
         }
@@ -259,25 +287,43 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
 
         QModelIndex curIndex = patientDataModel->index(patientDataModel->rowCount() - 1, 0);
     }
+    
+    tableView->hideColumn(2);
+    //tableView->hideColumn(3);
+
     reply->deleteLater();
 }
 
 void PatientTab::onTableClicked(const QModelIndex& index)
 {
-    if (index.isValid() && index.column() == 1) {
-        QString url = index.data().toString();
+    if (index.isValid() && index.column() == 1 && !isDownloading) {
+
+        int row = tableView->currentIndex().row();
+
+        QModelIndex curIndex = patientDataModel->index(row, 2);
+        QString url = patientDataModel->data(curIndex).toString();
+
+        curIndex = patientDataModel->index(row, 3);
+        landmarkS = patientDataModel->data(curIndex).toString();
+
+        qDebug() << "url " << url;
+
         //QDesktopServices::openUrl(QUrl(url));
+        isDownloading = true;
 
         QNetworkClient::getInstance().downloadImage(url, this, SLOT(onDownloadImage(QNetworkReply*)));
     }
 }
 
 void PatientTab::onDownloadImage(QNetworkReply* reply) {
+
+    qDebug() << "landmarkString" << landmarkS;
+
     QByteArray imageData = reply->readAll();
 
     QImage image = QImage::fromData(imageData);
 
-    qDebug() << "image format: " << image.format();
+    qDebug() << "onDownloadImage() image format: " << image.format();
 
     QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
     QString savePath = QDir(visitFolderPath).filePath(QString::fromStdString("d2.png"));
@@ -288,8 +334,7 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
 
     int height = FourChannelPNG.rows;
     int width = FourChannelPNG.cols;
-
-    qDebug() << "height: " << height << ", " << width;
+    qDebug() << "dimension(h, w): " << height << ", " << width;
 
     std::vector<cv::Mat>channels(4);
     cv::split(FourChannelPNG, channels);
@@ -353,13 +398,164 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
 
     /** Convert CV image to QImage */
     QImage qColorImage = convertColorCVToQImage(ColorIMG);
-    QImage qDepthImage1 = convertDepthToColorCVToColorizedQImageDetailed(AlignedDepthIMG1); // 16 bit
-    QImage qDepthImage2 = convertDepthToColorCVToColorizedQImageDetailed(AlignedDepthIMG2); // 16 bit
+    //QImage qDepthImage1 = convertDepthToColorCVToColorizedQImageDetailed(AlignedDepthIMG1); // 16 bit
+    //QImage qDepthImage2 = convertDepthToColorCVToColorizedQImageDetailed(AlignedDepthIMG2); // 16 bit
     /** Convert CV image to QImage END */
 
-    ShowImagesDialog dialog;
+
+    QString aiOriginResult = landmarkS;
+    if (aiOriginResult == "") {
+        int w = AlignedDepthIMG1.cols;
+        int h = AlignedDepthIMG1.rows;
+        std::string PtC = "[" + std::to_string(w / 2) + ", " + std::to_string(h / 5) + "], ";
+        std::string PtA2 = "[" + std::to_string(2 * w / 3) + ", " + std::to_string(2 * h / 5) + "], ";
+        std::string PtA1 = "[" + std::to_string(w / 3) + ", " + std::to_string(2 * h / 5) + "], ";
+        std::string PtB2 = "[" + std::to_string(2 * w / 3) + ", " + std::to_string(3 * h / 5) + "], ";
+        std::string PtB1 = "[" + std::to_string(w / 3) + ", " + std::to_string(3 * h / 5) + "], ";
+        std::string PtD = "[" + std::to_string(w / 2) + ", " + std::to_string(4 * h / 5) + "], ";
+        std::string complete = "[" + PtC + PtA2 + PtA1 + PtB2 + PtB1 + PtD + "]";
+        aiOriginResult = QString::fromStdString(complete);
+    }
+
+    AnnotateTab* annotateTab = this->parent->annotateTab;
+    //annotateTab->imageId = imageId;
+
+    QStringList list = aiOriginResult.split(",");
+    for (int i = 0; i < list.size(); i++) {
+        QString chopped = list[i].remove("[").remove("]");
+        float f = chopped.toFloat();
+
+        switch (i) {
+            case 0: annotateTab->predictedCX = f; break;
+            case 1: annotateTab->predictedCY = f; break;
+            case 2: annotateTab->predictedA2X = f; break;
+            case 3: annotateTab->predictedA2Y = f; break;
+            case 4: annotateTab->predictedA1X = f; break;
+            case 5: annotateTab->predictedA1Y = f; break;
+            case 6: annotateTab->predictedB2X = f; break;
+            case 7: annotateTab->predictedB2Y = f; break;
+            case 8: annotateTab->predictedB1X = f; break;
+            case 9: annotateTab->predictedB1Y = f; break;
+            case 10: annotateTab->predictedDX = f; break;
+            case 11: annotateTab->predictedDY = f; break;
+        }
+    }
+
+    if (!KinectEngine::getInstance().isDeviceOpened()) {
+        KinectEngine::getInstance().configDevice();
+        bool isSuccess = KinectEngine::getInstance().openDevice();
+
+        if (!isSuccess) {
+            TwoLinesDialog dialog;
+            dialog.setLine1("Kinect device cannot be opened!");
+            dialog.setLine2("Please check it and try again.");
+            dialog.exec();
+            return;
+        }
+    }
+
+    isDownloading = false;
+
+    this->parent->annotateTab->reloadCurrentImage(qColorImage, AlignedDepthIMG1);
+    this->parent->ui.tabWidget->setTabEnabled(4, true);
+    this->parent->ui.tabWidget->setCurrentIndex(4);
+
+    /*ShowImagesDialog dialog;
     dialog.setQColorImage(qColorImage);
     dialog.setQDepthImage1(qDepthImage1);
     dialog.setQDepthImage2(qDepthImage2);
-    dialog.exec();
+    dialog.exec();*/
 }
+
+
+//void PatientTab::onDownloadImage(QNetworkReply* reply) {
+//    QByteArray imageData = reply->readAll();
+//
+//    QImage image = QImage::fromData(imageData);
+//
+//    qDebug() << "image format: " << image.format();
+//
+//    QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
+//    QString savePath = QDir(visitFolderPath).filePath(QString::fromStdString("d2.png"));
+//
+//    image.save(savePath);
+//
+//    cv::Mat FourChannelPNG = cv::imread(savePath.toStdString(), -1);
+//
+//    int height = FourChannelPNG.rows;
+//    int width = FourChannelPNG.cols;
+//
+//    qDebug() << "height: " << height << ", " << width;
+//
+//    std::vector<cv::Mat>channels(4);
+//    cv::split(FourChannelPNG, channels);
+//
+//    /** ColorIMG */
+//    cv::Mat ColorIMG = cv::Mat::zeros(height, width, CV_8UC3);
+//    std::vector<cv::Mat>colorIMGChannels(3);
+//    colorIMGChannels[0] = cv::Mat::zeros(height, width, CV_8UC1);
+//    colorIMGChannels[1] = cv::Mat::zeros(height, width, CV_8UC1);
+//    colorIMGChannels[2] = cv::Mat::zeros(height, width, CV_8UC1);
+//
+//    for (int i = 0; i < width * height; i++) {
+//        colorIMGChannels[0].at<uint8_t>(i) = channels[1].at<uint16_t>(i) >> 8;
+//        colorIMGChannels[1].at<uint8_t>(i) = channels[2].at<uint16_t>(i) % 256;
+//        colorIMGChannels[2].at<uint8_t>(i) = channels[2].at<uint16_t>(i) >> 8;
+//    }
+//
+//    cv::merge(colorIMGChannels, ColorIMG);
+//
+//    //cv::imshow("RGB", ColorIMG);
+//    /** ColorIMG END */
+//
+//    /** Depth 1 */
+//    cv::Mat AlignedDepthIMG1 = cv::Mat::zeros(height, width, CV_16UC1);
+//    std::vector<cv::Mat>alignedDepthIMG1Channels(1);
+//    alignedDepthIMG1Channels[0] = cv::Mat::zeros(height, width, CV_16UC1);
+//
+//    for (int i = 0; i < width * height; i++) {
+//        alignedDepthIMG1Channels[0].at<uint16_t>(i) = channels[0].at<uint16_t>(i);
+//    }
+//
+//    cv::merge(alignedDepthIMG1Channels, AlignedDepthIMG1);
+//
+//    // Convert from 16 bit to 8 bit for display
+//    cv::Mat AlignedDepthIMG1_8bit;
+//    AlignedDepthIMG1.convertTo(AlignedDepthIMG1_8bit, CV_8U, 255.0 / 5000.0, 0.0);
+//    // Convert from 16 bit to 8 bit for display END
+//
+//    //cv::imshow("Depth1_8bit", AlignedDepthIMG1_8bit);
+//    /** Depth 1 END */
+//
+//
+//     /** Depth 2 */
+//    cv::Mat AlignedDepthIMG2 = cv::Mat::zeros(height, width, CV_16UC1);
+//    std::vector<cv::Mat>alignedDepthIMG2Channels(1);
+//    alignedDepthIMG2Channels[0] = cv::Mat::zeros(height, width, CV_16UC1);
+//
+//    for (int i = 0; i < width * height; i++) {
+//        alignedDepthIMG2Channels[0].at<uint16_t>(i) = channels[3].at<uint16_t>(i);
+//    }
+//
+//    cv::merge(alignedDepthIMG2Channels, AlignedDepthIMG2);
+//
+//    // Convert from 16 bit to 8 bit for display
+//    cv::Mat AlignedDepthIMG2_8bit;
+//    AlignedDepthIMG2.convertTo(AlignedDepthIMG2_8bit, CV_8U, 255.0 / 5000.0, 0.0);
+//    // Convert from 16 bit to 8 bit for display END
+//
+//    //cv::imshow("Depth2_8bit", AlignedDepthIMG2_8bit);
+//    /** Depth 2 END */
+//
+//    /** Convert CV image to QImage */
+//    QImage qColorImage = convertColorCVToQImage(ColorIMG);
+//    QImage qDepthImage1 = convertDepthToColorCVToColorizedQImageDetailed(AlignedDepthIMG1); // 16 bit
+//    QImage qDepthImage2 = convertDepthToColorCVToColorizedQImageDetailed(AlignedDepthIMG2); // 16 bit
+//    /** Convert CV image to QImage END */
+//
+//    ShowImagesDialog dialog;
+//    dialog.setQColorImage(qColorImage);
+//    dialog.setQDepthImage1(qDepthImage1);
+//    dialog.setQDepthImage2(qDepthImage2);
+//    dialog.exec();
+//}

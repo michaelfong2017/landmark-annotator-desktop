@@ -280,7 +280,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->qDepthToColorImage = convertDepthToColorCVToQImage(this->capturedDepthToColorImage);
 		// For annotatetab instead
 		//this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(this->capturedDepthToColorImage);
-		this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImageDetailed(this->capturedDepthToColorImage);
+		//this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImageDetailed(this->capturedDepthToColorImage);
 		// For annotatetab instead END
 
 		/** Initialize clip_rect whenever a new image is captured */
@@ -305,7 +305,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		captureHistory.qDepthImage = qDepthImage;
 		captureHistory.qColorToDepthImage = qColorToDepthImage;
 		captureHistory.qDepthToColorImage = qDepthToColorImage;
-		captureHistory.qDepthToColorColorizedImage = qDepthToColorColorizedImage;
+		//captureHistory.qDepthToColorColorizedImage = qDepthToColorColorizedImage;
 		captureHistory.clip_rect = clip_rect;
 		captureHistories.push_back(captureHistory);
 
@@ -400,9 +400,13 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		int uploadNumber = dataModel->rowCount() - imageBeingAnalyzedTableViewRow;
 
-		new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(), 
+		this->uploadProgressDialog->requests.insert(std::make_pair(uploadNumber, new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(),
+			imageType, imageName, FourChannelPNG,
+			uploadNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog)));
+
+		/*new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(), 
 			imageType, imageName, FourChannelPNG, 
-			uploadNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog);
+			uploadNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog)*/;
 
 		//this->uploadProgressDialog->requests.push_back(r);
 		//QNetworkClient::getInstance().uploadImage(FourChannelPNG, this, SLOT(onUploadImage(QNetworkReply*)));
@@ -579,7 +583,7 @@ void CaptureTab::clearCaptureHistories() {
 	qDepthImage = QImage();
 	qColorToDepthImage = QImage();
 	qDepthToColorImage = QImage();
-	qDepthToColorColorizedImage = QImage();
+	//qDepthToColorColorizedImage = QImage(); // not longer needed. Should be computed in annotate tab itself
 	RANSACImage.release();
 	imageType = -1; // Update on image selection
 	imageName = "";
@@ -1024,7 +1028,7 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 	this->isUploading = false;
 
 	// Move to annotate tab which index is 4
-	this->parent->annotateTab->reloadCurrentImage();
+	this->parent->annotateTab->reloadCurrentImage(getQColorImage(), getCapturedDepthToColorImage());
 	//this->parent->ui.tabWidget->setCurrentIndex(4);
 }
 
@@ -1064,10 +1068,6 @@ QImage CaptureTab::getQDepthToColorImage()
 	return this->qDepthToColorImage;
 }
 
-QImage CaptureTab::getQDepthToColorColorizedImage()
-{
-	return this->qDepthToColorColorizedImage;
-}
 
 int CaptureTab::getCaptureCount() { return this->captureCount; }
 
@@ -1385,7 +1385,7 @@ void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex
 	qDepthImage = captureHistory.qDepthImage;
 	qColorToDepthImage = captureHistory.qColorToDepthImage;
 	qDepthToColorImage = captureHistory.qDepthToColorImage;
-	qDepthToColorColorizedImage = captureHistory.qDepthToColorColorizedImage;
+	//qDepthToColorColorizedImage = captureHistory.qDepthToColorColorizedImage;
 	clip_rect = captureHistory.clip_rect;
 
 	displayCapturedImages();

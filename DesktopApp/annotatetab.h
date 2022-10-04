@@ -23,7 +23,7 @@ class AnnotateTab : public QWidget
 public:
     AnnotateTab(DesktopApp* parent);
 
-    void reloadCurrentImage();
+    void reloadCurrentImage(QImage, cv::Mat);
 
     cv::Mat getDepthToColorImage();
 
@@ -69,6 +69,7 @@ public:
 
 private:
     cv::Mat depthToColorImage;
+    cv::Mat recalculatedFullResolutionDepthImage;
 
     QImage qColorImage;
     QImage qDepthToColorColorizedImage;

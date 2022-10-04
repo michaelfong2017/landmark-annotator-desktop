@@ -50,6 +50,8 @@ void UploadProgressDialog::onUploading(QString patientName, int captureNumber)
 {
     qDebug() << "UploadProgressDialog onUploading";
 
+    qDebug() << requests.size();
+
     QList<QStandardItem*> itemList;
     QStandardItem* item;
     for (int j = 0; j < COLUMN_COUNT; j++)
@@ -90,6 +92,9 @@ void UploadProgressDialog::onCompleted(int uploadNumber)
     index = dataModel->index(dataModel->rowCount() - uploadNumber, 3);
     dataModel->setData(index, QString("Completed"), Qt::DisplayRole);
     dataModel->setData(index, QColor(Qt::blue), Qt::ForegroundRole);
+
+    // delete uploadrequest object << not work now
+    //delete (requests.find(uploadNumber)->second);
 }
 
 void UploadProgressDialog::onFailed(int uploadNumber)

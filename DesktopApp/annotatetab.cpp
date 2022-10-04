@@ -22,38 +22,6 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 	this->parent->ui.graphicsViewAnnotation2->setScene(this->depthToColorScene);
 	this->parent->ui.graphicsViewAnnotation2->show();
 
-	/*QObject::connect(this->parent->ui.saveButtonAnnotateTab, &QPushButton::clicked, [this]() {
-		QString dateTimeString = Helper::getCurrentDateTimeString();
-		QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
-		QString colorSavePath = visitFolderPath + "/landmarks_color_" + dateTimeString + ".png";
-		QString depthToColorSavePath = visitFolderPath + "/landmarks_rgbd_" + dateTimeString + ".png";
-		QString landmarksSavePath = visitFolderPath + "/landmarks_" + dateTimeString + ".json";
-
-		// Save color image
-		QImageWriter colorWriter(colorSavePath);
-		if (!colorWriter.write(this->annotatedColorImage)) {
-			qDebug() << colorWriter.errorString();
-			this->parent->ui.saveInfoAnnotateTab->setText("Something went wrong, cannot save images.");
-			return;
-		}
-
-		// Save RGBD image
-		QImageWriter depthToColorWriter(depthToColorSavePath);
-		if (!depthToColorWriter.write(this->annotatedDepthToColorColorizedImage)) {
-			qDebug() << depthToColorWriter.errorString();
-			this->parent->ui.saveInfoAnnotateTab->setText("Something went wrong, cannot save images.");
-			return;
-		}
-
-		// Save landmarks in json
-		QFile jsonFile(landmarksSavePath);
-		jsonFile.open(QFile::WriteOnly);
-		QJsonDocument document = this->getAnnotationsJson();
-		jsonFile.write(document.toJson());
-
-		this->parent->ui.saveInfoAnnotateTab->setText("Images saved as " + colorSavePath + " and " + depthToColorSavePath);
-		});*/
-
 	QObject::connect(this->parent->ui.confirmLandmarksButton, &QPushButton::clicked, [this]() {
 		qDebug() << "confirmLandmarksButton clicked";
 
@@ -159,34 +127,48 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 
 }
 
-void AnnotateTab::reloadCurrentImage() {
+void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToColorImage) {
+
 	// Remove existing annotations in annotations member variable
 	for (auto it : this->annotationsOnRight) this->annotationsOnRight[it.first] = QPointF();
 	// Remove existing annotations in annotations member variable END
 
-	this->depthToColorImage = this->parent->captureTab->getCapturedDepthToColorImage().clone();
+	this->depthToColorImage = depthMapToColorImage.clone();
 
 	if (depthToColorImage.empty()) {
 		qCritical() << "Cannot proceed since no successful depthToColorImage has been captured.";
 		return;
 	}
 
+
+	cv::Mat BlankImage = cv::Mat(1080, 1920, CV_16UC1);
+	cv::Mat destRoi = BlankImage(cv::Rect(560, 0, 800, 1080));
+	depthMapToColorImage.copyTo(destRoi);
+	this->recalculatedFullResolutionDepthImage = BlankImage;
+
+	/*cv::Mat view;
+	this->recalculatedFullResolutionDepthImage.convertTo(view, CV_8U, 255.0 / 5000.0, 0.0);
+	cv::imshow("Checking", view);*/
+
 	/** Display ai image from url */
 	//QNetworkClient::getInstance().downloadImage(this->aiImageUrl, this, SLOT(onDownloadImage(QNetworkReply*)));
 	/** Display ai image from url END */
 
-	this->qColorImage = this->parent->captureTab->getQColorImage().copy();
-	this->qDepthToColorColorizedImage = this->parent->captureTab->getQDepthToColorColorizedImage().copy();
+	this->qColorImage = colorImageLeft.copy();
+	this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImageDetailed(depthMapToColorImage);
 
 	/** Cropping part 2 */
-	cv::Rect cropRect = this->parent->captureTab->cropRect;
+	/*cv::Rect cropRect = this->parent->captureTab->cropRect;
 	this->qColorImage = this->qColorImage.copy(cropRect.x, cropRect.y, cropRect.width, cropRect.height);
-	this->qDepthToColorColorizedImage = this->qDepthToColorColorizedImage.copy(cropRect.x, cropRect.y, cropRect.width, cropRect.height);
+	this->qDepthToColorColorizedImage = this->qDepthToColorColorizedImage.copy(cropRect.x, cropRect.y, cropRect.width, cropRect.height);*/
 	/** Cropping part 2 END */
 
 	// scale both images according to displaying window size
 	int width = this->parent->ui.graphicsViewAnnotation->width();
 	int height = this->parent->ui.graphicsViewAnnotation->height();
+
+	qDebug() << width << height;
+
 	this->annotatedColorImage = this->qColorImage.copy().scaled(width, height, Qt::KeepAspectRatio);
 
 	width = this->parent->ui.graphicsViewAnnotation2->width();
@@ -221,7 +203,9 @@ void AnnotateTab::reloadCurrentImage() {
 		y = it.second.y();
 		x *= this->scalingFactorForRight;
 		y *= this->scalingFactorForRight;
-		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->depthToColorImage);
+		//QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->depthToColorImage);
+		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x+560, y, this->recalculatedFullResolutionDepthImage);
+		
 
 		if (this->annotations3D.find(it.first) == this->annotations3D.end()) {
 			this->annotations3D.insert({ it.first, vector3D });

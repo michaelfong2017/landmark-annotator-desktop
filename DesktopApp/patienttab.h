@@ -15,6 +15,8 @@ class PatientTab : public QWidget
     Q_OBJECT
 
 public:
+    bool isDownloading = false;
+    QString landmarkS = "";
     PatientTab(DesktopApp* parent);
     DesktopApp* getParent();
     void onEnterTab();

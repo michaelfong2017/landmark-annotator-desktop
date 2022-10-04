@@ -544,7 +544,6 @@ void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb)
 QVector3D KinectEngine::query3DPoint(int x, int y, cv::Mat depthToColorImage)
 {
 	ushort d = depthToColorImage.at<ushort>(y, x);
-	//qDebug() << "d: " << d;
 
 	k4a_calibration_t calibration;
 	if (k4a_device_get_calibration(this->device, this->config.depth_mode, this->config.color_resolution, &calibration) != K4A_RESULT_SUCCEEDED) {

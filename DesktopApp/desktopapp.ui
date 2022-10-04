@@ -1465,19 +1465,47 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_31">
+          <layout class="QHBoxLayout" name="horizontalLayout_31" stretch="1,1">
            <item>
-            <widget class="QGraphicsView" name="graphicsViewAnnotation">
-             <property name="styleSheet">
-              <string notr="true">QScrollBar {height:0px; width:0px;}
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item alignment="Qt::AlignHCenter">
+              <widget class="QGraphicsView" name="graphicsViewAnnotation">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>533</width>
+                 <height>720</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QScrollBar {height:0px; width:0px;}
 </string>
-             </property>
-            </widget>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_18">
-             <item>
+             <item alignment="Qt::AlignHCenter">
               <widget class="QGraphicsView" name="graphicsViewAnnotation2">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>320</width>
+                 <height>432</height>
+                </size>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QScrollBar {height:0px; width:0px;}</string>
                </property>

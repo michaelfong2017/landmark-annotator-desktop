@@ -45,7 +45,7 @@ public:
     QImage getQDepthImage();
     QImage getQColorToDepthImage();
     QImage getQDepthToColorImage();
-    QImage getQDepthToColorColorizedImage();
+    //QImage getQDepthToColorColorizedImage();
 
     void clearCaptureHistories();
 
@@ -83,7 +83,7 @@ private:
     QImage qDepthImage;
     QImage qColorToDepthImage;
     QImage qDepthToColorImage;
-    QImage qDepthToColorColorizedImage;
+    //QImage qDepthToColorColorizedImage;
 
     cv::Mat RANSACImage;
 

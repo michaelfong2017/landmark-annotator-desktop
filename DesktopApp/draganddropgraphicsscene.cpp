@@ -148,7 +148,8 @@ void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 
 		x *= *this->annotateTab->getScalingFactor();
 		y *= *this->annotateTab->getScalingFactor();
-		//qDebug() << "Check: " << x << ". " << y;
+		qDebug() << "Check: " << x << ". " << y;
+
 		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->annotateTab->getDepthToColorImage());
 		
 		(*this->annotateTab->getAnnotations3D())[this->pointKey].setX(vector3D.x());
