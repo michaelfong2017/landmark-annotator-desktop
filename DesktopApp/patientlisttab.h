@@ -8,6 +8,7 @@
 #include <vector>
 #include "patienttab.h"
 #include "helper.h"
+#include "patientlistsortfilterproxymodel.h"
 
 class PatientListTab : public QWidget
 {
@@ -23,8 +24,8 @@ private:
     DesktopApp* parent;
     QTableView* tableView;
     QStandardItemModel* patientListDataModel;
-    int currentPageIndex = 0;
-    const int ROWS_PER_PAGE = 20;
+    //int currentPageIndex = 0;
+    //const int ROWS_PER_PAGE = 20;
 
 private slots:
     void onFetchPatientList(QNetworkReply* reply);

@@ -9,8 +9,16 @@ PatientListTab::PatientListTab(DesktopApp* parent)
 	this->parent = parent;
 
     tableView = this->parent->ui.patientListTab->findChild<QTableView*>("tableView");
+
+    //patientListDataModel = new QStandardItemModel(0, COLUMN_COUNT, this);
+    //tableView->setModel(this->patientListDataModel);
+
     patientListDataModel = new QStandardItemModel(0, COLUMN_COUNT, this);
-    tableView->setModel(this->patientListDataModel);
+    PatientListSortFilterProxyModel* proxyModel = new PatientListSortFilterProxyModel(this);
+    proxyModel->setSourceModel(patientListDataModel);
+    tableView->setModel(proxyModel);
+    tableView->setSortingEnabled(true);
+
 
     tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -33,24 +41,28 @@ PatientListTab::PatientListTab(DesktopApp* parent)
 		});
 
     /** Patient list table pagination */
-    QObject::connect(this->parent->ui.patientListTab->findChild<QPushButton*>("patientListPreviousPageButton"), &QPushButton::clicked, [this]() {
-        //qDebug() << "Previous page button clicked";
-        if (currentPageIndex != 0) {
-            currentPageIndex--;
-        }
+    //QObject::connect(this->parent->ui.patientListTab->findChild<QPushButton*>("patientListPreviousPageButton"), &QPushButton::clicked, [this]() {
+    //    //qDebug() << "Previous page button clicked";
+    //    //if (currentPageIndex != 0) {
+    //    //    currentPageIndex--;
+    //    //}
 
-        // Re-fetch data
-        this->onEnterTab();
-        });
+    //    // Re-fetch data
+    //    this->onEnterTab();
+    //    });
 
-    QObject::connect(this->parent->ui.patientListTab->findChild<QPushButton*>("patientListNextPageButton"), &QPushButton::clicked, [this]() {
-        //qDebug() << "Next page button clicked";
-        currentPageIndex++;
+    //QObject::connect(this->parent->ui.patientListTab->findChild<QPushButton*>("patientListNextPageButton"), &QPushButton::clicked, [this]() {
+    //    //qDebug() << "Next page button clicked";
+    //    //currentPageIndex++;
 
-        // Re-fetch data
-        this->onEnterTab();
-        });
+    //    // Re-fetch data
+    //    this->onEnterTab();
+    //    });
     /** Patient list table pagination END */
+
+    this->parent->ui.patientListPreviousPageButton->setVisible(false);
+    this->parent->ui.patientListNextPageButton->setVisible(false);
+    this->parent->ui.patientListPageLabel->setVisible(false);
 }
 
 DesktopApp* PatientListTab::getParent()
@@ -105,18 +117,18 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     qDebug() << jsonArray;
     qDebug() << "Number of returned items:" << jsonArray.size();
 
-    while (jsonArray.size() != 0 && ROWS_PER_PAGE * this->currentPageIndex >= jsonArray.size()) {
-        if (currentPageIndex != 0) {
-            this->currentPageIndex--;
-        }
-    }
+    //while (jsonArray.size() != 0 && ROWS_PER_PAGE * this->currentPageIndex >= jsonArray.size()) {
+    //    if (currentPageIndex != 0) {
+    //        this->currentPageIndex--;
+    //    }
+    //}
 
-    this->parent->ui.patientListTab->findChild<QLabel*>("patientListPageLabel")->setText(QString("Page %1").arg(currentPageIndex+1));
+    //this->parent->ui.patientListTab->findChild<QLabel*>("patientListPageLabel")->setText(QString("Page %1").arg(currentPageIndex+1));
 
-    for (int i = ROWS_PER_PAGE * this->currentPageIndex; i < ROWS_PER_PAGE * (this->currentPageIndex + 1); i++) {
-        if (i > jsonArray.size() - 1) {
-            break;
-        }
+    //for (int i = ROWS_PER_PAGE * this->currentPageIndex; i < ROWS_PER_PAGE * (this->currentPageIndex + 1); i++) {
+    //        break;
+    //    }
+    for (int i=0; i<jsonArray.size(); i++) {
         
         QJsonValue value = jsonArray.at(i);
         QJsonObject obj = value.toObject();

@@ -43,9 +43,6 @@
     <ClCompile Include="patient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="patientlisttab.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="patienttab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -77,6 +74,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="uploadprogressdialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="patientlistsortfilterproxymodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="patientlisttab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -165,6 +168,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="uploadprogressdialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="patientlistsortfilterproxymodel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

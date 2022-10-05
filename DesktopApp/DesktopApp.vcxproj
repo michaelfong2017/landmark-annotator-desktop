@@ -124,6 +124,7 @@
     <ClCompile Include="draganddropgraphicsscene.cpp" />
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="kinectengine.cpp" />
+    <ClCompile Include="patientlistsortfilterproxymodel.cpp" />
     <ClCompile Include="reportdialog.cpp" />
     <ClCompile Include="reportdialog_eng.cpp" />
     <ClCompile Include="scribblearea.cpp" />
@@ -131,7 +132,12 @@
     <ClCompile Include="twolinesdialog.cpp" />
     <ClCompile Include="logintab.cpp" />
     <ClCompile Include="patient.cpp" />
-    <ClCompile Include="patientlisttab.cpp" />
+    <ClCompile Include="patientlisttab.cpp">
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
+    </ClCompile>
     <ClCompile Include="patienttab.cpp" />
     <ClCompile Include="qnetworkclient.cpp" />
     <ClCompile Include="recorder.cpp" />
@@ -180,6 +186,7 @@
     <QtMoc Include="scribblearea.h" />
     <QtMoc Include="showimagesdialog.h" />
     <QtMoc Include="reportdialog_eng.h" />
+    <QtMoc Include="patientlistsortfilterproxymodel.h" />
     <ClInclude Include="stdafx.h" />
     <QtMoc Include="uploadrequest.h" />
     <QtMoc Include="uploadprogressdialog.h" />
