@@ -1,4 +1,5 @@
 #include "uploadprogressdialog.h"
+#include "uploadrequest.h"
 
 UploadProgressDialog::UploadProgressDialog()
 	: QDialog()
@@ -16,6 +17,7 @@ UploadProgressDialog::UploadProgressDialog()
 
 	tableView->verticalHeader()->hide();
 
+    bool value = connect(tableView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onSlotRowDoubleClicked(const QModelIndex&)));
 
     /** Headers */
     QStringList headerLabels = { "Upload number", "Patient Name", "Capture number", "Progress" };
@@ -43,15 +45,36 @@ UploadProgressDialog::UploadProgressDialog()
 
 	QObject::connect(ui.buttonBox, &QDialogButtonBox::accepted, [this]() {
 		QDialog::accept();
-		});
+	});
 }
 
-void UploadProgressDialog::onUploading(QString patientName, int captureNumber)
-{
-    qDebug() << "UploadProgressDialog onUploading";
+void UploadProgressDialog::onSlotRowDoubleClicked(const QModelIndex& index) {
+    int row = tableView->currentIndex().row();
+    qDebug() << "Double Clicked row: " << row;
 
-    qDebug() << requests.size();
+    QString uploadNumber = dataModel->data(dataModel->index(row, 0)).toString();
+    qDebug() << "Double Clicked Uploading Number: " << uploadNumber;
 
+    QString status = dataModel->data(dataModel->index(row, 3)).toString();
+
+    if (status == "Failed. Double Click to Retry" || TRUE) {
+        qDebug() << "Reupload Uploading Number: " << uploadNumber;
+        auto it = (requests.find(uploadNumber.toInt()));
+        uploadrequest *h = it->second;
+        h->retry(uploadNumber.toInt());
+    }
+
+}
+
+void UploadProgressDialog::updateRowStatus(int uploadNumber, QString newStatus, QColor color) {
+    QModelIndex index;
+    index = dataModel->index(dataModel->rowCount() - uploadNumber, 3);
+    dataModel->setData(index, newStatus, Qt::DisplayRole);
+    dataModel->setData(index, color, Qt::ForegroundRole);
+}
+
+void UploadProgressDialog::addRow(int uploadNumber, QString patientName, int captureNumber) {
+    
     QList<QStandardItem*> itemList;
     QStandardItem* item;
     for (int j = 0; j < COLUMN_COUNT; j++)
@@ -82,27 +105,33 @@ void UploadProgressDialog::onUploading(QString patientName, int captureNumber)
     }
 
     dataModel->insertRow(0, itemList);
+
+    onUploading(uploadNumber);
+
+}
+
+void UploadProgressDialog::onUploading(int uploadNumber)
+{
+    qDebug() << "UploadProgressDialog onUploading";
+
+    updateRowStatus(uploadNumber, "Uploading...", QColor(Qt::black));
+  
 }
 
 void UploadProgressDialog::onCompleted(int uploadNumber)
 {
     qDebug() << "UploadProgressDialog onCompleted";
 
-    QModelIndex index;
-    index = dataModel->index(dataModel->rowCount() - uploadNumber, 3);
-    dataModel->setData(index, QString("Completed"), Qt::DisplayRole);
-    dataModel->setData(index, QColor(Qt::blue), Qt::ForegroundRole);
+    updateRowStatus(uploadNumber, "Completed", QColor(Qt::blue));
 
     // delete uploadrequest object << not work now
     //delete (requests.find(uploadNumber)->second);
+
 }
 
 void UploadProgressDialog::onFailed(int uploadNumber)
 {
     qDebug() << "UploadProgressDialog onFailed";
 
-    QModelIndex index;
-    index = dataModel->index(dataModel->rowCount() - uploadNumber, 3);
-    dataModel->setData(index, QString("Failed"), Qt::DisplayRole);
-    dataModel->setData(index, QColor(Qt::red), Qt::ForegroundRole);
+    updateRowStatus(uploadNumber, "Failed. Double Click to Retry", QColor(Qt::red));
 }

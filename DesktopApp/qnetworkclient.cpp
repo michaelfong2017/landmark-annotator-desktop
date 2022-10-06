@@ -32,7 +32,7 @@ void QNetworkClient::login(QTabWidget* qTabWidget, QString username, QString pas
 void QNetworkClient::onLogin(QNetworkReply* reply) {
 
     QByteArray response_data = reply->readAll();
-    qDebug() << response_data;
+    //qDebug() << response_data;
 
     /** TIMEOUT */
     if (response_data == nullptr) {
@@ -44,7 +44,7 @@ void QNetworkClient::onLogin(QNetworkReply* reply) {
     /** TIMEOUT END */
 
     QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
-    qDebug() << jsonResponse;
+    //qDebug() << jsonResponse;
     QJsonObject obj = jsonResponse.object();
  
     if (obj.contains("error")) {
@@ -171,7 +171,7 @@ void QNetworkClient::fetchExistingImagesOfPatient(int patientId, const QObject* 
 
     qDebug() << "fetchExistingImagesOfPatient";
 
-    qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId);
+    //qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId);
 
     QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId)));
     request.setRawHeader("Authorization", userToken.toUtf8());
@@ -243,7 +243,7 @@ void QNetworkClient::findLandmarkPredictions(int imageId, const QObject* receive
     request.setRawHeader("Authorization", userToken.toUtf8());
     request.setTransferTimeout(10000);
 
-    qDebug() << QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1").arg(imageId));
+    //qDebug() << QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1").arg(imageId));
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
 
@@ -264,8 +264,7 @@ void QNetworkClient::downloadImage(QString imageUrl, const QObject* receiver, co
 
 void QNetworkClient::confirmLandmarks(int imageId, QString aiOriginResult, const QObject* receiver, const char* member) {
 
-    qDebug() << "confirmLandmarks";
-    qDebug() << "imageId: " << imageId;
+    qDebug() << "confirmLandmarks imageId:" << imageId;
 
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 

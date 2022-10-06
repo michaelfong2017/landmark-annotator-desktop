@@ -140,7 +140,6 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 		return;
 	}
 
-
 	cv::Mat BlankImage = cv::Mat(1080, 1920, CV_16UC1);
 	cv::Mat destRoi = BlankImage(cv::Rect(560, 0, 800, 1080));
 	depthMapToColorImage.copyTo(destRoi);
@@ -216,6 +215,8 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 			this->annotations3D[it.first].setZ(vector3D.z());
 		}
 	}
+
+	this->parent->ui.patientNameInCapture2->setText("Current Patient: " + this->parent->patientTab->getCurrentPatientName());
 
 	this->drawAnnotations();
 	this->computeMetrics();
@@ -396,9 +397,9 @@ void AnnotateTab::computeMetrics() {
 	else 
 	{
 		this->invalidDistance = 0;
-		this->distance1 = - (this->annotations3D["D"].x() * (this->annotations3D["C"].z() / this->annotations3D["D"].z()) 
-			- this->annotations3D["C"].x());
-		//this->distance1 = (this->annotations3D["C"].x() - this->annotations3D["D"].x());
+		/*this->distance1 = - (this->annotations3D["D"].x() * (this->annotations3D["C"].z() / this->annotations3D["D"].z()) 
+			- this->annotations3D["C"].x());*/
+		this->distance1 = (this->annotations3D["C"].x() - this->annotations3D["D"].x());
 	}
 	
 
@@ -413,10 +414,24 @@ void AnnotateTab::computeMetrics() {
 	xDistance = this->annotationsOnRight["A2"].x() - this->annotationsOnRight["A1"].x();
 	this->angle2 = std::atan(yDiff / xDistance) * 180 / PI;
 
-	//Angle between x-diff and z-diff of A1 and A2
-	float xDiff = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
-	float zDiff = this->annotations3D["A1"].z() - this->annotations3D["A2"].z();
-	this->trunkRotation = std::atan(zDiff / xDiff) * 180 / PI;
+	//Angle between x-diff and z-diff of A1 and A2 and B1 B2
+	float AlphaxDiff = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
+	float AlphazDiff = this->annotations3D["A1"].z() - this->annotations3D["A2"].z();
+
+	float BetaxDiff = this->annotations3D["B2"].x() - this->annotations3D["B1"].x();
+	float BetazDiff = this->annotations3D["B1"].z() - this->annotations3D["B2"].z();
+	
+	float AlphaTrunkRotation = std::atan(AlphazDiff / AlphaxDiff) * 180 / PI;
+	float BetaTrunkRotation = std::atan(BetazDiff / BetaxDiff) * 180 / PI;
+
+	/*qDebug() << "AlphaxDiff " << AlphaxDiff;
+	qDebug() << "AlphazDiff " << AlphazDiff;
+	qDebug() << "BetaxDiff " << BetaxDiff;
+	qDebug() << "BetazDiff " << BetazDiff;
+	qDebug() << "AlphaTrunkRotation " << AlphaTrunkRotation;
+	qDebug() << "BetaTrunkRotation " << BetaTrunkRotation;*/
+
+	this->trunkRotation = BetaTrunkRotation - AlphaTrunkRotation;
 }
 
 void AnnotateTab::onConfirmLandmarks(QNetworkReply* reply) {

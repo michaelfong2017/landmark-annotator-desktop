@@ -114,7 +114,7 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     QJsonObject jsonObject = jsonResponse.object();
     QJsonArray jsonArray = jsonObject["items"].toArray();
 
-    qDebug() << jsonArray;
+    //qDebug() << jsonArray;
     qDebug() << "Number of returned items:" << jsonArray.size();
 
     //while (jsonArray.size() != 0 && ROWS_PER_PAGE * this->currentPageIndex >= jsonArray.size()) {

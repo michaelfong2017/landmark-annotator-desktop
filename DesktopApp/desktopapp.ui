@@ -888,9 +888,12 @@
       <attribute name="title">
        <string>Image</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_16">
+      <layout class="QVBoxLayout" name="verticalLayout_16" stretch="0">
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="spacing">
+          <number>6</number>
+         </property>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_30">
            <item>
@@ -953,6 +956,16 @@ color: rgb(255, 0, 5);
             </widget>
            </item>
            <item>
+            <widget class="QLabel" name="recordingGif">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="horizontalSpacer_16">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -972,10 +985,16 @@ color: rgb(255, 0, 5);
            <item>
             <widget class="QGraphicsView" name="graphicsViewVideo4">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>733</width>
+               <height>259</height>
+              </size>
              </property>
              <property name="styleSheet">
               <string notr="true">QScrollBar {height:0px; width:0px;}</string>
@@ -1007,6 +1026,18 @@ color: rgb(255, 0, 5);
           <layout class="QHBoxLayout" name="horizontalLayout_16">
            <item>
             <widget class="QGraphicsView" name="graphicsViewImage">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>733</width>
+               <height>259</height>
+              </size>
+             </property>
              <property name="styleSheet">
               <string notr="true">QScrollBar {height:0px; width:0px;}</string>
              </property>
@@ -1387,6 +1418,9 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_28">
+           <property name="topMargin">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QProgressBar" name="progressBar">
              <property name="sizePolicy">
@@ -1398,46 +1432,32 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>35</height>
+               <height>14</height>
               </size>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::NoFocus</enum>
              </property>
              <property name="styleSheet">
               <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
              </property>
              <property name="value">
-              <number>24</number>
+              <number>0</number>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+             <property name="textVisible">
+              <bool>false</bool>
+             </property>
+             <property name="invertedAppearance">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
           </layout>
          </item>
-         <item>
-          <spacer name="verticalSpacer_10">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Maximum</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>35</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
         </layout>
-       </item>
-       <item>
-        <widget class="QLabel" name="recordingGif">
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>
@@ -1448,21 +1468,41 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
       <layout class="QVBoxLayout" name="verticalLayout_19">
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_17">
-         <item alignment="Qt::AlignRight">
-          <widget class="QPushButton" name="logOutButton4">
-           <property name="minimumSize">
-            <size>
-             <width>100</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
-           </property>
-           <property name="text">
-            <string>Log out</string>
-           </property>
-          </widget>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_17">
+           <item>
+            <widget class="QLabel" name="patientNameInCapture2">
+             <property name="styleSheet">
+              <string notr="true">font: 18px &quot;MS Shell Dlg 2&quot;;</string>
+             </property>
+             <property name="text">
+              <string>Current Patient:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="logOutButton4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+             </property>
+             <property name="text">
+              <string>Log out</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_31" stretch="1,1">

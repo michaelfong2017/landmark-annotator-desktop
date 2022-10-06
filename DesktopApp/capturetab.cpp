@@ -12,7 +12,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	this->recorder = new Recorder(parent);
 	this->parent->ui.recordingIndicatorText->setVisible(false);
 	this->parent->ui.recordingElapsedTime->setVisible(false);
-	this->parent->ui.progressBar->setVisible(false);
+	this->parent->ui.progressBar->setValue(0);
+	this->parent->ui.progressBar->setTextVisible(false);
 
 	this->setDefaultCaptureMode();
 
@@ -323,6 +324,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			return;
 		}
 		qDebug() << "Analysis button clicked";
+
+		if (this->capturedColorImage.empty()) {
+			return;
+		}
+
 		//this->isUploading = true;
 		
 		//this->disableButtonsForUploading();
@@ -335,7 +341,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/** Store the image type of the image being analyzed END */
 
 		/** Cropping part 2 */
-		float cropUIToImageScale = (float)this->getCapturedColorImage().rows / this->parent->ui.graphicsViewImage->sceneRect().height();
+		/*float cropUIToImageScale = (float)this->getCapturedColorImage().rows / this->parent->ui.graphicsViewImage->sceneRect().height();
 		cv::Rect rect(this->clip_rect.left() * cropUIToImageScale, this->clip_rect.top() * cropUIToImageScale, this->clip_rect.width() * cropUIToImageScale, this->clip_rect.height() * cropUIToImageScale);
 
 		if (this->clip_rect.width() == this->max_clip_width) {
@@ -352,7 +358,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->capturedColorImage = this->capturedColorImage(rect);
 		this->capturedDepthToColorImage = this->capturedDepthToColorImage(rect);
 		this->RANSACImage = this->RANSACImage(rect);
-		this->cropRect = rect;
+		this->cropRect = rect;*/
 		/** Cropping part 2 END */
 
 		/* Convert to the special 4 channels image and upload */
@@ -374,7 +380,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		//int width = COLOR_IMAGE_WIDTH;
 		//int height = COLOR_IMAGE_HEIGHT;
 
-		cv::Mat FourChannelPNG = cv::Mat::ones(height, width, CV_16UC4);;
+		cv::Mat FourChannelPNG = cv::Mat::ones(height, width, CV_16UC4);
 		std::vector<cv::Mat>channels3(4);
 		cv::split(FourChannelPNG, channels3);
 
@@ -403,6 +409,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->uploadProgressDialog->requests.insert(std::make_pair(uploadNumber, new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(),
 			imageType, imageName, FourChannelPNG,
 			uploadNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog)));
+
+
 
 		/*new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(), 
 			imageType, imageName, FourChannelPNG, 
@@ -638,7 +646,7 @@ void CaptureTab::setDefaultCaptureMode() {
 
 void CaptureTab::disableButtonsForUploading() {
 
-	this->parent->ui.progressBar->setVisible(true);
+	this->parent->ui.progressBar->setTextVisible(true);
 	this->parent->ui.progressBar->setValue(1);
 
 	this->parent->ui.captureButton->setEnabled(false);
@@ -664,8 +672,8 @@ void CaptureTab::disableButtonsForUploading() {
 
 void CaptureTab::enableButtonsForUploading() {
 
-	this->parent->ui.progressBar->setValue(1);
-	this->parent->ui.progressBar->setVisible(false);
+	this->parent->ui.progressBar->setValue(0);
+	this->parent->ui.progressBar->setTextVisible(false);
 
 	this->parent->ui.captureButton->setEnabled(true);
 	this->parent->ui.saveVideoButton->setEnabled(true);
@@ -1183,8 +1191,8 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 		b = abcd[1];
 		c = abcd[2];
 		d = abcd[3];
-		qDebug() << "Equation of plane is " << a << " x + " << b
-			<< " y + " << c << " z + " << d << " = 0.";
+		/*qDebug() << "Equation of plane is " << a << " x + " << b
+			<< " y + " << c << " z + " << d << " = 0.";*/
 	
 		for (int y = 0; y < depthToColorImage.rows; y+=2) {
 			for (int x = 0; x < depthToColorImage.cols; x+=2) {
@@ -1222,10 +1230,10 @@ cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 		}
 
 		iterationCount++;
-		qDebug() << "Inliers: " << inlierCount;
+		//qDebug() << "Inliers: " << inlierCount;
 	
 	}
-	qDebug() << "Max Inliers: " << MaxInlierCount;
+	//qDebug() << "Max Inliers: " << MaxInlierCount;
 
 	// computer actual image
 	cv::Mat out = cv::Mat::zeros(depthToColorImage.rows, depthToColorImage.cols, CV_16UC1);

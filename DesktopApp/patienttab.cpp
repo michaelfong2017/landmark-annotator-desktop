@@ -208,7 +208,7 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
     QByteArray response_data = reply->readAll();
     QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
 
-    qDebug() << jsonResponse;
+    //qDebug() << jsonResponse;
 
     QJsonObject jsonObject = jsonResponse.object();
     QJsonArray jsonArray = jsonObject["items"].toArray();
@@ -325,16 +325,18 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
 
     qDebug() << "onDownloadImage() image format: " << image.format();
 
-    QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
-    QString savePath = QDir(visitFolderPath).filePath(QString::fromStdString("d2.png"));
+    /*QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
+    QString savePath = QDir(visitFolderPath).filePath(QString::fromStdString("d2.png"));*/
 
-    image.save(savePath);
-
+    /*image.save(savePath);
     cv::Mat FourChannelPNG = cv::imread(savePath.toStdString(), -1);
+    qDebug() << "savePath" << savePath;*/
+
+    cv::Mat FourChannelPNG = cv::Mat(image.height(), image.width(), CV_16UC4, image.bits(), image.bytesPerLine());
 
     int height = FourChannelPNG.rows;
     int width = FourChannelPNG.cols;
-    qDebug() << "dimension(h, w): " << height << ", " << width;
+    qDebug() << "dimension(h, w, c): " << height << ", " << width << ", " << FourChannelPNG.channels();
 
     std::vector<cv::Mat>channels(4);
     cv::split(FourChannelPNG, channels);
@@ -348,8 +350,8 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
 
     for (int i = 0; i < width * height; i++) {
         colorIMGChannels[0].at<uint8_t>(i) = channels[1].at<uint16_t>(i) >> 8;
-        colorIMGChannels[1].at<uint8_t>(i) = channels[2].at<uint16_t>(i) % 256;
-        colorIMGChannels[2].at<uint8_t>(i) = channels[2].at<uint16_t>(i) >> 8;
+        colorIMGChannels[1].at<uint8_t>(i) = channels[0].at<uint16_t>(i) % 256;
+        colorIMGChannels[2].at<uint8_t>(i) = channels[0].at<uint16_t>(i) >> 8;
     }
 
     cv::merge(colorIMGChannels, ColorIMG);
@@ -363,7 +365,7 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
     alignedDepthIMG1Channels[0] = cv::Mat::zeros(height, width, CV_16UC1);
 
     for (int i = 0; i < width * height; i++) {
-        alignedDepthIMG1Channels[0].at<uint16_t>(i) = channels[0].at<uint16_t>(i);
+        alignedDepthIMG1Channels[0].at<uint16_t>(i) = channels[2].at<uint16_t>(i);
     }
 
     cv::merge(alignedDepthIMG1Channels, AlignedDepthIMG1);

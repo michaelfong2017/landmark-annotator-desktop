@@ -16,15 +16,19 @@ public:
 	UploadProgressDialog();
 	Ui::UploadProgressDialogUI ui;
 	int latestUploadNumber = 0; // Start from 1 (increment from 0 to 1 when first use)
-	void onUploading(QString patientName, int captureNumber);
+	void onUploading(int uploadNumber);
 	void onCompleted(int uploadNumber);
 	void onFailed(int uploadNumber);
-	void RetryAllFailedAttempts();
+	void updateRowStatus(int uploadNumber, QString newStatus, QColor color);
+	void addRow(int uploadNumber, QString patientName, int captureNumber);
 
 private:
 	QTableView* tableView;
 	QStandardItemModel* dataModel;
 	const int COLUMN_COUNT = 4;
+
+private slots:
+	void onSlotRowDoubleClicked(const QModelIndex& index);
 };
 
 #endif

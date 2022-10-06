@@ -11,6 +11,8 @@ ClipGraphicsScene::ClipGraphicsScene(CaptureTab* captureTab, QGraphicsPixmapItem
 }
 
 void ClipGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
+
+	return;
 	float x = event->scenePos().x(), y = event->scenePos().y();
 
 	this->pointKey = -1;
@@ -49,6 +51,9 @@ void ClipGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 
 void ClipGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
+
+	return;
+
 	float x = event->scenePos().x(), y = event->scenePos().y();
 
 	qDebug() << "mouseMoveEvent (x,y) = (" << x << "," << y << ")";
@@ -120,6 +125,7 @@ void ClipGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
 void ClipGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
+	return;
 	float x = event->scenePos().x(), y = event->scenePos().y();
 
 	//qDebug() << "mouseReleaseEvent (x,y) = (" << x << "," << y << ")";
