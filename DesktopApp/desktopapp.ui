@@ -58,7 +58,7 @@
 </string>
          </property>
          <property name="text">
-          <string>V 1.6</string>
+          <string>V 1.6 Test 1</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>

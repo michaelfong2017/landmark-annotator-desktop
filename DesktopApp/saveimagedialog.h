@@ -13,6 +13,7 @@ class SaveImageDialog : public QDialog
 public:
 	SaveImageDialog(CaptureTab *parent = nullptr);
 	Ui::SaveImageDialogUI ui;
+	void SaveImageDialog::onSaveButtonClicked();
 
 private:
 	CaptureTab *parent;

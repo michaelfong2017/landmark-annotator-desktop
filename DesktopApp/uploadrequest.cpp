@@ -17,11 +17,11 @@ uploadrequest::uploadrequest(QString userToken, QString signature, int patientId
 
     this->uploadNumber = ++uploadProgressDialog->latestUploadNumber;
 
-    uploadImageNormally(this, SLOT(onUploadImageNormally(QNetworkReply*)));
+    //uploadImageNormally(this, SLOT(onUploadImageNormally(QNetworkReply*)));
 
-    /*if (signature == "") {
+    if (signature == "") {
         getSignature();
-    }*/
+    }
 }
 
 void uploadrequest::retry(int uploadNumber) {
@@ -35,7 +35,7 @@ void uploadrequest::reuploadNormally(int uploadNumber, const QObject* receiver, 
 
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/api/v1/upload")));
+    QNetworkRequest request(QUrl(QString("https://api.conovamed.com/api/v1/upload")));
     request.setRawHeader("Authorization", this->userToken.toUtf8());
     request.setTransferTimeout(25000);
 
@@ -63,7 +63,7 @@ void uploadrequest::getSignature() {
     qDebug() << "getSignature()";
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
     QEventLoop eventLoop;
-    QNetworkRequest request(QUrl("https://api.conovamed.com/api/v1/file/aliyunOssSignature?dir=wukong&expireln=3600"));
+    QNetworkRequest request(QUrl("https://api.conovamed.com/api/v1/file/aliyunOssSignature?dir=wukong&expireln=600"));
     request.setRawHeader("Authorization",    this->userToken.toUtf8());
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSignatureReceived(QNetworkReply*)));
@@ -99,44 +99,6 @@ void uploadrequest::onSignatureReceived(QNetworkReply* reply) {
 
     uploadImageToAliyun(this, SLOT(onUploadImageToAliyunCompleted(QNetworkReply*)), jsonResponse);
 }
-
-//void uploadrequest::uploadImageToAliyun(const QObject* receiver, const char* member, QJsonDocument json) {
-//
-//    qDebug() << "uploadImageToAliyun: " << imageToSend.channels();
-//
-//    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
-//
-//    QNetworkRequest request(QUrl(QString(json["host"].toString())));
-//    request.setTransferTimeout(25000);
-//
-//    QJsonObject obj;
-//    obj["policy"] = json["policy"].toString();
-//    obj["OSSAccessKeyId"] = json["accessId"].toString();
-//    obj["success_action_status"] = "200";
-//    obj["signature"] = json["signature"].toString();
-//    obj["key"] = "/wukong/test.png";
-//    QByteArray data = QJsonDocument(obj).toJson();
-//
-//
-//    QHttpMultiPart* multipart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-//
-//    QHttpPart imageArray;
-//    imageArray.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));
-//    imageArray.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"test.png\""));
-//
-//    QByteArray byteArray;
-//    QBuffer buffer(&byteArray);
-//    QImage qImage((const uchar*)imageToSend.data, imageToSend.cols, imageToSend.rows, imageToSend.step, QImage::Format_RGBA64);
-//    qImage.bits();
-//    qImage.save(&buffer, "PNG");
-//    imageArray.setBody(byteArray);
-//
-//    multipart->append(imageArray);
-//
-//    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
-//
-//    manager->post(request, data, multipart);
-//}
 
 void uploadrequest::uploadImageToAliyun(const QObject* receiver, const char* member, QJsonDocument json) {
 
@@ -187,11 +149,11 @@ void uploadrequest::uploadImageToAliyun(const QObject* receiver, const char* mem
     //文件Key
     QHttpPart textPart5;
     textPart5.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"key\""));
-    textPart5.setBody(QString("wukong/testImage1123122").toUtf8());
+    textPart5.setBody(QString("wukong/testImage1123").toUtf8());
 
     multipart->append(textPart);
     multipart->append(textPart2);
-    //multipart->append(textPart3);
+    multipart->append(textPart3);
     multipart->append(textPart4);
     multipart->append(textPart5);
 
@@ -205,8 +167,8 @@ void uploadrequest::uploadImageToAliyun(const QObject* receiver, const char* mem
     //multipart->append(imagePart);
 
     QHttpPart imageArray;
+    imageArray.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"testImage1123.png\""));
     imageArray.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));
-    imageArray.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"test.png\""));
 
     QByteArray byteArray;
     QBuffer buffer(&byteArray);
@@ -234,7 +196,20 @@ void uploadrequest::onUploadImageToAliyunCompleted(QNetworkReply* reply) {
 
     reply->deleteLater();
 
-    
+    /** TIMEOUT */
+    if (response_data == nullptr) {
+        uploadProgressDialog->onFailed(this->uploadNumber);
+
+        TwoLinesDialog dialog;
+        dialog.setLine1("Analysis Step 1 Timeout!");
+        dialog.exec();
+        return;
+    }
+    /** TIMEOUT END */
+
+    stageProgress = 1;
+    receivedURL = "";
+    bindImageUrl(this, SLOT(onBindImageUrl(QNetworkReply*)));
 }
 
 void uploadrequest::uploadImageNormally(const QObject* receiver, const char* member) {
@@ -245,7 +220,7 @@ void uploadrequest::uploadImageNormally(const QObject* receiver, const char* mem
 
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/api/v1/upload")));
+    QNetworkRequest request(QUrl(QString("https://api.conovamed.com/api/v1/upload")));
     request.setRawHeader("Authorization", this->userToken.toUtf8());
     request.setTransferTimeout(25000);
 
@@ -305,7 +280,7 @@ void uploadrequest::bindImageUrl(const QObject* receiver, const char* member) {
 
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/images"));
+    QNetworkRequest request(QUrl("https://api.conovamed.com/doctor-api/v1/images"));
     request.setRawHeader("Authorization", userToken.toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     request.setTransferTimeout(10000);
@@ -344,7 +319,10 @@ void uploadrequest::onBindImageUrl(QNetworkReply* reply) {
     /** TIMEOUT END */
 
     stageProgress = 2;
+
     uploadProgressDialog->onCompleted(this->uploadNumber);
+    //uploadProgressDialog = NULL;
+    //delete this;
 }
 
 void uploadrequest::debugRequest(QNetworkRequest request, QByteArray data = QByteArray())

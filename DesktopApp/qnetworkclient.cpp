@@ -13,7 +13,7 @@ void QNetworkClient::login(QTabWidget* qTabWidget, QString username, QString pas
     // Login
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/account/login"));
+    QNetworkRequest request(QUrl("https://api.conovamed.com/doctor-api/v1/account/login"));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     request.setTransferTimeout(10000);
 
@@ -66,7 +66,7 @@ void QNetworkClient::onLogin(QNetworkReply* reply) {
 void QNetworkClient::fetchPatientList(const QObject* receiver, const char* member) {
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients?MaxResultCount=500&Category=Passed"));
+    QNetworkRequest request(QUrl("https://api.conovamed.com/doctor-api/v1/patients?MaxResultCount=500&Category=Passed"));
     request.setRawHeader("Authorization", this->userToken.toUtf8());
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
@@ -79,7 +79,7 @@ void QNetworkClient::checkNewPatient(Patient patient, const QObject* receiver, c
 
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/check"));
+    QNetworkRequest request(QUrl("https://api.conovamed.com/doctor-api/v1/patients/check"));
     request.setRawHeader("Authorization", userToken.toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
@@ -124,7 +124,7 @@ void QNetworkClient::checkNewPatient(Patient patient, const QObject* receiver, c
 void QNetworkClient::uploadNewPatient(Patient patient, const QObject* receiver, const char* member) {
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/patients"));
+    QNetworkRequest request(QUrl("https://api.conovamed.com/doctor-api/v1/patients"));
     request.setRawHeader("Authorization", userToken.toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
@@ -171,9 +171,9 @@ void QNetworkClient::fetchExistingImagesOfPatient(int patientId, const QObject* 
 
     qDebug() << "fetchExistingImagesOfPatient";
 
-    //qDebug() << QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId);
+    //qDebug() << QString("https://api.conovamed.com/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId);
 
-    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId)));
+    QNetworkRequest request(QUrl(QString("https://api.conovamed.com/doctor-api/v1/patients/%1/images?ImageTypes=7&MaxResultCount=500").arg(patientId)));
     request.setRawHeader("Authorization", userToken.toUtf8());
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
@@ -187,7 +187,7 @@ void QNetworkClient::uploadImage(cv::Mat image, const QObject* receiver, const c
 
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/api/v1/upload")));
+    QNetworkRequest request(QUrl(QString("https://api.conovamed.com/api/v1/upload")));
     request.setRawHeader("Authorization", this->userToken.toUtf8());
     request.setTransferTimeout(25000);
 
@@ -216,7 +216,7 @@ void QNetworkClient::bindImageUrl(int patientId, QString url, int imageType, con
 
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl("https://qa.mosainet.com/sm-api/doctor-api/v1/images"));
+    QNetworkRequest request(QUrl("https://api.conovamed.com/doctor-api/v1/images"));
     request.setRawHeader("Authorization", userToken.toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     request.setTransferTimeout(10000);
@@ -239,11 +239,11 @@ void QNetworkClient::bindImageUrl(int patientId, QString url, int imageType, con
 void QNetworkClient::findLandmarkPredictions(int imageId, const QObject* receiver, const char* member) {
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1").arg(imageId)));
+    QNetworkRequest request(QUrl(QString("https://api.conovamed.com/doctor-api/v1/images/%1").arg(imageId)));
     request.setRawHeader("Authorization", userToken.toUtf8());
     request.setTransferTimeout(10000);
 
-    //qDebug() << QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1").arg(imageId));
+    //qDebug() << QUrl(QString("https://api.conovamed.com/doctor-api/v1/images/%1").arg(imageId));
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
 
@@ -268,7 +268,7 @@ void QNetworkClient::confirmLandmarks(int imageId, QString aiOriginResult, const
 
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
-    QNetworkRequest request(QUrl(QString("https://qa.mosainet.com/sm-api/doctor-api/v1/images/%1/audit").arg(imageId)));
+    QNetworkRequest request(QUrl(QString("https://api.conovamed.com/doctor-api/v1/images/%1/audit").arg(imageId)));
     request.setRawHeader("Authorization", userToken.toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 

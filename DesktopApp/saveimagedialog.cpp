@@ -15,9 +15,12 @@ SaveImageDialog::SaveImageDialog(CaptureTab* parent)
 	ui.imageSavePath->setWordWrap(true);
 	/** UI init END */
 
+	onSaveButtonClicked();
+
 	QObject::connect(ui.buttonBoxCancel, &QDialogButtonBox::rejected, [this]() {
 		QDialog::reject();
-		});
+	});
+
 
 	QObject::connect(ui.buttonBoxSave, &QDialogButtonBox::accepted, [this]() {
 		if (!ui.checkBoxColor->isChecked() && !ui.checkBoxDepth->isChecked() && !ui.checkBoxColorToDepth->isChecked() && !ui.checkBoxDepthToColor->isChecked()) {
@@ -25,90 +28,178 @@ SaveImageDialog::SaveImageDialog(CaptureTab* parent)
 			return;
 		}
 
-		QString dateTimeString = Helper::getCurrentDateTimeString();
-		QString visitFolderPath = Helper::getVisitFolderPath(this->parent->getParent()->savePath);
-		QString colorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color.png"));
-		QString depthToColorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth_aligned.png"));
-		QString depthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth.png"));
-		QString colorToDepthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color_aligned.png"));
+		onSaveButtonClicked();
 
-		qDebug() << "colorSavePath" << colorSavePath;
+		//QString dateTimeString = Helper::getCurrentDateTimeString();
+		//QString visitFolderPath = Helper::getVisitFolderPath(this->parent->getParent()->savePath);
+		//QString colorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color.png"));
+		//QString depthToColorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth_aligned.png"));
+		//QString depthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth.png"));
+		//QString colorToDepthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color_aligned.png"));
 
-		bool colorWriteSuccess = false;
-		bool depthWriteSuccess = false;
-		bool colorToDepthWriteSuccess = false;
-		bool depthToColorWriteSuccess = false;
+		//qDebug() << "colorSavePath" << colorSavePath;
 
-		QImageWriter writer1(colorSavePath);
-		QImageWriter writer2(depthSavePath);
-		QImageWriter writer3(colorToDepthSavePath);
-		QImageWriter writer4(depthToColorSavePath);
+		//bool colorWriteSuccess = false;
+		//bool depthWriteSuccess = false;
+		//bool colorToDepthWriteSuccess = false;
+		//bool depthToColorWriteSuccess = false;
 
-		if (ui.checkBoxColor->isChecked()) {
-			//cv::Mat mat = this->parent->getCapturedColorImage();
-			//colorWriteSuccess = cv::imwrite(colorSavePath.toStdString(), i);
-			QImage img((uchar*) this->parent->getCapturedColorImage().data, 
-				this->parent->getCapturedColorImage().cols, 
-				this->parent->getCapturedColorImage().rows, 
-				this->parent->getCapturedColorImage().step,
-				QImage::Format_RGB32);
-			colorWriteSuccess = writer1.write(img);
-		}
-		if (ui.checkBoxDepth->isChecked()) {
-			//cv::Mat i = this->parent->getCapturedDepthImage();
-			//depthWriteSuccess = cv::imwrite(depthSavePath.toStdString(), i);
-			QImage img((uchar*)this->parent->getCapturedDepthImage().data,
-				this->parent->getCapturedDepthImage().cols,
-				this->parent->getCapturedDepthImage().rows,
-				QImage::Format_Grayscale16);
-			depthWriteSuccess = writer2.write(img);
-		}
-		if (ui.checkBoxColorToDepth->isChecked()) {
-			//cv::Mat i = this->parent->getCapturedColorToDepthImage();
-			//cv::Mat temp;
-			//cvtColor(i, temp, cv::COLOR_BGRA2BGR);
-			//colorToDepthWriteSuccess = cv::imwrite(colorToDepthSavePath.toStdString(), temp);
-			QImage img((uchar*)this->parent->getCapturedColorToDepthImage().data,
-				this->parent->getCapturedColorToDepthImage().cols,
-				this->parent->getCapturedColorToDepthImage().rows,
-				QImage::Format_RGB32);
-			colorToDepthWriteSuccess = writer3.write(img);
-		}
+		//QImageWriter writer1(colorSavePath);
+		//QImageWriter writer2(depthSavePath);
+		//QImageWriter writer3(colorToDepthSavePath);
+		//QImageWriter writer4(depthToColorSavePath);
 
-		if (ui.checkBoxDepthToColor->isChecked()) {
-			//cv::Mat i = this->parent->getCapturedDepthToColorImage();
-			//depthToColorWriteSuccess = cv::imwrite(depthToColorSavePath.toStdString(), i);
-			QImage img((uchar*)this->parent->getCapturedDepthToColorImage().data,
-				this->parent->getCapturedDepthToColorImage().cols,
-				this->parent->getCapturedDepthToColorImage().rows,
-				this->parent->getCapturedDepthToColorImage().step,
-				QImage::Format_Grayscale16);
-			depthToColorWriteSuccess = writer4.write(img);
-		}
+		//if (ui.checkBoxColor->isChecked()) {
+		//	//cv::Mat mat = this->parent->getCapturedColorImage();
+		//	//colorWriteSuccess = cv::imwrite(colorSavePath.toStdString(), i);
+		//	QImage img((uchar*) this->parent->getCapturedColorImage().data, 
+		//		this->parent->getCapturedColorImage().cols, 
+		//		this->parent->getCapturedColorImage().rows, 
+		//		this->parent->getCapturedColorImage().step,
+		//		QImage::Format_RGB32);
+		//	colorWriteSuccess = writer1.write(img);
+		//}
+		//if (ui.checkBoxDepth->isChecked()) {
+		//	//cv::Mat i = this->parent->getCapturedDepthImage();
+		//	//depthWriteSuccess = cv::imwrite(depthSavePath.toStdString(), i);
+		//	QImage img((uchar*)this->parent->getCapturedDepthImage().data,
+		//		this->parent->getCapturedDepthImage().cols,
+		//		this->parent->getCapturedDepthImage().rows,
+		//		QImage::Format_Grayscale16);
+		//	depthWriteSuccess = writer2.write(img);
+		//}
+		//if (ui.checkBoxColorToDepth->isChecked()) {
+		//	//cv::Mat i = this->parent->getCapturedColorToDepthImage();
+		//	//cv::Mat temp;
+		//	//cvtColor(i, temp, cv::COLOR_BGRA2BGR);
+		//	//colorToDepthWriteSuccess = cv::imwrite(colorToDepthSavePath.toStdString(), temp);
+		//	QImage img((uchar*)this->parent->getCapturedColorToDepthImage().data,
+		//		this->parent->getCapturedColorToDepthImage().cols,
+		//		this->parent->getCapturedColorToDepthImage().rows,
+		//		QImage::Format_RGB32);
+		//	colorToDepthWriteSuccess = writer3.write(img);
+		//}
 
-		/** "Images saved under" */
-		if (!colorWriteSuccess && !depthWriteSuccess && !colorToDepthWriteSuccess && !depthToColorWriteSuccess) {
-			if (this->parent->getCaptureFilepath() == QString()) {
-				qDebug() << "no capture filepath exists";
-				this->parent->getParent()->ui.saveInfoCaptureTab->setText("Something went wrong, cannot save images.");
-			}
-			else qDebug() << "has capture filepath before";
-			QDialog::reject();
-			return;
-		}
+		//if (ui.checkBoxDepthToColor->isChecked()) {
+		//	//cv::Mat i = this->parent->getCapturedDepthToColorImage();
+		//	//depthToColorWriteSuccess = cv::imwrite(depthToColorSavePath.toStdString(), i);
+		//	QImage img((uchar*)this->parent->getCapturedDepthToColorImage().data,
+		//		this->parent->getCapturedDepthToColorImage().cols,
+		//		this->parent->getCapturedDepthToColorImage().rows,
+		//		this->parent->getCapturedDepthToColorImage().step,
+		//		QImage::Format_Grayscale16);
+		//	depthToColorWriteSuccess = writer4.write(img);
+		//}
 
-		/** "Images saved under" END */
+		///** "Images saved under" */
+		//if (!colorWriteSuccess && !depthWriteSuccess && !colorToDepthWriteSuccess && !depthToColorWriteSuccess) {
+		//	if (this->parent->getCaptureFilepath() == QString()) {
+		//		qDebug() << "no capture filepath exists";
+		//		this->parent->getParent()->ui.saveInfoCaptureTab->setText("Something went wrong, cannot save images.");
+		//	}
+		//	else qDebug() << "has capture filepath before";
+		//	QDialog::reject();
+		//	return;
+		//}
 
-		/** Show In Explorer */
-		if (colorWriteSuccess) this->parent->setCaptureFilepath(colorSavePath);
-		else if (depthWriteSuccess) this->parent->setCaptureFilepath(depthSavePath);
-		else if (colorToDepthWriteSuccess) this->parent->setCaptureFilepath(colorToDepthSavePath);
-		else this->parent->setCaptureFilepath(depthToColorSavePath);
+		///** "Images saved under" END */
 
-		this->parent->getParent()->ui.saveInfoCaptureTab->setText("Images are saved under\n" + visitFolderPath + "\nat " + dateTimeString);
-		this->parent->getParent()->ui.showInExplorer->show();
-		/** Show In Explorer END */
+		///** Show In Explorer */
+		//if (colorWriteSuccess) this->parent->setCaptureFilepath(colorSavePath);
+		//else if (depthWriteSuccess) this->parent->setCaptureFilepath(depthSavePath);
+		//else if (colorToDepthWriteSuccess) this->parent->setCaptureFilepath(colorToDepthSavePath);
+		//else this->parent->setCaptureFilepath(depthToColorSavePath);
+
+		//this->parent->getParent()->ui.saveInfoCaptureTab->setText("Images are saved under\n" + visitFolderPath + "\nat " + dateTimeString);
+		//this->parent->getParent()->ui.showInExplorer->show();
+		///** Show In Explorer END */
 
 		QDialog::accept();
-		});
+	});
+}
+
+void SaveImageDialog::onSaveButtonClicked() {
+	QString dateTimeString = Helper::getCurrentDateTimeString();
+	QString visitFolderPath = Helper::getVisitFolderPath(this->parent->getParent()->savePath);
+	QString colorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color.png"));
+	QString depthToColorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth_aligned.png"));
+	QString depthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth.png"));
+	QString colorToDepthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color_aligned.png"));
+
+	qDebug() << "colorSavePath" << colorSavePath;
+
+	bool colorWriteSuccess = false;
+	bool depthWriteSuccess = false;
+	bool colorToDepthWriteSuccess = false;
+	bool depthToColorWriteSuccess = false;
+
+	QImageWriter writer1(colorSavePath);
+	QImageWriter writer2(depthSavePath);
+	QImageWriter writer3(colorToDepthSavePath);
+	QImageWriter writer4(depthToColorSavePath);
+
+	if (ui.checkBoxColor->isChecked()) {
+		//cv::Mat mat = this->parent->getCapturedColorImage();
+		//colorWriteSuccess = cv::imwrite(colorSavePath.toStdString(), i);
+		QImage img((uchar*)this->parent->getCapturedColorImage().data,
+			this->parent->getCapturedColorImage().cols,
+			this->parent->getCapturedColorImage().rows,
+			this->parent->getCapturedColorImage().step,
+			QImage::Format_RGB32);
+		colorWriteSuccess = writer1.write(img);
+	}
+	if (ui.checkBoxDepth->isChecked()) {
+		//cv::Mat i = this->parent->getCapturedDepthImage();
+		//depthWriteSuccess = cv::imwrite(depthSavePath.toStdString(), i);
+		QImage img((uchar*)this->parent->getCapturedDepthImage().data,
+			this->parent->getCapturedDepthImage().cols,
+			this->parent->getCapturedDepthImage().rows,
+			QImage::Format_Grayscale16);
+		depthWriteSuccess = writer2.write(img);
+	}
+	if (ui.checkBoxColorToDepth->isChecked()) {
+		//cv::Mat i = this->parent->getCapturedColorToDepthImage();
+		//cv::Mat temp;
+		//cvtColor(i, temp, cv::COLOR_BGRA2BGR);
+		//colorToDepthWriteSuccess = cv::imwrite(colorToDepthSavePath.toStdString(), temp);
+		QImage img((uchar*)this->parent->getCapturedColorToDepthImage().data,
+			this->parent->getCapturedColorToDepthImage().cols,
+			this->parent->getCapturedColorToDepthImage().rows,
+			QImage::Format_RGB32);
+		colorToDepthWriteSuccess = writer3.write(img);
+	}
+
+	if (ui.checkBoxDepthToColor->isChecked()) {
+		//cv::Mat i = this->parent->getCapturedDepthToColorImage();
+		//depthToColorWriteSuccess = cv::imwrite(depthToColorSavePath.toStdString(), i);
+		QImage img((uchar*)this->parent->getCapturedDepthToColorImage().data,
+			this->parent->getCapturedDepthToColorImage().cols,
+			this->parent->getCapturedDepthToColorImage().rows,
+			this->parent->getCapturedDepthToColorImage().step,
+			QImage::Format_Grayscale16);
+		depthToColorWriteSuccess = writer4.write(img);
+	}
+
+	/** "Images saved under" */
+	if (!colorWriteSuccess && !depthWriteSuccess && !colorToDepthWriteSuccess && !depthToColorWriteSuccess) {
+		if (this->parent->getCaptureFilepath() == QString()) {
+			qDebug() << "no capture filepath exists";
+			this->parent->getParent()->ui.saveInfoCaptureTab->setText("Something went wrong, cannot save images.");
+		}
+		else qDebug() << "has capture filepath before";
+		QDialog::reject();
+		return;
+	}
+
+	/** "Images saved under" END */
+
+	/** Show In Explorer */
+	if (colorWriteSuccess) this->parent->setCaptureFilepath(colorSavePath);
+	else if (depthWriteSuccess) this->parent->setCaptureFilepath(depthSavePath);
+	else if (colorToDepthWriteSuccess) this->parent->setCaptureFilepath(colorToDepthSavePath);
+	else this->parent->setCaptureFilepath(depthToColorSavePath);
+
+	this->parent->getParent()->ui.saveInfoCaptureTab->setText("Images are saved under\n" + visitFolderPath + "\nat " + dateTimeString);
+	this->parent->getParent()->ui.showInExplorer->show();
+	/** Show In Explorer END */
 }

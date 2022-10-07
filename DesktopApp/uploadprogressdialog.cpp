@@ -57,7 +57,7 @@ void UploadProgressDialog::onSlotRowDoubleClicked(const QModelIndex& index) {
 
     QString status = dataModel->data(dataModel->index(row, 3)).toString();
 
-    if (status == "Failed. Double Click to Retry" || TRUE) {
+    if (status == "Failed. Double Click to Retry") {
         qDebug() << "Reupload Uploading Number: " << uploadNumber;
         auto it = (requests.find(uploadNumber.toInt()));
         uploadrequest *h = it->second;
@@ -125,7 +125,12 @@ void UploadProgressDialog::onCompleted(int uploadNumber)
     updateRowStatus(uploadNumber, "Completed", QColor(Qt::blue));
 
     // delete uploadrequest object << not work now
+
+    /*uploadrequest *h = requests.find(uploadNumber)->second;
+    delete(&h);*/
+
     //delete (requests.find(uploadNumber)->second);
+
 
 }
 

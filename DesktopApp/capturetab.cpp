@@ -98,7 +98,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		}
 		SaveImageDialog dialog(this);
 		dialog.exec();
-		});
+	});
 
 	QObject::connect(this->parent->ui.saveVideoButton, &QPushButton::clicked, [this]() {
 		if (this->isUploading) {
@@ -317,7 +317,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/** UI */
 		enableButtonsForUploading();
 		/** UI END */
-		});
+
+		SaveImageDialog dialog(this);
+		dialog.show();
+		dialog.accept();
+	});
 
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
 		if (this->isUploading) {
@@ -406,11 +410,17 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		int uploadNumber = dataModel->rowCount() - imageBeingAnalyzedTableViewRow;
 
+
+		QDateTime dateTime = dateTime.currentDateTime();
+		QString str = dateTime.toString();
+		str.replace(" ", "");
+		str.replace(":", "");
+
+		qDebug() << "ImageName: " << str;
+
 		this->uploadProgressDialog->requests.insert(std::make_pair(uploadNumber, new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(),
-			imageType, imageName, FourChannelPNG,
+			imageType, str, FourChannelPNG,
 			uploadNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog)));
-
-
 
 		/*new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(), 
 			imageType, imageName, FourChannelPNG, 

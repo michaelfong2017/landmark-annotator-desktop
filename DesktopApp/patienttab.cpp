@@ -191,6 +191,7 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
         QFont fn = item->font();
         fn.setPixelSize(14);
         item->setFont(fn);
+        item->setTextAlignment(Qt::AlignCenter);
 
         patientDataModel->setHorizontalHeaderItem(i, item);
     }
@@ -231,6 +232,7 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
                 fn.setPixelSize(14);
 
                 item->setFont(fn);
+                item->setTextAlignment(Qt::AlignCenter);
             }
             else if (i == 1) {
                 QString text;
@@ -249,6 +251,7 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
                 QColor blue(Qt::blue);
                 brush.setColor(blue);
                 item->setForeground(brush);
+                item->setTextAlignment(Qt::AlignCenter);
             }
             else if (i == 2) {
                 QString text;
@@ -289,7 +292,7 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
     }
     
     tableView->hideColumn(2);
-    //tableView->hideColumn(3);
+    tableView->hideColumn(3);
 
     reply->deleteLater();
 }
