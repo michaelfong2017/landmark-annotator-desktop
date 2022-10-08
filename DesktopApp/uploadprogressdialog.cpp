@@ -49,11 +49,9 @@ UploadProgressDialog::UploadProgressDialog()
 }
 
 void UploadProgressDialog::onSlotRowDoubleClicked(const QModelIndex& index) {
-    int row = tableView->currentIndex().row();
-    qDebug() << "Double Clicked row: " << row;
 
+    int row = tableView->currentIndex().row();
     QString uploadNumber = dataModel->data(dataModel->index(row, 0)).toString();
-    qDebug() << "Double Clicked Uploading Number: " << uploadNumber;
 
     QString status = dataModel->data(dataModel->index(row, 3)).toString();
 

@@ -399,55 +399,57 @@ QImage convertDepthToColorCVToColorizedQImageDetailed(cv::Mat cvImage) {
 	// per unit is now (5000/255) mm = 19.6 mm
 	cvImage.convertTo(cvImage, CV_8U, 255.0 / 5000.0, 0.0);
 
-	// mid point depth
+	// get picture center point depth
 	int midX = cvImage.cols / 2;
 	int midY = cvImage.rows / 2;
-	uchar mid = cvImage.at<uchar>(midY, midX);
+	uchar midDepth = cvImage.at<uchar>(midY, midX);
 
-	qDebug() << "Mid Point Depth: " << mid;
-	if (mid == 0) {
-		qDebug() << "Use closest";
+	qDebug() << "Mid Point Depth: " << midDepth;
+	if (midDepth == 0) {
+		// do something else if mid point depth is 0
+		qDebug() << "Use closest point";
 	}
 
-	float closeBound = 5.0; // 1 = 20mm, 5 = 1cm
-	float farBound = 7.5; // 15 = 2cm
-	float min = mid - closeBound;
-	float max = mid + farBound;
+	float lowerBound = 5.0; // 1 = 20mm, 5 = 1cm
+	float upperBound = 7.5; // 15 = 2cm
+	float lowerThreshold = midDepth - lowerBound;
+	float upperThreshold = midDepth + upperBound;
 
-	// min max cap
-	if (min <= 0.0) {
-		min = 0.0;
+	// clamp
+	if (lowerThreshold <= 0.0) {
+		lowerThreshold = 0.0;
 	}
-	if (max >= 255.0) {
-		max = 255.0;
+	if (upperThreshold >= 255.0) {
+		upperThreshold = 255.0;
 	}
 
-	// normalization according to given min max
+	// normalization according to given thresholds
 	for (int y = 0; y < cvImage.rows; y++)
 	{
 		for (int x = 0; x < cvImage.cols; x++)
 		{
 			uchar d = cvImage.at<uchar>(y, x);
+
+			// black pixels = no depth values recorded, will remain black when colorized image
 			if (d == 0.0) {
 				continue;
 			}
 
-			if (d < min) {
-				d = min;
+			// out of range, background. Will be colored gray when colorized image
+			if (d < lowerThreshold || d > upperThreshold) {
+				cvImage.at<uchar>(y, x) = 255;
+				continue;
 			}
 
-			if (d > max) {
-				d = max;
-			}
-
-			float result = ((d - min) / (max - min)) * 255;
+			float result = ((d - lowerThreshold) / (upperThreshold - lowerThreshold)) * 255;
 			cvImage.at<uchar>(y, x) = result;
 		}
 	}
 
+
+	// finding contour lines
 	cv::Mat cannyImg;
 	cv::Canny(cvImage, cannyImg, 10, 15);
-
 	std::vector<std::vector<cv::Point>> contours;
 	std::vector<cv::Vec4i> hierarchy;
 	cv::findContours(cannyImg, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
@@ -455,27 +457,16 @@ QImage convertDepthToColorCVToColorizedQImageDetailed(cv::Mat cvImage) {
 	/** Colorize depth image */
 	cv::Mat rgb;
 	colorizeDepth(cvImage, rgb);
+	/** Colorize depth image END */
 
+	// plotting contour lines in white
 	for (size_t i = 0; i < contours.size(); i++)
 	{
 		cv::Scalar color = cv::Scalar(255, 255, 255);
 		cv::drawContours(rgb, contours, (int)i, color, 2, cv::LINE_8, hierarchy, 0);
 	}
 
-	/** Colorize depth image END */
-
-	
-	/*qDebug() << "Start";
-	std::vector<std::vector<cv::Point>> contours;
-	std::vector<cv::Vec4i> hierarchy;
-	qDebug() << "findContours";
-	cv::findContours(cvImage, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_NONE);
-	temp = cvImage.clone();
-	cv::drawContours(temp, contours, -1, cv::Scalar(255, 255, 255), 2);*/
-
-	//colorizeDepth(temp, temp);
-	//qDebug() << "temp:" << can.rows << can.cols << can.channels();
-	//QImage qImage((const uchar*)can.data, can.cols, can.rows, can.step, QImage::Format_Grayscale8);
+	// convert from cv::Mat to QImage
 	QImage qImage((const uchar*)rgb.data, rgb.cols, rgb.rows, rgb.step, QImage::Format_RGB888);
 	qImage.bits();
 
@@ -501,8 +492,15 @@ void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb)
 		{
 			uchar d = gray.at<uchar>(y, x);
 
+			// show black
 			if (d == 0) {
 				rgb.at<cv::Point3_<uchar> >(y, x) = cv::Point3_<uchar>(0.f, 0.f, 0.f);
+				continue;
+			}
+
+			// show gray color
+			if (d == 255) {
+				rgb.at<cv::Point3_<uchar> >(y, x) = cv::Point3_<uchar>(200.f, 200.f, 200.f);
 				continue;
 			}
 
