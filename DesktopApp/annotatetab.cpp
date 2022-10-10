@@ -156,6 +156,38 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 	this->qColorImage = colorImageLeft.copy();
 	this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImageDetailed(depthMapToColorImage);
 
+	/** Find lower and upper depth, and update the upper and lower labels of the gradient color bar */
+	float lower = 0.0f;
+	float upper = 0.0f;
+	if (!depthMapToColorImage.empty()) {
+		// per unit is now (5000/255) mm = 19.6 mm
+		depthMapToColorImage.convertTo(depthMapToColorImage, CV_8U, 255.0 / 5000.0, 0.0);
+
+		// get picture center point depth
+		int midX = depthMapToColorImage.cols / 2;
+		int midY = depthMapToColorImage.rows / 2;
+		uchar midDepth = depthMapToColorImage.at<uchar>(midY, midX);
+
+		qDebug() << "Mid Point Depth: " << midDepth;
+		if (midDepth == 0) {
+			// do something else if mid point depth is 0
+			qDebug() << "Use closest point";
+		}
+
+		float lowerBound = 5.0; // 1 = 20mm, 5 = 1cm
+		float upperBound = 7.5; // 15 = 2cm
+		float lowerThreshold = midDepth - lowerBound;
+		float upperThreshold = midDepth + upperBound;
+
+		lower = lowerThreshold * 5000.0 / 255.0;
+		upper = upperThreshold * 5000.0 / 255.0;
+
+		qDebug() << "lower depth label:" << QString::number((int)lower) << "mm, upper depth label:" << QString::number((int)upper) << "mm";
+		this->parent->ui.lowerLabel->setText(QString::number((int)lower) + " mm");
+		this->parent->ui.upperLabel->setText(QString::number((int)upper) + " mm");
+	}
+	/** Find lower and upper depth, and update the upper and lower labels of the gradient color bar END */
+
 	/** Cropping part 2 */
 	/*cv::Rect cropRect = this->parent->captureTab->cropRect;
 	this->qColorImage = this->qColorImage.copy(cropRect.x, cropRect.y, cropRect.width, cropRect.height);
