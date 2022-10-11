@@ -38,7 +38,7 @@
       <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="loginTab">
       <property name="sizePolicy">
@@ -1575,7 +1575,7 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
                   </size>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #FF0000, stop:0.125 #FF6A00, stop:0.25 #FFD800, stop:0.375 #B6FF00, stop:0.5 #4CFF00, stop:0.625 #00FF21, stop:0.75 #00FF90, stop:0.875 #00FFFF, stop:1 #0094FF);</string>
+                  <string notr="true">background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #FF0000, stop:0.083 #FF6A00, stop:0.167 #FFD800, stop:0.25 #B6FF00, stop:0.333 #4CFF00, stop:0.417 #00FF21, stop:0.5 #00FF90, stop:0.583 #00FFFF, stop:0.667 #0094FF, stop:0.75 #0026FF, stop:0.833 #4800FF, stop:0.917 #B200FF, stop:1 #FF00DC);</string>
                  </property>
                 </widget>
                </item>
