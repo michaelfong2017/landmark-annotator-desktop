@@ -474,17 +474,30 @@ void AnnotateTab::onConfirmLandmarks(QNetworkReply* reply) {
 
 	QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
 
-	qDebug() << jsonResponse;
+	//qDebug() << jsonResponse;
 
 	QJsonObject obj = jsonResponse.object();
-	QString aiImageUrl = obj["aiImageUrl"].toString();
+	//QString aiImageUrl = obj["aiImageUrl"].toString();
 
-	if (!jsonResponse.isEmpty()) {
-		// Success
+	if (jsonResponse.isEmpty()) {
 		TwoLinesDialog dialog;
-		dialog.setLine1("Landmarks confirmed!");
+		dialog.setLine1("Error: Unknown");
 		dialog.exec();
+		return;
 	}
+
+	if (obj.contains("error")) {
+		QJsonObject child = obj["error"].toObject();
+		TwoLinesDialog dialog;
+		dialog.setLine1("Error: " + child["message"].toString());
+		dialog.exec();
+		return;
+	}
+
+	// Success
+	TwoLinesDialog dialog;
+	dialog.setLine1("Landmarks confirmed!");
+	dialog.exec();
 }
 
 

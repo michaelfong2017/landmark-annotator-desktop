@@ -47,11 +47,11 @@ void QNetworkClient::onLogin(QNetworkReply* reply) {
     QJsonDocument jsonResponse = QJsonDocument::fromJson(response_data);
     //qDebug() << jsonResponse;
     QJsonObject obj = jsonResponse.object();
-    //qDebug() << obj["error"];
- 
+
     if (obj.contains("error")) {
+        QJsonObject child = obj["error"].toObject();
         TwoLinesDialog dialog;
-        dialog.setLine1("Information incorrect!");
+        dialog.setLine1("Error: " + child["message"].toString());
         dialog.exec();
     }
     else {
