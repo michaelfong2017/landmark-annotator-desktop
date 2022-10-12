@@ -417,7 +417,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		str.replace(":", "");
 
 		this->uploadProgressDialog->requests.insert(std::make_pair(uploadNumber, new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(),
-			imageType, str, FourChannelPNG,
+			imageType, str, FourChannelPNG, color3,
 			uploadNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog)));
 
 		/*new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(), 
