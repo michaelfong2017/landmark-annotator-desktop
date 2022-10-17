@@ -11,6 +11,7 @@ struct CaptureHistory {
     cv::Mat capturedDepthImage;
     cv::Mat capturedColorToDepthImage;
     cv::Mat capturedDepthToColorImage;
+    cv::Mat FourChannelPNG;
     cv::Mat RANSACImage;
     QImage qColorImage;
     QImage qDepthImage;

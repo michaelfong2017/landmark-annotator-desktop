@@ -262,7 +262,7 @@ void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {
     /** Use the map with patientId as the key and save folder path as the value */
     QDir dir(QCoreApplication::applicationDirPath());
     dir.cdUp();
-    QDir path = QDir((dir.absolutePath()) + "/" + patientIdToSaveFolderPath[currentPatientId]);
+    QDir path = QDir((dir.absolutePath()) + "/Patient" + "/" + patientIdToSaveFolderPath[currentPatientId]);
 
     this->parent->savePath = path;
     /** Handle Chinese name when saving video */

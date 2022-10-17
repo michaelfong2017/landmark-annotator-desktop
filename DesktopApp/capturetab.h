@@ -39,6 +39,8 @@ public:
     cv::Mat getCapturedColorToDepthImage();
     cv::Mat getCapturedDepthToColorImage();
 
+    cv::Mat getFourChannelPNG();
+
     cv::Mat computeNormalizedDepthImage(cv::Mat);
 
     QImage getQColorImage();
@@ -77,6 +79,8 @@ private:
     cv::Mat capturedDepthImage;
     cv::Mat capturedColorToDepthImage;
     cv::Mat capturedDepthToColorImage;
+
+    cv::Mat FourChannelPNG;
     // stored captured images END
 
     QImage qColorImage;
