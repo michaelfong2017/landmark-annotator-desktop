@@ -241,6 +241,52 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		cv::waitKey(0);
 		cv::destroyWindow("ransac");*/
 
+
+		/* Convert to the special 4 channels image and upload */
+		cv::Mat color3 = this->capturedColorImage;
+		std::vector<cv::Mat>channelsForColor2(3);
+		cv::split(color3, channelsForColor2);
+
+		cv::Mat depthToColor3 = this->capturedDepthToColorImage;
+		std::vector<cv::Mat>channelsForDepth1(1);
+		cv::split(depthToColor3, channelsForDepth1);
+
+		cv::Mat normalizedDepthToColor = this->RANSACImage;
+		std::vector<cv::Mat>channelsForDepth2(1);
+		cv::split(normalizedDepthToColor, channelsForDepth2);
+
+
+		int w = this->capturedColorImage.cols;
+		int h = this->capturedColorImage.rows;
+		//int width = COLOR_IMAGE_WIDTH;
+		//int height = COLOR_IMAGE_HEIGHT;
+
+		FourChannelPNG = cv::Mat::ones(h, w, CV_16UC4);
+		std::vector<cv::Mat>channels3(4);
+		cv::split(FourChannelPNG, channels3);
+
+		qDebug() << "this->capturedColorImage" << this->capturedColorImage.cols;
+		qDebug() << "depthToColor3" << depthToColor3.cols;
+		qDebug() << "normalizedDepthToColor" << normalizedDepthToColor.cols;
+
+
+		// channelsForColor2 = BGR
+		for (int i = 0; i < w * h; i++) {
+			channels3[0].at<uint16_t>(i) = (channelsForColor2[2].at<uint8_t>(i) << 8) | channelsForColor2[1].at<uint8_t>(i);
+			channels3[1].at<uint16_t>(i) = (channelsForColor2[0].at<uint8_t>(i) << 8);
+		}
+		channels3[2] = channelsForDepth1[0];
+		channels3[3] = channelsForDepth2[0];
+
+		cv::merge(channels3, FourChannelPNG);
+
+		qDebug() << "Merging image completed: "
+			<< FourChannelPNG.cols << ", "
+			<< FourChannelPNG.rows << ", "
+			<< FourChannelPNG.channels();
+		/* Convert to the special 4 channels image and upload END */
+
+
 		/** Insert index to data model */
 		QList<QStandardItem*> itemList;
 		QStandardItem* dataItem;
@@ -301,6 +347,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		captureHistory.capturedDepthImage = capturedDepthImage;
 		captureHistory.capturedColorToDepthImage = capturedColorToDepthImage;
 		captureHistory.capturedDepthToColorImage = capturedDepthToColorImage;
+		captureHistory.FourChannelPNG = FourChannelPNG;
 		captureHistory.RANSACImage = RANSACImage;
 		captureHistory.qColorImage = qColorImage;
 		captureHistory.qDepthImage = qDepthImage;
@@ -318,9 +365,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		enableButtonsForUploading();
 		/** UI END */
 
-		SaveImageDialog dialog(this);
-		dialog.show();
-		dialog.accept();
+		SaveImageDialog dialog(this, true);
 	});
 
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
@@ -365,48 +410,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->cropRect = rect;*/
 		/** Cropping part 2 END */
 
-		/* Convert to the special 4 channels image and upload */
-		cv::Mat color3 = this->capturedColorImage;
-		std::vector<cv::Mat>channelsForColor2(3);
-		cv::split(color3, channelsForColor2);
-
-		cv::Mat depthToColor3 = this->capturedDepthToColorImage;
-		std::vector<cv::Mat>channelsForDepth1(1);
-		cv::split(depthToColor3, channelsForDepth1);
-
-		cv::Mat normalizedDepthToColor = this->RANSACImage;
-		std::vector<cv::Mat>channelsForDepth2(1);
-		cv::split(normalizedDepthToColor, channelsForDepth2);
-
-
-		int width = this->capturedColorImage.cols;
-		int height = this->capturedColorImage.rows;
-		//int width = COLOR_IMAGE_WIDTH;
-		//int height = COLOR_IMAGE_HEIGHT;
-
-		cv::Mat FourChannelPNG = cv::Mat::ones(height, width, CV_16UC4);
-		std::vector<cv::Mat>channels3(4);
-		cv::split(FourChannelPNG, channels3);
-
-		qDebug() << "this->capturedColorImage" << this->capturedColorImage.cols;
-		qDebug() << "depthToColor3" << depthToColor3.cols;
-		qDebug() << "normalizedDepthToColor" << normalizedDepthToColor.cols;
-
-
-		// channelsForColor2 = BGR
-		for (int i = 0; i < width * height; i++) {
-			channels3[0].at<uint16_t>(i) = (channelsForColor2[2].at<uint8_t>(i) << 8) | channelsForColor2[1].at<uint8_t>(i);
-			channels3[1].at<uint16_t>(i) = (channelsForColor2[0].at<uint8_t>(i) << 8);
-		}
-		channels3[2] = channelsForDepth1[0];
-		channels3[3] = channelsForDepth2[0];
-
-		cv::merge(channels3, FourChannelPNG);
-
-		qDebug() << "Merging image completed: " 
-			<< FourChannelPNG.cols << ", "
-			<< FourChannelPNG.rows << ", "
-			<< FourChannelPNG.channels();
+		
 
 		int uploadNumber = dataModel->rowCount() - imageBeingAnalyzedTableViewRow;
 
@@ -417,7 +421,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		str.replace(":", "");
 
 		this->uploadProgressDialog->requests.insert(std::make_pair(uploadNumber, new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(),
-			imageType, str, FourChannelPNG, color3,
+			imageType, str, this->FourChannelPNG, this->capturedColorImage,
 			uploadNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog)));
 
 		/*new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(), 
@@ -1064,6 +1068,11 @@ cv::Mat CaptureTab::getCapturedDepthToColorImage() {
 	return this->capturedDepthToColorImage;
 }
 
+cv::Mat CaptureTab::getFourChannelPNG()
+{
+	return this->FourChannelPNG;
+}
+
 QImage CaptureTab::getQColorImage()
 {
 	return this->qColorImage;
@@ -1396,6 +1405,7 @@ void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex
 	capturedDepthImage = captureHistory.capturedDepthImage;
 	capturedColorToDepthImage = captureHistory.capturedColorToDepthImage;
 	capturedDepthToColorImage = captureHistory.capturedDepthToColorImage;
+	FourChannelPNG = captureHistory.FourChannelPNG;
 	RANSACImage = captureHistory.RANSACImage;
 	qColorImage = captureHistory.qColorImage;
 	qDepthImage = captureHistory.qDepthImage;
