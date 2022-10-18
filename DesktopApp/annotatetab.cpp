@@ -448,11 +448,11 @@ void AnnotateTab::computeMetrics() {
 
 	//Angle between x-diff and z-diff of A1 and A2 and B1 B2
 	float AlphaxDiff = this->annotations3D["A2"].x() - this->annotations3D["A1"].x();
-	float AlphazDiff = this->annotations3D["A1"].z() - this->annotations3D["A2"].z();
+	float AlphazDiff = this->annotations3D["A2"].z() - this->annotations3D["A1"].z();
 
 	float BetaxDiff = this->annotations3D["B2"].x() - this->annotations3D["B1"].x();
-	float BetazDiff = this->annotations3D["B1"].z() - this->annotations3D["B2"].z();
-	
+	float BetazDiff = this->annotations3D["B2"].z() - this->annotations3D["B1"].z();
+
 	float AlphaTrunkRotation = std::atan(AlphazDiff / AlphaxDiff) * 180 / PI;
 	float BetaTrunkRotation = std::atan(BetazDiff / BetaxDiff) * 180 / PI;
 
@@ -464,7 +464,7 @@ void AnnotateTab::computeMetrics() {
 	qDebug() << "BetaTrunkRotation " << BetaTrunkRotation;*/
 
 	this->trunkRotation = BetaTrunkRotation - AlphaTrunkRotation;
-}
+}	
 
 void AnnotateTab::onConfirmLandmarks(QNetworkReply* reply) {
 	qDebug() << "onConfirmLandmarks";

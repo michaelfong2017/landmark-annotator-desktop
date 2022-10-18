@@ -16,14 +16,14 @@
   <widget class="QLabel" name="heightLabel">
    <property name="geometry">
     <rect>
-     <x>533</x>
+     <x>520</x>
      <y>230</y>
      <width>111</width>
      <height>29</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Height (cm):</string>
@@ -32,14 +32,14 @@
   <widget class="QLabel" name="emailLabel">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>30</x>
      <y>180</y>
-     <width>80</width>
+     <width>111</width>
      <height>30</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Email:</string>
@@ -48,14 +48,14 @@
   <widget class="QLabel" name="nameLabel">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>30</x>
      <y>30</y>
-     <width>80</width>
+     <width>111</width>
      <height>30</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Name*:</string>
@@ -64,14 +64,14 @@
   <widget class="QLabel" name="subjectNumberLabel">
    <property name="geometry">
     <rect>
-     <x>533</x>
+     <x>520</x>
      <y>30</y>
      <width>131</width>
      <height>29</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Subject Number:</string>
@@ -80,14 +80,14 @@
   <widget class="QLabel" name="weightLabel">
    <property name="geometry">
     <rect>
-     <x>533</x>
+     <x>520</x>
      <y>280</y>
      <width>111</width>
      <height>29</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Weight (kg):</string>
@@ -96,14 +96,14 @@
   <widget class="QLabel" name="dobLabel">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>30</x>
      <y>220</y>
      <width>80</width>
      <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Birthday*:</string>
@@ -112,27 +112,27 @@
   <widget class="QTextEdit" name="addressInput">
    <property name="geometry">
     <rect>
-     <x>610</x>
+     <x>620</x>
      <y>340</y>
      <width>350</width>
      <height>100</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
   </widget>
   <widget class="QLabel" name="sexLabel">
    <property name="geometry">
     <rect>
-     <x>533</x>
+     <x>520</x>
      <y>180</y>
      <width>121</width>
      <height>29</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Gender:</string>
@@ -141,14 +141,14 @@
   <widget class="QLabel" name="socialSecurityLabel">
    <property name="geometry">
     <rect>
-     <x>533</x>
+     <x>520</x>
      <y>80</y>
-     <width>141</width>
+     <width>161</width>
      <height>29</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Social Security Number:</string>
@@ -157,14 +157,14 @@
   <widget class="QLabel" name="phoneLabel">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>30</x>
      <y>130</y>
-     <width>80</width>
+     <width>111</width>
      <height>30</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Phone:</string>
@@ -183,7 +183,7 @@
     <item>
      <widget class="QRadioButton" name="male">
       <property name="styleSheet">
-       <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+       <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
       </property>
       <property name="text">
        <string>Male</string>
@@ -193,7 +193,7 @@
     <item>
      <widget class="QRadioButton" name="female">
       <property name="styleSheet">
-       <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+       <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
       </property>
       <property name="text">
        <string>Female</string>
@@ -205,14 +205,14 @@
   <widget class="QLabel" name="addressLabel">
    <property name="geometry">
     <rect>
-     <x>533</x>
+     <x>520</x>
      <y>330</y>
      <width>81</width>
      <height>29</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Address:</string>
@@ -221,14 +221,14 @@
   <widget class="QLabel" name="nationalityLabel">
    <property name="geometry">
     <rect>
-     <x>533</x>
+     <x>520</x>
      <y>130</y>
      <width>131</width>
      <height>29</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Country:</string>
@@ -237,17 +237,17 @@
   <widget class="QLabel" name="idLabel">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>30</x>
      <y>80</y>
-     <width>80</width>
+     <width>111</width>
      <height>30</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
-    <string>ID Number*:</string>
+    <string>ID Number*</string>
    </property>
   </widget>
   <widget class="QDialogButtonBox" name="buttonBox">
@@ -294,6 +294,9 @@
      <height>71</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -318,7 +321,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLineEdit" name="nameInput">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>30</y>
      <width>350</width>
      <height>30</height>
@@ -328,7 +331,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLineEdit" name="idInput">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>80</y>
      <width>350</width>
      <height>30</height>
@@ -338,7 +341,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLineEdit" name="phoneInput">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>130</y>
      <width>350</width>
      <height>30</height>
@@ -348,7 +351,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLineEdit" name="emailInput">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>180</y>
      <width>350</width>
      <height>30</height>
@@ -358,7 +361,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLineEdit" name="subjectNumberInput">
    <property name="geometry">
     <rect>
-     <x>680</x>
+     <x>690</x>
      <y>30</y>
      <width>280</width>
      <height>30</height>
@@ -368,7 +371,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLineEdit" name="socialSecurityInput">
    <property name="geometry">
     <rect>
-     <x>680</x>
+     <x>690</x>
      <y>80</y>
      <width>280</width>
      <height>30</height>
@@ -378,7 +381,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLineEdit" name="nationalityInput">
    <property name="geometry">
     <rect>
-     <x>680</x>
+     <x>690</x>
      <y>130</y>
      <width>280</width>
      <height>30</height>
@@ -388,7 +391,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLineEdit" name="heightInput">
    <property name="geometry">
     <rect>
-     <x>680</x>
+     <x>690</x>
      <y>230</y>
      <width>280</width>
      <height>30</height>
@@ -398,7 +401,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLineEdit" name="weightInput">
    <property name="geometry">
     <rect>
-     <x>680</x>
+     <x>690</x>
      <y>280</y>
      <width>280</width>
      <height>30</height>
@@ -408,7 +411,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QComboBox" name="dayComboBox">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>270</x>
      <y>230</y>
      <width>65</width>
      <height>21</height>
@@ -421,7 +424,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QComboBox" name="monthComboBox">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>160</x>
      <y>230</y>
      <width>65</width>
      <height>21</height>
@@ -434,7 +437,7 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QComboBox" name="yearComboBox">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>390</x>
      <y>230</y>
      <width>90</width>
      <height>21</height>
@@ -447,14 +450,14 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLabel" name="remarksLabel">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>30</x>
      <y>330</y>
      <width>80</width>
      <height>30</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>Notes:</string>
@@ -463,27 +466,27 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QTextEdit" name="remarksInput">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>340</y>
      <width>350</width>
      <height>100</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
   </widget>
   <widget class="QLabel" name="ddLabel">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>240</x>
      <y>231</y>
      <width>21</width>
      <height>20</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>DD:</string>
@@ -492,14 +495,14 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLabel" name="MMLabel">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>230</y>
      <width>31</width>
      <height>21</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>MM:</string>
@@ -508,14 +511,14 @@ font: 14px &quot;MS Shell Dlg 2&quot;;</string>
   <widget class="QLabel" name="yyyyLabel">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>350</x>
      <y>231</y>
      <width>41</width>
      <height>20</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 12px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 14px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
     <string>YYYY:</string>
