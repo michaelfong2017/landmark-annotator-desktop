@@ -55,7 +55,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <IncludePath>H:\opencv-4.5.2\build\Debug\install\include;D:\opencv-4.5.2\build\Debug\install\include;$(IncludePath)</IncludePath>
+    <IncludePath>H:\opencv-4.5.2\build\Debug\install\include;D:\opencv-4.5.2-build\Debug\install\include;$(IncludePath)</IncludePath>
     <LibraryPath>H:\opencv-4.5.2\build\Debug\install\x64\vc16\lib;D:\opencv-4.5.2-build\Debug\install\x64\vc16\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
