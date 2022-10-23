@@ -8,6 +8,8 @@
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext&, const QString& msg)
 {
+    //fprintf(stdout, "%s", msg.toLocal8Bit().constData());
+
     QString dateString = Helper::getCurrentDateString();
     QString dateTimeString = Helper::getCurrentDateTimeString();
 
@@ -46,6 +48,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     qInstallMessageHandler(myMessageHandler);
+    //qInstallMessageHandler(nullptr);
     DesktopApp w;
     w.show();
     w.setAttribute(Qt::WA_AcceptTouchEvents);

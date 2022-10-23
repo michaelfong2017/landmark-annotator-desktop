@@ -27,6 +27,10 @@ uploadrequest::uploadrequest(QString userToken, QString signature, int patientId
 	
     qDebug() << "uploadrequest";
 
+    // Read host address
+    readHostAddress();
+    // Read host address END
+
     std::string s = generate_hex(32);
     qDebug() << QString::fromUtf8(s.c_str());
 
@@ -493,4 +497,13 @@ void uploadrequest::debugRequest(QNetworkRequest request, QByteArray data = QByt
         qDebug() << request.rawHeader(rawHeader);
     }
     qDebug() << data;
+}
+
+void uploadrequest::readHostAddress() {
+    QDir dir(QCoreApplication::applicationDirPath());
+    dir.cdUp();
+    QString configDir = dir.absolutePath() + "/configs";
+    QSettings settings(QString(configDir + "/config.ini"), QSettings::IniFormat);
+    hostAddress = settings.value("hostAddress", "hostAddress").toString(); // settings.value() returns QVariant
+    qDebug() << "uploadrequest hostAddress: " << hostAddress;
 }

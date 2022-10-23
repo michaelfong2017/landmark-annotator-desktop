@@ -15,9 +15,11 @@ class uploadrequest : public QWidget
 	public:
 		uploadrequest(QString userToken, QString signature, int patientId, int imageType, QString imageName, cv::Mat imageToSend, cv::Mat imageToSend2, int captureNumber, QString patientName, UploadProgressDialog* uploadProgressDialog);
 		void retry(int);
+		void readHostAddress();
 	private:
 		//QString hostAddress = "https://api.conovamed.com/";
-		QString hostAddress = "https://qa.mosainet.com/sm-api/";
+		//QString hostAddress = "https://qa.mosainet.com/sm-api/";
+		QString hostAddress = "";
 		QString userToken;
 		QString signature;
 		int patientId = -1;

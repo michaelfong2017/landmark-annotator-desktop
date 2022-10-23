@@ -35,7 +35,9 @@ public:
     void confirmLandmarks(int imageId, QString aiOriginResult, const QObject* receiver, const char* member);
     QString userToken;
     //QString hostAddress = "https://api.conovamed.com/";
-    QString hostAddress = "https://qa.mosainet.com/sm-api/";
+    //QString hostAddress = "https://qa.mosainet.com/sm-api/";
+    QString hostAddress = "";
+    void readHostAddress();
 private:
     QNetworkClient();
     

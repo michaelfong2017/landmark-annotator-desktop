@@ -294,3 +294,12 @@ void QNetworkClient::confirmLandmarks(int imageId, QString aiOriginResult, const
 
     manager->put(request, data);
 }
+
+void QNetworkClient::readHostAddress() {
+    QDir dir(QCoreApplication::applicationDirPath());
+    dir.cdUp();
+    QString configDir = dir.absolutePath() + "/configs";
+    QSettings settings(QString(configDir + "/config.ini"), QSettings::IniFormat);
+    hostAddress = settings.value("hostAddress", "hostAddress").toString(); // settings.value() returns QVariant
+    qDebug() << "QNetworkClient hostAddress: " << hostAddress;
+}

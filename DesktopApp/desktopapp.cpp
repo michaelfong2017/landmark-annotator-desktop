@@ -15,6 +15,10 @@ DesktopApp::DesktopApp(QWidget* parent)
 	this->setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
 	ui.setupUi(this);
 
+	// Read host address for qnetworkclient.h
+	QNetworkClient::getInstance().readHostAddress();
+	// Read host address for qnetworkclient.h END
+
 	// Test refactoring
 	// 
 	//KinectEngine::getInstance().captureImages();
