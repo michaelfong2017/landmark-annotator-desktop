@@ -57,8 +57,8 @@ void UploadProgressDialog::onSlotRowDoubleClicked(const QModelIndex& index) {
 
     if (status == "Failed. Double Click to Retry") {
         qDebug() << "Reupload Uploading Number: " << uploadNumber;
-        auto it = (requests.find(uploadNumber.toInt()));
-        uploadrequest *h = it->second;
+        auto it = requests.find(uploadNumber.toInt());
+        uploadrequest *h = it->second.get();
         h->retry(uploadNumber.toInt());
     }
 
@@ -129,7 +129,8 @@ void UploadProgressDialog::onCompleted(int uploadNumber)
 
     //delete (requests.find(uploadNumber)->second);
 
-
+    auto it = requests.find(uploadNumber);
+    requests.erase(it);
 }
 
 void UploadProgressDialog::onFailed(int uploadNumber)

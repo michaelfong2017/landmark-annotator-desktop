@@ -12,7 +12,13 @@ class UploadProgressDialog : public QDialog
 	Q_OBJECT
 
 public:
-	std::map<int, uploadrequest*> requests;
+	// https://stackoverflow.com/questions/35681215/avoid-memory-leakage-when-removing-object-pointer-from-the-map
+	// If you really do need to dynamically allocate the Request, for whatever reason, 
+	// instead of storing a raw pointer, you could store a smart pointer,
+	// which will automatically delete the pointed-to object when it is destroyed. 
+	// The default choice for this would be std::unique_ptr.
+	std::map<int, std::unique_ptr<uploadrequest>> requests;
+	// Then you again only need to do myMap.erase(it_req);; no manual delete to worry about.
 	UploadProgressDialog();
 	Ui::UploadProgressDialogUI ui;
 	int latestUploadNumber = 0; // Start from 1 (increment from 0 to 1 when first use)
