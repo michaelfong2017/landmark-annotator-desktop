@@ -3,7 +3,8 @@
 *.wmv
 *.mp4
 
-/x64
+/x64/*
+!/x64/configs/
 .vs/
 DesktopApp/x64/
 *.png
