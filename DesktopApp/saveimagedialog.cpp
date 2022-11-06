@@ -39,17 +39,16 @@ SaveImageDialog::SaveImageDialog(CaptureTab* parent, bool autoSave)
 void SaveImageDialog::onManualSave() {
 	QString dateTimeString = Helper::getCurrentDateTimeString();
 	QString visitFolderPath = Helper::getVisitFolderPath(this->parent->getParent()->savePath);
-	QString colorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color.png"));
-	QString depthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth.png"));
-	QString colorToDepthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color_aligned.png"));
-	QString depthToColorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth_aligned.png"));
-	QString fourChannelPNGSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_four_channel.png"));
 
-	QString chosenColorSavePath = colorSavePath;
-	QString chosenDepthSavePath = depthSavePath;
-	QString chosenColorToDepthSavePath = colorToDepthSavePath;
-	QString chosenDepthToColorSavePath = depthToColorSavePath;
-	QString chosenFourChannelPNGSavePath = fourChannelPNGSavePath;
+	QString	chosenFolder = QFileDialog::getExistingDirectory(this, tr("Select Output Folder"),
+		visitFolderPath,
+		QFileDialog::ShowDirsOnly);
+
+	QString colorSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color.png"));
+	QString depthSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth.png"));
+	QString colorToDepthSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color_aligned.png"));
+	QString depthToColorSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth_aligned.png"));
+	QString fourChannelPNGSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_four_channel.png"));
 
 	bool colorWriteSuccess = false;
 	bool depthWriteSuccess = false;
@@ -57,11 +56,9 @@ void SaveImageDialog::onManualSave() {
 	bool depthToColorWriteSuccess = false;
 	bool fourChannelPNGWriteSuccess = false;
 
+
 	if (ui.checkBoxColor->isChecked()) {
-		chosenColorSavePath = QFileDialog::getSaveFileName(this, tr("Save Color Image"),
-			colorSavePath,
-			tr("Images (*.png *.jpg)"));
-		QImageWriter writer1(chosenColorSavePath);
+		QImageWriter writer1(colorSavePath);
 
 		//cv::Mat mat = this->parent->getCapturedColorImage();
 		//colorWriteSuccess = cv::imwrite(colorSavePath.toStdString(), i);
@@ -73,10 +70,7 @@ void SaveImageDialog::onManualSave() {
 		colorWriteSuccess = writer1.write(img);
 	}
 	if (ui.checkBoxDepth->isChecked()) {
-		chosenDepthSavePath = QFileDialog::getSaveFileName(this, tr("Save Depth Image"),
-			depthSavePath,
-			tr("Images (*.png *.jpg)"));
-		QImageWriter writer2(chosenDepthSavePath);
+		QImageWriter writer2(depthSavePath);
 
 		//cv::Mat i = this->parent->getCapturedDepthImage();
 		//depthWriteSuccess = cv::imwrite(depthSavePath.toStdString(), i);
@@ -87,10 +81,7 @@ void SaveImageDialog::onManualSave() {
 		depthWriteSuccess = writer2.write(img);
 	}
 	if (ui.checkBoxColorToDepth->isChecked()) {
-		chosenColorToDepthSavePath = QFileDialog::getSaveFileName(this, tr("Save Color To Depth Image"),
-			colorToDepthSavePath,
-			tr("Images (*.png *.jpg)"));
-		QImageWriter writer3(chosenColorToDepthSavePath);
+		QImageWriter writer3(colorToDepthSavePath);
 
 		//cv::Mat i = this->parent->getCapturedColorToDepthImage();
 		//cv::Mat temp;
@@ -104,10 +95,7 @@ void SaveImageDialog::onManualSave() {
 	}
 
 	if (ui.checkBoxDepthToColor->isChecked()) {
-		chosenDepthToColorSavePath = QFileDialog::getSaveFileName(this, tr("Save Depth To Color Image"),
-			depthToColorSavePath,
-			tr("Images (*.png *.jpg)"));
-		QImageWriter writer4(chosenDepthToColorSavePath);
+		QImageWriter writer4(depthToColorSavePath);
 
 		//cv::Mat i = this->parent->getCapturedDepthToColorImage();
 		//depthToColorWriteSuccess = cv::imwrite(depthToColorSavePath.toStdString(), i);
@@ -120,10 +108,7 @@ void SaveImageDialog::onManualSave() {
 	}
 
 	if (ui.checkBoxFourChannel->isChecked()) {
-		chosenFourChannelPNGSavePath = QFileDialog::getSaveFileName(this, tr("Save Four Channel Image"),
-			fourChannelPNGSavePath,
-			tr("Images (*.png *.jpg)"));
-		QImageWriter writer5(chosenFourChannelPNGSavePath);
+		QImageWriter writer5(fourChannelPNGSavePath);
 
 		QImage img((uchar*)this->parent->getFourChannelPNG().data,
 			this->parent->getFourChannelPNG().cols,
@@ -147,11 +132,11 @@ void SaveImageDialog::onManualSave() {
 	/** "Images saved under" END */
 
 	/** Show In Explorer */
-	if (colorWriteSuccess) this->parent->setCaptureFilepath(chosenColorSavePath);
-	else if (depthWriteSuccess) this->parent->setCaptureFilepath(chosenDepthSavePath);
-	else if (colorToDepthWriteSuccess) this->parent->setCaptureFilepath(chosenColorToDepthSavePath);
-	else if (depthToColorWriteSuccess) this->parent->setCaptureFilepath(chosenDepthToColorSavePath);
-	else this->parent->setCaptureFilepath(chosenFourChannelPNGSavePath);
+	if (colorWriteSuccess) this->parent->setCaptureFilepath(colorSavePath);
+	else if (depthWriteSuccess) this->parent->setCaptureFilepath(depthSavePath);
+	else if (colorToDepthWriteSuccess) this->parent->setCaptureFilepath(colorToDepthSavePath);
+	else if (depthToColorWriteSuccess) this->parent->setCaptureFilepath(depthToColorSavePath);
+	else this->parent->setCaptureFilepath(fourChannelPNGSavePath);
 
 	this->parent->getParent()->ui.saveInfoCaptureTab->setText("Images are saved under\n" + visitFolderPath + "\nat " + dateTimeString);
 	this->parent->getParent()->ui.showInExplorer->show();

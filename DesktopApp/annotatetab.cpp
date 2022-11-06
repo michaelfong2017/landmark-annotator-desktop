@@ -331,6 +331,13 @@ void AnnotateTab::setAnnotationsText() {
 		text2.append(str);
 	}
 
+	/** Round to 2 decimal places */
+	std::string distance1String = QString::number(this->distance1, 'f', 2).toStdString();
+	std::string angle1String = QString::number(this->angle1, 'f', 2).toStdString();
+	std::string angle2String = QString::number(this->angle2, 'f', 2).toStdString();
+	std::string trunkRotationString = QString::number(this->trunkRotation, 'f', 2).toStdString();
+	/** Round to 2 decimal places END */
+
 	if (this->invalidDistance == 1) {
 		text.append(QString::fromStdString("Distance - Central Shift: Landmark C invalid \n"));
 	}
@@ -338,12 +345,12 @@ void AnnotateTab::setAnnotationsText() {
 		text.append(QString::fromStdString("Distance - Central Shift: Landmark D invalid \n"));
 	}
 	else {
-		text.append(QString::fromStdString("Distance - Central Shift: " + std::to_string(this->distance1) + " mm\n"));
+		text.append(QString::fromStdString("Distance - Central Shift: " + distance1String + " mm\n"));
 	}
 	
-	text.append(QString::fromStdString("Imbalance - Scapular: " + std::to_string(this->angle2) + " degree\n"));
-	text.append(QString::fromStdString("Imbalance - Pelvic: " + std::to_string(this->angle1) + " degree\n"));
-	text.append(QString::fromStdString("Angle - Trunk Rotation: " + std::to_string(this->trunkRotation) + " degree\n"));
+	text.append(QString::fromStdString("Imbalance - Scapular: " + angle2String + " degree\n"));
+	text.append(QString::fromStdString("Imbalance - Pelvic: " + angle1String + " degree\n"));
+	text.append(QString::fromStdString("Angle - Trunk Rotation: " + trunkRotationString + " degree\n"));
 
 	this->parent->ui.annotationsText->setText(text);
 	this->parent->ui.annotationsText2->setText(text2);

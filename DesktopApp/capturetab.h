@@ -105,6 +105,7 @@ private:
     QElapsedTimer recordingElapsedTimer;
     QNetworkAccessManager manager;
     bool noImageCaptured;
+    void afterSensorImagesAcquired();
     void setDefaultCaptureMode();
     void disableButtonsForUploading();
     void enableButtonsForUploading();

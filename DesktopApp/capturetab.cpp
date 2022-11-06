@@ -194,6 +194,55 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		process->startDetached("explorer.exe", args);
 		});
 
+	QObject::connect(this->parent->ui.importButton, &QPushButton::clicked, [this]() {
+		qDebug() << "import button clicked";
+
+		QString patientFolderPath = this->getParent()->savePath.absolutePath();
+
+		QString chosenColorSavePath = QFileDialog::getOpenFileName(this, tr("Select Color Image"),
+			patientFolderPath,
+			tr("Images (*.png *.jpg)"));
+
+		QString chosenFolder = QFileInfo(chosenColorSavePath).absoluteDir().absolutePath();
+		QString chosenFilename = QUrl(chosenColorSavePath).fileName();
+
+		qDebug() << "chosenFolder: " << chosenFolder;
+		qDebug() << "chosenFilename: " << chosenFilename;
+
+		if (chosenColorSavePath.split("_").length() < 2) {
+			qWarning() << "capturetab importButton - The selected color image does not have a filename matching the expected format (with correct timestamp prefix)";
+			return;
+		}
+
+		QString filenamePrefix = chosenFilename.split("_")[0] + "_" + chosenFilename.split("_")[1];
+	
+		QString colorSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_color.png");
+		QString depthSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_depth.png");
+		QString colorToDepthSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_color_aligned.png");
+		QString depthToColorSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_depth_aligned.png");
+		QString fourChannelPNGSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_four_channel.png");
+
+		this->capturedColorImage = cv::imread(colorSavePath.toStdString(), -1);
+		this->capturedDepthImage = cv::imread(depthSavePath.toStdString(), -1);
+		this->capturedColorToDepthImage = cv::imread(colorToDepthSavePath.toStdString(), -1);
+		this->capturedDepthToColorImage = cv::imread(depthToColorSavePath.toStdString(), -1);
+		this->FourChannelPNG = cv::imread(fourChannelPNGSavePath.toStdString(), -1);
+
+		cv::cvtColor(this->capturedColorImage, this->capturedColorImage, cv::COLOR_BGR2BGRA);
+		this->capturedDepthImage.convertTo(this->capturedDepthImage, CV_16UC1);
+		cv::cvtColor(this->capturedColorToDepthImage, this->capturedColorToDepthImage, cv::COLOR_BGR2BGRA);
+		this->capturedDepthToColorImage.convertTo(this->capturedDepthToColorImage, CV_16UC1);
+		cv::cvtColor(this->FourChannelPNG, this->FourChannelPNG, cv::COLOR_BGR2BGRA);
+
+
+		afterSensorImagesAcquired();
+
+
+		/** Import does not need auto-save */
+		SaveImageDialog dialog(this, false);
+		/** Import does not need auto-save END */
+		});
+
 	QObject::connect(this->parent->ui.captureButton, &QPushButton::clicked, [this]() {
 		if (this->isUploading) {
 			return;
@@ -208,6 +257,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->imageType = getImageTypeFromDescription(this->imageName);
 		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
+
 		// Shallow copy
 		/*cv::Mat color = this->capturedColorImage;
 		cv::Mat depth = this->capturedDepthImage;
@@ -240,7 +290,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		cv::imshow("ransac", this->RANSACImage);
 		cv::waitKey(0);
 		cv::destroyWindow("ransac");*/
-
 
 		/* Convert to the special 4 channels image and upload */
 		cv::Mat color3 = this->capturedColorImage;
@@ -287,85 +336,12 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/* Convert to the special 4 channels image and upload END */
 
 
-		/** Insert index to data model */
-		QList<QStandardItem*> itemList;
-		QStandardItem* dataItem;
-		for (int i = 0; i < COLUMN_COUNT; i++)
-		{
-			QString text;
-			switch (i) {
-			case 0:
-				text = QString::number(dataModel->rowCount() + 1);
-				break;
-			case 1:
-				text = QString::number(dataModel->rowCount());
-				break;
-			case 2:
-				//text = QString::number(imageType);
-				text = imageName;
-				break;
-			case 3:
-				QDateTime dateTime = dateTime.currentDateTime();
-				text = dateTime.toString("yyyy-MM-dd HH:mm:ss");
-				break;
-			}
-			dataItem = new QStandardItem(text);
-			QFont fn = dataItem->font();
-			fn.setPixelSize(14);
-			dataItem->setFont(fn);
-			itemList << dataItem;
-		}
+		afterSensorImagesAcquired();
 
-		dataModel->insertRow(0, itemList);
 
-		imageBeingAnalyzedTableViewRow = 0;
-		/** Insert index to data model END */
-
-		this->qColorImage = convertColorCVToQImage(this->capturedColorImage);
-		this->qDepthImage = convertDepthCVToQImage(this->capturedDepthImage);
-		this->qColorToDepthImage = convertColorToDepthCVToQImage(this->capturedColorToDepthImage);
-		this->qDepthToColorImage = convertDepthToColorCVToQImage(this->capturedDepthToColorImage);
-		// For annotatetab instead
-		//this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(this->capturedDepthToColorImage);
-		//this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImageDetailed(this->capturedDepthToColorImage);
-		// For annotatetab instead END
-
-		/** Initialize clip_rect whenever a new image is captured */
-		int width = this->parent->ui.graphicsViewImage->width();
-		int height = this->parent->ui.graphicsViewImage->height();
-		QImage imageScaled = qColorImage.scaled(width, height, Qt::KeepAspectRatio);
-		max_clip_width = imageScaled.width();
-		max_clip_height = imageScaled.height();
-		clip_rect = QRect(0, 0, max_clip_width, max_clip_height);
-		/** Initialize clip_rect whenever a new image is captured */
-
-		/** Store histories of images for selection */
-		CaptureHistory captureHistory;
-		captureHistory.imageType = imageType;
-		captureHistory.imageName = imageName;
-		captureHistory.capturedColorImage = capturedColorImage;
-		captureHistory.capturedDepthImage = capturedDepthImage;
-		captureHistory.capturedColorToDepthImage = capturedColorToDepthImage;
-		captureHistory.capturedDepthToColorImage = capturedDepthToColorImage;
-		captureHistory.FourChannelPNG = FourChannelPNG;
-		captureHistory.RANSACImage = RANSACImage;
-		captureHistory.qColorImage = qColorImage;
-		captureHistory.qDepthImage = qDepthImage;
-		captureHistory.qColorToDepthImage = qColorToDepthImage;
-		captureHistory.qDepthToColorImage = qDepthToColorImage;
-		//captureHistory.qDepthToColorColorizedImage = qDepthToColorColorizedImage;
-		captureHistory.clip_rect = clip_rect;
-		captureHistories.push_back(captureHistory);
-
-		selectedImageIndex = captureHistories.size() - 1;
-		/** Store histories of images for selection END */
-		displayCapturedImages();
-
-		/** UI */
-		enableButtonsForUploading();
-		/** UI END */
-
+		/** Import does not need auto-save */
 		SaveImageDialog dialog(this, true);
+		/** Import does not need auto-save END */
 	});
 
 	QObject::connect(this->parent->ui.annotateButtonCaptureTab, &QPushButton::clicked, [this]() {
@@ -586,6 +562,86 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 }
 
+void CaptureTab::afterSensorImagesAcquired() {
+	/** Insert index to data model */
+	QList<QStandardItem*> itemList;
+	QStandardItem* dataItem;
+	for (int i = 0; i < COLUMN_COUNT; i++)
+	{
+		QString text;
+		switch (i) {
+		case 0:
+			text = QString::number(dataModel->rowCount() + 1);
+			break;
+		case 1:
+			text = QString::number(dataModel->rowCount());
+			break;
+		case 2:
+			//text = QString::number(imageType);
+			text = imageName;
+			break;
+		case 3:
+			QDateTime dateTime = dateTime.currentDateTime();
+			text = dateTime.toString("yyyy-MM-dd HH:mm:ss");
+			break;
+		}
+		dataItem = new QStandardItem(text);
+		QFont fn = dataItem->font();
+		fn.setPixelSize(14);
+		dataItem->setFont(fn);
+		itemList << dataItem;
+	}
+
+	dataModel->insertRow(0, itemList);
+
+	imageBeingAnalyzedTableViewRow = 0;
+	/** Insert index to data model END */
+
+	this->qColorImage = convertColorCVToQImage(this->capturedColorImage);
+	this->qDepthImage = convertDepthCVToQImage(this->capturedDepthImage);
+	this->qColorToDepthImage = convertColorToDepthCVToQImage(this->capturedColorToDepthImage);
+	this->qDepthToColorImage = convertDepthToColorCVToQImage(this->capturedDepthToColorImage);
+	// For annotatetab instead
+	//this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(this->capturedDepthToColorImage);
+	//this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImageDetailed(this->capturedDepthToColorImage);
+	// For annotatetab instead END
+
+	/** Initialize clip_rect whenever a new image is captured */
+	int width = this->parent->ui.graphicsViewImage->width();
+	int height = this->parent->ui.graphicsViewImage->height();
+	QImage imageScaled = qColorImage.scaled(width, height, Qt::KeepAspectRatio);
+	max_clip_width = imageScaled.width();
+	max_clip_height = imageScaled.height();
+	clip_rect = QRect(0, 0, max_clip_width, max_clip_height);
+	/** Initialize clip_rect whenever a new image is captured */
+
+	/** Store histories of images for selection */
+	CaptureHistory captureHistory;
+	captureHistory.imageType = imageType;
+	captureHistory.imageName = imageName;
+	captureHistory.capturedColorImage = capturedColorImage;
+	captureHistory.capturedDepthImage = capturedDepthImage;
+	captureHistory.capturedColorToDepthImage = capturedColorToDepthImage;
+	captureHistory.capturedDepthToColorImage = capturedDepthToColorImage;
+	captureHistory.FourChannelPNG = FourChannelPNG;
+	captureHistory.RANSACImage = RANSACImage;
+	captureHistory.qColorImage = qColorImage;
+	captureHistory.qDepthImage = qDepthImage;
+	captureHistory.qColorToDepthImage = qColorToDepthImage;
+	captureHistory.qDepthToColorImage = qDepthToColorImage;
+	//captureHistory.qDepthToColorColorizedImage = qDepthToColorColorizedImage;
+	captureHistory.clip_rect = clip_rect;
+	captureHistories.push_back(captureHistory);
+
+	selectedImageIndex = captureHistories.size() - 1;
+	/** Store histories of images for selection END */
+	displayCapturedImages();
+
+	/** UI */
+	enableButtonsForUploading();
+	/** UI END */
+}
+
 void CaptureTab::clearCaptureHistories() {
 	qDebug() << "Clear records: " << captureHistories.size();
 	for (int i = 0; i < captureHistories.size(); i++) {
@@ -661,6 +717,7 @@ void CaptureTab::disableButtonsForUploading() {
 	this->parent->ui.progressBar->setTextVisible(true);
 	this->parent->ui.progressBar->setValue(1);
 
+	this->parent->ui.importButton->setEnabled(false);
 	this->parent->ui.captureButton->setEnabled(false);
 	this->parent->ui.saveVideoButton->setEnabled(false);
 	this->parent->ui.saveButtonCaptureTab->setEnabled(false);
@@ -687,6 +744,7 @@ void CaptureTab::enableButtonsForUploading() {
 	this->parent->ui.progressBar->setValue(0);
 	this->parent->ui.progressBar->setTextVisible(false);
 
+	this->parent->ui.importButton->setEnabled(true);
 	this->parent->ui.captureButton->setEnabled(true);
 	this->parent->ui.saveVideoButton->setEnabled(true);
 	this->parent->ui.saveButtonCaptureTab->setEnabled(true);
@@ -1338,6 +1396,7 @@ int CaptureTab::getImageTypeFromDescription(QString description)
 void CaptureTab::onEnterOfflineMode()
 {
 	qDebug() << "CaptureTab::onEnterOfflineMode()";
+	this->parent->ui.importButton->setEnabled(false);
 	this->parent->ui.captureButton->setEnabled(false);
 	this->parent->ui.saveVideoButton->setEnabled(false);
 	this->parent->ui.saveButtonCaptureTab->setEnabled(false);
@@ -1361,6 +1420,7 @@ void CaptureTab::onEnterOfflineMode()
 void CaptureTab::onExitOfflineMode()
 {
 	qDebug() << "CaptureTab::onExitOfflineMode()";
+	this->parent->ui.importButton->setEnabled(true);
 	this->parent->ui.captureButton->setEnabled(true);
 	this->parent->ui.saveVideoButton->setEnabled(true);
 	this->parent->ui.saveButtonCaptureTab->setEnabled(true);
