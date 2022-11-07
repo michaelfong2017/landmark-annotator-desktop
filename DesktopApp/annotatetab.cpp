@@ -194,6 +194,14 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 	this->qDepthToColorColorizedImage = this->qDepthToColorColorizedImage.copy(cropRect.x, cropRect.y, cropRect.width, cropRect.height);*/
 	/** Cropping part 2 END */
 
+	resizeAndDrawAnnotations();
+
+
+	this->computeMetrics();
+	this->setAnnotationsText();
+}
+
+void AnnotateTab::resizeAndDrawAnnotations() {
 	// scale both images according to displaying window size
 	int width = this->parent->ui.graphicsViewAnnotation->width();
 	int height = this->parent->ui.graphicsViewAnnotation->height();
@@ -235,8 +243,8 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 		x *= this->scalingFactorForRight;
 		y *= this->scalingFactorForRight;
 		//QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->depthToColorImage);
-		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x+560, y, this->recalculatedFullResolutionDepthImage);
-		
+		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x + 560, y, this->recalculatedFullResolutionDepthImage);
+
 
 		if (this->annotations3D.find(it.first) == this->annotations3D.end()) {
 			this->annotations3D.insert({ it.first, vector3D });
@@ -251,8 +259,6 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 	this->parent->ui.patientNameInCapture2->setText("Current Patient: " + this->parent->patientTab->getCurrentPatientName());
 
 	this->drawAnnotations();
-	this->computeMetrics();
-	this->setAnnotationsText();
 }
 
 cv::Mat AnnotateTab::getDepthToColorImage()

@@ -162,3 +162,16 @@ QImage DesktopApp::getQIRImage() {
 	return qImage;
 }
 
+void DesktopApp::resizeEvent(QResizeEvent* event)
+{
+	qDebug() << "DesktopApp::resizeEvent";
+	//qDebug() << "height: " + event->size().height() << ", width: " + event->size().width();
+
+	if (!this->captureTab->getCapturedColorImage().empty()) {
+		this->captureTab->displayCapturedImages();
+	}
+
+	if (!this->annotateTab->getQColorImage()->isNull()) {
+		this->annotateTab->resizeAndDrawAnnotations();
+	}
+}

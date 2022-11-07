@@ -82,7 +82,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	/** This must be put here (below) */
 	tableView->setColumnWidth(0, 18);
 	tableView->setColumnWidth(2, 150);
-	tableView->setColumnWidth(3, tableView->width() - 150 - 50);
+	//tableView->setColumnWidth(3, tableView->width() - 150 - 50);
+	tableView->horizontalHeader()->setStretchLastSection(true);
 	/** This must be put here (below) END */
 	/** Headers END */
 
@@ -1362,6 +1363,9 @@ void CaptureTab::displayCapturedImages() {
 	int height = this->parent->ui.graphicsViewImage->height();
 
 	QImage imageScaled = image.scaled(width, height, Qt::KeepAspectRatio);
+	this->max_clip_width = imageScaled.width();
+	this->max_clip_height = imageScaled.height();
+	this->clip_rect = QRect(0, 0, max_clip_width, max_clip_height);
 
 	// Deallocate heap memory used by previous GGraphicsScene object
 	if (this->parent->ui.graphicsViewImage->scene()) {

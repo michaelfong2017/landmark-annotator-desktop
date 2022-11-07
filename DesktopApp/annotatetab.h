@@ -41,6 +41,8 @@ public:
     void computeMetrics();
     void setAiImageUrl(QString aiImageUrl);
 
+    void resizeAndDrawAnnotations();
+
     float scalingFactorFromRightToLeft; // from Annotate Left Color Image to Right Depth image
 
     // Landmark predictions
