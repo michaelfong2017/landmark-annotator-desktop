@@ -19,14 +19,14 @@ void ClipGraphicsPixmapItem::paint(QPainter* painter, const QStyleOptionGraphics
 	}
 	/** Disable cropping if selected display image is either qDepthImage or qColorToDepthImage END */
 
-	painter->setPen(QPen(QBrush(Qt::red), 4, Qt::DashLine));
-	painter->drawRect(this->captureTab->clip_rect);
-
-	painter->setPen(QPen(QBrush(Qt::blue), 4, Qt::SolidLine));
+	//painter->setPen(QPen(QBrush(Qt::red), 4, Qt::DashLine));
 	//painter->drawRect(this->captureTab->clip_rect);
-	for (int i = 0; i < 4; i++) {
-		painter->drawRect(this->captureTab->corner(i));
-	}
+
+	//painter->setPen(QPen(QBrush(Qt::blue), 4, Qt::SolidLine));
+	////painter->drawRect(this->captureTab->clip_rect);
+	//for (int i = 0; i < 4; i++) {
+	//	painter->drawRect(this->captureTab->corner(i));
+	//}
 
 	//painter->setClipRect(this->captureTab->clip_rect);
 }

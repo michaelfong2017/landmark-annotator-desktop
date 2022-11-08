@@ -129,8 +129,13 @@ void UploadProgressDialog::onCompleted(int uploadNumber)
 
     //delete (requests.find(uploadNumber)->second);
 
-    auto it = requests.find(uploadNumber);
-    requests.erase(it);
+    for (auto it = requests.begin(); it != requests.end();)
+    {
+        if (it->first == uploadNumber)
+            it = requests.erase(it);
+        else
+            ++it;
+    }
 }
 
 void UploadProgressDialog::onFailed(int uploadNumber)
