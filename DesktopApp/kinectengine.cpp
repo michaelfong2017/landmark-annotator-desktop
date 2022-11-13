@@ -322,6 +322,48 @@ void KinectEngine::readDepthToColorImage(cv::Mat& depthToColorImage, k4a_image_t
 	return;
 }
 
+void KinectEngine::readPointCloudImage(cv::Mat& xyzImage, k4a_image_t k4aDepthImage)
+{
+	// Shallow copy
+	k4a_image_t _k4aDepthImage = this->k4aDepthImage;
+
+	if (k4aDepthImage != NULL) {
+		_k4aDepthImage = k4aDepthImage;
+	}
+	else {
+		if (_k4aDepthImage == NULL) {
+			xyzImage = cv::Mat{};
+			return;
+		}
+	}
+
+	k4a_transformation_t transformationHandle = k4a_transformation_create(&this->calibration);
+
+	k4a_image_t alignmentImage;
+	if (k4a_image_create(K4A_IMAGE_FORMAT_CUSTOM, k4a_image_get_width_pixels(_k4aDepthImage), k4a_image_get_height_pixels(_k4aDepthImage), 3 * k4a_image_get_width_pixels(_k4aDepthImage) * (int)sizeof(uint16_t),
+		&alignmentImage) != K4A_RESULT_SUCCEEDED) {
+		k4a_transformation_destroy(transformationHandle);
+		k4a_image_release(alignmentImage);
+		xyzImage = cv::Mat{};
+		return;
+	}
+
+	if (k4a_transformation_depth_image_to_point_cloud(transformationHandle, _k4aDepthImage, K4A_CALIBRATION_TYPE_DEPTH, alignmentImage) != K4A_WAIT_RESULT_SUCCEEDED) {
+		k4a_transformation_destroy(transformationHandle);
+		k4a_image_release(alignmentImage);
+		xyzImage = cv::Mat{};
+		return;
+	}
+
+	// .clone() is necessary
+	xyzImage = cv::Mat(k4a_image_get_height_pixels(alignmentImage), k4a_image_get_width_pixels(alignmentImage), CV_16UC3, k4a_image_get_buffer(alignmentImage), cv::Mat::AUTO_STEP).clone();
+
+	k4a_transformation_destroy(transformationHandle);
+	k4a_image_release(alignmentImage);
+
+	return;
+}
+
 #pragma endregion
 
 QImage convertColorCVToQImage(cv::Mat cvImage) {

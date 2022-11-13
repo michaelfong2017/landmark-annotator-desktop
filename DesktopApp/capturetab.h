@@ -38,6 +38,7 @@ public:
     cv::Mat getCapturedDepthImage();
     cv::Mat getCapturedColorToDepthImage();
     cv::Mat getCapturedDepthToColorImage();
+    cv::Mat getPointCloudImage();
 
     cv::Mat getFourChannelPNG();
 
@@ -81,6 +82,7 @@ private:
     cv::Mat capturedDepthImage;
     cv::Mat capturedColorToDepthImage;
     cv::Mat capturedDepthToColorImage;
+    cv::Mat pointCloudImage;
 
     cv::Mat FourChannelPNG;
     // stored captured images END

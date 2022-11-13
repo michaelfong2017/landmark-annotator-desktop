@@ -258,6 +258,43 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->imageType = getImageTypeFromDescription(this->imageName);
 		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
+		KinectEngine::getInstance().readPointCloudImage(this->pointCloudImage);
+
+
+		/** Convert 16UC3 to 16UC4 with alpha=1 */
+		cv::Mat pointCloudImage16UC4 = cv::Mat::ones(this->pointCloudImage.rows, this->pointCloudImage.cols, CV_16UC4);
+		std::vector<cv::Mat>channels16UC4(4);
+		std::vector<cv::Mat>channels16UC3(3);
+		cv::split(pointCloudImage16UC4, channels16UC4);
+		cv::split(this->pointCloudImage, channels16UC3);
+		channels16UC4[0] = channels16UC3[0];
+		channels16UC4[1] = channels16UC3[1];
+		channels16UC4[2] = channels16UC3[2];
+
+		cv::merge(channels16UC4, pointCloudImage16UC4);
+		/** Convert 16UC3 to 16UC4 with alpha=1 END */
+
+		/** Save point cloud image for testing */
+		QString dateTimeString = Helper::getCurrentDateTimeString();
+		QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
+
+		QString	chosenFolder = QFileDialog::getExistingDirectory(this, tr("Select Output Folder"),
+			visitFolderPath,
+			QFileDialog::ShowDirsOnly);
+		QString pointCloudSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_point_cloud.png"));
+		bool pointCloudWriteSuccess = false;
+
+		QImageWriter writer(pointCloudSavePath);
+
+		QImage img((uchar*)pointCloudImage16UC4.data,
+			pointCloudImage16UC4.cols,
+			pointCloudImage16UC4.rows,
+			pointCloudImage16UC4.step,
+			QImage::Format_RGBA64);
+			pointCloudWriteSuccess = writer.write(img);
+		/** Save point cloud image for testing END */
+
+
 
 		// Shallow copy
 		/*cv::Mat color = this->capturedColorImage;
@@ -1125,6 +1162,11 @@ cv::Mat CaptureTab::getCapturedColorToDepthImage() {
 
 cv::Mat CaptureTab::getCapturedDepthToColorImage() {
 	return this->capturedDepthToColorImage;
+}
+
+cv::Mat CaptureTab::getPointCloudImage()
+{
+	return this->pointCloudImage;
 }
 
 cv::Mat CaptureTab::getFourChannelPNG()

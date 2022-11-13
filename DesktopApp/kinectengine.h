@@ -49,6 +49,7 @@ public:
     void readDepthImage(cv::Mat& depthImage, k4a_image_t k4aDepthImage = NULL);
     void readColorToDepthImage(cv::Mat& colorToDepthImage, k4a_image_t k4aColorImage = NULL, k4a_image_t k4aDepthImage = NULL);
     void readDepthToColorImage(cv::Mat& depthToColorImage, k4a_image_t k4aColorImage = NULL, k4a_image_t k4aDepthImage = NULL);
+    void readPointCloudImage(cv::Mat& depthImage, k4a_image_t k4aDepthImage = NULL);
     std::deque<k4a_float3_t> getGyroSampleQueue();
     std::deque<k4a_float3_t> getAccSampleQueue();
     QVector3D query3DPoint(int x, int y, cv::Mat depthToColorImage);
