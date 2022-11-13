@@ -223,11 +223,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		QString depthToColorSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_depth_aligned.png");
 		QString fourChannelPNGSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_four_channel.png");
 
-		this->capturedColorImage = cv::imread(colorSavePath.toStdString(), -1);
-		this->capturedDepthImage = cv::imread(depthSavePath.toStdString(), -1);
-		this->capturedColorToDepthImage = cv::imread(colorToDepthSavePath.toStdString(), -1);
-		this->capturedDepthToColorImage = cv::imread(depthToColorSavePath.toStdString(), -1);
-		this->FourChannelPNG = cv::imread(fourChannelPNGSavePath.toStdString(), -1);
+		this->capturedColorImage = KinectEngine::getInstance().readCVImageFromFile(colorSavePath.toStdWString());
+		this->capturedDepthImage = KinectEngine::getInstance().readCVImageFromFile(depthSavePath.toStdWString());
+		this->capturedColorToDepthImage = KinectEngine::getInstance().readCVImageFromFile(colorToDepthSavePath.toStdWString());
+		this->capturedDepthToColorImage = KinectEngine::getInstance().readCVImageFromFile(depthToColorSavePath.toStdWString());
+		this->FourChannelPNG = KinectEngine::getInstance().readCVImageFromFile(fourChannelPNGSavePath.toStdWString());
 
 		cv::cvtColor(this->capturedColorImage, this->capturedColorImage, cv::COLOR_BGR2BGRA);
 		this->capturedDepthImage.convertTo(this->capturedDepthImage, CV_16UC1);

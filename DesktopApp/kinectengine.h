@@ -74,6 +74,7 @@ public:
         float d);
 
     /** Calculate plane equation and distance between plane and 3D point END */
+    cv::Mat readCVImageFromFile(std::wstring filename);
 
 private:
     KinectEngine();

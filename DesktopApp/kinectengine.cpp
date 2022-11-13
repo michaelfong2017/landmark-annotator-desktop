@@ -690,3 +690,24 @@ float KinectEngine::findDistanceBetween3DPointAndPlane(
 
 	return d / e;
 }
+
+cv::Mat KinectEngine::readCVImageFromFile(std::wstring filename)
+{
+	const wchar_t* widecstr = filename.c_str();
+
+	FILE* fp = _wfopen(widecstr, L"rb");
+	if (!fp)
+	{
+		return cv::Mat();
+	}
+	fseek(fp, 0, SEEK_END);
+	long sz = ftell(fp);
+	char* buf = new char[sz];
+	fseek(fp, 0, SEEK_SET);
+	long n = fread(buf, 1, sz, fp);
+	cv::_InputArray arr(buf, sz);
+	cv::Mat img = cv::imdecode(arr, -1);
+	delete[] buf;
+	fclose(fp);
+	return img;
+}
