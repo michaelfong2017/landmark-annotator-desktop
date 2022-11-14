@@ -262,16 +262,28 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 
 		/** Convert 16UC3 to 16UC4 with alpha=1 */
-		cv::Mat pointCloudImage16UC4 = cv::Mat::ones(this->pointCloudImage.rows, this->pointCloudImage.cols, CV_16UC4);
-		std::vector<cv::Mat>channels16UC4(4);
-		std::vector<cv::Mat>channels16UC3(3);
-		cv::split(pointCloudImage16UC4, channels16UC4);
-		cv::split(this->pointCloudImage, channels16UC3);
-		channels16UC4[0] = channels16UC3[0];
-		channels16UC4[1] = channels16UC3[1];
-		channels16UC4[2] = channels16UC3[2];
+		cv::Mat pointCloudImage16SC4 = cv::Mat::ones(this->pointCloudImage.rows, this->pointCloudImage.cols, CV_16SC4);
+		std::vector<cv::Mat>channels16C4(4);
+		std::vector<cv::Mat>channels16C3(3);
+		cv::split(pointCloudImage16SC4, channels16C4);
+		cv::split(this->pointCloudImage, channels16C3);
+		channels16C4[0] = channels16C3[0];
+		channels16C4[1] = channels16C3[1];
+		channels16C4[2] = channels16C3[2];
 
-		cv::merge(channels16UC4, pointCloudImage16UC4);
+		//qDebug() << "PCD2";
+		//for (int i = 0; i < this->pointCloudImage.cols / 2; i++) {
+		//	for (int j = 0; j < this->pointCloudImage.rows / 2; j++) {
+		//		cv::Vec3b color = this->pointCloudImage.at<cv::Vec3b>(j, i);
+		//		//qDebug() << color[0] << color[1] << color[2];
+		//		//qDebug() << "1 Pixel";
+		//		/*qDebug() << channels16C3[0].at<int16_t>(j, i);
+		//		qDebug() << channels16C3[1].at<int16_t>(j, i);
+		//		qDebug() << channels16C3[2].at<int16_t>(j, i);*/
+		//	}
+		//}
+
+		cv::merge(channels16C4, pointCloudImage16SC4);
 		/** Convert 16UC3 to 16UC4 with alpha=1 END */
 
 		/** Save point cloud image for testing */
@@ -286,10 +298,10 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		QImageWriter writer(pointCloudSavePath);
 
-		QImage img((uchar*)pointCloudImage16UC4.data,
-			pointCloudImage16UC4.cols,
-			pointCloudImage16UC4.rows,
-			pointCloudImage16UC4.step,
+		QImage img((uchar*)pointCloudImage16SC4.data,
+			pointCloudImage16SC4.cols,
+			pointCloudImage16SC4.rows,
+			pointCloudImage16SC4.step,
 			QImage::Format_RGBA64);
 			pointCloudWriteSuccess = writer.write(img);
 		/** Save point cloud image for testing END */

@@ -340,8 +340,12 @@ void KinectEngine::readPointCloudImage(cv::Mat& xyzImage, k4a_image_t k4aDepthIm
 	k4a_transformation_t transformationHandle = k4a_transformation_create(&this->calibration);
 
 	k4a_image_t alignmentImage;
-	if (k4a_image_create(K4A_IMAGE_FORMAT_CUSTOM, k4a_image_get_width_pixels(_k4aDepthImage), k4a_image_get_height_pixels(_k4aDepthImage), 3 * k4a_image_get_width_pixels(_k4aDepthImage) * (int)sizeof(uint16_t),
+	if (k4a_image_create(K4A_IMAGE_FORMAT_CUSTOM, 
+		k4a_image_get_width_pixels(_k4aDepthImage), 
+		k4a_image_get_height_pixels(_k4aDepthImage), 
+		3 * k4a_image_get_width_pixels(_k4aDepthImage) * (int)sizeof(int16_t),
 		&alignmentImage) != K4A_RESULT_SUCCEEDED) {
+
 		k4a_transformation_destroy(transformationHandle);
 		k4a_image_release(alignmentImage);
 		xyzImage = cv::Mat{};
@@ -355,9 +359,28 @@ void KinectEngine::readPointCloudImage(cv::Mat& xyzImage, k4a_image_t k4aDepthIm
 		return;
 	}
 
-	// .clone() is necessary
-	xyzImage = cv::Mat(k4a_image_get_height_pixels(alignmentImage), k4a_image_get_width_pixels(alignmentImage), CV_16UC3, k4a_image_get_buffer(alignmentImage), cv::Mat::AUTO_STEP).clone();
+	int width = k4a_image_get_width_pixels(alignmentImage);
+	int height = k4a_image_get_height_pixels(alignmentImage);
+	int stride = k4a_image_get_stride_bytes(alignmentImage);
+	int16_t* pointCloudImageBuffer = (int16_t*)k4a_image_get_buffer(alignmentImage);
 
+	/*for (int h = 0; h < height; h++)
+	{
+		for (int w = 0; w < width; w++)
+		{
+			int pixelIndex = h * width + w;
+			k4a_float3_t position = {
+				static_cast<float>(pointCloudImageBuffer[3 * pixelIndex + 0]),
+				static_cast<float>(pointCloudImageBuffer[3 * pixelIndex + 1]),
+				static_cast<float>(pointCloudImageBuffer[3 * pixelIndex + 2]) 
+			};
+			qDebug() << pointCloudImageBuffer[3 * pixelIndex + 0] << " " << pointCloudImageBuffer[3 * pixelIndex + 1] << " " << pointCloudImageBuffer[3 * pixelIndex + 2];
+		}
+	}*/
+
+	// .clone() is necessary
+	xyzImage = cv::Mat(k4a_image_get_height_pixels(alignmentImage), k4a_image_get_width_pixels(alignmentImage), CV_16SC3, k4a_image_get_buffer(alignmentImage), cv::Mat::AUTO_STEP).clone();
+	
 	k4a_transformation_destroy(transformationHandle);
 	k4a_image_release(alignmentImage);
 
