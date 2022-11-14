@@ -38,7 +38,7 @@
       <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="loginTab">
       <property name="sizePolicy">
@@ -1293,19 +1293,6 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QPushButton" name="importButton">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>35</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Import</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="captureButton">
            <property name="enabled">
             <bool>true</bool>
@@ -1327,6 +1314,19 @@ font: 16px &quot;MS Shell Dlg 2&quot;;</string>
            </property>
            <property name="text">
             <string>Capture</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="importButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Import</string>
            </property>
           </widget>
          </item>

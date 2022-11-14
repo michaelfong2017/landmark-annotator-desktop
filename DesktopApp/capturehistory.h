@@ -12,6 +12,7 @@ struct CaptureHistory {
     cv::Mat capturedColorToDepthImage;
     cv::Mat capturedDepthToColorImage;
     cv::Mat FourChannelPNG;
+    cv::Mat PointCloudPNG;
     cv::Mat RANSACImage;
     QImage qColorImage;
     QImage qDepthImage;

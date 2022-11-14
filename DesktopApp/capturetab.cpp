@@ -196,7 +196,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		});
 
 	QObject::connect(this->parent->ui.importButton, &QPushButton::clicked, [this]() {
-		qDebug() << "import button clicked";
+		qDebug() << "Import button clicked";
 
 		QString patientFolderPath = this->getParent()->savePath.absolutePath();
 
@@ -258,55 +258,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->imageType = getImageTypeFromDescription(this->imageName);
 		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
-		KinectEngine::getInstance().readPointCloudImage(this->pointCloudImage);
-
-
-		/** Convert 16UC3 to 16UC4 with alpha=1 */
-		cv::Mat pointCloudImage16SC4 = cv::Mat::ones(this->pointCloudImage.rows, this->pointCloudImage.cols, CV_16SC4);
-		std::vector<cv::Mat>channels16C4(4);
-		std::vector<cv::Mat>channels16C3(3);
-		cv::split(pointCloudImage16SC4, channels16C4);
-		cv::split(this->pointCloudImage, channels16C3);
-		channels16C4[0] = channels16C3[0];
-		channels16C4[1] = channels16C3[1];
-		channels16C4[2] = channels16C3[2];
-
-		//qDebug() << "PCD2";
-		//for (int i = 0; i < this->pointCloudImage.cols / 2; i++) {
-		//	for (int j = 0; j < this->pointCloudImage.rows / 2; j++) {
-		//		cv::Vec3b color = this->pointCloudImage.at<cv::Vec3b>(j, i);
-		//		//qDebug() << color[0] << color[1] << color[2];
-		//		//qDebug() << "1 Pixel";
-		//		/*qDebug() << channels16C3[0].at<int16_t>(j, i);
-		//		qDebug() << channels16C3[1].at<int16_t>(j, i);
-		//		qDebug() << channels16C3[2].at<int16_t>(j, i);*/
-		//	}
-		//}
-
-		cv::merge(channels16C4, pointCloudImage16SC4);
-		/** Convert 16UC3 to 16UC4 with alpha=1 END */
-
-		/** Save point cloud image for testing */
-		QString dateTimeString = Helper::getCurrentDateTimeString();
-		QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
-
-		QString	chosenFolder = QFileDialog::getExistingDirectory(this, tr("Select Output Folder"),
-			visitFolderPath,
-			QFileDialog::ShowDirsOnly);
-		QString pointCloudSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_point_cloud.png"));
-		bool pointCloudWriteSuccess = false;
-
-		QImageWriter writer(pointCloudSavePath);
-
-		QImage img((uchar*)pointCloudImage16SC4.data,
-			pointCloudImage16SC4.cols,
-			pointCloudImage16SC4.rows,
-			pointCloudImage16SC4.step,
-			QImage::Format_RGBA64);
-			pointCloudWriteSuccess = writer.write(img);
-		/** Save point cloud image for testing END */
-
-
 
 		// Shallow copy
 		/*cv::Mat color = this->capturedColorImage;
@@ -323,6 +274,16 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			dialog.exec();
 			return;
 		}
+
+		// Point Cloud 
+		if (this->parent->ui.enablePointCloudcheckBox->isChecked()) {
+			qDebug() << "High Resolution checked. get Point Cloud";
+			this->PointCloudPNG = computePointCloudFromDepth();
+		}
+		else {
+			this->PointCloudPNG = cv::Mat{};
+		}
+
 		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
 		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
 		this->noImageCaptured = false;
@@ -447,7 +408,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		str.replace(":", "");
 
 		this->uploadProgressDialog->requests.insert(std::make_pair(uploadNumber, new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(),
-			imageType, str, this->FourChannelPNG, this->capturedColorImage,
+			imageType, str, this->FourChannelPNG, this->capturedColorImage, this->PointCloudPNG,
 			uploadNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog)));
 
 		/*new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(), 
@@ -673,6 +634,7 @@ void CaptureTab::afterSensorImagesAcquired() {
 	captureHistory.capturedDepthImage = capturedDepthImage;
 	captureHistory.capturedColorToDepthImage = capturedColorToDepthImage;
 	captureHistory.capturedDepthToColorImage = capturedDepthToColorImage;
+	captureHistory.PointCloudPNG = PointCloudPNG;
 	captureHistory.FourChannelPNG = FourChannelPNG;
 	captureHistory.RANSACImage = RANSACImage;
 	captureHistory.qColorImage = qColorImage;
@@ -1178,7 +1140,7 @@ cv::Mat CaptureTab::getCapturedDepthToColorImage() {
 
 cv::Mat CaptureTab::getPointCloudImage()
 {
-	return this->pointCloudImage;
+	return this->PointCloudPNG;
 }
 
 cv::Mat CaptureTab::getFourChannelPNG()
@@ -1215,6 +1177,51 @@ Recorder* CaptureTab::getRecorder() { return this->recorder; }
 
 QString CaptureTab::getCaptureFilepath() { return this->captureFilepath; }
 void CaptureTab::setCaptureFilepath(QString captureFilepath) { this->captureFilepath = captureFilepath; }
+
+cv::Mat CaptureTab::computePointCloudFromDepth() {
+
+	cv::Mat temp;
+
+	KinectEngine::getInstance().readPointCloudImage(temp);
+
+	/** Convert 16UC3 to 16UC4 with alpha=1 */
+	cv::Mat pointCloudImage16SC4 = cv::Mat::ones(temp.rows, temp.cols, CV_16SC4);
+	std::vector<cv::Mat>channels16C4(4);
+	std::vector<cv::Mat>channels16C3(3);
+	cv::split(pointCloudImage16SC4, channels16C4);
+	cv::split(temp, channels16C3);
+	channels16C4[0] = channels16C3[0];
+	channels16C4[1] = channels16C3[1];
+	channels16C4[2] = channels16C3[2];
+
+	cv::merge(channels16C4, pointCloudImage16SC4);
+	temp = pointCloudImage16SC4;
+
+	//this->pointCloudImage = pointCloudImage16SC4
+	/** Convert 16UC3 to 16UC4 with alpha=1 END */
+
+	/** Save point cloud image for testing */
+	/*QString dateTimeString = Helper::getCurrentDateTimeString();
+	QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
+
+	QString	chosenFolder = QFileDialog::getExistingDirectory(this, tr("Select Output Folder"),
+		visitFolderPath,
+		QFileDialog::ShowDirsOnly);
+	QString pointCloudSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_point_cloud.png"));
+	bool pointCloudWriteSuccess = false;
+
+	QImageWriter writer(pointCloudSavePath);
+
+	QImage img((uchar*)pointCloudImage16SC4.data,
+		pointCloudImage16SC4.cols,
+		pointCloudImage16SC4.rows,
+		pointCloudImage16SC4.step,
+		QImage::Format_RGBA64);
+		pointCloudWriteSuccess = writer.write(img);*/
+		/** Save point cloud image for testing END */
+
+		return temp;
+}
 
 cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {
 
@@ -1524,12 +1531,12 @@ void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex
 	capturedColorToDepthImage = captureHistory.capturedColorToDepthImage;
 	capturedDepthToColorImage = captureHistory.capturedDepthToColorImage;
 	FourChannelPNG = captureHistory.FourChannelPNG;
+	PointCloudPNG = captureHistory.PointCloudPNG;
 	RANSACImage = captureHistory.RANSACImage;
 	qColorImage = captureHistory.qColorImage;
 	qDepthImage = captureHistory.qDepthImage;
 	qColorToDepthImage = captureHistory.qColorToDepthImage;
 	qDepthToColorImage = captureHistory.qDepthToColorImage;
-	//qDepthToColorColorizedImage = captureHistory.qDepthToColorColorizedImage;
 	clip_rect = captureHistory.clip_rect;
 
 	displayCapturedImages();

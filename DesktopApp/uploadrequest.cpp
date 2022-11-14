@@ -23,7 +23,7 @@ std::string generate_hex(const unsigned int len) {
     return ss.str();
 }
 
-uploadrequest::uploadrequest(QString userToken, QString signature, int patientId, int type, QString imageName, cv::Mat imageToSend, cv::Mat imageToSend2, int captureNumber, QString patientName, UploadProgressDialog* uploadProgressDialog) {
+uploadrequest::uploadrequest(QString userToken, QString signature, int patientId, int type, QString imageName, cv::Mat imageToSend, cv::Mat imageToSend2, cv::Mat imageToSend3, int captureNumber, QString patientName, UploadProgressDialog* uploadProgressDialog) {
 	
     qDebug() << "uploadrequest";
 
@@ -42,6 +42,7 @@ uploadrequest::uploadrequest(QString userToken, QString signature, int patientId
     this->patientName = patientName;
     this->imageToSend = imageToSend;
     this->imageToSend2 = imageToSend2;
+    this->imageToSend3 = imageToSend3;
     this->captureNumber = captureNumber;
     this->uploadProgressDialog = uploadProgressDialog;
     this->uploadNumber = ++uploadProgressDialog->latestUploadNumber;
@@ -143,6 +144,7 @@ void uploadrequest::onSignatureReceived(QNetworkReply* reply) {
 
     uploadImageToAliyun(this, SLOT(onUploadImageToAliyunCompleted(QNetworkReply*)), jsonResponse);
     uploadImageToAliyun2(this, SLOT(onUploadImageToAliyunCompleted2(QNetworkReply*)), jsonResponse);
+    uploadImageToAliyun3(this, SLOT(onUploadImageToAliyunCompleted3(QNetworkReply*)), jsonResponse);
 }
 
 void uploadrequest::uploadImageToAliyun(const QObject* receiver, const char* member, QJsonDocument json) {
@@ -309,6 +311,82 @@ void uploadrequest::uploadImageToAliyun2(const QObject* receiver, const char* me
     manager->post(request, multipart);
 }
 
+void uploadrequest::uploadImageToAliyun3(const QObject* receiver, const char* member, QJsonDocument json) {
+
+    qDebug() << "uploadImageToAliyun3: " << imageToSend3.cols << ", " << imageToSend3.rows << ", " << imageToSend3.channels();
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+
+    QNetworkRequest request(QUrl(QString(json["host"].toString())));
+    request.setRawHeader("Accept", "application/json");
+    request.setRawHeader("Accept-Language", "zh-CN,zh;q=0.9");
+    request.setRawHeader("Cache-Control", "no-cache");
+    request.setRawHeader("Connection", "keep-alive");
+    request.setRawHeader("Origin", "https://qa.mosainet.com/");
+    request.setRawHeader("Pragma", "no-cache");
+    request.setRawHeader("Referer", "https://qa.mosainet.com/");
+    request.setRawHeader("Sec-Fetch-Dest", "empty");
+    request.setRawHeader("Sec-Fetch-Mode", "cors");
+    request.setRawHeader("Sec-Fetch-Site", "cross-site");
+    request.setRawHeader("sec-ch-ua-mobile", "?0");
+    request.setRawHeader("sec-ch-ua-platform", "\"AI Server\"");
+    request.setTransferTimeout(25000);
+
+    QHttpMultiPart* multipart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data;boundary=" + multipart->boundary());
+
+    //加密串
+    QHttpPart textPart;
+    textPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"policy\""));
+    textPart.setBody(json["policy"].toString().toUtf8());
+
+    //身份
+    QHttpPart textPart2;
+    textPart2.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"OSSAccessKeyId\""));
+    textPart2.setBody(json["accessId"].toString().toUtf8());
+
+    QHttpPart textPart3;
+    textPart3.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"success_action_status\""));
+    textPart3.setBody(QString("200").toUtf8());
+
+    //签名
+    QHttpPart textPart4;
+    textPart4.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"signature\""));
+    textPart4.setBody(json["signature"].toString().toUtf8());
+
+    //文件Key
+    QHttpPart textPart5;
+    textPart5.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"key\""));
+    textPart5.setBody((QString("wukong/") + imageName + QString("PCD")).toUtf8());
+
+    multipart->append(textPart);
+    multipart->append(textPart2);
+    multipart->append(textPart3);
+    multipart->append(textPart4);
+    multipart->append(textPart5);
+
+    QHttpPart imageArray;
+    imageArray.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"" + imageName + "PCD.png\""));
+    imageArray.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));
+
+    QByteArray byteArray;
+    QBuffer buffer(&byteArray);
+    QImage qImage((const uchar*)imageToSend3.data, imageToSend3.cols, imageToSend3.rows, imageToSend3.step, QImage::Format_RGBA64);
+    qImage.bits();
+    qImage.save(&buffer, "PNG");
+    imageArray.setBody(byteArray);
+
+    multipart->append(imageArray);
+
+    connect(manager, SIGNAL(finished(QNetworkReply*)), receiver, member);
+
+    receivedURL3 = QString(json["host"].toString()) + QString("/wukong/") + imageName + QString("PCD");
+
+    manager->post(request, multipart);
+}
+
+
 void uploadrequest::onUploadImageToAliyunCompleted(QNetworkReply* reply) {
 
     qDebug() << "onUploadImageToAliyunCompleted";
@@ -329,7 +407,7 @@ void uploadrequest::onUploadImageToAliyunCompleted(QNetworkReply* reply) {
     stageProgress = 1;
     Completed1 = TRUE;
 
-    if (Completed2) {
+    if (Completed2 && Completed3) {
         // both completed
         bindImageUrl(this, SLOT(onBindImageUrl(QNetworkReply*)));
     }
@@ -338,7 +416,7 @@ void uploadrequest::onUploadImageToAliyunCompleted(QNetworkReply* reply) {
 
 void uploadrequest::onUploadImageToAliyunCompleted2(QNetworkReply* reply) {
 
-    qDebug() << "onUploadImageToAliyunCompleted";
+    qDebug() << "onUploadImageToAliyunCompleted2";
 
     QVariant statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
 
@@ -354,14 +432,39 @@ void uploadrequest::onUploadImageToAliyunCompleted2(QNetworkReply* reply) {
     }
 
     stageProgress = 1;
-
     Completed2 = TRUE;
 
-    if (Completed1) {
+    if (Completed1 && Completed3) {
         // both completed
         bindImageUrl(this, SLOT(onBindImageUrl(QNetworkReply*)));
     }
 
+    //bindImageUrl(this, SLOT(onBindImageUrl(QNetworkReply*)));
+}
+
+void uploadrequest::onUploadImageToAliyunCompleted3(QNetworkReply* reply) {
+
+    qDebug() << "onUploadImageToAliyunCompleted3";
+
+    QVariant statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    QByteArray response_data = reply->readAll();
+
+    reply->deleteLater();
+
+    /** ERROR */
+    if (statusCode.toInt() != 200) {
+        uploadProgressDialog->onFailed(this->uploadNumber);
+        qDebug() << statusCode.toInt();
+        return;
+    }
+
+    stageProgress = 1;
+    Completed3 = TRUE;
+
+    if (Completed1 && Completed2) {
+        // both completed
+        bindImageUrl(this, SLOT(onBindImageUrl(QNetworkReply*)));
+    }
     //bindImageUrl(this, SLOT(onBindImageUrl(QNetworkReply*)));
 }
 
@@ -444,10 +547,11 @@ void uploadrequest::bindImageUrl(const QObject* receiver, const char* member) {
     obj["patientId"] = patientId;
     obj["url"] = receivedURL;
     obj["originImageUrl"] = receivedURL2;
+    obj["pointcloudurl"] = receivedURL3;
     obj["imageType"] = imageType;
     obj["imageName"] = imageName;
 
-    qDebug() << "patientID: " << patientId << " imageType: " << imageType << " url: " << receivedURL << " url2: " << receivedURL2;
+    qDebug() << "patientID: " << patientId << " imageType: " << imageType << " url: " << receivedURL << " url2: " << receivedURL2 << " url3: " << receivedURL3;
 
     QByteArray data = QJsonDocument(obj).toJson();
 

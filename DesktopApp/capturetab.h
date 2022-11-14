@@ -43,6 +43,7 @@ public:
     cv::Mat getFourChannelPNG();
 
     cv::Mat computeNormalizedDepthImage(cv::Mat);
+    cv::Mat computePointCloudFromDepth();
 
     QImage getQColorImage();
     QImage getQDepthImage();
@@ -82,8 +83,7 @@ private:
     cv::Mat capturedDepthImage;
     cv::Mat capturedColorToDepthImage;
     cv::Mat capturedDepthToColorImage;
-    cv::Mat pointCloudImage;
-
+    cv::Mat PointCloudPNG;
     cv::Mat FourChannelPNG;
     // stored captured images END
 
