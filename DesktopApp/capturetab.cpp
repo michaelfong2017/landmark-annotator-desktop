@@ -258,7 +258,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->imageType = getImageTypeFromDescription(this->imageName);
 		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
-
 		// Shallow copy
 		/*cv::Mat color = this->capturedColorImage;
 		cv::Mat depth = this->capturedDepthImage;
@@ -275,34 +274,38 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			return;
 		}
 
+		
 		// Point Cloud 
 		if (this->parent->ui.enablePointCloudcheckBox->isChecked()) {
 			qDebug() << "High Resolution checked. get Point Cloud";
 			this->PointCloudPNG = computePointCloudFromDepth();
 		}
 		else {
-			this->PointCloudPNG = cv::Mat{};
+			this->PointCloudPNG = cv::Mat::ones(1080, 1920, CV_16SC4);
 		}
+
+		this->RANSACImage = computeNormalizedDepthImage(this->capturedDepthToColorImage);
 
 		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
 		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
 		this->noImageCaptured = false;
 
-		this->RANSACImage = computeNormalizedDepthImage(this->capturedDepthToColorImage);
-
-		// Cropping
+		/* Cropping all images to 800 * 1080 START*/
 		float widthOfPatientBack = 800;
 		cv::Rect rect((COLOR_IMAGE_WIDTH / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 1080);
 		this->capturedColorImage = this->capturedColorImage(rect);
 		this->capturedDepthToColorImage = this->capturedDepthToColorImage(rect);
 		this->RANSACImage = this->RANSACImage(rect);
+		this->PointCloudPNG = this->PointCloudPNG(rect);
+		/* Cropping all images to 800 * 1080 END*/
 
+		// For Debugging
 		/*this->RANSACImage.convertTo(this->RANSACImage, CV_8U, 255.0 / 5000.0, 0.0);
 		cv::imshow("ransac", this->RANSACImage);
 		cv::waitKey(0);
 		cv::destroyWindow("ransac");*/
 
-		/* Convert to the special 4 channels image and upload */
+		/* Convert to the special 4 channels image and upload START*/
 		cv::Mat color3 = this->capturedColorImage;
 		std::vector<cv::Mat>channelsForColor2(3);
 		cv::split(color3, channelsForColor2);
@@ -315,11 +318,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		std::vector<cv::Mat>channelsForDepth2(1);
 		cv::split(normalizedDepthToColor, channelsForDepth2);
 
-
 		int w = this->capturedColorImage.cols;
 		int h = this->capturedColorImage.rows;
-		//int width = COLOR_IMAGE_WIDTH;
-		//int height = COLOR_IMAGE_HEIGHT;
 
 		FourChannelPNG = cv::Mat::ones(h, w, CV_16UC4);
 		std::vector<cv::Mat>channels3(4);
@@ -328,7 +328,6 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		qDebug() << "this->capturedColorImage" << this->capturedColorImage.cols;
 		qDebug() << "depthToColor3" << depthToColor3.cols;
 		qDebug() << "normalizedDepthToColor" << normalizedDepthToColor.cols;
-
 
 		// channelsForColor2 = BGR
 		for (int i = 0; i < w * h; i++) {
@@ -340,15 +339,13 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		cv::merge(channels3, FourChannelPNG);
 
-		qDebug() << "Merging image completed: "
+		qDebug() << "Merging FourChannelPNG completed: "
 			<< FourChannelPNG.cols << ", "
 			<< FourChannelPNG.rows << ", "
 			<< FourChannelPNG.channels();
 		/* Convert to the special 4 channels image and upload END */
 
-
 		afterSensorImagesAcquired();
-
 
 		/** Import does not need auto-save */
 		SaveImageDialog dialog(this, true);
@@ -612,10 +609,6 @@ void CaptureTab::afterSensorImagesAcquired() {
 	this->qDepthImage = convertDepthCVToQImage(this->capturedDepthImage);
 	this->qColorToDepthImage = convertColorToDepthCVToQImage(this->capturedColorToDepthImage);
 	this->qDepthToColorImage = convertDepthToColorCVToQImage(this->capturedDepthToColorImage);
-	// For annotatetab instead
-	//this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImage(this->capturedDepthToColorImage);
-	//this->qDepthToColorColorizedImage = convertDepthToColorCVToColorizedQImageDetailed(this->capturedDepthToColorImage);
-	// For annotatetab instead END
 
 	/** Initialize clip_rect whenever a new image is captured */
 	int width = this->parent->ui.graphicsViewImage->width();
@@ -641,7 +634,6 @@ void CaptureTab::afterSensorImagesAcquired() {
 	captureHistory.qDepthImage = qDepthImage;
 	captureHistory.qColorToDepthImage = qColorToDepthImage;
 	captureHistory.qDepthToColorImage = qDepthToColorImage;
-	//captureHistory.qDepthToColorColorizedImage = qDepthToColorColorizedImage;
 	captureHistory.clip_rect = clip_rect;
 	captureHistories.push_back(captureHistory);
 
@@ -663,6 +655,8 @@ void CaptureTab::clearCaptureHistories() {
 	captureHistories.clear();
 
 	/** Reset variables stored in CaptureTab */
+	imageType = -1; // Update on image selection
+	imageName = "";
 	capturedColorImage.release();
 	capturedDepthImage.release();
 	capturedColorToDepthImage.release();
@@ -671,10 +665,8 @@ void CaptureTab::clearCaptureHistories() {
 	qDepthImage = QImage();
 	qColorToDepthImage = QImage();
 	qDepthToColorImage = QImage();
-	//qDepthToColorColorizedImage = QImage(); // not longer needed. Should be computed in annotate tab itself
 	RANSACImage.release();
-	imageType = -1; // Update on image selection
-	imageName = "";
+	//PointCloudPNG.release();
 	imageTypeBeingAnalyzed = -1; // Update on analysis button pressed
 	/** Reset variables stored in CaptureTab END */
 
@@ -1181,7 +1173,6 @@ void CaptureTab::setCaptureFilepath(QString captureFilepath) { this->captureFile
 cv::Mat CaptureTab::computePointCloudFromDepth() {
 
 	cv::Mat temp;
-
 	KinectEngine::getInstance().readPointCloudImage(temp);
 
 	/** Convert 16UC3 to 16UC4 with alpha=1 */
@@ -1218,9 +1209,9 @@ cv::Mat CaptureTab::computePointCloudFromDepth() {
 		pointCloudImage16SC4.step,
 		QImage::Format_RGBA64);
 		pointCloudWriteSuccess = writer.write(img);*/
-		/** Save point cloud image for testing END */
+	/** Save point cloud image for testing END */
 
-		return temp;
+	return temp;
 }
 
 cv::Mat CaptureTab::computeNormalizedDepthImage(cv::Mat depthToColorImage) {

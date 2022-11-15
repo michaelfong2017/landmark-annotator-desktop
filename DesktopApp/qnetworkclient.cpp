@@ -14,11 +14,10 @@ void QNetworkClient::login(QTabWidget* qTabWidget, QString username, QString pas
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
 
     QNetworkRequest request(QUrl(hostAddress + "doctor-api/v1/account/login"));
-    //QNetworkRequest request(QUrl("https://api.conovamed.com/doctor-api/v1/account/login"));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     request.setTransferTimeout(10000);
 
-    qDebug() << username << password;
+    qDebug() << "Login with username:" << username;
 
     QJsonObject obj;
     obj["account"] = username;

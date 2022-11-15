@@ -547,7 +547,7 @@ void uploadrequest::bindImageUrl(const QObject* receiver, const char* member) {
     obj["patientId"] = patientId;
     obj["url"] = receivedURL;
     obj["originImageUrl"] = receivedURL2;
-    obj["pointcloudurl"] = receivedURL3;
+    obj["pointCloudUrl"] = receivedURL3;
     obj["imageType"] = imageType;
     obj["imageName"] = imageName;
 

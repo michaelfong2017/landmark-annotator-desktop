@@ -49,7 +49,7 @@ public:
     void readDepthImage(cv::Mat& depthImage, k4a_image_t k4aDepthImage = NULL);
     void readColorToDepthImage(cv::Mat& colorToDepthImage, k4a_image_t k4aColorImage = NULL, k4a_image_t k4aDepthImage = NULL);
     void readDepthToColorImage(cv::Mat& depthToColorImage, k4a_image_t k4aColorImage = NULL, k4a_image_t k4aDepthImage = NULL);
-    void readPointCloudImage(cv::Mat& depthImage, k4a_image_t k4aDepthImage = NULL);
+    void readPointCloudImage(cv::Mat& xyzImage);
     std::deque<k4a_float3_t> getGyroSampleQueue();
     std::deque<k4a_float3_t> getAccSampleQueue();
     QVector3D query3DPoint(int x, int y, cv::Mat depthToColorImage);
@@ -64,17 +64,11 @@ public:
     
     // Find the equation of plane passing through 3 points.
     // Return [a, b, c, d].
-    float* findPlaneEquationCoefficients(float x1, float y1,
-        float z1, float x2,
-        float y2, float z2,
-		float x3, float y3, float z3);
-
-    float findDistanceBetween3DPointAndPlane(float x1, float y1,
-        float z1, float a,
-        float b, float c,
-        float d);
-
+    float* findPlaneEquationCoefficients(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3);
+    
+    float findDistanceBetween3DPointAndPlane(float x1, float y1, float z1, float a, float b, float c, float d);
     /** Calculate plane equation and distance between plane and 3D point END */
+
     cv::Mat readCVImageFromFile(std::wstring filename);
 
 private:

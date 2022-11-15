@@ -322,49 +322,88 @@ void KinectEngine::readDepthToColorImage(cv::Mat& depthToColorImage, k4a_image_t
 	return;
 }
 
-void KinectEngine::readPointCloudImage(cv::Mat& xyzImage, k4a_image_t k4aDepthImage)
+/*
+* Aligned the Depth onto Color and then convert to Point Cloud image
+* @return cv::Mat(1080, 1920, 16SC4), empty cv::Mat if error
+*/
+void KinectEngine::readPointCloudImage(cv::Mat& xyzImage)
 {
+
+	qDebug() << "readPointCloudImage";
+
 	// Shallow copy
+	k4a_image_t _k4aColorImage = this->k4aColorImage;
 	k4a_image_t _k4aDepthImage = this->k4aDepthImage;
 
-	if (k4aDepthImage != NULL) {
-		_k4aDepthImage = k4aDepthImage;
-	}
-	else {
-		if (_k4aDepthImage == NULL) {
-			xyzImage = cv::Mat{};
-			return;
-		}
+	if (_k4aColorImage == NULL || _k4aDepthImage == NULL) {
+		xyzImage = cv::Mat{};
+		return;
 	}
 
 	k4a_transformation_t transformationHandle = k4a_transformation_create(&this->calibration);
 
-	k4a_image_t alignmentImage;
-	if (k4a_image_create(K4A_IMAGE_FORMAT_CUSTOM, 
-		k4a_image_get_width_pixels(_k4aDepthImage), 
-		k4a_image_get_height_pixels(_k4aDepthImage), 
-		3 * k4a_image_get_width_pixels(_k4aDepthImage) * (int)sizeof(int16_t),
-		&alignmentImage) != K4A_RESULT_SUCCEEDED) {
-
+	// Old approach of computing on raw Depth image
+	/*int width = k4a_image_get_width_pixels(_k4aDepthImage);
+	int height = k4a_image_get_height_pixels(_k4aDepthImage);
+	k4a_image_t pcdImage;
+	if (k4a_image_create(K4A_IMAGE_FORMAT_CUSTOM, width, height, 3 * width * (int)sizeof(int16_t), &pcdImage) != K4A_RESULT_SUCCEEDED) {
 		k4a_transformation_destroy(transformationHandle);
-		k4a_image_release(alignmentImage);
+		k4a_image_release(pcdImage);
+		xyzImage = cv::Mat{};
+		return;
+	}
+	qDebug() << "readPointCloudImage step 2a";
+	if (k4a_transformation_depth_image_to_point_cloud(transformationHandle, _k4aDepthImage, K4A_CALIBRATION_TYPE_DEPTH, pcdImage) != K4A_WAIT_RESULT_SUCCEEDED) {
+		qDebug() << "Failed";
+		k4a_transformation_destroy(transformationHandle);
+		k4a_image_release(pcdImage);
+		xyzImage = cv::Mat{};
+		return;
+	}*/
+
+	// New approach to compute on aligned Depth image
+	// 1. get depth to color image first
+	k4a_image_t alignedDepthImage;
+	if (k4a_image_create(K4A_IMAGE_FORMAT_DEPTH16, k4a_image_get_width_pixels(_k4aColorImage), k4a_image_get_height_pixels(_k4aColorImage), k4a_image_get_width_pixels(_k4aColorImage) * (int)sizeof(uint16_t),
+		&alignedDepthImage) != K4A_RESULT_SUCCEEDED) {
+		k4a_transformation_destroy(transformationHandle);
+		k4a_image_release(alignedDepthImage);
+		xyzImage = cv::Mat{};
+		return;
+	}
+	if (k4a_transformation_depth_image_to_color_camera(transformationHandle, _k4aDepthImage, alignedDepthImage) != K4A_WAIT_RESULT_SUCCEEDED) {
+		k4a_transformation_destroy(transformationHandle);
+		k4a_image_release(alignedDepthImage);
+		xyzImage = cv::Mat{};
+		return;
+	}
+	
+	int width = k4a_image_get_width_pixels(alignedDepthImage);
+	int height = k4a_image_get_height_pixels(alignedDepthImage);
+	int stride = k4a_image_get_stride_bytes(alignedDepthImage);
+
+	// 2. depth to color to pointcloud
+	k4a_image_t pcdImage;
+	if (k4a_image_create(K4A_IMAGE_FORMAT_CUSTOM, width, height, 3 * width * (int)sizeof(int16_t), &pcdImage) != K4A_RESULT_SUCCEEDED) {
+		k4a_transformation_destroy(transformationHandle);
+		k4a_image_release(pcdImage);
+		xyzImage = cv::Mat{};
+		return;
+	}
+	if (k4a_transformation_depth_image_to_point_cloud(transformationHandle, alignedDepthImage, K4A_CALIBRATION_TYPE_COLOR, pcdImage) != K4A_WAIT_RESULT_SUCCEEDED) {
+		qDebug() << "Failed";
+		k4a_transformation_destroy(transformationHandle);
+		k4a_image_release(pcdImage);
 		xyzImage = cv::Mat{};
 		return;
 	}
 
-	if (k4a_transformation_depth_image_to_point_cloud(transformationHandle, _k4aDepthImage, K4A_CALIBRATION_TYPE_DEPTH, alignmentImage) != K4A_WAIT_RESULT_SUCCEEDED) {
-		k4a_transformation_destroy(transformationHandle);
-		k4a_image_release(alignmentImage);
-		xyzImage = cv::Mat{};
-		return;
-	}
-
-	int width = k4a_image_get_width_pixels(alignmentImage);
-	int height = k4a_image_get_height_pixels(alignmentImage);
-	int stride = k4a_image_get_stride_bytes(alignmentImage);
-	int16_t* pointCloudImageBuffer = (int16_t*)k4a_image_get_buffer(alignmentImage);
-
-	/*for (int h = 0; h < height; h++)
+	/* For Debuggubg */
+	/*int width = k4a_image_get_width_pixels(pcdImage);
+	int height = k4a_image_get_height_pixels(pcdImage);
+	int stride = k4a_image_get_stride_bytes(pcdImage);
+	int16_t* pointCloudImageBuffer = (int16_t*)k4a_image_get_buffer(pcdImage);
+	for (int h = 0; h < height; h++)
 	{
 		for (int w = 0; w < width; w++)
 		{
@@ -379,10 +418,11 @@ void KinectEngine::readPointCloudImage(cv::Mat& xyzImage, k4a_image_t k4aDepthIm
 	}*/
 
 	// .clone() is necessary
-	xyzImage = cv::Mat(k4a_image_get_height_pixels(alignmentImage), k4a_image_get_width_pixels(alignmentImage), CV_16SC3, k4a_image_get_buffer(alignmentImage), cv::Mat::AUTO_STEP).clone();
+	xyzImage = cv::Mat(k4a_image_get_height_pixels(pcdImage), k4a_image_get_width_pixels(pcdImage), CV_16SC3, k4a_image_get_buffer(pcdImage), cv::Mat::AUTO_STEP).clone();
 	
 	k4a_transformation_destroy(transformationHandle);
-	k4a_image_release(alignmentImage);
+	k4a_image_release(alignedDepthImage);
+	k4a_image_release(pcdImage);
 
 	return;
 }

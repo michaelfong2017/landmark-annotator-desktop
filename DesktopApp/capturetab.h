@@ -41,7 +41,6 @@ public:
     cv::Mat getPointCloudImage();
 
     cv::Mat getFourChannelPNG();
-
     cv::Mat computeNormalizedDepthImage(cv::Mat);
     cv::Mat computePointCloudFromDepth();
 
@@ -49,7 +48,6 @@ public:
     QImage getQDepthImage();
     QImage getQColorToDepthImage();
     QImage getQDepthToColorImage();
-    //QImage getQDepthToColorColorizedImage();
 
     void displayCapturedImages();
 
@@ -83,18 +81,16 @@ private:
     cv::Mat capturedDepthImage;
     cv::Mat capturedColorToDepthImage;
     cv::Mat capturedDepthToColorImage;
-    cv::Mat PointCloudPNG;
     cv::Mat FourChannelPNG;
+    cv::Mat RANSACImage;
+    cv::Mat PointCloudPNG;
     // stored captured images END
 
     QImage qColorImage;
     QImage qDepthImage;
     QImage qColorToDepthImage;
     QImage qDepthToColorImage;
-    //QImage qDepthToColorColorizedImage;
-
-    cv::Mat RANSACImage;
-
+    
     int imageType = -1; // Update on image selection
     QString imageName = "";
     int imageTypeBeingAnalyzed = -1; // Update on analysis button pressed
