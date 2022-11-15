@@ -11,13 +11,14 @@ class SaveImageDialog : public QDialog
 	Q_OBJECT
 
 public:
-	SaveImageDialog(CaptureTab *parent = nullptr, bool autoSave = false);
+	SaveImageDialog(CaptureTab *parent = nullptr, bool autoSave = false, bool savePointCloud = false);
 	Ui::SaveImageDialogUI ui;
 	void SaveImageDialog::onManualSave();
 	void SaveImageDialog::onAutoSave();
 
 private:
 	CaptureTab *parent;
+	bool savePointCloud = false;
 };
 
 #endif

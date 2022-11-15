@@ -1,11 +1,13 @@
 #include "saveimagedialog.h"
 
-SaveImageDialog::SaveImageDialog(CaptureTab* parent, bool autoSave)
+SaveImageDialog::SaveImageDialog(CaptureTab* parent, bool autoSave, bool savePointCloud)
 	: QDialog(parent)
 {
 	ui.setupUi(this);
 
 	this->parent = parent;
+
+	this->savePointCloud = savePointCloud;
 
 	/** UI init */
 	ui.warningLabel->setText(QString());
@@ -49,12 +51,14 @@ void SaveImageDialog::onManualSave() {
 	QString colorToDepthSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color_aligned.png"));
 	QString depthToColorSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth_aligned.png"));
 	QString fourChannelPNGSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_four_channel.png"));
+	QString pointCloudSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_point_cloud.png"));
 
 	bool colorWriteSuccess = false;
 	bool depthWriteSuccess = false;
 	bool colorToDepthWriteSuccess = false;
 	bool depthToColorWriteSuccess = false;
 	bool fourChannelPNGWriteSuccess = false;
+	bool pointCloudWriteSuccess = false;
 
 
 	if (ui.checkBoxColor->isChecked()) {
@@ -118,8 +122,20 @@ void SaveImageDialog::onManualSave() {
 		fourChannelPNGWriteSuccess = writer5.write(img);
 	}
 
+	if (this->savePointCloud) {
+		QImageWriter writer6(pointCloudSavePath);
+
+		QImage img((uchar*)this->parent->getPointCloudImage().data,
+			this->parent->getPointCloudImage().cols,
+			this->parent->getPointCloudImage().rows,
+			this->parent->getPointCloudImage().step,
+			QImage::Format_RGBA64);
+		pointCloudWriteSuccess = writer6.write(img);
+	}
+
+
 	/** "Images saved under" */
-	if (!colorWriteSuccess && !depthWriteSuccess && !colorToDepthWriteSuccess && !depthToColorWriteSuccess && !fourChannelPNGWriteSuccess) {
+	if (!colorWriteSuccess && !depthWriteSuccess && !colorToDepthWriteSuccess && !depthToColorWriteSuccess && !fourChannelPNGWriteSuccess && !pointCloudWriteSuccess) {
 		if (this->parent->getCaptureFilepath() == QString()) {
 			qDebug() << "no capture filepath exists";
 			this->parent->getParent()->ui.saveInfoCaptureTab->setText("Something went wrong, cannot save images.");
@@ -136,7 +152,8 @@ void SaveImageDialog::onManualSave() {
 	else if (depthWriteSuccess) this->parent->setCaptureFilepath(depthSavePath);
 	else if (colorToDepthWriteSuccess) this->parent->setCaptureFilepath(colorToDepthSavePath);
 	else if (depthToColorWriteSuccess) this->parent->setCaptureFilepath(depthToColorSavePath);
-	else this->parent->setCaptureFilepath(fourChannelPNGSavePath);
+	else if (fourChannelPNGWriteSuccess) this->parent->setCaptureFilepath(fourChannelPNGSavePath);
+	else this->parent->setCaptureFilepath(pointCloudSavePath);
 
 	this->parent->getParent()->ui.saveInfoCaptureTab->setText("Images are saved under\n" + visitFolderPath + "\nat " + dateTimeString);
 	this->parent->getParent()->ui.showInExplorer->show();
@@ -151,6 +168,7 @@ void SaveImageDialog::onAutoSave() {
 	QString colorToDepthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color_aligned.png"));
 	QString depthToColorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth_aligned.png"));
 	QString fourChannelPNGSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_four_channel.png"));
+	QString pointCloudSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_point_cloud.png"));
 
 	qDebug() << "colorSavePath" << colorSavePath;
 
@@ -159,12 +177,14 @@ void SaveImageDialog::onAutoSave() {
 	bool colorToDepthWriteSuccess = false;
 	bool depthToColorWriteSuccess = false;
 	bool fourChannelPNGWriteSuccess = false;
+	bool pointCloudWriteSuccess = false;
 
 	QImageWriter writer1(colorSavePath);
 	QImageWriter writer2(depthSavePath);
 	QImageWriter writer3(colorToDepthSavePath);
 	QImageWriter writer4(depthToColorSavePath);
 	QImageWriter writer5(fourChannelPNGSavePath);
+	QImageWriter writer6(pointCloudSavePath);
 
 	if (ui.checkBoxColor->isChecked()) {
 		//cv::Mat mat = this->parent->getCapturedColorImage();
@@ -217,8 +237,18 @@ void SaveImageDialog::onAutoSave() {
 		fourChannelPNGWriteSuccess = writer5.write(img);
 	}
 
+	if (this->savePointCloud) {
+		QImage img((uchar*)this->parent->getPointCloudImage().data,
+			this->parent->getPointCloudImage().cols,
+			this->parent->getPointCloudImage().rows,
+			this->parent->getPointCloudImage().step,
+			QImage::Format_RGBA64);
+		pointCloudWriteSuccess = writer6.write(img);
+	}
+
+
 	/** "Images saved under" */
-	if (!colorWriteSuccess && !depthWriteSuccess && !colorToDepthWriteSuccess && !depthToColorWriteSuccess && !fourChannelPNGWriteSuccess) {
+	if (!colorWriteSuccess && !depthWriteSuccess && !colorToDepthWriteSuccess && !depthToColorWriteSuccess && !fourChannelPNGWriteSuccess && !pointCloudWriteSuccess) {
 		if (this->parent->getCaptureFilepath() == QString()) {
 			qDebug() << "no capture filepath exists";
 			this->parent->getParent()->ui.saveInfoCaptureTab->setText("Something went wrong, cannot save images.");
@@ -235,7 +265,8 @@ void SaveImageDialog::onAutoSave() {
 	else if (depthWriteSuccess) this->parent->setCaptureFilepath(depthSavePath);
 	else if (colorToDepthWriteSuccess) this->parent->setCaptureFilepath(colorToDepthSavePath);
 	else if (depthToColorWriteSuccess) this->parent->setCaptureFilepath(depthToColorSavePath);
-	else this->parent->setCaptureFilepath(fourChannelPNGSavePath);
+	else if (fourChannelPNGWriteSuccess) this->parent->setCaptureFilepath(fourChannelPNGSavePath);
+	else this->parent->setCaptureFilepath(pointCloudSavePath);
 
 	this->parent->getParent()->ui.saveInfoCaptureTab->setText("Images are saved under\n" + visitFolderPath + "\nat " + dateTimeString);
 	this->parent->getParent()->ui.showInExplorer->show();

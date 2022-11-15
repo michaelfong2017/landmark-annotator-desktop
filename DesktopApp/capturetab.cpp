@@ -97,7 +97,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		if (this->isUploading) {
 			return;
 		}
-		SaveImageDialog dialog(this);
+		SaveImageDialog dialog(this, false, this->hasPointCloud);
 		dialog.exec();
 	});
 
@@ -222,25 +222,30 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		QString colorToDepthSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_color_aligned.png");
 		QString depthToColorSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_depth_aligned.png");
 		QString fourChannelPNGSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_four_channel.png");
+		QString pointCloudPNGSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_point_cloud.png");
 
 		this->capturedColorImage = KinectEngine::getInstance().readCVImageFromFile(colorSavePath.toStdWString());
 		this->capturedDepthImage = KinectEngine::getInstance().readCVImageFromFile(depthSavePath.toStdWString());
 		this->capturedColorToDepthImage = KinectEngine::getInstance().readCVImageFromFile(colorToDepthSavePath.toStdWString());
 		this->capturedDepthToColorImage = KinectEngine::getInstance().readCVImageFromFile(depthToColorSavePath.toStdWString());
 		this->FourChannelPNG = KinectEngine::getInstance().readCVImageFromFile(fourChannelPNGSavePath.toStdWString());
+		this->PointCloudPNG = KinectEngine::getInstance().readCVImageFromFile(pointCloudPNGSavePath.toStdWString());
+
+		this->hasPointCloud = this->PointCloudPNG.dims != 0;
 
 		cv::cvtColor(this->capturedColorImage, this->capturedColorImage, cv::COLOR_BGR2BGRA);
 		this->capturedDepthImage.convertTo(this->capturedDepthImage, CV_16UC1);
 		cv::cvtColor(this->capturedColorToDepthImage, this->capturedColorToDepthImage, cv::COLOR_BGR2BGRA);
 		this->capturedDepthToColorImage.convertTo(this->capturedDepthToColorImage, CV_16UC1);
 		cv::cvtColor(this->FourChannelPNG, this->FourChannelPNG, cv::COLOR_BGR2BGRA);
+		this->PointCloudPNG.convertTo(this->PointCloudPNG, CV_16SC4);
 
 
 		afterSensorImagesAcquired();
 
 
 		/** Import does not need auto-save */
-		SaveImageDialog dialog(this, false);
+		SaveImageDialog dialog(this, false, this->hasPointCloud);
 		/** Import does not need auto-save END */
 		});
 
@@ -279,9 +284,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		if (this->parent->ui.enablePointCloudcheckBox->isChecked()) {
 			qDebug() << "High Resolution checked. get Point Cloud";
 			this->PointCloudPNG = computePointCloudFromDepth();
+			this->hasPointCloud = true;
 		}
 		else {
 			this->PointCloudPNG = cv::Mat::ones(1080, 1920, CV_16SC4);
+			this->hasPointCloud = false;
 		}
 
 		this->RANSACImage = computeNormalizedDepthImage(this->capturedDepthToColorImage);
@@ -348,7 +355,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		afterSensorImagesAcquired();
 
 		/** Import does not need auto-save */
-		SaveImageDialog dialog(this, true);
+		SaveImageDialog dialog(this, true, this->hasPointCloud);
 		/** Import does not need auto-save END */
 	});
 
@@ -628,6 +635,7 @@ void CaptureTab::afterSensorImagesAcquired() {
 	captureHistory.capturedColorToDepthImage = capturedColorToDepthImage;
 	captureHistory.capturedDepthToColorImage = capturedDepthToColorImage;
 	captureHistory.PointCloudPNG = PointCloudPNG;
+	captureHistory.hasPointCloud = hasPointCloud;
 	captureHistory.FourChannelPNG = FourChannelPNG;
 	captureHistory.RANSACImage = RANSACImage;
 	captureHistory.qColorImage = qColorImage;
@@ -667,6 +675,7 @@ void CaptureTab::clearCaptureHistories() {
 	qDepthToColorImage = QImage();
 	RANSACImage.release();
 	//PointCloudPNG.release();
+	hasPointCloud = false;
 	imageTypeBeingAnalyzed = -1; // Update on analysis button pressed
 	/** Reset variables stored in CaptureTab END */
 
@@ -1175,7 +1184,7 @@ cv::Mat CaptureTab::computePointCloudFromDepth() {
 	cv::Mat temp;
 	KinectEngine::getInstance().readPointCloudImage(temp);
 
-	/** Convert 16UC3 to 16UC4 with alpha=1 */
+	/** Convert 16UC3 to 16SC4 with alpha=1 */
 	cv::Mat pointCloudImage16SC4 = cv::Mat::ones(temp.rows, temp.cols, CV_16SC4);
 	std::vector<cv::Mat>channels16C4(4);
 	std::vector<cv::Mat>channels16C3(3);
@@ -1523,6 +1532,7 @@ void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex
 	capturedDepthToColorImage = captureHistory.capturedDepthToColorImage;
 	FourChannelPNG = captureHistory.FourChannelPNG;
 	PointCloudPNG = captureHistory.PointCloudPNG;
+	hasPointCloud = captureHistory.hasPointCloud;
 	RANSACImage = captureHistory.RANSACImage;
 	qColorImage = captureHistory.qColorImage;
 	qDepthImage = captureHistory.qDepthImage;

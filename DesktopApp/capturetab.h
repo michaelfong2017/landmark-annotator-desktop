@@ -84,6 +84,7 @@ private:
     cv::Mat FourChannelPNG;
     cv::Mat RANSACImage;
     cv::Mat PointCloudPNG;
+    bool hasPointCloud;
     // stored captured images END
 
     QImage qColorImage;
