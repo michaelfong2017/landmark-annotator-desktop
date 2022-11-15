@@ -58,7 +58,7 @@
 </string>
          </property>
          <property name="text">
-          <string>V 1.7.1</string>
+          <string>V 1.7.2</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
@@ -1275,7 +1275,7 @@ color: rgb(255, 0, 5);
           <string notr="true"/>
          </property>
          <property name="text">
-          <string>High Resolution</string>
+          <string>High-res PCD</string>
          </property>
         </widget>
        </item>
