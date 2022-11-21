@@ -45,13 +45,8 @@ uploadrequest::uploadrequest(QString userToken, QString signature, int patientId
     this->imageToSend3 = imageToSend3;
     this->captureNumber = captureNumber;
     this->uploadProgressDialog = uploadProgressDialog;
-    this->uploadNumber = ++uploadProgressDialog->latestUploadNumber;
+    this->uploadNumber = uploadProgressDialog->latestUploadNumber;
 
-    //uploadImageNormally(this, SLOT(onUploadImageNormally(QNetworkReply*)));
-
-    if (signature == "") {
-        getSignature();
-    }
 }
 
 void uploadrequest::retry(int uploadNumber) {
@@ -117,7 +112,9 @@ void uploadrequest::getSignature() {
 }
 
 void uploadrequest::onSignatureReceived(QNetworkReply* reply) {
-    
+
+    qDebug() << "onSignatureReceived()";
+
     QByteArray response_data = reply->readAll();
     reply->deleteLater();
 
@@ -611,3 +608,13 @@ void uploadrequest::readHostAddress() {
     hostAddress = settings.value("hostAddress", "hostAddress").toString(); // settings.value() returns QVariant
     qDebug() << "uploadrequest hostAddress: " << hostAddress;
 }
+
+void uploadrequest::start()
+{
+    //uploadImageNormally(this, SLOT(onUploadImageNormally(QNetworkReply*)));
+
+    if (signature == "") {
+        getSignature();
+    }
+}
+

@@ -403,7 +403,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		
 
-		int uploadNumber = dataModel->rowCount() - imageBeingAnalyzedTableViewRow;
+		//int uploadNumber = dataModel->rowCount() - imageBeingAnalyzedTableViewRow;
+		int uploadNumber = ++uploadProgressDialog->latestUploadNumber;
 
 
 		QDateTime dateTime = dateTime.currentDateTime();
@@ -411,9 +412,26 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		str.replace(" ", "");
 		str.replace(":", "");
 
-		this->uploadProgressDialog->requests.insert(std::make_pair(uploadNumber, new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(),
+		/** Remove previously completed uploads */
+		for (auto i = begin(this->uploadProgressDialog->completedUploadNumbers); i != end(this->uploadProgressDialog->completedUploadNumbers); ++i) {
+			int completedUploadNumber = *i;
+
+			std::map<int, std::unique_ptr<uploadrequest>>::iterator it = this->uploadProgressDialog->requests.find(completedUploadNumber);
+			if (it != this->uploadProgressDialog->requests.end()) {
+				std::unique_ptr<uploadrequest> req = std::move(it->second);
+				this->uploadProgressDialog->requests.erase(it);
+			}
+		}
+		this->uploadProgressDialog->completedUploadNumbers.clear();
+		/** Remove previously completed uploads END */
+
+		std::unique_ptr<uploadrequest> req = std::make_unique<uploadrequest>(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(),
 			imageType, str, this->FourChannelPNG, this->capturedColorImage, this->PointCloudPNG,
-			uploadNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog)));
+			uploadNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog);
+		this->uploadProgressDialog->requests.insert(std::make_pair(uploadNumber, std::move(req)));
+		
+		std::map<int, std::unique_ptr<uploadrequest>>::iterator it = this->uploadProgressDialog->requests.find(uploadNumber);
+		it->second.get()->start();
 
 		/*new uploadrequest(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(), 
 			imageType, imageName, FourChannelPNG, 

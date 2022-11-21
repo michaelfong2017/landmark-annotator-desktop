@@ -27,6 +27,7 @@ public:
 	void onFailed(int uploadNumber);
 	void updateRowStatus(int uploadNumber, QString newStatus, QColor color);
 	void addRow(int uploadNumber, QString patientName, int captureNumber);
+	std::vector<int> completedUploadNumbers;
 
 private:
 	QTableView* tableView;
