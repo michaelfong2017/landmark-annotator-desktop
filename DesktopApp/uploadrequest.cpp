@@ -23,7 +23,7 @@ std::string generate_hex(const unsigned int len) {
     return ss.str();
 }
 
-uploadrequest::uploadrequest(QString userToken, QString signature, int patientId, int type, QString imageName, cv::Mat imageToSend, cv::Mat imageToSend2, cv::Mat imageToSend3, int captureNumber, QString patientName, UploadProgressDialog* uploadProgressDialog) {
+uploadrequest::uploadrequest(QString userToken, QString signature, int patientId, int type, QString imageName, cv::Mat imageToSend, cv::Mat imageToSend2, cv::Mat imageToSend3, int uploadNumber, int captureNumber, QString patientName, UploadProgressDialog* uploadProgressDialog) {
 	
     qDebug() << "uploadrequest";
 

@@ -80,7 +80,7 @@ void UploadProgressDialog::addRow(int uploadNumber, QString patientName, int cap
         QString text;
         switch (j) {
         case 0:
-            text = QString::number(dataModel->rowCount() + 1);
+            text = QString::number(uploadNumber);
             break;
         case 1:
             text = patientName;

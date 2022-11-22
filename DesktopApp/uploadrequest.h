@@ -13,7 +13,7 @@ class uploadrequest : public QWidget
 	Q_OBJECT
 
 	public:
-		uploadrequest(QString userToken, QString signature, int patientId, int imageType, QString imageName, cv::Mat imageToSend, cv::Mat imageToSend2, cv::Mat imageToSend3, int captureNumber, QString patientName, UploadProgressDialog* uploadProgressDialog);
+		uploadrequest(QString userToken, QString signature, int patientId, int imageType, QString imageName, cv::Mat imageToSend, cv::Mat imageToSend2, cv::Mat imageToSend3, int uploadNumber, int captureNumber, QString patientName, UploadProgressDialog* uploadProgressDialog);
 		void retry(int);
 		void readHostAddress();
 		void start();

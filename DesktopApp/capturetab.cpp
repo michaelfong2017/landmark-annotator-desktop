@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include "uploadrequest.h"
 
-const int COLUMN_COUNT = 4;
+const int COLUMN_COUNT = 5;
 
 CaptureTab::CaptureTab(DesktopApp* parent)
 {
@@ -66,7 +66,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	dataModel->clear();
 
 	/** Headers */
-	QStringList headerLabels = { "", "index", "Image Type", "Creation Time" };
+	QStringList headerLabels = { "", "index", "Image Type", "Has Point Cloud?", "Creation Time" };
 
 	for (int i = 0; i < COLUMN_COUNT; i++)
 	{
@@ -82,6 +82,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	/** This must be put here (below) */
 	tableView->setColumnWidth(0, 18);
 	tableView->setColumnWidth(2, 150);
+	tableView->setColumnWidth(3, 120);
 	//tableView->setColumnWidth(3, tableView->width() - 150 - 50);
 	tableView->horizontalHeader()->setStretchLastSection(true);
 	/** This must be put here (below) END */
@@ -233,7 +234,13 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->FourChannelPNG = KinectEngine::getInstance().readCVImageFromFile(fourChannelPNGSavePath.toStdWString());
 		this->PointCloudPNG = KinectEngine::getInstance().readCVImageFromFile(pointCloudPNGSavePath.toStdWString());
 
-		this->hasPointCloud = this->PointCloudPNG.dims != 0;
+		if (this->PointCloudPNG.dims == 0) {
+			this->PointCloudPNG = cv::Mat::ones(1080, 1920, CV_16SC4);
+			this->hasPointCloud = false;
+		}
+		else {
+			this->hasPointCloud = true;
+		}
 
 		cv::cvtColor(this->capturedColorImage, this->capturedColorImage, cv::COLOR_BGR2BGRA);
 		this->capturedDepthImage.convertTo(this->capturedDepthImage, CV_16UC1);
@@ -407,7 +414,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		
 
-		//int uploadNumber = dataModel->rowCount() - imageBeingAnalyzedTableViewRow;
+		int captureNumber = dataModel->rowCount() - imageBeingAnalyzedTableViewRow;
 		int uploadNumber = ++uploadProgressDialog->latestUploadNumber;
 
 
@@ -431,7 +438,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		std::unique_ptr<uploadrequest> req = std::make_unique<uploadrequest>(QNetworkClient::getInstance().userToken, "", this->parent->patientTab->getCurrentPatientId(),
 			imageType, str, this->FourChannelPNG, this->capturedColorImage, this->PointCloudPNG,
-			uploadNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog);
+			uploadNumber, captureNumber, this->parent->patientTab->getCurrentPatientName(), this->uploadProgressDialog);
 		this->uploadProgressDialog->requests.insert(std::make_pair(uploadNumber, std::move(req)));
 		
 		std::map<int, std::unique_ptr<uploadrequest>>::iterator it = this->uploadProgressDialog->requests.find(uploadNumber);
@@ -618,6 +625,9 @@ void CaptureTab::afterSensorImagesAcquired() {
 			text = imageName;
 			break;
 		case 3:
+			text = this->hasPointCloud ? "Yes" : "No";
+			break;
+		case 4:
 			//QDateTime dateTime = dateTime.currentDateTime();
 			//text = dateTime.toString("yyyy-MM-dd HH:mm:ss");
 			text = Helper::dateTimeFilepathToDisplay(this->creationTime);
