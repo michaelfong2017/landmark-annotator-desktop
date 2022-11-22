@@ -224,6 +224,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		QString fourChannelPNGSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_four_channel.png");
 		QString pointCloudPNGSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_point_cloud.png");
 
+		this->creationTime = filenamePrefix;
+
 		this->capturedColorImage = KinectEngine::getInstance().readCVImageFromFile(colorSavePath.toStdWString());
 		this->capturedDepthImage = KinectEngine::getInstance().readCVImageFromFile(depthSavePath.toStdWString());
 		this->capturedColorToDepthImage = KinectEngine::getInstance().readCVImageFromFile(colorToDepthSavePath.toStdWString());
@@ -351,6 +353,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			<< FourChannelPNG.rows << ", "
 			<< FourChannelPNG.channels();
 		/* Convert to the special 4 channels image and upload END */
+
+		this->creationTime = Helper::getCurrentDateTimeString();
 
 		afterSensorImagesAcquired();
 
@@ -614,8 +618,9 @@ void CaptureTab::afterSensorImagesAcquired() {
 			text = imageName;
 			break;
 		case 3:
-			QDateTime dateTime = dateTime.currentDateTime();
-			text = dateTime.toString("yyyy-MM-dd HH:mm:ss");
+			//QDateTime dateTime = dateTime.currentDateTime();
+			//text = dateTime.toString("yyyy-MM-dd HH:mm:ss");
+			text = Helper::dateTimeFilepathToDisplay(this->creationTime);
 			break;
 		}
 		dataItem = new QStandardItem(text);

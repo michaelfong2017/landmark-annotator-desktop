@@ -49,3 +49,10 @@ QString Helper::convertFetchedDateTime(QString text)
 
     return localTime.toString("yyyy-MM-dd HH:mm:ss");
 }
+
+QString Helper::dateTimeFilepathToDisplay(QString text)
+{
+    QString dateStr = text.split("_")[0];
+    QString timeStr = text.split("_")[1];
+    return QString(dateStr + " " + timeStr.mid(0, 2) + ":" + timeStr.mid(2, 2) + ":" + timeStr.mid(4, 2));
+}

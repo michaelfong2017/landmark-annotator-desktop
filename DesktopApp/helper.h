@@ -9,6 +9,7 @@ public:
 	static QString getCurrentDateString();
 	static QString getVisitFolderPath(QDir);
 	static QString convertFetchedDateTime(QString);
+	static QString dateTimeFilepathToDisplay(QString);
 };
 
 #endif

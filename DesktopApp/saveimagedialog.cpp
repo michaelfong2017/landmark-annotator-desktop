@@ -161,7 +161,8 @@ void SaveImageDialog::onManualSave() {
 }
 
 void SaveImageDialog::onAutoSave() {
-	QString dateTimeString = Helper::getCurrentDateTimeString();
+	QString dateTimeString = this->parent->creationTime;
+
 	QString visitFolderPath = Helper::getVisitFolderPath(this->parent->getParent()->savePath);
 	QString colorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color.png"));
 	QString depthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth.png"));

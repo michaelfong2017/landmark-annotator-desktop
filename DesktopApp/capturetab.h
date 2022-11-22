@@ -34,6 +34,9 @@ public:
     void setCaptureFilepath(QString captureFilepath);
 
     bool isUploading;
+
+    QString creationTime;
+
     cv::Mat getCapturedColorImage();
     cv::Mat getCapturedDepthImage();
     cv::Mat getCapturedColorToDepthImage();
