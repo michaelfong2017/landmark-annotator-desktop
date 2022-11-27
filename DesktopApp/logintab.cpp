@@ -34,7 +34,12 @@ LoginTab::LoginTab(DesktopApp* parent)
 			settings.setValue("login/password", "");
 		}
 
-		QNetworkClient::getInstance().login(this->parent->ui.tabWidget, username, password);
+		if (isEmailLogin(username)) {
+			QNetworkClient::getInstance().login(this->parent->ui.tabWidget, username, password);
+		}
+		else {
+			QNetworkClient::getInstance().login(this->parent->ui.tabWidget, username, password);
+		}
 	});
 
 	QObject::connect(parent->ui.offlineModeButton, &QPushButton::clicked, [this]() {
@@ -78,4 +83,12 @@ LoginTab::LoginTab(DesktopApp* parent)
 DesktopApp* LoginTab::getParent()
 {
 	return this->parent;
+}
+
+bool LoginTab::isEmailLogin(QString account)
+{
+	if (account.contains("@")) {
+		return true;
+	}
+	return false;
 }

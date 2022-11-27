@@ -19,6 +19,7 @@ public:
 
 private:
     DesktopApp* parent;
+    bool isEmailLogin(QString account);
 
 };
 

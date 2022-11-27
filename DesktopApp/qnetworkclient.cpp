@@ -7,7 +7,7 @@ QNetworkClient::QNetworkClient() : QWidget() {
     
 }
 
-void QNetworkClient::login(QTabWidget* qTabWidget, QString username, QString password) {
+void QNetworkClient::login(QTabWidget* qTabWidget, QString username, QString password, bool isEmailLogin) {
     this->qTabWidget = qTabWidget;
 
     // Login
@@ -22,6 +22,12 @@ void QNetworkClient::login(QTabWidget* qTabWidget, QString username, QString pas
     QJsonObject obj;
     obj["account"] = username;
     obj["password"] = password;
+    if (isEmailLogin) {
+        obj["platformType"] = 0;
+    }
+    else {
+        obj["platformType"] = 4;
+    }
     QByteArray data = QJsonDocument(obj).toJson();
 
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onLogin(QNetworkReply*)));

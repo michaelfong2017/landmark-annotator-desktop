@@ -23,7 +23,7 @@ public:
 
     void operator=(QNetworkClient const&) = delete;
 
-    void login(QTabWidget* qTabWidget, QString username , QString password);
+    void login(QTabWidget* qTabWidget, QString username , QString password, bool isEmailLogin = false);
     void fetchPatientList(const QObject* receiver, const char* member);
     void checkNewPatient(Patient patient, const QObject* receiver, const char* member);
     void uploadNewPatient(Patient patient, const QObject* receiver, const char* member);

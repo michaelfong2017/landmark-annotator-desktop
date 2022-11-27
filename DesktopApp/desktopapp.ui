@@ -160,7 +160,7 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>120</width>
+               <width>145</width>
                <height>0</height>
               </size>
              </property>
@@ -174,7 +174,7 @@
               <string notr="true">font: 20px &quot;MS Shell Dlg 2&quot;;</string>
              </property>
              <property name="text">
-              <string>Username: </string>
+              <string>Email or phone:</string>
              </property>
             </widget>
            </item>
@@ -192,6 +192,9 @@
              </property>
              <property name="text">
               <string/>
+             </property>
+             <property name="placeholderText">
+              <string>Email or phone</string>
              </property>
             </widget>
            </item>
@@ -261,7 +264,7 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>120</width>
+               <width>145</width>
                <height>0</height>
               </size>
              </property>
@@ -287,6 +290,9 @@
              </property>
              <property name="text">
               <string/>
+             </property>
+             <property name="placeholderText">
+              <string>Password</string>
              </property>
             </widget>
            </item>
@@ -350,7 +356,7 @@
             <string notr="true">font: 15px &quot;MS Shell Dlg 2&quot;;</string>
            </property>
            <property name="text">
-            <string>Remember username and password</string>
+            <string>Remember account and password</string>
            </property>
           </widget>
          </item>
