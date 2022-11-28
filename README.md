@@ -46,3 +46,26 @@ C:\Qt\Qt5.15.2\5.15.2\msvc2019_64\bin\windeployqt.exe C:\Users\Edward\Desktop\Mi
 
 # 4. Manually add SSL libraries so that HTTPS requests can be sent
 Copy `libcrypto-1_1-x64.dll`, `libeay32.dll`, `libssl-1_1-x64.dll` and `ssleay32.dll` to `C:\Users\Edward\Desktop\Michael_Fong\DesktopApp\x64\Debug` and `C:\Users\Edward\Desktop\Michael_Fong\DesktopApp\x64\Release`.
+
+# 5. Import Intel RealSense SDK 2.0 (C++) to Visual Studio 2019 (Windows)
+1. Download SDK for Windows from https://github.com/IntelRealSense/librealsense/releases/tag/v2.51.1
+
+2. Find the installed SDK at `C:\Program Files (x86)\Intel RealSense SDK 2.0\`
+
+3. Create folder `C:\Users\Edward\Desktop\Michael_Fong\DesktopApp\packages\Intel RealSense SDK 2.0\`
+
+4. Copy `C:\Program Files (x86)\Intel RealSense SDK 2.0\include\` to `C:\Users\Edward\Desktop\Michael_Fong\DesktopApp\packages\Intel RealSense SDK 2.0\`
+
+5. Copy `C:\Program Files (x86)\Intel RealSense SDK 2.0\lib\` to `C:\Users\Edward\Desktop\Michael_Fong\DesktopApp\packages\Intel RealSense SDK 2.0\`
+
+6. Copy `C:\Program Files (x86)\Intel RealSense SDK 2.0\bin\x64\realsense2.dll` to both `C:\Users\Edward\Desktop\Michael_Fong\DesktopApp\x64\Debug\` and `C:\Users\Edward\Desktop\Michael_Fong\DesktopApp\x64\Release\`
+
+7. Project -> DesktopApp Property -> C/C++ -> General:
+
+* Remember to set for both `Debug` and `Release`.
+
+VC++ Directories:  
+- `Include Directories` -> edit -> add `$(SolutionDir)packages\Intel RealSense SDK 2.0\include`  
+- `Library Directories` -> edit -> add `$(SolutionDir)packages\Intel RealSense SDK 2.0\lib`
+- Linker -> Input
+`Additional Dependencies` -> edit -> add `$(SolutionDir)packages\Intel RealSense SDK 2.0\lib\x64\realsense2.lib`

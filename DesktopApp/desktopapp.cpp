@@ -7,6 +7,7 @@
 #include "annotatetab.h"
 #include "alignmenttab.h"
 #include "kinectengine.h"
+#include "librealsense2/rs.hpp"
 
 DesktopApp::DesktopApp(QWidget* parent)
 	: QWidget(parent)
@@ -37,6 +38,23 @@ DesktopApp::DesktopApp(QWidget* parent)
 	// 
 	//KinectEngine::getInstance().closeDevice();
 	// Test refactoring END
+
+	// Test realsense2
+	rs2::context ctx;
+    auto list = ctx.query_devices(); // Get a snapshot of currently connected devices
+    int device_count = list.size();
+    
+    rs2::device front, back;
+
+    if (device_count == 0)
+        throw std::runtime_error("No device detected. Is it plugged in?");
+    else if (device_count == 1)
+        front = list.front();
+	else if (device_count == 2) {
+		front = list.front();
+		back = list.back();
+	}
+	// Test realsense2 END
 	
 	this->loginTab = new LoginTab(this);
 	this->patientListTab = new PatientListTab(this);
