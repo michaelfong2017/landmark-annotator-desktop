@@ -56,3 +56,15 @@ QString Helper::dateTimeFilepathToDisplay(QString text)
     QString timeStr = text.split("_")[1];
     return QString(dateStr + " " + timeStr.mid(0, 2) + ":" + timeStr.mid(2, 2) + ":" + timeStr.mid(4, 2));
 }
+
+bool Helper::saveCVImage(cv::Mat image, QString savePath, QImage::Format format)
+{
+    QImageWriter writer(savePath);
+    QImage qImage((uchar*)image.data,
+        image.cols,
+        image.rows,
+        image.step,
+        format);
+    bool success = writer.write(qImage);
+    return success;
+}
