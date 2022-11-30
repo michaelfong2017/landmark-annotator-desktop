@@ -74,6 +74,8 @@ ReportDialog::ReportDialog(AnnotateTab* parent) : QDialog(parent)
 	ui.rightCheckBox3->setEnabled(false);
 	ui.rightCheckBox4->setEnabled(false);
 
+	qDebug() << " get info ";
+
 	ui.NameLabel->setText(this->parent->getParent()->patientTab->getCurrentPatientName());
 	ui.PhoneLabel->setText(this->parent->getParent()->patientTab->getPhoneNumber());
 	ui.GenerLabel->setText(this->parent->getParent()->patientTab->getSex());

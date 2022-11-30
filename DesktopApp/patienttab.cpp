@@ -335,6 +335,15 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
     cv::Mat FourChannelPNG = cv::imread(savePath.toStdString(), -1);
     qDebug() << "savePath" << savePath;*/
 
+    if (image.format() != QImage::Format_RGBA64) {
+        qDebug() << "Error: image format incorrect " << image.format();
+        TwoLinesDialog dialog;
+        dialog.setLine1("Error: Image format incorrect" + image.format());
+        dialog.exec();
+        isDownloading = false;
+        return;
+    }
+
     cv::Mat FourChannelPNG = cv::Mat(image.height(), image.width(), CV_16UC4, image.bits(), image.bytesPerLine());
 
     int height = FourChannelPNG.rows;

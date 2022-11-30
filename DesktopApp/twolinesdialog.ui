@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>401</width>
+    <width>420</width>
     <height>171</height>
    </rect>
   </property>
@@ -62,7 +62,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>381</width>
+     <width>401</width>
      <height>71</height>
     </rect>
    </property>
@@ -70,10 +70,10 @@
     <enum>Qt::LeftToRight</enum>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 18px &quot;MS Shell Dlg 2&quot;;</string>
+    <string notr="true">font: 16px &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="text">
-    <string>&lt;line1&gt;</string>
+    <string>Error: Image format incorrect</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
