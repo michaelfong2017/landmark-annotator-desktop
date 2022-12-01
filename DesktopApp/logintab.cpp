@@ -1,5 +1,6 @@
 ﻿#include "logintab.h"
 #include "librealsense2/rs.hpp"
+#include <QtUiTools/quiloader.h>
 
 LoginTab::LoginTab(DesktopApp* parent)
 {
@@ -45,6 +46,29 @@ LoginTab::LoginTab(DesktopApp* parent)
 
 	QObject::connect(parent->ui.offlineModeButton, &QPushButton::clicked, [this]() {
 		qDebug() << "offlineModeButton clicked";
+
+		QUiLoader loader;
+		QFile file(":/DesktopApp/twolinesdialog.ui");
+		file.open(QFile::ReadOnly);
+		QDialog* myWidget = (QDialog*)loader.load(&file, this);
+		file.close();
+
+		//QVBoxLayout* layout = new QVBoxLayout;
+		//layout->addWidget(myWidget);
+		//setLayout(layout);
+		//QMainWindow mw;
+		//mw.setCentralWidget(myWidget);
+		//mw.show();
+		this->parent->hide();
+		QDialogButtonBox* buttonBox = myWidget->findChild<QDialogButtonBox*>("buttonBox");
+		QObject::connect(buttonBox, &QDialogButtonBox::accepted, [myWidget]() {
+			qDebug() << "buttonBox pressed";
+			myWidget->accept();
+			});
+
+		myWidget->show();
+
+		//return;
 
 		// Test realsense2
 		rs2::context ctx;
