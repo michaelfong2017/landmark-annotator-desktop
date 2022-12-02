@@ -14,6 +14,10 @@ DesktopApp::DesktopApp(QWidget* parent)
 	//this->setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
 	ui.setupUi(this);
 
+	this->loginTabEmail = ui.tabWidget->widget(0);
+	this->loginTabPhone = ui.tabWidget->widget(1);
+	ui.tabWidget->removeTab(1);
+
 	// Read host address for qnetworkclient.h
 	QNetworkClient::getInstance().readHostAddress();
 	// Read host address for qnetworkclient.h END

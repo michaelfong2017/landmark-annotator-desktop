@@ -49,6 +49,9 @@ public:
     void setTextOnGraphicsViews(std::string text);
     QImage getQIRImage();
 
+    QWidget* loginTabEmail;
+    QWidget* loginTabPhone;
+
 protected:
     void resizeEvent(QResizeEvent* event) override;
 };
