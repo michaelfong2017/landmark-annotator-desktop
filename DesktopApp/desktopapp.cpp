@@ -72,7 +72,7 @@ DesktopApp::DesktopApp(QWidget* parent)
 
 	QObject::connect(ui.tabWidget, &QTabWidget::currentChanged, [this]() {
 		switch (this->ui.tabWidget->currentIndex()) {
-		case 0:
+		case TabIndex::LOGINTAB:
 			// current tab is loginTab
 			if (isOfflineMode) {
 				ui.tabWidget->setTabEnabled(TabIndex::CAPTURETAB, false);
@@ -80,24 +80,24 @@ DesktopApp::DesktopApp(QWidget* parent)
 				captureTab->onExitOfflineMode();
 			}
 			break;
-		case 1:
+		case TabIndex::PATIENTLISTTAB:
 			// current tab is patientListTab
 
 			/** Re-enable the tabs after login */
-			this->ui.tabWidget->setTabEnabled(1, true);
+			this->ui.tabWidget->setTabEnabled(TabIndex::PATIENTLISTTAB, true);
 			/** Re-enable the tabs after login END */
 
 			this->patientListTab->onEnterTab();
 			break;
-		case 2:
+		case TabIndex::PATIENTTAB:
 			// current tab is patientTab
 			this->patientTab->onEnterTab();
 			break;
-		case 3:
+		case TabIndex::CAPTURETAB:
 			// current tab is captureTab
 			this->captureTab->timer->start(0);
 			break;
-		case 4:
+		case TabIndex::ANNOTATETAB:
 			// current tab is annotateTab
 			this->captureTab->timer->stop();
 			break;
