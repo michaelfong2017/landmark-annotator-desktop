@@ -5,7 +5,6 @@
 #include "patienttab.h"
 #include "capturetab.h"
 #include "annotatetab.h"
-#include "alignmenttab.h"
 #include "kinectengine.h"
 
 DesktopApp::DesktopApp(QWidget* parent)
@@ -43,21 +42,16 @@ DesktopApp::DesktopApp(QWidget* parent)
 	this->patientTab = new PatientTab(this);
 	this->captureTab = new CaptureTab(this);
 	this->annotateTab = new AnnotateTab(this);
-	this->alignmentTab = new AlignmentTab(this);
 
-	if (this->ui.tabWidget->currentIndex() == 2) captureTab->timer->start(0);
+	if (this->ui.tabWidget->currentIndex() == TabIndex::PATIENTTAB) captureTab->timer->start(0);
 
 	/** Must login to begin */
-	this->ui.tabWidget->setTabEnabled(1, false);
-	this->ui.tabWidget->setTabEnabled(2, false);
-	this->ui.tabWidget->setTabEnabled(3, false);
-	this->ui.tabWidget->setTabEnabled(4, false);
+	this->ui.tabWidget->setTabEnabled(TabIndex::PATIENTLISTTAB, false);
+	this->ui.tabWidget->setTabEnabled(TabIndex::PATIENTTAB, false);
+	this->ui.tabWidget->setTabEnabled(TabIndex::CAPTURETAB, false);
+	this->ui.tabWidget->setTabEnabled(TabIndex::ANNOTATETAB, false);
 	/** Must login to begin END */
 
-	/** Hide unused Alignment tab */
-	this->ui.tabWidget->setTabEnabled(5, false);
-	this->ui.tabWidget->setTabVisible(5, false);
-	/** Hide unused Alignment tab END */
 	/** Hide unused bottom buttons in Analysis tab */
 	//this->ui.horizontalLayout_3->setEnabled(false)
 
@@ -81,7 +75,7 @@ DesktopApp::DesktopApp(QWidget* parent)
 		case 0:
 			// current tab is loginTab
 			if (isOfflineMode) {
-				ui.tabWidget->setTabEnabled(3, false);
+				ui.tabWidget->setTabEnabled(TabIndex::CAPTURETAB, false);
 				isOfflineMode = false;
 				captureTab->onExitOfflineMode();
 			}
@@ -122,12 +116,12 @@ void DesktopApp::logOut()
 	// need to clear list
 	captureTab->clearCaptureHistories();
 
-	this->ui.tabWidget->setTabEnabled(0, true);
-	this->ui.tabWidget->setTabEnabled(1, false);
-	this->ui.tabWidget->setTabEnabled(2, false);
-	this->ui.tabWidget->setTabEnabled(3, false);
-	this->ui.tabWidget->setTabEnabled(4, false);
-	this->ui.tabWidget->setCurrentIndex(0);
+	this->ui.tabWidget->setTabEnabled(TabIndex::LOGINTAB, true);
+	this->ui.tabWidget->setTabEnabled(TabIndex::PATIENTLISTTAB, false);
+	this->ui.tabWidget->setTabEnabled(TabIndex::PATIENTTAB, false);
+	this->ui.tabWidget->setTabEnabled(TabIndex::CAPTURETAB, false);
+	this->ui.tabWidget->setTabEnabled(TabIndex::ANNOTATETAB, false);
+	this->ui.tabWidget->setCurrentIndex(TabIndex::LOGINTAB);
 }
 
 void DesktopApp::setTextOnGraphicsViews(std::string text) {

@@ -45,9 +45,9 @@ PatientTab::PatientTab(DesktopApp* parent)
         // need to clear list
         this->parent->captureTab->clearCaptureHistories();
 
-        this->parent->ui.tabWidget->setTabEnabled(3, true);
-        this->parent->ui.tabWidget->setTabEnabled(4, true);
-        this->parent->ui.tabWidget->setCurrentIndex(3);
+        this->parent->ui.tabWidget->setTabEnabled(TabIndex::CAPTURETAB, true);
+        this->parent->ui.tabWidget->setTabEnabled(TabIndex::ANNOTATETAB, true);
+        this->parent->ui.tabWidget->setCurrentIndex(TabIndex::CAPTURETAB);
         });
 }
 
@@ -471,8 +471,8 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
     isDownloading = false;
 
     this->parent->annotateTab->reloadCurrentImage(qColorImage, AlignedDepthIMG1);
-    this->parent->ui.tabWidget->setTabEnabled(4, true);
-    this->parent->ui.tabWidget->setCurrentIndex(4);
+    this->parent->ui.tabWidget->setTabEnabled(TabIndex::ANNOTATETAB, true);
+    this->parent->ui.tabWidget->setCurrentIndex(TabIndex::ANNOTATETAB);
 
     /*ShowImagesDialog dialog;
     dialog.setQColorImage(qColorImage);

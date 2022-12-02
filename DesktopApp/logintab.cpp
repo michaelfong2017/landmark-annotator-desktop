@@ -48,9 +48,9 @@ LoginTab::LoginTab(DesktopApp* parent)
 		qDebug() << "offlineModeButton clicked";
 
 		QUiLoader loader;
-		QFile file(":/DesktopApp/twolinesdialog.ui");
+		QFile file(":/DesktopApp/desktopapp.ui");
 		file.open(QFile::ReadOnly);
-		QDialog* myWidget = (QDialog*)loader.load(&file, this);
+		QWidget* myWidget = loader.load(&file, this);
 		file.close();
 
 		//QVBoxLayout* layout = new QVBoxLayout;
@@ -59,16 +59,14 @@ LoginTab::LoginTab(DesktopApp* parent)
 		//QMainWindow mw;
 		//mw.setCentralWidget(myWidget);
 		//mw.show();
-		this->parent->hide();
-		QDialogButtonBox* buttonBox = myWidget->findChild<QDialogButtonBox*>("buttonBox");
-		QObject::connect(buttonBox, &QDialogButtonBox::accepted, [myWidget]() {
-			qDebug() << "buttonBox pressed";
-			myWidget->accept();
-			});
+		this->parent->ui.tabWidget->removeTab(0);
 
-		myWidget->show();
+		QWidget* newLoginTab = myWidget->findChild<QWidget*>("loginTab");
+		this->parent->ui.tabWidget->insertTab(0, newLoginTab, "New Login");
+		this->parent->ui.tabWidget->setCurrentIndex(TabIndex::LOGINTAB);
+		//myWidget->show();
 
-		//return;
+		return;
 
 		// Test realsense2
 		rs2::context ctx;
@@ -185,11 +183,11 @@ LoginTab::LoginTab(DesktopApp* parent)
 		////
 
 		// Disable all tabs except capture tab in offline mode
-		this->parent->ui.tabWidget->setTabEnabled(3, true);
-		this->parent->ui.tabWidget->setTabEnabled(1, false);
-		this->parent->ui.tabWidget->setTabEnabled(2, false);
-		this->parent->ui.tabWidget->setTabEnabled(4, false);
-		this->parent->ui.tabWidget->setCurrentIndex(3);
+		this->parent->ui.tabWidget->setTabEnabled(TabIndex::CAPTURETAB, true);
+		this->parent->ui.tabWidget->setTabEnabled(TabIndex::PATIENTLISTTAB, false);
+		this->parent->ui.tabWidget->setTabEnabled(TabIndex::PATIENTTAB, false);
+		this->parent->ui.tabWidget->setTabEnabled(TabIndex::ANNOTATETAB, false);
+		this->parent->ui.tabWidget->setCurrentIndex(TabIndex::CAPTURETAB);
 		this->parent->isOfflineMode = true;
 		this->parent->captureTab->onEnterOfflineMode();
 	});

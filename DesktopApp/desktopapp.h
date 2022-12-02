@@ -18,7 +18,8 @@ class PatientListTab;
 class PatientTab;
 class CaptureTab;
 class AnnotateTab;
-class AlignmentTab;
+
+enum TabIndex { LOGINTAB = 0, PATIENTLISTTAB = 1, PATIENTTAB = 2, CAPTURETAB = 3, ANNOTATETAB = 4 };
 
 class DesktopApp : public QWidget
 {
@@ -34,7 +35,6 @@ public:
     PatientTab* patientTab;
     CaptureTab* captureTab;
     AnnotateTab* annotateTab;
-    AlignmentTab* alignmentTab;
 
     std::queue<k4a_image_t> irImageQueue;
 

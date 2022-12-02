@@ -10,9 +10,6 @@
     <ClCompile Include="reportdialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="alignmenttab.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="annotatetab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -117,9 +114,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="reportdialog.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="alignmenttab.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="annotatetab.h">

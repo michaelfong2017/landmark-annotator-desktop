@@ -7,6 +7,7 @@
 #include <QtWidgets/QWidget>
 #include "patient.h"
 #include <opencv2/opencv.hpp>
+#include "desktopapp.h"
 
 
 class QNetworkClient : public QWidget

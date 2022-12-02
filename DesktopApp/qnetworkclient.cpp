@@ -62,8 +62,8 @@ void QNetworkClient::onLogin(QNetworkReply* reply) {
     else {
         this->userToken = QString::fromStdString("Bearer " + response_data.toStdString());
         qDebug() << this->userToken;
-        qTabWidget->setCurrentIndex(1);
-        qTabWidget->setTabEnabled(0, false);
+        qTabWidget->setCurrentIndex(TabIndex::PATIENTLISTTAB);
+        qTabWidget->setTabEnabled(TabIndex::LOGINTAB, false);
     }
 
     reply->deleteLater();

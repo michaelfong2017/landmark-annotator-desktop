@@ -10,5 +10,6 @@
         <file>resources/recording.gif</file>
         <file>resources/HumanCutShape4.png</file>
         <file>twolinesdialog.ui</file>
+        <file>desktopapp.ui</file>
     </qresource>
 </RCC>

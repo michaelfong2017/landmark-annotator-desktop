@@ -112,10 +112,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
 
 			/** Re-enable changing tab */
-			this->parent->ui.tabWidget->setTabEnabled(1, true);
-			this->parent->ui.tabWidget->setTabEnabled(2, true);
-			this->parent->ui.tabWidget->setTabEnabled(4, true);
-			this->parent->ui.tabWidget->setTabEnabled(5, true);
+			this->parent->ui.tabWidget->setTabEnabled(TabIndex::PATIENTLISTTAB, true);
+			this->parent->ui.tabWidget->setTabEnabled(TabIndex::PATIENTTAB, true);
+			this->parent->ui.tabWidget->setTabEnabled(TabIndex::ANNOTATETAB, true);
 			/** Re-enable changing tab END */
 
 			// Modify UI to disable recording status
@@ -152,10 +151,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			// Current status is NOT recording
 
 			/** Disable changing tab */
-			this->parent->ui.tabWidget->setTabEnabled(1, false);
-			this->parent->ui.tabWidget->setTabEnabled(2, false);
-			this->parent->ui.tabWidget->setTabEnabled(4, false);
-			this->parent->ui.tabWidget->setTabEnabled(5, false);
+			this->parent->ui.tabWidget->setTabEnabled(TabIndex::PATIENTLISTTAB, false);
+			this->parent->ui.tabWidget->setTabEnabled(TabIndex::PATIENTTAB, false);
+			this->parent->ui.tabWidget->setTabEnabled(TabIndex::ANNOTATETAB, false);
 			/** Disable changing tab END */
 
 			// Modify UI to indicate recording status
@@ -775,10 +773,9 @@ void CaptureTab::disableButtonsForUploading() {
 
 	this->parent->ui.logOutButton3->setEnabled(false);
 
-	this->parent->ui.tabWidget->setTabEnabled(1, false);
-	this->parent->ui.tabWidget->setTabEnabled(2, false);
-	this->parent->ui.tabWidget->setTabEnabled(4, false);
-	this->parent->ui.tabWidget->setTabEnabled(5, false);
+	this->parent->ui.tabWidget->setTabEnabled(TabIndex::PATIENTLISTTAB, false);
+	this->parent->ui.tabWidget->setTabEnabled(TabIndex::PATIENTTAB, false);
+	this->parent->ui.tabWidget->setTabEnabled(TabIndex::ANNOTATETAB, false);
 	
 	/** Disable table view row selection */
 	tableView->setSelectionMode(QAbstractItemView::NoSelection);
@@ -802,10 +799,9 @@ void CaptureTab::enableButtonsForUploading() {
 
 	this->parent->ui.logOutButton3->setEnabled(true);
 
-	this->parent->ui.tabWidget->setTabEnabled(1, true);
-	this->parent->ui.tabWidget->setTabEnabled(2, true);
-	this->parent->ui.tabWidget->setTabEnabled(4, true);
-	this->parent->ui.tabWidget->setTabEnabled(5, true);
+	this->parent->ui.tabWidget->setTabEnabled(TabIndex::PATIENTLISTTAB, true);
+	this->parent->ui.tabWidget->setTabEnabled(TabIndex::PATIENTTAB, true);
+	this->parent->ui.tabWidget->setTabEnabled(TabIndex::ANNOTATETAB, true);
 
 	/** Enable table view row selection */
 	tableView->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -1153,7 +1149,7 @@ void CaptureTab::onFindLandmarkPredictions(QNetworkReply* reply) {
 
 	// Move to annotate tab which index is 4
 	this->parent->annotateTab->reloadCurrentImage(getQColorImage(), getCapturedDepthToColorImage());
-	//this->parent->ui.tabWidget->setCurrentIndex(4);
+	//this->parent->ui.tabWidget->setCurrentIndex(TabIndex::ANNOTATETAB);
 }
 
 cv::Mat CaptureTab::getCapturedColorImage() {
