@@ -58,6 +58,14 @@
         <source>Other</source>
         <translation>Other</translation>
     </message>
+    <message>
+        <source>Record</source>
+        <translation>Record</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Stop</translation>
+    </message>
 </context>
 <context>
     <name>CreateNewPatientDialog</name>

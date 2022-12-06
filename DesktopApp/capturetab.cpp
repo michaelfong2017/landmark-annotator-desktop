@@ -112,7 +112,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			this->parent->ui.captureTab->setStyleSheet("");
 
 			this->recorder->stopRecorder();
-			this->parent->ui.saveVideoButton->setText("Record");
+			this->parent->ui.saveVideoButton->setText(tr("Record"));
 
 			this->parent->ui.saveInfoCaptureTab->setText("Recording is saved under\n" + visitFolderPath + "\nat " + dateTimeString);
 
@@ -151,7 +151,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			this->parent->ui.captureTab->setStyleSheet("#captureTab {border: 2px solid red}");
 
 			this->recorder->prepareRecorder();
-			this->parent->ui.saveVideoButton->setText("Stop");
+			this->parent->ui.saveVideoButton->setText(tr("Stop"));
 
 			// Disable analysis button
 			this->parent->ui.annotateButtonCaptureTab->setEnabled(false);
@@ -1538,6 +1538,13 @@ void CaptureTab::onLanguageChanged()
 	otherString = tr("Other");
 
 	this->parent->ui.patientNameInCapture->setText(tr("Current Patient: ") + this->parent->patientTab->getCurrentPatientName());
+
+	if (this->recorder->getRecordingStatus()) {
+		this->parent->ui.saveVideoButton->setText(tr("Stop"));
+	}
+	else {
+		this->parent->ui.saveVideoButton->setText(tr("Record"));
+	}
 }
 
 void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex& previous) {

@@ -58,6 +58,14 @@
         <source>Other</source>
         <translation>其他</translation>
     </message>
+    <message>
+        <source>Record</source>
+        <translation>录影</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>停止</translation>
+    </message>
 </context>
 <context>
     <name>CreateNewPatientDialog</name>
