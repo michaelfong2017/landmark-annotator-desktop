@@ -20,6 +20,7 @@ public:
 private:
     DesktopApp* parent;
     bool isEmailLogin(QString account);
+    void startOfflineMode();
 
 };
 
