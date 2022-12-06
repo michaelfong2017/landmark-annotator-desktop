@@ -123,11 +123,13 @@
     <ClCompile Include="draganddropgraphicsscene.cpp" />
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="kinectengine.cpp" />
+    <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="patientlistsortfilterproxymodel.cpp" />
     <ClCompile Include="reportdialog.cpp" />
     <ClCompile Include="reportdialog_eng.cpp" />
     <ClCompile Include="scribblearea.cpp" />
     <ClCompile Include="showimagesdialog.cpp" />
+    <ClCompile Include="translationhelper.cpp" />
     <ClCompile Include="twolinesdialog.cpp" />
     <ClCompile Include="logintab.cpp" />
     <ClCompile Include="patient.cpp" />
@@ -186,9 +188,11 @@
     <QtMoc Include="showimagesdialog.h" />
     <QtMoc Include="reportdialog_eng.h" />
     <QtMoc Include="patientlistsortfilterproxymodel.h" />
+    <QtMoc Include="mainwindow.h" />
     <ClInclude Include="stdafx.h" />
     <QtMoc Include="uploadrequest.h" />
     <QtMoc Include="uploadprogressdialog.h" />
+    <QtMoc Include="translationhelper.h" />
     <ClInclude Include="util\networkutil.h" />
     <QtMoc Include="saveimagedialog.h" />
     <ClInclude Include="draganddropgraphicsscene.h" />

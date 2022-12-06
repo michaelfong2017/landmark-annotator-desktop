@@ -1,11 +1,11 @@
-#include "desktopapp.h"
+#include "mainwindow.h"
 #include "stdafx.h"
 #include <QtWidgets/QApplication>
 #include <QtDebug>
 #include <QFile>
 #include <QTextStream>
 #include "helper.h"
-#include <qtranslator.h>
+#include "translationhelper.h"
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext&, const QString& msg)
 {
@@ -51,18 +51,10 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(myMessageHandler);
     //qInstallMessageHandler(nullptr);
 
-    QTranslator translator;
-    QString dir = QString(QCoreApplication::applicationDirPath());
-    bool success = translator.load(QString("Translation_zh_CN.qm"), dir);
-    if (success) {
-        QCoreApplication::installTranslator(&translator);
-    }
+    //TranslationHelper::getInstance().useEnglishTranslator();
+    TranslationHelper::getInstance().useSimplifiedChineseTranslator();
 
-    QString check = QCoreApplication::translate("DesktopAppClass", "Wukong");
-    qDebug() << QCoreApplication::translate("DesktopAppClass", "Wukong");
-
-    DesktopApp w;
+    MainWindow w;
     w.show();
-    w.setAttribute(Qt::WA_AcceptTouchEvents);
     return a.exec();
 }

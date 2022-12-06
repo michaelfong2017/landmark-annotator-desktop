@@ -79,6 +79,12 @@
     <ClCompile Include="patientlisttab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="translationhelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mainwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="capturehistory.h">
@@ -165,6 +171,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="patientlistsortfilterproxymodel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="translationhelper.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="mainwindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
