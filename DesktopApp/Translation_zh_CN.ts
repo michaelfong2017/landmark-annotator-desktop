@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>AnnotateTab</name>
+    <message>
+        <source>Current Patient: </source>
+        <translation>目前病人： </translation>
+    </message>
+</context>
+<context>
     <name>CaptureTab</name>
     <message>
         <source>Select Color Image</source>
@@ -10,6 +17,26 @@
     <message>
         <source>Images (*.png *.jpg)</source>
         <translation>图片 （*.png *.jpg）</translation>
+    </message>
+    <message>
+        <source>index</source>
+        <translation>索引</translation>
+    </message>
+    <message>
+        <source>Image Type</source>
+        <translation>图片类别</translation>
+    </message>
+    <message>
+        <source>Has Point Cloud?</source>
+        <translation>有点云?</translation>
+    </message>
+    <message>
+        <source>Creation Time</source>
+        <translation>创建日期</translation>
+    </message>
+    <message>
+        <source>Current Patient: </source>
+        <translation>目前病人： </translation>
     </message>
 </context>
 <context>
@@ -84,15 +111,19 @@
     </message>
     <message>
         <source>DD:</source>
-        <translation>日日：</translation>
+        <translation>日：</translation>
     </message>
     <message>
         <source>MM:</source>
-        <translation>月月：</translation>
+        <translation>月：</translation>
     </message>
     <message>
         <source>YYYY:</source>
-        <translation>年年年年：</translation>
+        <translation>年：</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>新增</translation>
     </message>
 </context>
 <context>
@@ -356,6 +387,104 @@
     </message>
 </context>
 <context>
+    <name>PatientListTab</name>
+    <message>
+        <source>Patient ID</source>
+        <translation>病人ID</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>姓名</translation>
+    </message>
+    <message>
+        <source>Gender</source>
+        <translation>性别</translation>
+    </message>
+    <message>
+        <source>Age</source>
+        <translation>年龄</translation>
+    </message>
+    <message>
+        <source>Phone Number</source>
+        <translation>电话号码</translation>
+    </message>
+    <message>
+        <source>Subject Number</source>
+        <translation>病人编号</translation>
+    </message>
+    <message>
+        <source>Creation Time</source>
+        <translation>创建时间</translation>
+    </message>
+    <message>
+        <source>idCard</source>
+        <translation>身份证号码</translation>
+    </message>
+    <message>
+        <source>sin</source>
+        <translation>社会安全号码</translation>
+    </message>
+    <message>
+        <source>email</source>
+        <translation>电邮</translation>
+    </message>
+    <message>
+        <source>address</source>
+        <translation>地址</translation>
+    </message>
+    <message>
+        <source>remark</source>
+        <translation>备注</translation>
+    </message>
+    <message>
+        <source>dob</source>
+        <translation>出生日期</translation>
+    </message>
+    <message>
+        <source>weight</source>
+        <translation>体重</translation>
+    </message>
+    <message>
+        <source>height</source>
+        <translation>身高</translation>
+    </message>
+</context>
+<context>
+    <name>PatientTab</name>
+    <message>
+        <source>Name: </source>
+        <translation>姓名： </translation>
+    </message>
+    <message>
+        <source>Age: </source>
+        <translation>年龄： </translation>
+    </message>
+    <message>
+        <source>Subject Number: </source>
+        <translation>病人编号： </translation>
+    </message>
+    <message>
+        <source>Captured Date</source>
+        <translation>拍摄日期</translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation>分析</translation>
+    </message>
+    <message>
+        <source>Url</source>
+        <translation>网址</translation>
+    </message>
+    <message>
+        <source>Landmarks</source>
+        <translation>地标</translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation>查看</translation>
+    </message>
+</context>
+<context>
     <name>ReportDialogUI</name>
     <message>
         <source>Report</source>
@@ -447,7 +576,7 @@
     </message>
     <message>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">姓名</translation>
     </message>
     <message>
         <source>  电话: </source>
@@ -463,7 +592,7 @@
     </message>
     <message>
         <source>Gender</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">性别</translation>
     </message>
     <message>
         <source>  出生日期: </source>
@@ -479,7 +608,7 @@
     </message>
     <message>
         <source>Age</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">年龄</translation>
     </message>
     <message>
         <source>  体重: </source>
@@ -623,7 +752,7 @@
     </message>
     <message>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">姓名</translation>
     </message>
     <message>
         <source>  Tel: </source>
@@ -639,7 +768,7 @@
     </message>
     <message>
         <source>Gender</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">性别</translation>
     </message>
     <message>
         <source>  Birthday: </source>
@@ -655,7 +784,7 @@
     </message>
     <message>
         <source>Age</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">年龄</translation>
     </message>
     <message>
         <source>  Weight: </source>
@@ -786,6 +915,25 @@
     <message>
         <source>Error: Image format incorrect</source>
         <translation>错误：图片格式有误</translation>
+    </message>
+</context>
+<context>
+    <name>UploadProgressDialog</name>
+    <message>
+        <source>Upload number</source>
+        <translation>上载编号</translation>
+    </message>
+    <message>
+        <source>Patient Name</source>
+        <translation>病人姓名</translation>
+    </message>
+    <message>
+        <source>Capture number</source>
+        <translation>拍摄编号</translation>
+    </message>
+    <message>
+        <source>Progress</source>
+        <translation>进度</translation>
     </message>
 </context>
 <context>

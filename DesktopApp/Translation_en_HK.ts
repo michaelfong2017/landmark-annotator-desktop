@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_HK">
 <context>
+    <name>AnnotateTab</name>
+    <message>
+        <source>Current Patient: </source>
+        <translation>Current Patient: </translation>
+    </message>
+</context>
+<context>
     <name>CaptureTab</name>
     <message>
         <source>Select Color Image</source>
@@ -10,6 +17,26 @@
     <message>
         <source>Images (*.png *.jpg)</source>
         <translation>Images (*.png *.jpg)</translation>
+    </message>
+    <message>
+        <source>index</source>
+        <translation>index</translation>
+    </message>
+    <message>
+        <source>Image Type</source>
+        <translation>Image Type</translation>
+    </message>
+    <message>
+        <source>Has Point Cloud?</source>
+        <translation>Has Point Cloud?</translation>
+    </message>
+    <message>
+        <source>Creation Time</source>
+        <translation>Creation Time</translation>
+    </message>
+    <message>
+        <source>Current Patient: </source>
+        <translation>Current Patient: </translation>
     </message>
 </context>
 <context>
@@ -93,6 +120,10 @@
     <message>
         <source>YYYY:</source>
         <translation>YYYY:</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Add</translation>
     </message>
 </context>
 <context>
@@ -356,6 +387,104 @@
     </message>
 </context>
 <context>
+    <name>PatientListTab</name>
+    <message>
+        <source>Patient ID</source>
+        <translation>Patient ID</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Name</translation>
+    </message>
+    <message>
+        <source>Gender</source>
+        <translation>Gender</translation>
+    </message>
+    <message>
+        <source>Age</source>
+        <translation>Age</translation>
+    </message>
+    <message>
+        <source>Phone Number</source>
+        <translation>Phone Number</translation>
+    </message>
+    <message>
+        <source>Subject Number</source>
+        <translation>Subject Number</translation>
+    </message>
+    <message>
+        <source>Creation Time</source>
+        <translation>Creation Time</translation>
+    </message>
+    <message>
+        <source>idCard</source>
+        <translation>idCard</translation>
+    </message>
+    <message>
+        <source>sin</source>
+        <translation>sin</translation>
+    </message>
+    <message>
+        <source>email</source>
+        <translation>email</translation>
+    </message>
+    <message>
+        <source>address</source>
+        <translation>address</translation>
+    </message>
+    <message>
+        <source>remark</source>
+        <translation>remark</translation>
+    </message>
+    <message>
+        <source>dob</source>
+        <translation>dob</translation>
+    </message>
+    <message>
+        <source>weight</source>
+        <translation>weight</translation>
+    </message>
+    <message>
+        <source>height</source>
+        <translation>height</translation>
+    </message>
+</context>
+<context>
+    <name>PatientTab</name>
+    <message>
+        <source>Name: </source>
+        <translation>Name: </translation>
+    </message>
+    <message>
+        <source>Age: </source>
+        <translation>Age: </translation>
+    </message>
+    <message>
+        <source>Subject Number: </source>
+        <translation>Subject Number: </translation>
+    </message>
+    <message>
+        <source>Captured Date</source>
+        <translation>Captured Date</translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation>Analysis</translation>
+    </message>
+    <message>
+        <source>Url</source>
+        <translation>Url</translation>
+    </message>
+    <message>
+        <source>Landmarks</source>
+        <translation>Landmarks</translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation>View</translation>
+    </message>
+</context>
+<context>
     <name>ReportDialogUI</name>
     <message>
         <source>Report</source>
@@ -447,7 +576,7 @@
     </message>
     <message>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Name</translation>
     </message>
     <message>
         <source>  电话: </source>
@@ -463,7 +592,7 @@
     </message>
     <message>
         <source>Gender</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gender</translation>
     </message>
     <message>
         <source>  出生日期: </source>
@@ -479,7 +608,7 @@
     </message>
     <message>
         <source>Age</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Age</translation>
     </message>
     <message>
         <source>  体重: </source>
@@ -623,7 +752,7 @@
     </message>
     <message>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Name</translation>
     </message>
     <message>
         <source>  Tel: </source>
@@ -639,7 +768,7 @@
     </message>
     <message>
         <source>Gender</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gender</translation>
     </message>
     <message>
         <source>  Birthday: </source>
@@ -655,7 +784,7 @@
     </message>
     <message>
         <source>Age</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Age</translation>
     </message>
     <message>
         <source>  Weight: </source>
@@ -786,6 +915,25 @@
     <message>
         <source>Error: Image format incorrect</source>
         <translation>Error: Image format incorrect</translation>
+    </message>
+</context>
+<context>
+    <name>UploadProgressDialog</name>
+    <message>
+        <source>Upload number</source>
+        <translation>Upload number</translation>
+    </message>
+    <message>
+        <source>Patient Name</source>
+        <translation>Patient Name</translation>
+    </message>
+    <message>
+        <source>Capture number</source>
+        <translation>Capture number</translation>
+    </message>
+    <message>
+        <source>Progress</source>
+        <translation>Progress</translation>
     </message>
 </context>
 <context>

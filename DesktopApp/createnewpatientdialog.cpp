@@ -7,7 +7,7 @@ CreateNewPatientDialog::CreateNewPatientDialog(PatientListTab* parent)
 
 	this->parent = parent;
 
-    QPushButton* b = ui.buttonBox->addButton("Add", QDialogButtonBox::AcceptRole);
+    QPushButton* b = ui.buttonBox->addButton(tr("Add"), QDialogButtonBox::AcceptRole);
     b->setDefault(false);
     b->setAutoDefault(false);
     b->setFocusPolicy(Qt::NoFocus);

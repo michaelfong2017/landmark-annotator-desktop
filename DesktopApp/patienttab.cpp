@@ -60,9 +60,9 @@ void PatientTab::onEnterTab() {
     tableView->hide();
     QNetworkClient::getInstance().fetchExistingImagesOfPatient(currentPatientId, this, SLOT(onFetchExistingImagesOfPatient(QNetworkReply*)));
 
-    this->parent->ui.patientTab->findChild<QLabel*>("patientName")->setText(QString("Name: %1").arg(name));
-    this->parent->ui.patientTab->findChild<QLabel*>("patientAge")->setText(QString("Age: %1").arg(age));
-    this->parent->ui.patientTab->findChild<QLabel*>("patientSubjectNumber")->setText(QString("Subject Number: %1").arg(subjectNumber));
+    this->parent->ui.patientTab->findChild<QLabel*>("patientName")->setText(tr("Name: ") + name);
+    this->parent->ui.patientTab->findChild<QLabel*>("patientAge")->setText(tr("Age: ") + age);
+    this->parent->ui.patientTab->findChild<QLabel*>("patientSubjectNumber")->setText(tr("Subject Number: ") + subjectNumber);
 }
 
 
@@ -182,7 +182,7 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
     patientDataModel->clear();
 
     /** Headers */
-    QStringList headerLabels = { "Captured Date", "Analysis", "Url", "Landmarks"};
+    QStringList headerLabels = { tr("Captured Date"), tr("Analysis"), tr("Url"), tr("Landmarks")};
 
     for (int i = 0; i < 4; i++)
     {
@@ -237,7 +237,7 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
             else if (i == 1) {
                 QString text;
 
-                text = "View";
+                text = tr("View");
 
                 item = new QStandardItem(text);
                 QFont fn = item->font();

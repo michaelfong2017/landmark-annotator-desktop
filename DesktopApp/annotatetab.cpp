@@ -256,7 +256,7 @@ void AnnotateTab::resizeAndDrawAnnotations() {
 		}
 	}
 
-	this->parent->ui.patientNameInCapture2->setText(QString("Current Patient: " + this->parent->patientTab->getCurrentPatientName()));
+	this->parent->ui.patientNameInCapture2->setText(tr("Current Patient: ") + this->parent->patientTab->getCurrentPatientName());
 
 	this->drawAnnotations();
 }

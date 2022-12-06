@@ -66,7 +66,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	dataModel->clear();
 
 	/** Headers */
-	QStringList headerLabels = { "", "index", "Image Type", "Has Point Cloud?", "Creation Time" };
+	QStringList headerLabels = { "", tr("index"), tr("Image Type"), tr("Has Point Cloud?"), tr("Creation Time") };
 
 	for (int i = 0; i < COLUMN_COUNT; i++)
 	{
@@ -714,7 +714,7 @@ void CaptureTab::clearCaptureHistories() {
 	if (this->parent->ui.graphicsViewImage->scene()) {
 		delete this->parent->ui.graphicsViewImage->scene();
 	}
-	this->parent->ui.patientNameInCapture->setText(QString("Current Patient: " + this->parent->patientTab->getCurrentPatientName()));
+	this->parent->ui.patientNameInCapture->setText(tr("Current Patient: ") + this->parent->patientTab->getCurrentPatientName());
 
 }
 

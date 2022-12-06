@@ -20,7 +20,7 @@ UploadProgressDialog::UploadProgressDialog()
     bool value = connect(tableView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onSlotRowDoubleClicked(const QModelIndex&)));
 
     /** Headers */
-    QStringList headerLabels = { "Upload number", "Patient Name", "Capture number", "Progress" };
+    QStringList headerLabels = { tr("Upload number"), tr("Patient Name"), tr("Capture number"), tr("Progress") };
 
     for (int i = 0; i < COLUMN_COUNT; i++)
     {

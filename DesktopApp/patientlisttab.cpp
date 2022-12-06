@@ -82,7 +82,7 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     patientListDataModel->clear();
 
     /** Headers */
-    QStringList headerLabels = { "", "Patient ID", "Name", "Gender", "Age", "Phone Number", "Subject Number", "Creation Time", "idCard", "sin", "email", "address", "remark", "dob", "weight", "height"};
+    QStringList headerLabels = { "", tr("Patient ID"), tr("Name"), tr("Gender"), tr("Age"), tr("Phone Number"), tr("Subject Number"), tr("Creation Time"), tr("idCard"), tr("sin"), tr("email"), tr("address"), tr("remark"), tr("dob"), tr("weight"), tr("height")};
 
     for (int i = 0; i < COLUMN_COUNT; i++)
     {
