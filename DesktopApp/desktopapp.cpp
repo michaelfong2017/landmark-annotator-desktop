@@ -173,3 +173,14 @@ void DesktopApp::resizeEvent(QResizeEvent* event)
 		this->annotateTab->resizeAndDrawAnnotations();
 	}
 }
+
+void DesktopApp::changeEvent(QEvent* event)
+{
+	if (event->type() == QEvent::LanguageChange) {
+		ui.retranslateUi(this);
+		window()->setWindowTitle(tr("Wukong"));
+	}
+	else {
+		QWidget::changeEvent(event);
+	}
+}

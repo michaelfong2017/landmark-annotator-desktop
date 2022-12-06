@@ -69,3 +69,20 @@ VC++ Directories:
 - `Library Directories` -> edit -> add `$(SolutionDir)packages\Intel RealSense SDK 2.0\lib`
 - Linker -> Input
 `Additional Dependencies` -> edit -> add `$(SolutionDir)packages\Intel RealSense SDK 2.0\lib\x64\realsense2.lib`
+
+# Visual Studio Creating Qt Translation Files
+- https://doc-snapshots.qt.io/vstools-dev/qtvstools-translation-files.html
+
+## Create translation file
+1. Select Project > Add New Item > Installed > Visual C++ > Qt > Qt Translation File.
+2. In Select a Language, you can choose a language from the list of supported languages. You can use Search to filter for a specific language.
+3. In the Save as field, enter a filename for the translation file.
+4. Select Finish to create the file and have it listed in Translation Files in Visual Studio's Solution Explorer.
+5. Right-click a translation file to open a context menu with options for running `lupdate` and `lrelease`. `lupdate` needs to be run to initialize the translation file (e.g. automatically find the contexts and the strings that will be translated).
+
+
+## Install translation file
+In order to find the generate and find the .qm file (for each translation file):
+1. Select either Debug or Release in Visual Studio.
+2. Right-click each translation file (.ts file) and select lrelease. Now the .qm file will be generated in either x64/Debug or x64/Release.
+

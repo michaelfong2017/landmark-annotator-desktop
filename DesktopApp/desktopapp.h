@@ -29,7 +29,7 @@ public:
     DesktopApp(QWidget *parent = Q_NULLPTR);
 
     Ui::DesktopAppClass ui;
-    
+
     LoginTab* loginTab;
     PatientListTab* patientListTab;
     PatientTab* patientTab;
@@ -54,6 +54,7 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent* event) override;
+    void changeEvent(QEvent* event) override;
 };
 
 #endif

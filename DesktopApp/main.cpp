@@ -51,8 +51,8 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(myMessageHandler);
     //qInstallMessageHandler(nullptr);
 
-    //TranslationHelper::getInstance().useEnglishTranslator();
-    TranslationHelper::getInstance().useSimplifiedChineseTranslator();
+    TranslationHelper::getInstance().useEnglishTranslator();
+    //TranslationHelper::getInstance().useSimplifiedChineseTranslator();
 
     MainWindow w;
     w.show();

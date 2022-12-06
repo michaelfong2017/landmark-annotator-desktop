@@ -26,25 +26,27 @@ protected:
 
 //! [1]
 private slots:
-    void newFile();
-    void open();
-    void save();
-    void print();
-    void undo();
-    void redo();
-    void cut();
-    void copy();
-    void paste();
-    void bold();
-    void italic();
-    void leftAlign();
-    void rightAlign();
-    void justify();
-    void center();
-    void setLineSpacing();
-    void setParagraphSpacing();
-    void about();
-    void aboutQt();
+    void switchToEnglish();
+    void switchToSimplifiedChinese();
+    //void newFile();
+    //void open();
+    //void save();
+    //void print();
+    //void undo();
+    //void redo();
+    //void cut();
+    //void copy();
+    //void paste();
+    //void bold();
+    //void italic();
+    //void leftAlign();
+    //void rightAlign();
+    //void justify();
+    //void center();
+    //void setLineSpacing();
+    //void setParagraphSpacing();
+    //void about();
+    //void aboutQt();
 //! [1]
 
 //! [2]
@@ -54,32 +56,35 @@ private:
 //! [2]
 
 //! [3]
-    QMenu *fileMenu;
-    QMenu *editMenu;
-    QMenu *formatMenu;
-    QMenu *helpMenu;
-    QActionGroup *alignmentGroup;
-    QAction *newAct;
-    QAction *openAct;
-    QAction *saveAct;
-    QAction *printAct;
-    QAction *exitAct;
-    QAction *undoAct;
-    QAction *redoAct;
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteAct;
-    QAction *boldAct;
-    QAction *italicAct;
-    QAction *leftAlignAct;
-    QAction *rightAlignAct;
-    QAction *justifyAct;
-    QAction *centerAct;
-    QAction *setLineSpacingAct;
-    QAction *setParagraphSpacingAct;
-    QAction *aboutAct;
-    QAction *aboutQtAct;
-    QLabel *infoLabel;
+    QMenu* languageMenu;
+    QAction* switchToEnglishAct;
+    QAction* switchToSimplifiedChineseAct;
+    //QMenu *fileMenu;
+    //QMenu *editMenu;
+    //QMenu *formatMenu;
+    //QMenu *helpMenu;
+    //QActionGroup *alignmentGroup;
+    //QAction *newAct;
+    //QAction *openAct;
+    //QAction *saveAct;
+    //QAction *printAct;
+    //QAction *exitAct;
+    //QAction *undoAct;
+    //QAction *redoAct;
+    //QAction *cutAct;
+    //QAction *copyAct;
+    //QAction *pasteAct;
+    //QAction *boldAct;
+    //QAction *italicAct;
+    //QAction *leftAlignAct;
+    //QAction *rightAlignAct;
+    //QAction *justifyAct;
+    //QAction *centerAct;
+    //QAction *setLineSpacingAct;
+    //QAction *setParagraphSpacingAct;
+    //QAction *aboutAct;
+    //QAction *aboutQtAct;
+    //QLabel *infoLabel;
 };
 //! [3]
 
