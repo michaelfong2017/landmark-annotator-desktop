@@ -325,3 +325,16 @@ void MainWindow::createMenus()
 //    formatMenu->addAction(setLineSpacingAct);
 //    formatMenu->addAction(setParagraphSpacingAct);
 }
+
+void MainWindow::changeEvent(QEvent* event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        QAction* action = menuBar()->actions().at(0); // access just the first QAction
+        action->setText(tr("Language"));
+        switchToEnglishAct->setText(tr("Switch to English"));
+        switchToSimplifiedChineseAct->setText(tr("Switch to Simplified Chinese"));
+    }
+    else {
+        QWidget::changeEvent(event);
+    }
+}

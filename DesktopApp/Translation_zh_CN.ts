@@ -5,94 +5,94 @@
     <name>CaptureTab</name>
     <message>
         <source>Select Color Image</source>
-        <translation type="unfinished"></translation>
+        <translation>选择彩色图片</translation>
     </message>
     <message>
         <source>Images (*.png *.jpg)</source>
-        <translation type="unfinished"></translation>
+        <translation>图片 （*.png *.jpg）</translation>
     </message>
 </context>
 <context>
     <name>CreateNewPatientDialog</name>
     <message>
         <source>New Patient</source>
-        <translation type="unfinished"></translation>
+        <translation>新增病人</translation>
     </message>
     <message>
         <source>Height (cm):</source>
-        <translation type="unfinished"></translation>
+        <translation>身高 （厘米）：</translation>
     </message>
     <message>
         <source>Email:</source>
-        <translation type="unfinished"></translation>
+        <translation>电邮：</translation>
     </message>
     <message>
         <source>Name*:</source>
-        <translation type="unfinished"></translation>
+        <translation>姓名*：</translation>
     </message>
     <message>
         <source>Subject Number:</source>
-        <translation type="unfinished"></translation>
+        <translation>病人编号：</translation>
     </message>
     <message>
         <source>Weight (kg):</source>
-        <translation type="unfinished"></translation>
+        <translation>体重（公斤）：</translation>
     </message>
     <message>
         <source>Birthday*:</source>
-        <translation type="unfinished"></translation>
+        <translation>出生日期*：</translation>
     </message>
     <message>
         <source>Gender:</source>
-        <translation type="unfinished"></translation>
+        <translation>性别：</translation>
     </message>
     <message>
         <source>Social Security Number:</source>
-        <translation type="unfinished"></translation>
+        <translation>社会安全号码：</translation>
     </message>
     <message>
         <source>Phone:</source>
-        <translation type="unfinished"></translation>
+        <translation>电话：</translation>
     </message>
     <message>
         <source>Male</source>
-        <translation type="unfinished"></translation>
+        <translation>男</translation>
     </message>
     <message>
         <source>Female</source>
-        <translation type="unfinished"></translation>
+        <translation>女</translation>
     </message>
     <message>
         <source>Address:</source>
-        <translation type="unfinished"></translation>
+        <translation>地址：</translation>
     </message>
     <message>
         <source>Country:</source>
-        <translation type="unfinished"></translation>
+        <translation>国家：</translation>
     </message>
     <message>
         <source>ID Number*</source>
-        <translation type="unfinished"></translation>
+        <translation>身份证号码*：</translation>
     </message>
     <message>
         <source>(Note: Surname_FirstName)</source>
-        <translation type="unfinished"></translation>
+        <translation>（注：姓_名字）</translation>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>备注：</translation>
     </message>
     <message>
         <source>DD:</source>
-        <translation type="unfinished"></translation>
+        <translation>日日：</translation>
     </message>
     <message>
         <source>MM:</source>
-        <translation type="unfinished"></translation>
+        <translation>月月：</translation>
     </message>
     <message>
         <source>YYYY:</source>
-        <translation type="unfinished"></translation>
+        <translation>年年年年：</translation>
     </message>
 </context>
 <context>
@@ -110,219 +110,230 @@
     </message>
     <message>
         <source>Email login</source>
-        <translation type="unfinished"></translation>
+        <translation>电邮登入</translation>
     </message>
     <message>
         <source>V 1.7.3</source>
-        <translation type="unfinished"></translation>
+        <translation>版本 1.7.3</translation>
     </message>
     <message>
         <source>Email: </source>
-        <translation type="unfinished"></translation>
+        <translation>电邮： </translation>
     </message>
     <message>
         <source>test@example.com</source>
-        <translation type="unfinished"></translation>
+        <translation>test@example.com</translation>
     </message>
     <message>
         <source>Password: </source>
-        <translation type="unfinished"></translation>
+        <translation>密码： </translation>
     </message>
     <message>
         <source>Password</source>
-        <translation type="unfinished"></translation>
+        <translation>密码</translation>
     </message>
     <message>
         <source>Remember account and password</source>
-        <translation type="unfinished"></translation>
+        <translation>记住帐号和密码</translation>
     </message>
     <message>
         <source>Switch to Phone Login instead</source>
-        <translation type="unfinished"></translation>
+        <translation>使用电话登入</translation>
     </message>
     <message>
         <source>Login</source>
-        <translation type="unfinished"></translation>
+        <translation>登入</translation>
     </message>
     <message>
         <source>Offline Preview</source>
-        <translation type="unfinished"></translation>
+        <translation>线下预览</translation>
     </message>
     <message>
         <source>Phone login</source>
-        <translation type="unfinished"></translation>
+        <translation>电话登入</translation>
     </message>
     <message>
         <source>Phone: </source>
-        <translation type="unfinished"></translation>
+        <translation>电话： </translation>
     </message>
     <message>
         <source>+86</source>
-        <translation type="unfinished"></translation>
+        <translation>+86</translation>
     </message>
     <message>
         <source>+852</source>
-        <translation type="unfinished"></translation>
+        <translation>+852</translation>
     </message>
     <message>
         <source>+855</source>
-        <translation type="unfinished"></translation>
+        <translation>+855</translation>
     </message>
     <message>
         <source>5-12 digit phone no.</source>
-        <translation type="unfinished"></translation>
+        <translation>5-12位电话号码</translation>
     </message>
     <message>
         <source>Switch to Email Login instead</source>
-        <translation type="unfinished"></translation>
+        <translation>使用电邮登入</translation>
     </message>
     <message>
         <source>Patient list</source>
-        <translation type="unfinished"></translation>
+        <translation>病人列表</translation>
     </message>
     <message>
         <source>Log out</source>
-        <translation type="unfinished"></translation>
+        <translation>登出</translation>
     </message>
     <message>
         <source>Patient List</source>
-        <translation type="unfinished"></translation>
+        <translation>病人列表</translation>
     </message>
     <message>
         <source>Previous page</source>
-        <translation type="unfinished"></translation>
+        <translation>上一页</translation>
     </message>
     <message>
         <source>Page 1</source>
-        <translation type="unfinished"></translation>
+        <translation>第1页</translation>
     </message>
     <message>
         <source>Next page</source>
-        <translation type="unfinished"></translation>
+        <translation>下一页</translation>
     </message>
     <message>
         <source>New Patient</source>
-        <translation type="unfinished"></translation>
+        <translation>新增病人</translation>
     </message>
     <message>
         <source>Image list</source>
-        <translation type="unfinished"></translation>
+        <translation>图片列表</translation>
     </message>
     <message>
         <source>Name: Jerry Tam</source>
-        <translation type="unfinished"></translation>
+        <translation>姓名： Jerry Tam</translation>
     </message>
     <message>
         <source>Age: XX</source>
-        <translation type="unfinished"></translation>
+        <translation>年龄： XX</translation>
     </message>
     <message>
         <source>Subject Number: </source>
-        <translation type="unfinished"></translation>
+        <translation>病人编号： </translation>
     </message>
     <message>
         <source>Capture New</source>
-        <translation type="unfinished"></translation>
+        <translation>拍摄新图片</translation>
     </message>
     <message>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>图片</translation>
     </message>
     <message>
         <source>Current Patient:</source>
-        <translation type="unfinished"></translation>
+        <translation>目前病人：</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>正在录影</translation>
     </message>
     <message>
         <source>00:25</source>
-        <translation type="unfinished"></translation>
+        <translation>00:25</translation>
     </message>
     <message>
         <source>Analysis Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>分析类别：</translation>
     </message>
     <message>
         <source>Back analysis</source>
-        <translation type="unfinished"></translation>
+        <translation>后背</translation>
     </message>
     <message>
         <source>Left side</source>
-        <translation type="unfinished"></translation>
+        <translation>左背</translation>
     </message>
     <message>
         <source>Right side</source>
-        <translation type="unfinished"></translation>
+        <translation>右背</translation>
     </message>
     <message>
         <source>Other</source>
-        <translation type="unfinished"></translation>
+        <translation>其他</translation>
     </message>
     <message>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>彩色</translation>
     </message>
     <message>
         <source>Depth</source>
-        <translation type="unfinished"></translation>
+        <translation>深度</translation>
     </message>
     <message>
         <source>Color to Depth</source>
-        <translation type="unfinished"></translation>
+        <translation>彩色映射到深度</translation>
     </message>
     <message>
         <source>Depth to Color</source>
-        <translation type="unfinished"></translation>
+        <translation>深度映射到彩色</translation>
     </message>
     <message>
         <source>High-res PCD</source>
-        <translation type="unfinished"></translation>
+        <translation>高解像点云</translation>
     </message>
     <message>
         <source>(Select before capturing image)</source>
-        <translation type="unfinished"></translation>
+        <translation>（请先选择分析类别）</translation>
     </message>
     <message>
         <source>Capture</source>
-        <translation type="unfinished"></translation>
+        <translation>拍摄</translation>
     </message>
     <message>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>导入</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>储存</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation>录影</translation>
     </message>
     <message>
         <source>Analysis</source>
-        <translation type="unfinished"></translation>
+        <translation>分析</translation>
     </message>
     <message>
         <source>Show in Explorer</source>
-        <translation type="unfinished"></translation>
+        <translation>在资源管理器中显示</translation>
     </message>
     <message>
         <source>2000mm</source>
-        <translation type="unfinished"></translation>
+        <translation>2000毫米</translation>
     </message>
     <message>
         <source>50mm</source>
-        <translation type="unfinished"></translation>
+        <translation>50毫米</translation>
     </message>
     <message>
         <source>Confirm</source>
-        <translation type="unfinished"></translation>
+        <translation>确认</translation>
     </message>
     <message>
         <source>Report</source>
-        <translation type="unfinished"></translation>
+        <translation>报告</translation>
+    </message>
+</context>
+<context>
+    <name>LoginTab</name>
+    <message>
+        <source>Phone Login</source>
+        <translation>电话登入</translation>
+    </message>
+    <message>
+        <source>Email Login</source>
+        <translation>电邮登入</translation>
     </message>
 </context>
 <context>
@@ -333,22 +344,22 @@
     </message>
     <message>
         <source>Switch to English</source>
-        <translation type="unfinished"></translation>
+        <translation>转换为英文</translation>
     </message>
     <message>
         <source>Switch to Simplified Chinese</source>
-        <translation type="unfinished"></translation>
+        <translation>转换为简体</translation>
     </message>
     <message>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>语言</translation>
     </message>
 </context>
 <context>
     <name>ReportDialogUI</name>
     <message>
         <source>Report</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">报告</translation>
     </message>
     <message>
         <source>脊椎侧弯检测报告</source>
@@ -524,7 +535,7 @@
     <name>ReportDialog_EngUI</name>
     <message>
         <source>Report</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">报告</translation>
     </message>
     <message>
         <source> Scoliosis Back Quantitative Analysis and Comparison Research Report</source>
@@ -701,65 +712,65 @@
     <name>SaveImageDialog</name>
     <message>
         <source>Select Output Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>选择输出文件夹</translation>
     </message>
 </context>
 <context>
     <name>SaveImageDialogUI</name>
     <message>
         <source>Dialog</source>
-        <translation type="unfinished">对话框</translation>
+        <translation>对话框</translation>
     </message>
     <message>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>彩色</translation>
     </message>
     <message>
         <source>Depth</source>
-        <translation type="unfinished"></translation>
+        <translation>深度</translation>
     </message>
     <message>
         <source>Color to Depth</source>
-        <translation type="unfinished"></translation>
+        <translation>彩色映射到深度</translation>
     </message>
     <message>
         <source>Depth to Color</source>
-        <translation type="unfinished"></translation>
+        <translation>深度映射到彩色</translation>
     </message>
     <message>
         <source>Four Channel</source>
-        <translation type="unfinished"></translation>
+        <translation>四通道图片</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;What image type would you like to save?&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;你想储存甚么类别的图片？&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Images saved under&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;图片已储存在&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; color:#ff0000;&quot;&gt;Please tick at least one checkbox, or press Cancel.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; color:#ff0000;&quot;&gt;请至少勾选一个方框，或按取消。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
     <name>ShowImagesDialogUI</name>
     <message>
         <source>Dialog</source>
-        <translation type="unfinished">对话框</translation>
+        <translation>对话框</translation>
     </message>
     <message>
         <source>RGB Color Image</source>
-        <translation type="unfinished"></translation>
+        <translation>彩色图片</translation>
     </message>
     <message>
         <source>Depth Image 1</source>
-        <translation type="unfinished"></translation>
+        <translation>深度图片一</translation>
     </message>
     <message>
         <source>Depth Image 2</source>
-        <translation type="unfinished"></translation>
+        <translation>深度图片二</translation>
     </message>
 </context>
 <context>
@@ -781,7 +792,7 @@
     <name>UploadProgressDialogUI</name>
     <message>
         <source>Dialog</source>
-        <translation type="unfinished">对话框</translation>
+        <translation>对话框</translation>
     </message>
 </context>
 </TS>

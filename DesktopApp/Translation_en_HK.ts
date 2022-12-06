@@ -326,6 +326,17 @@
     </message>
 </context>
 <context>
+    <name>LoginTab</name>
+    <message>
+        <source>Phone Login</source>
+        <translation>Phone Login</translation>
+    </message>
+    <message>
+        <source>Email Login</source>
+        <translation>Email Login</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Wukong</source>

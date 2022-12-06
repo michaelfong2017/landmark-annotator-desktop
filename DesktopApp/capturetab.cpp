@@ -714,7 +714,7 @@ void CaptureTab::clearCaptureHistories() {
 	if (this->parent->ui.graphicsViewImage->scene()) {
 		delete this->parent->ui.graphicsViewImage->scene();
 	}
-	this->parent->ui.patientNameInCapture->setText("Current Patient: " + this->parent->patientTab->getCurrentPatientName());
+	this->parent->ui.patientNameInCapture->setText(QString("Current Patient: " + this->parent->patientTab->getCurrentPatientName()));
 
 }
 

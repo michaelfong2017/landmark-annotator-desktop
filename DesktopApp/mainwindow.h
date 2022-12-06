@@ -85,6 +85,9 @@ private:
     //QAction *aboutAct;
     //QAction *aboutQtAct;
     //QLabel *infoLabel;
+
+protected:
+    void changeEvent(QEvent* event) override;
 };
 //! [3]
 

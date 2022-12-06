@@ -21,7 +21,7 @@ LoginTab::LoginTab(DesktopApp* parent)
 	this->parent->ui.loginTab->findChild<QLineEdit*>("passwordLineEdit")->setText(password);
 
 	QObject::connect(parent->ui.switchLoginButton, &QPushButton::clicked, [this]() {
-		this->parent->ui.tabWidget->insertTab(TabIndex::LOGINTAB, this->parent->loginTabPhone, "Phone Login");
+		this->parent->ui.tabWidget->insertTab(TabIndex::LOGINTAB, this->parent->loginTabPhone, tr("Phone Login"));
 		this->parent->ui.tabWidget->setCurrentIndex(TabIndex::LOGINTAB);
 		this->parent->ui.tabWidget->removeTab(TabIndex::LOGINTAB + 1);
 		});
@@ -79,7 +79,7 @@ LoginTab::LoginTab(DesktopApp* parent)
 	
 
 	QObject::connect(parent->ui.switchLoginButton_2, &QPushButton::clicked, [this]() {
-		this->parent->ui.tabWidget->insertTab(TabIndex::LOGINTAB, this->parent->loginTabEmail, "Email Login");
+		this->parent->ui.tabWidget->insertTab(TabIndex::LOGINTAB, this->parent->loginTabEmail, tr("Email Login"));
 		this->parent->ui.tabWidget->setCurrentIndex(TabIndex::LOGINTAB);
 		this->parent->ui.tabWidget->removeTab(TabIndex::LOGINTAB + 1);
 		});
