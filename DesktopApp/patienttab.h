@@ -44,6 +44,8 @@ public:
     void setHeight(QString height);
     QString getHeight();
 
+    void onLanguageChanged();
+
 private:
     DesktopApp* parent;
     QTableView* tableView;
@@ -63,11 +65,11 @@ private:
     QString remark;
     QString weight;
     QString height;
+    void setHeaders();
 
 private slots:
     void onFetchExistingImagesOfPatient(QNetworkReply* reply);
     void onTableClicked(const QModelIndex& index);
     void onDownloadImage(QNetworkReply* reply);
 };
-
 #endif

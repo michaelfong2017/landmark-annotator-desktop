@@ -75,6 +75,8 @@ public:
     void onEnterOfflineMode();
     void onExitOfflineMode();
 
+    void onLanguageChanged();
+
 private:
     DesktopApp* parent;
 
@@ -134,6 +136,13 @@ private:
     /** Select image table view END */
 
     UploadProgressDialog* uploadProgressDialog;
+
+    void setHeaders();
+
+    QString backAnalysisString;
+    QString leftSideString;
+    QString rightSideString;
+    QString otherString;
 
 private slots:
     void onUploadImage(QNetworkReply* reply);

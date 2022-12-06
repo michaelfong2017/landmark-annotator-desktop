@@ -183,8 +183,8 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 		upper = upperThreshold * 5000.0 / 255.0;
 
 		qDebug() << "lower depth label:" << QString::number((int)lower) << "mm, upper depth label:" << QString::number((int)upper) << "mm";
-		this->parent->ui.lowerLabel->setText(QString::number((int)lower) + " mm");
-		this->parent->ui.upperLabel->setText(QString::number((int)upper) + " mm");
+		this->parent->ui.lowerLabel->setText(QString::number((int)lower) + " " + tr("mm"));
+		this->parent->ui.upperLabel->setText(QString::number((int)upper) + " " + tr("mm"));
 	}
 	/** Find lower and upper depth, and update the upper and lower labels of the gradient color bar END */
 
@@ -271,6 +271,12 @@ void AnnotateTab::setAiImageUrl(QString aiImageUrl)
 	this->aiImageUrl = aiImageUrl;
 }
 
+void AnnotateTab::onLanguageChanged()
+{
+	this->setAnnotationsText();
+	this->parent->ui.patientNameInCapture2->setText(tr("Current Patient: ") + this->parent->patientTab->getCurrentPatientName());
+}
+
 void AnnotateTab::drawAnnotations() {
 	this->recopyAnnotatedImage();
 
@@ -305,14 +311,14 @@ std::map<std::string, QPointF>* AnnotateTab::getAnnotations() {
 }
 
 void AnnotateTab::setAnnotationsText() {
-	QString text = "";
-	QString text2 = "";
+	QString text = tr("");
+	QString text2 = tr("");
 	for (auto it : this->annotations3D) {
 		std::string key = it.first;
 		int x = this->annotationsOnRight[key].x() * this->scalingFactorForRight, y = this->annotationsOnRight[key].y() * this->scalingFactorForRight, z = it.second.z();
 		//int x = it.second.z(), y = it.second.y(), z = it.second.z();
 
-		std::string PointName = "";
+		QString PointName = "";
 		if (it.first == "A1") {
 			PointName = "Left Inf Scapular Angle (A1)";
 		}
@@ -332,31 +338,30 @@ void AnnotateTab::setAnnotationsText() {
 			PointName = "TOC (D)";
 		}
 
-		std::string plain_s = PointName + ": (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")\n";
-		QString str = QString::fromUtf8(plain_s.c_str());
+		QString str = PointName + ": (" + QString::number(x) + ", " + QString::number(y) + ", " + QString::number(z) + ")\n";
 		text2.append(str);
 	}
 
 	/** Round to 2 decimal places */
-	std::string distance1String = QString::number(this->distance1, 'f', 2).toStdString();
-	std::string angle1String = QString::number(this->angle1, 'f', 2).toStdString();
-	std::string angle2String = QString::number(this->angle2, 'f', 2).toStdString();
-	std::string trunkRotationString = QString::number(this->trunkRotation, 'f', 2).toStdString();
+	QString distance1String = QString::number(this->distance1, 'f', 2);
+	QString angle1String = QString::number(this->angle1, 'f', 2);
+	QString angle2String = QString::number(this->angle2, 'f', 2);
+	QString trunkRotationString = QString::number(this->trunkRotation, 'f', 2);
 	/** Round to 2 decimal places END */
 
 	if (this->invalidDistance == 1) {
-		text.append(QString::fromStdString("Distance - Central Shift: Landmark C invalid \n"));
+		text += "Distance - Central Shift: Landmark C invalid \n";
 	}
 	else if (this->invalidDistance == 2) {
-		text.append(QString::fromStdString("Distance - Central Shift: Landmark D invalid \n"));
+		text += "Distance - Central Shift: Landmark D invalid \n";
 	}
 	else {
-		text.append(QString::fromStdString("Distance - Central Shift: " + distance1String + " mm\n"));
+		text += "Distance - Central Shift: " + distance1String + " mm\n";
 	}
 	
-	text.append(QString::fromStdString("Imbalance - Scapular: " + angle2String + " degree\n"));
-	text.append(QString::fromStdString("Imbalance - Pelvic: " + angle1String + " degree\n"));
-	text.append(QString::fromStdString("Angle - Trunk Rotation: " + trunkRotationString + " degree\n"));
+	text += "Imbalance - Scapular: " + angle2String + " degree\n";
+	text += "Imbalance - Pelvic: " + angle1String + " degree\n";
+	text += "Angle - Trunk Rotation: " + trunkRotationString + " degree\n";
 
 	this->parent->ui.annotationsText->setText(text);
 	this->parent->ui.annotationsText2->setText(text2);

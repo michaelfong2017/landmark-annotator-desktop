@@ -16,6 +16,7 @@ class LoginTab : public QWidget
 public:
     LoginTab(DesktopApp* parent);
     DesktopApp* getParent();
+    void onLanguageChanged();
 
 private:
     DesktopApp* parent;

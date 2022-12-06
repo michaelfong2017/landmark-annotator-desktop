@@ -120,6 +120,47 @@ DesktopApp* LoginTab::getParent()
 	return this->parent;
 }
 
+void LoginTab::onLanguageChanged()
+{
+	/** Remembered username and password */
+	QSettings settings("Wukong", "Wukong");
+
+
+	QString username = settings.value("login/username").toString();
+	QString password = settings.value("login/password").toString();
+
+	if (username != "" && password != "") {
+		this->parent->ui.rememberCheckBox->setChecked(true);
+	}
+
+	this->parent->ui.loginTab->findChild<QLineEdit*>("usernameLineEdit")->setText(username);
+	this->parent->ui.loginTab->findChild<QLineEdit*>("passwordLineEdit")->setText(password);
+
+
+
+	// Full phone number is stored and retrieved
+	QString phoneFull = settings.value("login/phoneFull").toString();
+	QString passwordPhone = settings.value("login/passwordPhone").toString();
+
+	if (phoneFull != "" && passwordPhone != "") {
+		this->parent->ui.rememberCheckBox_2->setChecked(true);
+	}
+
+	if (phoneFull.split("-").size() == 2) {
+		QString areaCode = "+" + phoneFull.split("-")[0];
+		QString number = phoneFull.split("-")[1];
+
+		QComboBox* comboBox = this->parent->ui.comboBox;
+		int index = comboBox->findText(areaCode);
+		if (index != -1) { // -1 for not found
+			comboBox->setCurrentIndex(index);
+		}
+		this->parent->ui.usernameLineEdit_2->setText(number);
+		this->parent->ui.passwordLineEdit_2->setText(passwordPhone);
+	}
+	/** Remembered username and password END */
+}
+
 bool LoginTab::isEmailLogin(QString account)
 {
 	if (account.contains("@")) {

@@ -33,9 +33,13 @@ private:
 	QTableView* tableView;
 	QStandardItemModel* dataModel;
 	const int COLUMN_COUNT = 4;
+	void setHeaders();
 
 private slots:
 	void onSlotRowDoubleClicked(const QModelIndex& index);
+
+protected:
+	void changeEvent(QEvent* event) override;
 };
 
 #endif

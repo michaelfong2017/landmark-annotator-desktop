@@ -180,43 +180,11 @@ void DesktopApp::changeEvent(QEvent* event)
 		ui.retranslateUi(this);
 		window()->setWindowTitle(tr("Wukong"));
 
-		/** Remembered username and password */
-		QSettings settings("Wukong", "Wukong");
-
-
-		QString username = settings.value("login/username").toString();
-		QString password = settings.value("login/password").toString();
-
-		if (username != "" && password != "") {
-			ui.rememberCheckBox->setChecked(true);
-		}
-
-		ui.loginTab->findChild<QLineEdit*>("usernameLineEdit")->setText(username);
-		ui.loginTab->findChild<QLineEdit*>("passwordLineEdit")->setText(password);
-
-
-
-		// Full phone number is stored and retrieved
-		QString phoneFull = settings.value("login/phoneFull").toString();
-		QString passwordPhone = settings.value("login/passwordPhone").toString();
-
-		if (phoneFull != "" && passwordPhone != "") {
-			ui.rememberCheckBox_2->setChecked(true);
-		}
-
-		if (phoneFull.split("-").size() == 2) {
-			QString areaCode = "+" + phoneFull.split("-")[0];
-			QString number = phoneFull.split("-")[1];
-
-			QComboBox* comboBox = ui.comboBox;
-			int index = comboBox->findText(areaCode);
-			if (index != -1) { // -1 for not found
-				comboBox->setCurrentIndex(index);
-			}
-			ui.usernameLineEdit_2->setText(number);
-			ui.passwordLineEdit_2->setText(passwordPhone);
-		}
-		/** Remembered username and password END */
+		loginTab->onLanguageChanged();
+		patientListTab->onLanguageChanged();
+		patientTab->onLanguageChanged();
+		captureTab->onLanguageChanged();
+		annotateTab->onLanguageChanged();
 	}
 	else {
 		QWidget::changeEvent(event);

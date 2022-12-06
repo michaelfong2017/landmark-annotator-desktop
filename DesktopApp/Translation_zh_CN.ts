@@ -7,6 +7,10 @@
         <source>Current Patient: </source>
         <translation>目前病人： </translation>
     </message>
+    <message>
+        <source>mm</source>
+        <translation>毫米</translation>
+    </message>
 </context>
 <context>
     <name>CaptureTab</name>
@@ -37,6 +41,22 @@
     <message>
         <source>Current Patient: </source>
         <translation>目前病人： </translation>
+    </message>
+    <message>
+        <source>Back analysis</source>
+        <translation>后背</translation>
+    </message>
+    <message>
+        <source>Left side</source>
+        <translation>左背</translation>
+    </message>
+    <message>
+        <source>Right side</source>
+        <translation>右背</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>其他</translation>
     </message>
 </context>
 <context>

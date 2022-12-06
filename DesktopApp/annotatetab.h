@@ -69,6 +69,8 @@ public:
     float angle2; // Angle between a1-a2 line and xy-plane in deg
     float trunkRotation;
 
+    void onLanguageChanged();
+
 private:
     cv::Mat depthToColorImage;
     cv::Mat recalculatedFullResolutionDepthImage;

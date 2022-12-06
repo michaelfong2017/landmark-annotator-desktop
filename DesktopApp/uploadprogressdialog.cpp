@@ -20,18 +20,7 @@ UploadProgressDialog::UploadProgressDialog()
     bool value = connect(tableView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onSlotRowDoubleClicked(const QModelIndex&)));
 
     /** Headers */
-    QStringList headerLabels = { tr("Upload number"), tr("Patient Name"), tr("Capture number"), tr("Progress") };
-
-    for (int i = 0; i < COLUMN_COUNT; i++)
-    {
-        QString text = headerLabels.at(i);
-        QStandardItem* item = new QStandardItem(text);
-        QFont fn = item->font();
-        fn.setPixelSize(14);
-        item->setFont(fn);
-
-        dataModel->setHorizontalHeaderItem(i, item);
-    }
+    setHeaders();
 
     tableView->setColumnWidth(0, 150);
 
@@ -137,4 +126,30 @@ void UploadProgressDialog::onFailed(int uploadNumber)
     qDebug() << "UploadProgressDialog onFailed";
 
     updateRowStatus(uploadNumber, "Failed. Double Click to Retry", QColor(Qt::red));
+}
+
+void UploadProgressDialog::setHeaders()
+{
+    QStringList headerLabels = { tr("Upload number"), tr("Patient Name"), tr("Capture number"), tr("Progress") };
+
+    for (int i = 0; i < COLUMN_COUNT; i++)
+    {
+        QString text = headerLabels.at(i);
+        QStandardItem* item = new QStandardItem(text);
+        QFont fn = item->font();
+        fn.setPixelSize(14);
+        item->setFont(fn);
+
+        dataModel->setHorizontalHeaderItem(i, item);
+    }
+}
+
+void UploadProgressDialog::changeEvent(QEvent* event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        setHeaders();
+    }
+    else {
+        QWidget::changeEvent(event);
+    }
 }

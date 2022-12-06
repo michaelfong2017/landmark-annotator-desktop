@@ -177,24 +177,21 @@ QString PatientTab::getHeight()
     return this->height;
 }
 
+void PatientTab::onLanguageChanged()
+{
+    setHeaders();
+
+    this->parent->ui.patientTab->findChild<QLabel*>("patientName")->setText(tr("Name: ") + name);
+    this->parent->ui.patientTab->findChild<QLabel*>("patientAge")->setText(tr("Age: ") + age);
+    this->parent->ui.patientTab->findChild<QLabel*>("patientSubjectNumber")->setText(tr("Subject Number: ") + subjectNumber);
+}
+
 void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
     // Clear data and re-fetch all data every time
     patientDataModel->clear();
 
     /** Headers */
-    QStringList headerLabels = { tr("Captured Date"), tr("Analysis"), tr("Url"), tr("Landmarks")};
-
-    for (int i = 0; i < 4; i++)
-    {
-        QString text = headerLabels.at(i);
-        QStandardItem* item = new QStandardItem(text);
-        QFont fn = item->font();
-        fn.setPixelSize(14);
-        item->setFont(fn);
-        item->setTextAlignment(Qt::AlignCenter);
-
-        patientDataModel->setHorizontalHeaderItem(i, item);
-    }
+    setHeaders();
 
     /** This must be put here (below) */
     for (int col = 0; col < 4; col++)
@@ -295,6 +292,23 @@ void PatientTab::onFetchExistingImagesOfPatient(QNetworkReply* reply) {
     tableView->hideColumn(3);
 
     reply->deleteLater();
+}
+
+void PatientTab::setHeaders()
+{
+    QStringList headerLabels = { tr("Captured Date"), tr("Analysis"), tr("Url"), tr("Landmarks") };
+
+    for (int i = 0; i < 4; i++)
+    {
+        QString text = headerLabels.at(i);
+        QStandardItem* item = new QStandardItem(text);
+        QFont fn = item->font();
+        fn.setPixelSize(14);
+        item->setFont(fn);
+        item->setTextAlignment(Qt::AlignCenter);
+
+        patientDataModel->setHorizontalHeaderItem(i, item);
+    }
 }
 
 void PatientTab::onTableClicked(const QModelIndex& index)

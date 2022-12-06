@@ -20,16 +20,19 @@ public:
     void onEnterTab();
     std::map<int, QString> patientIdToSaveFolderPath;
 
+    void onLanguageChanged();
+
 private:
     DesktopApp* parent;
     QTableView* tableView;
     QStandardItemModel* patientListDataModel;
     //int currentPageIndex = 0;
     //const int ROWS_PER_PAGE = 20;
+    void setHeaders();
 
 private slots:
     void onFetchPatientList(QNetworkReply* reply);
-    void onSlotRowDoubleClicked(const QModelIndex &index);
-};
+    void onSlotRowDoubleClicked(const QModelIndex& index);
 
+};
 #endif

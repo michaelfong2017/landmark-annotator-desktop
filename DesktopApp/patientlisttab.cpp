@@ -75,6 +75,11 @@ void PatientListTab::onEnterTab() {
     QNetworkClient::getInstance().fetchPatientList(this, SLOT(onFetchPatientList(QNetworkReply*)));
 }
 
+void PatientListTab::onLanguageChanged()
+{
+    setHeaders();
+}
+
 void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     qDebug() << "onFetchPatientList";
 
@@ -82,18 +87,7 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     patientListDataModel->clear();
 
     /** Headers */
-    QStringList headerLabels = { "", tr("Patient ID"), tr("Name"), tr("Gender"), tr("Age"), tr("Phone Number"), tr("Subject Number"), tr("Creation Time"), tr("idCard"), tr("sin"), tr("email"), tr("address"), tr("remark"), tr("dob"), tr("weight"), tr("height")};
-
-    for (int i = 0; i < COLUMN_COUNT; i++)
-    {
-        QString text = headerLabels.at(i);
-        QStandardItem* item = new QStandardItem(text);
-        QFont fn = item->font();
-        fn.setPixelSize(14);
-        item->setFont(fn);
-
-        patientListDataModel->setHorizontalHeaderItem(i, item);
-    }
+    setHeaders();
 
     tableView->setColumnWidth(0, 18);
 
@@ -244,6 +238,22 @@ void PatientListTab::onFetchPatientList(QNetworkReply* reply) {
     // Sort and hide END
     reply->deleteLater();
 
+}
+
+void PatientListTab::setHeaders()
+{
+    QStringList headerLabels = { "", tr("Patient ID"), tr("Name"), tr("Gender"), tr("Age"), tr("Phone Number"), tr("Subject Number"), tr("Creation Time"), tr("idCard"), tr("sin"), tr("email"), tr("address"), tr("remark"), tr("dob"), tr("weight"), tr("height") };
+
+    for (int i = 0; i < COLUMN_COUNT; i++)
+    {
+        QString text = headerLabels.at(i);
+        QStandardItem* item = new QStandardItem(text);
+        QFont fn = item->font();
+        fn.setPixelSize(14);
+        item->setFont(fn);
+
+        patientListDataModel->setHorizontalHeaderItem(i, item);
+    }
 }
 
 void PatientListTab::onSlotRowDoubleClicked(const QModelIndex &index) {

@@ -7,6 +7,10 @@
         <source>Current Patient: </source>
         <translation>Current Patient: </translation>
     </message>
+    <message>
+        <source>mm</source>
+        <translation>mm</translation>
+    </message>
 </context>
 <context>
     <name>CaptureTab</name>
@@ -37,6 +41,22 @@
     <message>
         <source>Current Patient: </source>
         <translation>Current Patient: </translation>
+    </message>
+    <message>
+        <source>Back analysis</source>
+        <translation>Back analysis</translation>
+    </message>
+    <message>
+        <source>Left side</source>
+        <translation>Left side</translation>
+    </message>
+    <message>
+        <source>Right side</source>
+        <translation>Right side</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Other</translation>
     </message>
 </context>
 <context>

@@ -66,18 +66,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	dataModel->clear();
 
 	/** Headers */
-	QStringList headerLabels = { "", tr("index"), tr("Image Type"), tr("Has Point Cloud?"), tr("Creation Time") };
-
-	for (int i = 0; i < COLUMN_COUNT; i++)
-	{
-		QString text = headerLabels.at(i);
-		QStandardItem* item = new QStandardItem(text);
-		QFont fn = item->font();
-		fn.setPixelSize(14);
-		item->setFont(fn);
-
-		dataModel->setHorizontalHeaderItem(i, item);
-	}
+	setHeaders();
 
 	/** This must be put here (below) */
 	tableView->setColumnWidth(0, 18);
@@ -1472,16 +1461,16 @@ void CaptureTab::displayCapturedImages() {
 int CaptureTab::getImageTypeFromDescription(QString description)
 {
 	int imageType = -1;
-	if (description == "Back analysis") {
+	if (description == backAnalysisString) {
 		imageType = 7;
 	}
-	else if (description == "Left side") {
+	else if (description == leftSideString) {
 		imageType = 8;
 	}
-	else if (description == "Right side") {
+	else if (description == rightSideString) {
 		imageType = 9;
 	}
-	else if (description == "Other") {
+	else if (description == otherString) {
 		imageType = 10;
 	}
 	return imageType;
@@ -1501,6 +1490,8 @@ void CaptureTab::onEnterOfflineMode()
 	this->parent->ui.radioButton4->setEnabled(false);
 
 	this->parent->ui.imageTypeComboBox->setEnabled(false);
+
+	this->parent->ui.enablePointCloudcheckBox->setEnabled(false);
 
 	// Disable log out button in offline mode
 	this->parent->ui.logOutButton3->setEnabled(false);
@@ -1526,6 +1517,8 @@ void CaptureTab::onExitOfflineMode()
 
 	this->parent->ui.imageTypeComboBox->setEnabled(true);
 
+	this->parent->ui.enablePointCloudcheckBox->setEnabled(true);
+
 	// Enable log out button in offline mode
 	this->parent->ui.logOutButton3->setEnabled(true);
 	////
@@ -1533,6 +1526,18 @@ void CaptureTab::onExitOfflineMode()
 	/** Enable table view row selection */
 	tableView->setSelectionMode(QAbstractItemView::SingleSelection);
 	/** Enable table view row selection END */
+}
+
+void CaptureTab::onLanguageChanged()
+{
+	setHeaders();
+
+	backAnalysisString = tr("Back analysis");
+	leftSideString = tr("Left side");
+	rightSideString = tr("Right side");
+	otherString = tr("Other");
+
+	this->parent->ui.patientNameInCapture->setText(tr("Current Patient: ") + this->parent->patientTab->getCurrentPatientName());
 }
 
 void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex& previous) {
@@ -1570,4 +1575,20 @@ void CaptureTab::onSlotRowSelected(const QModelIndex& current, const QModelIndex
 	clip_rect = captureHistory.clip_rect;
 
 	displayCapturedImages();
+}
+
+void CaptureTab::setHeaders()
+{
+	QStringList headerLabels = { "", tr("index"), tr("Image Type"), tr("Has Point Cloud?"), tr("Creation Time") };
+
+	for (int i = 0; i < COLUMN_COUNT; i++)
+	{
+		QString text = headerLabels.at(i);
+		QStandardItem* item = new QStandardItem(text);
+		QFont fn = item->font();
+		fn.setPixelSize(14);
+		item->setFont(fn);
+
+		dataModel->setHorizontalHeaderItem(i, item);
+	}
 }
