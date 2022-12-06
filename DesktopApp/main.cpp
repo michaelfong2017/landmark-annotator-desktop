@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QTextStream>
 #include "helper.h"
+#include <qtranslator.h>
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext&, const QString& msg)
 {
@@ -49,6 +50,17 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     qInstallMessageHandler(myMessageHandler);
     //qInstallMessageHandler(nullptr);
+
+    QTranslator translator;
+    QString dir = QString(QCoreApplication::applicationDirPath());
+    bool success = translator.load(QString("Translation_zh_CN.qm"), dir);
+    if (success) {
+        QCoreApplication::installTranslator(&translator);
+    }
+
+    QString check = QCoreApplication::translate("DesktopAppClass", "Wukong");
+    qDebug() << QCoreApplication::translate("DesktopAppClass", "Wukong");
+
     DesktopApp w;
     w.show();
     w.setAttribute(Qt::WA_AcceptTouchEvents);

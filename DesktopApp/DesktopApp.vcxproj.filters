@@ -217,4 +217,8 @@
       <ParseFiles>true</ParseFiles>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <QtTranslation Include="Translation_en_HK.ts" />
+    <QtTranslation Include="Translation_zh_CN.ts" />
+  </ItemGroup>
 </Project>
