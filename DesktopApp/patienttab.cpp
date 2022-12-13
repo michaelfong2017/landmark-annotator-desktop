@@ -5,6 +5,11 @@ PatientTab::PatientTab(DesktopApp* parent)
 {
     this->parent = parent;
 
+    /** Progress bar UI */
+    this->parent->ui.progressBar_2->setValue(0);
+    this->parent->ui.progressBar_2->setTextVisible(false);
+    /** Progress bar UI END */
+
     tableView = this->parent->ui.patientTab->findChild<QTableView*>("tableViewPatient");
     patientDataModel = new QStandardItemModel(0, 4, this);
     tableView->setModel(this->patientDataModel);
@@ -315,6 +320,11 @@ void PatientTab::onTableClicked(const QModelIndex& index)
 {
     if (index.isValid() && index.column() == 1 && !isDownloading) {
 
+        /** Progress bar UI */
+        this->parent->ui.progressBar_2->setTextVisible(true);
+        this->parent->ui.progressBar_2->setValue(50);
+        /** Progress bar UI END */
+
         int row = tableView->currentIndex().row();
 
         QModelIndex curIndex = patientDataModel->index(row, 2);
@@ -355,6 +365,10 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
         dialog.setLine1("Error: Image format incorrect" + image.format());
         dialog.exec();
         isDownloading = false;
+        /** Progress bar UI */
+        this->parent->ui.progressBar_2->setTextVisible(false);
+        this->parent->ui.progressBar_2->setValue(0);
+        /** Progress bar UI END */
         return;
     }
 
@@ -484,9 +498,16 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
 
     isDownloading = false;
 
+    /** Progress bar UI */
+    this->parent->ui.progressBar_2->setValue(100);
+    this->parent->ui.progressBar_2->setTextVisible(false);
+    /** Progress bar UI END */
+
     this->parent->annotateTab->reloadCurrentImage(qColorImage, AlignedDepthIMG1);
     this->parent->ui.tabWidget->setTabEnabled(TabIndex::ANNOTATETAB, true);
     this->parent->ui.tabWidget->setCurrentIndex(TabIndex::ANNOTATETAB);
+
+    this->parent->ui.progressBar_2->setValue(0);
 
     /*ShowImagesDialog dialog;
     dialog.setQColorImage(qColorImage);
