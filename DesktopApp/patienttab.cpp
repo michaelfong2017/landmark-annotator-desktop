@@ -362,7 +362,7 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
     if (image.format() != QImage::Format_RGBA64) {
         qDebug() << "Error: image format incorrect " << image.format();
         TwoLinesDialog dialog;
-        dialog.setLine1("Error: Image format incorrect" + image.format());
+        dialog.setLine1("Error: Image format incorrect");
         dialog.exec();
         isDownloading = false;
         /** Progress bar UI */

@@ -1203,17 +1203,17 @@ cv::Mat CaptureTab::computePointCloudFromDepth() {
 	KinectEngine::getInstance().readPointCloudImage(temp);
 
 	/** Convert 16UC3 to 16SC4 with alpha=1 */
-	cv::Mat pointCloudImage16SC4 = cv::Mat::ones(temp.rows, temp.cols, CV_16SC4);
+	cv::Mat pointCloudImage16UC4 = cv::Mat::ones(temp.rows, temp.cols, CV_16UC4);
 	std::vector<cv::Mat>channels16C4(4);
 	std::vector<cv::Mat>channels16C3(3);
-	cv::split(pointCloudImage16SC4, channels16C4);
+	cv::split(pointCloudImage16UC4, channels16C4);
 	cv::split(temp, channels16C3);
 	channels16C4[0] = channels16C3[0];
 	channels16C4[1] = channels16C3[1];
 	channels16C4[2] = channels16C3[2];
 
-	cv::merge(channels16C4, pointCloudImage16SC4);
-	temp = pointCloudImage16SC4;
+	cv::merge(channels16C4, pointCloudImage16UC4);
+	temp = pointCloudImage16UC4;
 
 	//this->pointCloudImage = pointCloudImage16SC4
 	/** Convert 16UC3 to 16UC4 with alpha=1 END */
@@ -1460,7 +1460,7 @@ void CaptureTab::displayCapturedImages() {
 
 int CaptureTab::getImageTypeFromDescription(QString description)
 {
-	int imageType = -1;
+	int imageType = 7;
 	if (description == backAnalysisString) {
 		imageType = 7;
 	}

@@ -399,9 +399,9 @@ void KinectEngine::readPointCloudImage(cv::Mat& xyzImage)
 	}
 
 	/* For Debuggubg */
-	/*int width = k4a_image_get_width_pixels(pcdImage);
-	int height = k4a_image_get_height_pixels(pcdImage);
-	int stride = k4a_image_get_stride_bytes(pcdImage);
+	width = k4a_image_get_width_pixels(pcdImage);
+	height = k4a_image_get_height_pixels(pcdImage);
+	stride = k4a_image_get_stride_bytes(pcdImage);
 	int16_t* pointCloudImageBuffer = (int16_t*)k4a_image_get_buffer(pcdImage);
 	for (int h = 0; h < height; h++)
 	{
@@ -413,12 +413,16 @@ void KinectEngine::readPointCloudImage(cv::Mat& xyzImage)
 				static_cast<float>(pointCloudImageBuffer[3 * pixelIndex + 1]),
 				static_cast<float>(pointCloudImageBuffer[3 * pixelIndex + 2]) 
 			};
-			qDebug() << pointCloudImageBuffer[3 * pixelIndex + 0] << " " << pointCloudImageBuffer[3 * pixelIndex + 1] << " " << pointCloudImageBuffer[3 * pixelIndex + 2];
+			pointCloudImageBuffer[3 * pixelIndex + 0] = pointCloudImageBuffer[3 * pixelIndex + 0] + 32768;
+			pointCloudImageBuffer[3 * pixelIndex + 1] = pointCloudImageBuffer[3 * pixelIndex + 1] + 32768;
+			pointCloudImageBuffer[3 * pixelIndex + 2] = pointCloudImageBuffer[3 * pixelIndex + 2] + 32768;
+			//qDebug() << pointCloudImageBuffer[3 * pixelIndex + 0] << "," << pointCloudImageBuffer[3 * pixelIndex + 1] << "," << pointCloudImageBuffer[3 * pixelIndex + 2];
 		}
-	}*/
+	}
 
 	// .clone() is necessary
-	xyzImage = cv::Mat(k4a_image_get_height_pixels(pcdImage), k4a_image_get_width_pixels(pcdImage), CV_16SC3, k4a_image_get_buffer(pcdImage), cv::Mat::AUTO_STEP).clone();
+	//xyzImage = cv::Mat(k4a_image_get_height_pixels(pcdImage), k4a_image_get_width_pixels(pcdImage), CV_16UC3, k4a_image_get_buffer(pcdImage), cv::Mat::AUTO_STEP).clone();
+	xyzImage = cv::Mat(k4a_image_get_height_pixels(pcdImage), k4a_image_get_width_pixels(pcdImage), CV_16UC3, k4a_image_get_buffer(pcdImage), cv::Mat::AUTO_STEP).clone();
 	
 	k4a_transformation_destroy(transformationHandle);
 	k4a_image_release(alignedDepthImage);
