@@ -1,5 +1,6 @@
 #include "patienttab.h"
 #include "capturetab.h"
+#include "realsenseengine.h"
 
 PatientTab::PatientTab(DesktopApp* parent)
 {
@@ -26,7 +27,8 @@ PatientTab::PatientTab(DesktopApp* parent)
     QObject::connect(this->parent->ui.patientTab->findChild<QPushButton*>("captureNewButton"), &QPushButton::clicked, [this]() {
         qDebug() << "captureNewButton clicked";
 
-        if (!KinectEngine::getInstance().isDeviceConnected()) {
+
+        if (!RealsenseEngine::getInstance().isDeviceConnected()) {
             TwoLinesDialog dialog;
             dialog.setLine1("Kinect device cannot be opened!");
             dialog.setLine2("Please check it and try again.");
@@ -34,9 +36,9 @@ PatientTab::PatientTab(DesktopApp* parent)
             return;
         }
 
-        if (!KinectEngine::getInstance().isDeviceOpened()) {
-            KinectEngine::getInstance().configDevice();
-            bool isSuccess = KinectEngine::getInstance().openDevice();
+        if (!RealsenseEngine::getInstance().isDeviceOpened()) {
+            RealsenseEngine::getInstance().configDevice();
+            bool isSuccess = RealsenseEngine::getInstance().openDevice();
 
             if (!isSuccess) {
                 TwoLinesDialog dialog;
@@ -46,6 +48,28 @@ PatientTab::PatientTab(DesktopApp* parent)
                 return;
             }
         }
+
+
+        //if (!KinectEngine::getInstance().isDeviceConnected()) {
+        //    TwoLinesDialog dialog;
+        //    dialog.setLine1("Kinect device cannot be opened!");
+        //    dialog.setLine2("Please check it and try again.");
+        //    dialog.exec();
+        //    return;
+        //}
+
+        //if (!KinectEngine::getInstance().isDeviceOpened()) {
+        //    KinectEngine::getInstance().configDevice();
+        //    bool isSuccess = KinectEngine::getInstance().openDevice();
+
+        //    if (!isSuccess) {
+        //        TwoLinesDialog dialog;
+        //        dialog.setLine1("Kinect device cannot be opened!");
+        //        dialog.setLine2("Please check it and try again.");
+        //        dialog.exec();
+        //        return;
+        //    }
+        //}
 
         // need to clear list
         this->parent->captureTab->clearCaptureHistories();

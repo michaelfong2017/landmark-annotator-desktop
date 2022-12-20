@@ -1,6 +1,7 @@
 ﻿#include "logintab.h"
 #include "librealsense2/rs.hpp"
 #include <QtUiTools/quiloader.h>
+#include "realsenseengine.h"
 
 LoginTab::LoginTab(DesktopApp* parent)
 {
@@ -191,9 +192,9 @@ void LoginTab::startOfflineMode() {
 //	rs2::context ctx;
 //	auto list = ctx.query_devices(); // Get a snapshot of currently connected devices
 //	int device_count = list.size();
-
+//
 //	rs2::device front, back;
-
+//
 //	if (device_count == 0)
 //		throw std::runtime_error("No device detected. Is it plugged in?");
 //	else if (device_count == 1)
@@ -202,67 +203,67 @@ void LoginTab::startOfflineMode() {
 //		front = list.front();
 //		back = list.back();
 //	}
-
-
-//	// 建構一個RealSense抽象設備的管道以容納擷取到的影像
-
+//
+//
+//	// 建構一個Realsense抽象設備的管道以容納擷取到的影像
+//
 //	rs2::pipeline p;
-
+//
 //	// 創建自定義參數以配置管道
-
+//
 //	rs2::config cfg;
-
+//
 //	// 設定影像尺寸(寬w，高h)
-
+//
 //	const int w = 1280;
-
+//
 //	const int h = 720;
-
+//
 //	// 設定欲顯示的影像流(可依需求啟動不一定要全設)
-
+//
 //	cfg.enable_stream(RS2_STREAM_COLOR, w, h, RS2_FORMAT_BGRA8, 30); // 8-bit blue, green and red channels + constant alpha channel equal to FF 30fps
-
+//
 //	cfg.enable_stream(RS2_STREAM_DEPTH, w, h, RS2_FORMAT_Z16, 30); // 16 bit格式灰階深度影像 30fps
-
+//
 //	cfg.enable_stream(RS2_STREAM_INFRARED, 1, w, h, RS2_FORMAT_Y8, 30); // 8 bit格式左紅外線影像 30fps
-
+//
 //	cfg.enable_stream(RS2_STREAM_INFRARED, 2, w, h, RS2_FORMAT_Y8, 30); // 8 bit格式右紅外線影像 30fps
-
+//
 //	// 根據設定值啟動指定串流影像
-
+//
 //	p.start(cfg);
-
+//
 //	// Find first depth sensor (devices can have zero or more then one)
 ////    auto sensor = selection.get_device().first<rs2::depth_sensor>();
 ////    auto scale =  sensor.get_depth_scale();
-
+//
 //	// Block program until frames arrive
 //	rs2::frameset frames = p.wait_for_frames();
-
+//
 //	rs2::frame color = frames.get_color_frame();            // Find the color data
-
+//
 //	// Declare depth colorizer for enhanced color visualization of depth data
 //	rs2::colorizer color_map;
 //	rs2::frame depth = color_map.process(frames.get_depth_frame()); // Find and colorize the depth data
-
+//
 //	// Query frame size (width and height)
 //	int width, height;
-
+//
 //	width = color.as<rs2::video_frame>().get_width();
 //	height = color.as<rs2::video_frame>().get_height();
 //	cv::Mat colorCVImage(height, width, CV_8UC4, (void*)color.get_data(), cv::Mat::AUTO_STEP);
-
-
+//
+//
 //	width = depth.as<rs2::video_frame>().get_width();
 //	height = depth.as<rs2::video_frame>().get_height();
 //	cv::Mat depthCVImage(height, width, CV_8UC3, (void*)depth.get_data(), cv::Mat::AUTO_STEP);
 //	cv::cvtColor(depthCVImage, depthCVImage, cv::COLOR_RGB2BGRA);
-
-
+//
+//
 //	bool success;
 //	success = Helper::saveCVImage(colorCVImage, "d455_color_test.png", QImage::Format_RGB32);
-
-
+//
+//
 //	success = Helper::saveCVImage(depthCVImage, "d455_depth_test.png", QImage::Format_RGB32);
 
 
@@ -279,7 +280,8 @@ void LoginTab::startOfflineMode() {
 	//qDebug() << "The camera is facing an object " << dist_to_center << " meters away \r";
 	// Test realsense2 END
 
-	if (!KinectEngine::getInstance().isDeviceConnected()) {
+
+	if (!RealsenseEngine::getInstance().isDeviceConnected()) {
 		TwoLinesDialog dialog;
 		dialog.setLine1("Kinect device cannot be opened!");
 		dialog.setLine2("Please check it and try again.");
@@ -287,9 +289,9 @@ void LoginTab::startOfflineMode() {
 		return;
 	}
 
-	if (!KinectEngine::getInstance().isDeviceOpened()) {
-		KinectEngine::getInstance().configDevice();
-		bool isSuccess = KinectEngine::getInstance().openDevice();
+	if (!RealsenseEngine::getInstance().isDeviceOpened()) {
+		RealsenseEngine::getInstance().configDevice();
+		bool isSuccess = RealsenseEngine::getInstance().openDevice();
 
 		if (!isSuccess) {
 			TwoLinesDialog dialog;
@@ -299,6 +301,29 @@ void LoginTab::startOfflineMode() {
 			return;
 		}
 	}
+	
+
+
+	//if (!KinectEngine::getInstance().isDeviceConnected()) {
+	//	TwoLinesDialog dialog;
+	//	dialog.setLine1("Kinect device cannot be opened!");
+	//	dialog.setLine2("Please check it and try again.");
+	//	dialog.exec();
+	//	return;
+	//}
+
+	//if (!KinectEngine::getInstance().isDeviceOpened()) {
+	//	KinectEngine::getInstance().configDevice();
+	//	bool isSuccess = KinectEngine::getInstance().openDevice();
+
+	//	if (!isSuccess) {
+	//		TwoLinesDialog dialog;
+	//		dialog.setLine1("Kinect device cannot be opened!");
+	//		dialog.setLine2("Please check it and try again.");
+	//		dialog.exec();
+	//		return;
+	//	}
+	//}
 
 	// NO NEED to clear capture histories
 	////

@@ -125,8 +125,8 @@ bool KinectEngine::queueIMUSample()
 
 	switch (k4a_device_get_imu_sample(this->device, &imuSample, K4A_WAIT_INFINITE)) {
 	case K4A_WAIT_RESULT_SUCCEEDED:
-		this->gyroSampleQueue.push_back(imuSample.gyro_sample);
-		this->accSampleQueue.push_back(imuSample.acc_sample);
+		this->gyroSampleQueue.push_back(point3D{ imuSample.gyro_sample.xyz.x, imuSample.gyro_sample.xyz.y, imuSample.gyro_sample.xyz.z });
+		this->accSampleQueue.push_back(point3D{ imuSample.acc_sample.xyz.x, imuSample.acc_sample.xyz.y, imuSample.acc_sample.xyz.z });
 
 		while (this->gyroSampleQueue.size() > MAX_GYROSCOPE_QUEUE_SIZE) this->gyroSampleQueue.pop_front();
 		while (this->accSampleQueue.size() > MAX_ACCELEROMETER_QUEUE_SIZE) this->accSampleQueue.pop_front();
@@ -674,12 +674,12 @@ QVector3D KinectEngine::query3DPoint(int x, int y, cv::Mat depthToColorImage)
 	return QVector3D(0, 0, 0);
 }
 
-std::deque<k4a_float3_t> KinectEngine::getGyroSampleQueue()
+std::deque<point3D> KinectEngine::getGyroSampleQueue()
 {
 	return this->gyroSampleQueue;
 }
 
-std::deque<k4a_float3_t> KinectEngine::getAccSampleQueue()
+std::deque<point3D> KinectEngine::getAccSampleQueue()
 {
 	return this->accSampleQueue;
 }

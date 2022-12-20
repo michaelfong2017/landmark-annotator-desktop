@@ -1,8 +1,10 @@
 #include "capturetab.h"
 #include "saveimagedialog.h"
 #include "kinectengine.h"
+#include "realsenseengine.h"
 #include <Windows.h>
 #include "uploadrequest.h"
+#include "types.h"
 
 const int COLUMN_COUNT = 5;
 
@@ -257,7 +259,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		this->imageName = this->parent->ui.imageTypeComboBox->currentText();
 		this->imageType = getImageTypeFromDescription(this->imageName);
-		KinectEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
+		RealsenseEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
 		// Shallow copy
 		/*cv::Mat color = this->capturedColorImage;
@@ -283,7 +285,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			this->hasPointCloud = true;
 		}
 		else {
-			this->PointCloudPNG = cv::Mat::ones(1080, 1920, CV_16SC4);
+			//this->PointCloudPNG = cv::Mat::ones(1080, 1920, CV_16SC4);
+			this->PointCloudPNG = cv::Mat::ones(720, 1280, CV_16SC4);
 			this->hasPointCloud = false;
 		}
 
@@ -294,8 +297,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->noImageCaptured = false;
 
 		/* Cropping all images to 800 * 1080 START*/
-		float widthOfPatientBack = 800;
-		cv::Rect rect((COLOR_IMAGE_WIDTH / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 1080);
+		/* Cropping all images to 534 * 720 START*/
+		//float widthOfPatientBack = 800;
+		float widthOfPatientBack = 534;
+		//cv::Rect rect((COLOR_IMAGE_WIDTH / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 1080);
+		cv::Rect rect((COLOR_IMAGE_WIDTH / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 720);
 		this->capturedColorImage = this->capturedColorImage(rect);
 		this->capturedDepthToColorImage = this->capturedDepthToColorImage(rect);
 		this->RANSACImage = this->RANSACImage(rect);
@@ -444,14 +450,27 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 	QObject::connect(timer, &QTimer::timeout, [this]() {
 		//qDebug() << "timer connect start: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-		if (!KinectEngine::getInstance().isDeviceOpened()) {
+		//if (!KinectEngine::getInstance().isDeviceOpened()) {
+		//	return;
+		//}
+
+		//KinectEngine::getInstance().captureImages();
+		//cv::Mat color, depth;
+		//KinectEngine::getInstance().readColorAndDepthImages(color, depth);
+
+
+		if (!RealsenseEngine::getInstance().isDeviceOpened()) {
 			return;
 		}
 
-		KinectEngine::getInstance().captureImages();
+		RealsenseEngine::getInstance().captureImages();
 		cv::Mat color, depth;
-		KinectEngine::getInstance().readColorAndDepthImages(color, depth);
+		RealsenseEngine::getInstance().readColorAndDepthImages(color, depth);
+
+
 		int cropPerSide = KinectEngine::getInstance().COLOR_IMAGE_CROP_WIDTH_PER_SIDE;
+
+		
 		QImage qColor = convertColorCVToQImage(color);
 
 		// Crop left and right
@@ -459,6 +478,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		// Crop left and right END
 
 		QImage qDepth = convertDepthCVToColorizedQImage(depth);
+
 
 		// Recording time elapsed
 		this->parent->ui.recordingElapsedTime->setText(QTime::fromMSecsSinceStartOfDay(this->recordingElapsedTimer.elapsed()).toString("mm:ss"));
@@ -565,20 +585,26 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		/*
 		* IMU sample
 		*/
-		bool queueIMUSuccess = KinectEngine::getInstance().queueIMUSample();
-		std::deque<k4a_float3_t> gyroSampleQueue = KinectEngine::getInstance().getGyroSampleQueue();
-		std::deque<k4a_float3_t> accSampleQueue = KinectEngine::getInstance().getAccSampleQueue();
+		//bool queueIMUSuccess = KinectEngine::getInstance().queueIMUSample();
+		//std::deque<point3D> gyroSampleQueue = KinectEngine::getInstance().getGyroSampleQueue();
+		//std::deque<point3D> accSampleQueue = KinectEngine::getInstance().getAccSampleQueue();
+
+
+		bool queueIMUSuccess = RealsenseEngine::getInstance().queueIMUSample();
+		std::deque<point3D> gyroSampleQueue = RealsenseEngine::getInstance().getGyroSampleQueue();
+		std::deque<point3D> accSampleQueue = RealsenseEngine::getInstance().getAccSampleQueue();
+
 
 		if (queueIMUSuccess && !gyroSampleQueue.empty() && !accSampleQueue.empty()) {
 			//qDebug() << "timer connect 17: " << QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
 			/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved */
 			alertIfMoving(
-				gyroSampleQueue[gyroSampleQueue.size() - 1].xyz.x,
-				gyroSampleQueue[gyroSampleQueue.size() - 1].xyz.y,
-				gyroSampleQueue[gyroSampleQueue.size() - 1].xyz.z,
-				accSampleQueue[accSampleQueue.size() - 1].xyz.x,
-				accSampleQueue[accSampleQueue.size() - 1].xyz.y,
-				accSampleQueue[accSampleQueue.size() - 1].xyz.z
+				gyroSampleQueue[gyroSampleQueue.size() - 1].x,
+				gyroSampleQueue[gyroSampleQueue.size() - 1].y,
+				gyroSampleQueue[gyroSampleQueue.size() - 1].z,
+				accSampleQueue[accSampleQueue.size() - 1].x,
+				accSampleQueue[accSampleQueue.size() - 1].y,
+				accSampleQueue[accSampleQueue.size() - 1].z
 			);
 			/** Alert if gyroscope and accelerometer show that the kinect sensor is being moved END */
 
