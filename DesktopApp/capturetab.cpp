@@ -224,7 +224,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->PointCloudPNG = KinectEngine::getInstance().readCVImageFromFile(pointCloudPNGSavePath.toStdWString());
 
 		if (this->PointCloudPNG.dims == 0) {
-			this->PointCloudPNG = cv::Mat::ones(1080, 1920, CV_16SC4);
+			//this->PointCloudPNG = cv::Mat::ones(1080, 1920, CV_16SC4);
+			this->PointCloudPNG = cv::Mat::ones(720, 1280, CV_16SC4);
 			this->hasPointCloud = false;
 		}
 		else {
@@ -290,7 +291,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			this->hasPointCloud = false;
 		}
 
-		this->RANSACImage = computeNormalizedDepthImage(this->capturedDepthToColorImage);
+		RealsenseEngine::getInstance().computeNormalizedDepthImage(this->capturedDepthToColorImage, this->RANSACImage);
 
 		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
 		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
@@ -301,7 +302,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		//float widthOfPatientBack = 800;
 		float widthOfPatientBack = 534;
 		//cv::Rect rect((COLOR_IMAGE_WIDTH / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 1080);
-		cv::Rect rect((COLOR_IMAGE_WIDTH / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 720);
+		cv::Rect rect((COLOR_IMAGE_WIDTH_REALSENSE / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 720);
 		this->capturedColorImage = this->capturedColorImage(rect);
 		this->capturedDepthToColorImage = this->capturedDepthToColorImage(rect);
 		this->RANSACImage = this->RANSACImage(rect);
@@ -474,7 +475,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		QImage qColor = convertColorCVToQImage(color);
 
 		// Crop left and right
-		qColor = qColor.copy(cropPerSide, 0, COLOR_IMAGE_WIDTH - 2 * cropPerSide, COLOR_IMAGE_HEIGHT);
+		qColor = qColor.copy(cropPerSide, 0, COLOR_IMAGE_WIDTH_REALSENSE - 2 * cropPerSide, COLOR_IMAGE_HEIGHT_REALSENSE);
 		// Crop left and right END
 
 		QImage qDepth = convertDepthCVToColorizedQImage(depth);
@@ -1226,7 +1227,11 @@ void CaptureTab::setCaptureFilepath(QString captureFilepath) { this->captureFile
 cv::Mat CaptureTab::computePointCloudFromDepth() {
 
 	cv::Mat temp;
-	KinectEngine::getInstance().readPointCloudImage(temp);
+	RealsenseEngine::getInstance().readPointCloudImage(temp);
+	temp.convertTo(temp, CV_16UC4);
+	return temp; // For Realsense, return early
+
+	//KinectEngine::getInstance().readPointCloudImage(temp);
 
 	/** Convert 16UC3 to 16SC4 with alpha=1 */
 	cv::Mat pointCloudImage16UC4 = cv::Mat::ones(temp.rows, temp.cols, CV_16UC4);

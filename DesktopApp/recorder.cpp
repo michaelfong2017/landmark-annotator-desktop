@@ -1,5 +1,6 @@
 #include "recorder.h"
 #include "kinectengine.h"
+#include "realsenseengine.h"
 
 Recorder::Recorder(DesktopApp* parent) {
 	this->isRecording = false;
@@ -31,13 +32,13 @@ void Recorder::prepareRecorder() {
 
 	// Initialize opencv VideoWriter
 	cv::Size colorSize(
-		COLOR_IMAGE_WIDTH,
-		COLOR_IMAGE_HEIGHT
+		COLOR_IMAGE_WIDTH_REALSENSE,
+		COLOR_IMAGE_HEIGHT_REALSENSE
 	);
 
 	cv::Size depthSize(
-		DEPTH_IMAGE_WIDTH,
-		DEPTH_IMAGE_HEIGHT
+		DEPTH_IMAGE_WIDTH_REALSENSE,
+		DEPTH_IMAGE_HEIGHT_REALSENSE
 	);
 
 	/** Handle Chinese name when saving video */

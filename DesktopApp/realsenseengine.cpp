@@ -1,4 +1,7 @@
 #include "realsenseengine.h"
+#include "librealsense2/rsutil.h"
+#include "kinectengine.h"
+#include "helper.h"
 
 RealsenseEngine::RealsenseEngine() : QWidget() {
 }
@@ -56,9 +59,9 @@ void RealsenseEngine::closeDevice()
 
 void RealsenseEngine::configDevice()
 {
-	const int w = COLOR_IMAGE_WIDTH;
+	const int w = COLOR_IMAGE_WIDTH_REALSENSE;
 
-	const int h = COLOR_IMAGE_HEIGHT;
+	const int h = COLOR_IMAGE_HEIGHT_REALSENSE;
 
 	cfg.enable_stream(RS2_STREAM_COLOR, w, h, RS2_FORMAT_BGRA8, VIDEOWRITER_FPS);
 
@@ -180,8 +183,24 @@ void RealsenseEngine::readDepthToColorImage(cv::Mat& depthToColorImage, rs2::fra
 
 void RealsenseEngine::readPointCloudImage(cv::Mat& xyzImage)
 {
-	// TODO
-	xyzImage = cv::Mat();
+	this->rs2ImageLock.lockForRead();
+	// Shallow copy
+	rs2::frame colorFrame = this->colorFrame;
+	rs2::frame depthFrame = this->depthFrame;
+	this->rs2ImageLock.unlock();
+
+	rs2::pointcloud pc;
+	rs2::points points = pc.calculate(depthFrame);
+	pc.map_to(colorFrame);
+
+
+	int width = colorFrame.as<rs2::video_frame>().get_width();
+	int height = colorFrame.as<rs2::video_frame>().get_height();
+
+	xyzImage = cv::Mat(height, width, CV_8UC4, (void*)colorFrame.get_data(), cv::Mat::AUTO_STEP);
+
+	bool success;
+	success = Helper::saveCVImage(xyzImage, "d455_point_cloud_test.png", QImage::Format_RGB32);
 }
 
 std::deque<point3D> RealsenseEngine::getGyroSampleQueue()
@@ -194,8 +213,189 @@ std::deque<point3D> RealsenseEngine::getAccSampleQueue()
 	return accSampleQueue;
 }
 
+void RealsenseEngine::computeNormalizedDepthImage(const cv::Mat depthToColorImage, cv::Mat& out)
+{
+	// RANSAC
+	int k = 6;
+	int threshold = 15;
+
+	int iterationCount = 0;
+	int inlierCount = 0;
+
+	int MaxInlierCount = -1;
+	float PlaneA, PlaneB, PlaneC, PlaneD;
+	float BestPointOne[2];
+	float BestPointTwo[2];
+	float BestPointThree[2];
+
+	float a, b, c, d;
+	float PointOne[2];
+	float PointTwo[2];
+	float PointThree[2];
+
+	srand((unsigned)time(0));
+
+	int IgnoreLeftAndRightPixel = 150;
+	int IgnoreMiddlePixel = 150;
+
+	while (iterationCount <= k) {
+
+		inlierCount = 0;
+
+		// First point
+		while (true) {
+			PointOne[0] = rand() % depthToColorImage.cols;
+			PointOne[1] = rand() % depthToColorImage.rows;
+			if (PointOne[0] < IgnoreLeftAndRightPixel && PointOne[0] > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
+				continue;
+			}
+			if (PointOne[0] > 565 && PointOne[0] < 715) {
+				continue;
+			}
+			QVector3D vector3D_1 = RealsenseEngine::getInstance().query3DPoint(PointOne[0], PointOne[1], depthToColorImage);
+			if (vector3D_1.x() == 0.0f && vector3D_1.y() == 0.0f && vector3D_1.z() == 0.0f) {
+				continue;
+			}
+			else {
+				break;
+			}
+		}
+
+		// Second point
+		while (true) {
+			PointTwo[0] = rand() % depthToColorImage.cols;
+			PointTwo[1] = rand() % depthToColorImage.rows;
+			if (PointTwo[0] < IgnoreLeftAndRightPixel && PointTwo[0] > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
+				continue;
+			}
+			if (PointTwo[0] > 565 && PointTwo[0] < 715) {
+				continue;
+			}
+			QVector3D vector3D_2 = RealsenseEngine::getInstance().query3DPoint(PointTwo[0], PointTwo[1], depthToColorImage);
+			if (vector3D_2.x() == 0.0f && vector3D_2.y() == 0.0f && vector3D_2.z() == 0.0f) {
+				continue;
+			}
+			if (sqrt(pow(PointTwo[0] - PointOne[0], 2) + pow(PointTwo[1] - PointOne[1], 2) * 1.0) <= 100) {
+				continue;
+			}
+			break;
+		}
+
+		// Third point
+		while (true) {
+			PointThree[0] = rand() % depthToColorImage.cols;
+			PointThree[1] = rand() % depthToColorImage.rows;
+			if (PointThree[0] < IgnoreLeftAndRightPixel && PointThree[0] > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
+				continue;
+			}
+			if (PointThree[0] > 565 && PointThree[0] < 715) {
+				continue;
+			}
+			QVector3D vector3D_3 = RealsenseEngine::getInstance().query3DPoint(PointThree[0], PointThree[1], depthToColorImage);
+			if (vector3D_3.x() == 0.0f && vector3D_3.y() == 0.0f && vector3D_3.z() == 0.0f) {
+				continue;
+			}
+			if (sqrt(pow(PointThree[0] - PointOne[0], 2) + pow(PointThree[1] - PointOne[1], 2) * 1.0) <= 100) {
+				continue;
+			}
+			if (sqrt(pow(PointThree[0] - PointTwo[0], 2) + pow(PointThree[1] - PointTwo[1], 2) * 1.0) <= 100) {
+				continue;
+			}
+			break;
+		}
+
+		QVector3D vector3D_1 = RealsenseEngine::getInstance().query3DPoint(PointOne[0], PointOne[1], depthToColorImage);
+		QVector3D vector3D_2 = RealsenseEngine::getInstance().query3DPoint(PointTwo[0], PointTwo[1], depthToColorImage);
+		QVector3D vector3D_3 = RealsenseEngine::getInstance().query3DPoint(PointThree[0], PointThree[1], depthToColorImage);
+
+		float* abcd;
+		abcd = KinectEngine::getInstance().findPlaneEquationCoefficients(
+			vector3D_1.x(), vector3D_1.y(), vector3D_1.z(),
+			vector3D_2.x(), vector3D_2.y(), vector3D_2.z(),
+			vector3D_3.x(), vector3D_3.y(), vector3D_3.z()
+		);
+		a = abcd[0];
+		b = abcd[1];
+		c = abcd[2];
+		d = abcd[3];
+		/*qDebug() << "Equation of plane is " << a << " x + " << b
+			<< " y + " << c << " z + " << d << " = 0.";*/
+
+		for (int y = 0; y < depthToColorImage.rows; y += 2) {
+			for (int x = 0; x < depthToColorImage.cols; x += 2) {
+				if (x > 565 && x < 715) {
+					continue;
+				}
+				if (x < IgnoreLeftAndRightPixel || x > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
+					continue;
+				}
+				QVector3D vector3D = RealsenseEngine::getInstance().query3DPoint(x, y, depthToColorImage);
+				if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
+					continue;
+				}
+
+				float distance = KinectEngine::getInstance().findDistanceBetween3DPointAndPlane(vector3D.x(), vector3D.y(), vector3D.z(), a, b, c, d);
+				if (distance <= threshold) {
+					inlierCount++;
+				}
+			}
+		}
+
+		if (inlierCount > MaxInlierCount) {
+			PlaneA = a;
+			PlaneB = b;
+			PlaneC = c;
+			PlaneD = d;
+			BestPointOne[0] = PointOne[0];
+			BestPointOne[1] = PointOne[1];
+			BestPointTwo[0] = PointTwo[0];
+			BestPointTwo[1] = PointTwo[1];
+			BestPointThree[0] = PointThree[0];
+			BestPointThree[1] = PointThree[1];
+
+			MaxInlierCount = inlierCount;
+		}
+
+		iterationCount++;
+		//qDebug() << "Inliers: " << inlierCount;
+
+	}
+	//qDebug() << "Max Inliers: " << MaxInlierCount;
+
+	// computer actual image
+	out = cv::Mat::zeros(depthToColorImage.rows, depthToColorImage.cols, CV_16UC1);
+	float maxDistance = 0.0f;
+	for (int y = 0; y < depthToColorImage.rows; y++) {
+		for (int x = 0; x < depthToColorImage.cols; x++) {
+
+			QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, depthToColorImage);
+
+			if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
+				out.at<uint16_t>(y, x) = 0.0f;
+				continue;
+			}
+
+			float distance = KinectEngine::getInstance().findDistanceBetween3DPointAndPlane(vector3D.x(), vector3D.y(), vector3D.z(), PlaneA, PlaneB, PlaneC, PlaneD);
+			out.at<uint16_t>(y, x) = distance;
+			/*if (distance <= threshold) {
+				out.at<uint16_t>(y, x) = 5000;
+			}*/
+			if (distance > maxDistance) {
+				maxDistance = distance;
+			}
+		}
+	}
+	//out.at<uint16_t>(BestPointOne[1], BestPointOne[0]) = 5000;
+	//out.at<uint16_t>(BestPointTwo[1], BestPointTwo[0]) = 5000;
+	//out.at<uint16_t>(BestPointThree[1], BestPointThree[0]) = 5000;
+}
+
 QVector3D RealsenseEngine::query3DPoint(int x, int y, cv::Mat depthToColorImage)
 {
-	// TODO
-	return QVector3D(0, 0, 0);
+	rs2_intrinsics const intrin = p.get_active_profile().get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>().get_intrinsics();
+	float point[3];
+	float pixel[2]{ static_cast<float>(x), static_cast<float>(y) };
+	ushort depth = depthToColorImage.at<ushort>(y, x);
+	rs2_deproject_pixel_to_point(point, &intrin, pixel, depth);
+	return QVector3D(point[0], point[1], point[2]);
 }

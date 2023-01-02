@@ -7,10 +7,10 @@
 #include "types.h"
 
 #define VIDEOWRITER_FPS 30
-#define COLOR_IMAGE_WIDTH 1280
-#define COLOR_IMAGE_HEIGHT 720 
-#define DEPTH_IMAGE_WIDTH 640
-#define DEPTH_IMAGE_HEIGHT 576
+#define COLOR_IMAGE_WIDTH_REALSENSE 1280
+#define COLOR_IMAGE_HEIGHT_REALSENSE 720 
+#define DEPTH_IMAGE_WIDTH_REALSENSE 1280
+#define DEPTH_IMAGE_HEIGHT_REALSENSE 720
 
 #define MAX_GYROSCOPE_QUEUE_SIZE 30
 #define MAX_ACCELEROMETER_QUEUE_SIZE 30
@@ -21,7 +21,7 @@ class RealsenseEngine : public QWidget
 
 public:
     // COLOR_IMAGE_CROP_WIDTH_PER_SIDE can be set to 0 to disable such crop
-    //int COLOR_IMAGE_CROP_WIDTH_PER_SIDE = (COLOR_IMAGE_WIDTH - COLOR_IMAGE_HEIGHT) / 2;
+    //int COLOR_IMAGE_CROP_WIDTH_PER_SIDE = (COLOR_IMAGE_WIDTH_REALSENSE - COLOR_IMAGE_HEIGHT_REALSENSE) / 2;
     int COLOR_IMAGE_CROP_WIDTH_PER_SIDE = 0;
 
     static RealsenseEngine& getInstance() {
@@ -52,6 +52,8 @@ public:
     void readPointCloudImage(cv::Mat& xyzImage);
     std::deque<point3D> getGyroSampleQueue();
     std::deque<point3D> getAccSampleQueue();
+
+    void computeNormalizedDepthImage(const cv::Mat depthToColorImage, cv::Mat& out);
     QVector3D query3DPoint(int x, int y, cv::Mat depthToColorImage);
 
     /** New plane calculation */
