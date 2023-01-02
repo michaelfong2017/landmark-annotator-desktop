@@ -189,7 +189,7 @@ void KinectEngine::readColorImage(cv::Mat& colorImage, k4a_image_t k4aColorImage
 	int rows = k4a_image_get_height_pixels(_k4aColorImage);
 	int cols = k4a_image_get_width_pixels(_k4aColorImage);
 
-	// Not sure if .clone() is necessary
+	// .clone() is necessary
 	colorImage = cv::Mat(k4a_image_get_height_pixels(_k4aColorImage), k4a_image_get_width_pixels(_k4aColorImage), CV_8UC4, k4a_image_get_buffer(_k4aColorImage)).clone();
 
 	return;

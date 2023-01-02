@@ -145,7 +145,10 @@ void RealsenseEngine::readColorImage(cv::Mat& colorImage, rs2::frame colorFrame)
 	int width = colorFrame.as<rs2::video_frame>().get_width();
 	int height = colorFrame.as<rs2::video_frame>().get_height();
 
-	colorImage = cv::Mat(height, width, CV_8UC4, (void*)colorFrame.get_data(), cv::Mat::AUTO_STEP);
+	// .clone() is necessary to prevent release in memory before use. Otherwise, later on when this
+	// cv image needs to be used (e.g. cvtColor() or clone()), there will be access violation error
+	// https://stackoverflow.com/questions/45013214/qt-signal-slot-cvmat-unable-to-read-memory-access-violation
+	colorImage = cv::Mat(height, width, CV_8UC4, (void*)colorFrame.get_data(), cv::Mat::AUTO_STEP).clone();
 }
 
 void RealsenseEngine::readDepthImage(cv::Mat& depthImage, rs2::frame depthFrame)
@@ -166,7 +169,7 @@ void RealsenseEngine::readDepthImage(cv::Mat& depthImage, rs2::frame depthFrame)
 	int width = depthFrame.as<rs2::video_frame>().get_width();
 	int height = depthFrame.as<rs2::video_frame>().get_height();
 
-	depthImage = cv::Mat(height, width, CV_16U, (void*)depthFrame.get_data(), cv::Mat::AUTO_STEP);
+	depthImage = cv::Mat(height, width, CV_16U, (void*)depthFrame.get_data(), cv::Mat::AUTO_STEP).clone();
 }
 
 // Just return color image since color image and depth image have the same dimentsion
@@ -181,6 +184,7 @@ void RealsenseEngine::readDepthToColorImage(cv::Mat& depthToColorImage, rs2::fra
 	readDepthImage(depthToColorImage, depthFrame);
 }
 
+// Return 16UC3 point cloud image, the 3 channels correspond to xyz and the positions correspond to uv (texture space)
 void RealsenseEngine::readPointCloudImage(cv::Mat& xyzImage)
 {
 	this->rs2ImageLock.lockForRead();
@@ -194,13 +198,11 @@ void RealsenseEngine::readPointCloudImage(cv::Mat& xyzImage)
 	pc.map_to(colorFrame);
 
 
+	// TODO Comment below, and then comvert point cloud to 16UC3 cv image
 	int width = colorFrame.as<rs2::video_frame>().get_width();
 	int height = colorFrame.as<rs2::video_frame>().get_height();
 
-	xyzImage = cv::Mat(height, width, CV_8UC4, (void*)colorFrame.get_data(), cv::Mat::AUTO_STEP);
-
-	bool success;
-	success = Helper::saveCVImage(xyzImage, "d455_point_cloud_test.png", QImage::Format_RGB32);
+	xyzImage = cv::Mat(height, width, CV_8UC4, (void*)colorFrame.get_data(), cv::Mat::AUTO_STEP).clone();
 }
 
 std::deque<point3D> RealsenseEngine::getGyroSampleQueue()
