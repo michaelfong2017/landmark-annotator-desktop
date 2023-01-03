@@ -140,8 +140,10 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 		return;
 	}
 
-	cv::Mat BlankImage = cv::Mat(1080, 1920, CV_16UC1);
-	cv::Mat destRoi = BlankImage(cv::Rect(560, 0, 800, 1080));
+	//cv::Mat BlankImage = cv::Mat(1080, 1920, CV_16UC1);
+	//cv::Mat destRoi = BlankImage(cv::Rect(560, 0, 800, 1080));
+	cv::Mat BlankImage = cv::Mat(720, 1280, CV_16UC1);
+	cv::Mat destRoi = BlankImage(cv::Rect(373, 0, 534, 720));
 	depthMapToColorImage.copyTo(destRoi);
 	this->recalculatedFullResolutionDepthImage = BlankImage;
 
