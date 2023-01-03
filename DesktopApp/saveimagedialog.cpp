@@ -42,6 +42,9 @@ void SaveImageDialog::onManualSave() {
 	QString dateTimeString = Helper::getCurrentDateTimeString();
 	QString visitFolderPath = Helper::getVisitFolderPath(this->parent->getParent()->savePath);
 
+	// After realsense camera is opened, native file dialog will freeze the application
+	// and therefore cannot be used. QFileDialog::DontUseNativeDialog is thus needed.
+	// See https://stackoverflow.com/questions/31983412/code-freezes-on-trying-to-open-qdialog
 	QString	chosenFolder = QFileDialog::getExistingDirectory(this, tr("Select Output Folder"),
 		visitFolderPath,
 		QFileDialog::ShowDirsOnly | QFileDialog::DontUseNativeDialog);

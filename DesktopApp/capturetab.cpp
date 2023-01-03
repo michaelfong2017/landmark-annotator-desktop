@@ -190,6 +190,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		QString patientFolderPath = this->getParent()->savePath.absolutePath();
 
+		// After realsense camera is opened, native file dialog will freeze the application
+		// and therefore cannot be used. QFileDialog::DontUseNativeDialog is thus needed.
+		// See https://stackoverflow.com/questions/31983412/code-freezes-on-trying-to-open-qdialog
 		QString chosenColorSavePath = QFileDialog::getOpenFileName(this, tr("Select Color Image"),
 			patientFolderPath,
 			tr("Images (*.png *.jpg)"), 0, QFileDialog::DontUseNativeDialog);
