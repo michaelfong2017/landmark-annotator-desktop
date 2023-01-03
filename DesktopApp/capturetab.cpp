@@ -192,7 +192,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		QString chosenColorSavePath = QFileDialog::getOpenFileName(this, tr("Select Color Image"),
 			patientFolderPath,
-			tr("Images (*.png *.jpg)"));
+			tr("Images (*.png *.jpg)"), 0, QFileDialog::DontUseNativeDialog);
 
 		QString chosenFolder = QFileInfo(chosenColorSavePath).absoluteDir().absolutePath();
 		QString chosenFilename = QUrl(chosenColorSavePath).fileName();

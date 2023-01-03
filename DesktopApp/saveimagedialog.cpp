@@ -44,7 +44,7 @@ void SaveImageDialog::onManualSave() {
 
 	QString	chosenFolder = QFileDialog::getExistingDirectory(this, tr("Select Output Folder"),
 		visitFolderPath,
-		QFileDialog::ShowDirsOnly);
+		QFileDialog::ShowDirsOnly | QFileDialog::DontUseNativeDialog);
 
 	QString colorSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color.png"));
 	QString depthSavePath = QDir(chosenFolder).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth.png"));
