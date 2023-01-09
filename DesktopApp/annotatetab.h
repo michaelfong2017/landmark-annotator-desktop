@@ -74,6 +74,7 @@ public:
 private:
     cv::Mat depthToColorImage;
     cv::Mat recalculatedFullResolutionDepthImage;
+    int query3DOffsetX;
 
     QImage qColorImage;
     QImage qDepthToColorColorizedImage;
