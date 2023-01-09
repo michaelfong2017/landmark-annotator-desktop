@@ -396,6 +396,7 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
         return;
     }
 
+    // 800x1080 for Kinect, 534x720 for Realsense
     cv::Mat FourChannelPNG = cv::Mat(image.height(), image.width(), CV_16UC4, image.bits(), image.bytesPerLine());
 
     int height = FourChannelPNG.rows;
@@ -507,18 +508,18 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
         }
     }
 
-    if (!KinectEngine::getInstance().isDeviceOpened()) {
-        KinectEngine::getInstance().configDevice();
-        bool isSuccess = KinectEngine::getInstance().openDevice();
+    //if (!KinectEngine::getInstance().isDeviceOpened()) {
+    //    KinectEngine::getInstance().configDevice();
+    //    bool isSuccess = KinectEngine::getInstance().openDevice();
 
-        if (!isSuccess) {
-            TwoLinesDialog dialog;
-            dialog.setLine1("Kinect device cannot be opened!");
-            dialog.setLine2("Please check it and try again.");
-            dialog.exec();
-            return;
-        }
-    }
+    //    if (!isSuccess) {
+    //        TwoLinesDialog dialog;
+    //        dialog.setLine1("Kinect device cannot be opened!");
+    //        dialog.setLine2("Please check it and try again.");
+    //        dialog.exec();
+    //        return;
+    //    }
+    //}
 
     isDownloading = false;
 

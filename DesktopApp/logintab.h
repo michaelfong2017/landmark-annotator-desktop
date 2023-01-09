@@ -6,6 +6,7 @@
 #include "desktopapp.h"
 #include "qnetworkclient.h"
 #include "kinectengine.h"
+#include "realsenseengine.h"
 #include "twolinesdialog.h"
 #include "capturetab.h"
 

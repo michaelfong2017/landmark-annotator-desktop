@@ -1,6 +1,7 @@
 #include "annotatetab.h"
 #include "draganddropgraphicsscene.h"
 #include "kinectengine.h"
+#include "realsenseengine.h"
 #include <reportdialog.h>
 
 QPointF getRandomPoint(int maxWidth, int maxHeight) {
@@ -127,6 +128,7 @@ AnnotateTab::AnnotateTab(DesktopApp* parent) {
 
 }
 
+// For both images, 800x1080 for Kinect, 534x720 for Realsense
 void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToColorImage) {
 
 	// Remove existing annotations in annotations member variable
@@ -140,10 +142,21 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 		return;
 	}
 
-	//cv::Mat BlankImage = cv::Mat(1080, 1920, CV_16UC1);
-	//cv::Mat destRoi = BlankImage(cv::Rect(560, 0, 800, 1080));
-	cv::Mat BlankImage = cv::Mat(720, 1280, CV_16UC1);
-	cv::Mat destRoi = BlankImage(cv::Rect(373, 0, 534, 720));
+	cv::Mat BlankImage; 
+	cv::Mat destRoi;
+
+	if (depthMapToColorImage.cols == 800 && depthMapToColorImage.rows == 1080) {
+		BlankImage = cv::Mat(1080, 1920, CV_16UC1);
+		destRoi = BlankImage(cv::Rect(560, 0, 800, 1080));
+	}
+	else if (depthMapToColorImage.cols == 534 && depthMapToColorImage.rows == 720) {
+		BlankImage = cv::Mat(720, 1280, CV_16UC1);
+		destRoi = BlankImage(cv::Rect(373, 0, 534, 720));
+	}
+	else {
+		qCritical() << "Cropped image must have dimensions either 800x1080 or 534x720, but now is not.";
+	}
+
 	depthMapToColorImage.copyTo(destRoi);
 	this->recalculatedFullResolutionDepthImage = BlankImage;
 
@@ -245,7 +258,7 @@ void AnnotateTab::resizeAndDrawAnnotations() {
 		x *= this->scalingFactorForRight;
 		y *= this->scalingFactorForRight;
 		//QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->depthToColorImage);
-		QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x + 560, y, this->recalculatedFullResolutionDepthImage);
+		QVector3D vector3D = RealsenseEngine::getInstance().query3DPoint(x + 560, y, this->recalculatedFullResolutionDepthImage);
 
 
 		if (this->annotations3D.find(it.first) == this->annotations3D.end()) {

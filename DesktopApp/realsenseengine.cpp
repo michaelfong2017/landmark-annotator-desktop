@@ -202,17 +202,16 @@ void RealsenseEngine::readPointCloudImage(cv::Mat& xyzImage)
 	int height = colorFrame.as<rs2::video_frame>().get_height();
 	xyzImage = cv::Mat(height, width, CV_16UC3);
 
-	auto vertices = points.get_vertices(); // points in meters
+	auto vertices = points.get_vertices();
 	for (int y = 0; y < xyzImage.rows; y++)
 	{
 		for (int x = 0; x < xyzImage.cols; x++)
 		{
 			cv::Vec3s& color = xyzImage.at<cv::Vec3s>(y, x);
 
-			// Convert from meter to millimeter
-			color[0] = static_cast<short>(1000.0f * vertices[y * width + x].x);
-			color[1] = static_cast<short>(1000.0f * vertices[y * width + x].y);
-			color[2] = static_cast<short>(1000.0f * vertices[y * width + x].z);
+			color[0] = static_cast<short>(vertices[y * width + x].x);
+			color[1] = static_cast<short>(vertices[y * width + x].y);
+			color[2] = static_cast<short>(vertices[y * width + x].z);
 
 			// set pixel
 			xyzImage.at<cv::Vec3s>(y, x) = color;
@@ -414,9 +413,6 @@ QVector3D RealsenseEngine::query3DPoint(int x, int y, cv::Mat depthToColorImage)
 	float pixel[2]{ static_cast<float>(x), static_cast<float>(y) };
 	ushort depth = depthToColorImage.at<ushort>(y, x);
 	rs2_deproject_pixel_to_point(point, &intrin, pixel, depth);
-	// Convert from meter to millimeter
-	point[0] *= 1000.0f;
-	point[1] *= 1000.0f;
-	point[2] *= 1000.0f;
-	return QVector3D(point[0], point[1], point[2]);
+	// 52685 means no depth value in the depth image
+	return QVector3D(point[0], point[1], point[2] == 52685 ? 0 : point[2]);
 }
