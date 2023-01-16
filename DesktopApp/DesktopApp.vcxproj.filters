@@ -88,6 +88,18 @@
     <ClCompile Include="realsenseengine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cameramanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="realsensecamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="kinectcamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="capturehistory.h">
@@ -118,6 +130,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cameramanager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="kinectcamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -186,6 +207,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="realsenseengine.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="realsensecamera.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

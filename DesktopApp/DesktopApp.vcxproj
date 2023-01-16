@@ -118,15 +118,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="annotatetab.cpp" />
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="cameramanager.cpp" />
     <ClCompile Include="capturetab.cpp" />
     <ClCompile Include="clipgraphicspixmapitem.cpp" />
     <ClCompile Include="clipgraphicsscene.cpp" />
     <ClCompile Include="createnewpatientdialog.cpp" />
     <ClCompile Include="draganddropgraphicsscene.cpp" />
     <ClCompile Include="helper.cpp" />
+    <ClCompile Include="kinectcamera.cpp" />
     <ClCompile Include="kinectengine.cpp" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="patientlistsortfilterproxymodel.cpp" />
+    <ClCompile Include="realsensecamera.cpp" />
     <ClCompile Include="realsenseengine.cpp" />
     <ClCompile Include="reportdialog.cpp" />
     <ClCompile Include="reportdialog_eng.cpp" />
@@ -183,6 +187,8 @@
     <QtMoc Include="qnetworkclient.h" />
     <QtMoc Include="twolinesdialog.h" />
     <QtMoc Include="noteditabledelegate.h" />
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="cameramanager.h" />
     <ClInclude Include="capturehistory.h" />
     <ClInclude Include="clipgraphicspixmapitem.h" />
     <ClInclude Include="clipgraphicsscene.h" />
@@ -193,6 +199,8 @@
     <QtMoc Include="patientlistsortfilterproxymodel.h" />
     <QtMoc Include="mainwindow.h" />
     <QtMoc Include="realsenseengine.h" />
+    <ClInclude Include="kinectcamera.h" />
+    <QtMoc Include="realsensecamera.h" />
     <ClInclude Include="stdafx.h" />
     <QtMoc Include="uploadrequest.h" />
     <QtMoc Include="uploadprogressdialog.h" />

@@ -7,6 +7,8 @@
 #include "helper.h"
 #include "translationhelper.h"
 
+#include "cameramanager.h"
+
 void myMessageHandler(QtMsgType type, const QMessageLogContext&, const QString& msg)
 {
     //fprintf(stdout, "%s", msg.toLocal8Bit().constData());
@@ -53,6 +55,17 @@ int main(int argc, char *argv[])
 
     TranslationHelper::getInstance().useEnglishTranslator();
     //TranslationHelper::getInstance().useSimplifiedChineseTranslator();
+
+    // Test implementing Strategy pattern and multiple inheritance
+    camera::CameraManager::getInstance().setCamera(camera::Model::REALSENSE);
+    camera::CameraManager::getInstance().getCamera()->open();
+    camera::CameraManager::getInstance().getCamera()->startThread();
+    qDebug() << endl << "width is " << camera::CameraManager::getInstance().getConfig()->color_width << endl;
+    camera::CameraManager::getInstance().getCamera()->stopThread();
+
+    camera::CameraManager::getInstance().setCamera(camera::Model::KINECT);
+    qDebug() << endl << "width is " << camera::CameraManager::getInstance().getConfig()->color_width << endl;
+    // Test implementing Strategy pattern and multiple inheritance END
 
     MainWindow w;
     w.show();
