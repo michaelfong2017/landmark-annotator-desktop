@@ -15,14 +15,15 @@ namespace camera {
 		CameraManager(CameraManager const&) = delete;
 		void operator=(CameraManager const&) = delete;
 
+		~CameraManager();
+
 		Camera* getCamera();
 		void setCamera(Model model);
 		Config* getConfig();
 
 	private:
 		CameraManager();
-		~CameraManager();
-		Camera* camera_ = nullptr;
+		Camera* camera_;
 	};
 }
 

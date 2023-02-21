@@ -20,10 +20,11 @@ namespace camera {
 		public QThread, public Camera
 	{
 		Q_OBJECT
-	private:
-		friend class CameraManager;
+	public:
 		RealsenseCamera();
 		~RealsenseCamera();
+	private:
+		friend class CameraManager;
 		// Realsense configuration structure, it will define streams that need to be opened
 		rs2::config cfg;
 		// Our pipeline, main object used by realsense to handle streams

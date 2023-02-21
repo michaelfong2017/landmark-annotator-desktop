@@ -19,10 +19,11 @@ namespace camera {
 	class KinectCamera :
 		public QThread, public Camera
 	{
-	private:
-		friend class CameraManager;
+	public:
 		KinectCamera();
 		~KinectCamera();
+	private:
+		friend class CameraManager;
 
 		// Member function that handles thread iteration
 		void run() override;
