@@ -406,7 +406,7 @@ void RealsenseEngine::computeNormalizedDepthImage(const cv::Mat depthToColorImag
 	for (int y = 0; y < depthToColorImage.rows; y++) {
 		for (int x = 0; x < depthToColorImage.cols; x++) {
 
-			QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, depthToColorImage);
+			QVector3D vector3D = RealsenseEngine::getInstance().query3DPoint(x, y, depthToColorImage);
 
 			if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
 				out.at<uint16_t>(y, x) = 0.0f;
