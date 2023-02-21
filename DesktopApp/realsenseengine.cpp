@@ -2,6 +2,8 @@
 #include "librealsense2/rsutil.h"
 #include "kinectengine.h"
 #include "helper.h"
+#include "cameramanager.h"
+#include "realsensecamera.h"
 
 RealsenseEngine::RealsenseEngine() : QWidget() {
 }
@@ -75,25 +77,45 @@ void RealsenseEngine::configDevice()
 void RealsenseEngine::captureImages()
 {
 	rs2ImageLock.lockForWrite();
-	rs2::frameset frames = p.wait_for_frames();
-	colorFrame = frames.get_color_frame();
-	depthFrame = frames.get_depth_frame();
+	//rs2::frameset frames = p.wait_for_frames();
+	//colorFrame = frames.get_color_frame();
+	//depthFrame = frames.get_depth_frame();
+	camera::RealsenseCamera* camera = static_cast<camera::RealsenseCamera*>(camera::CameraManager::getInstance().getCamera());
+	
+	camera->rs2ImageLock.lockForRead();
+	if (camera->queue_color.poll_for_frame(&colorFrame)) {
+		this->colorFrame = colorFrame;
+	}
+	if (camera->queue_depth.poll_for_frame(&depthFrame)) {
+		this->depthFrame = depthFrame;
+	}
+	camera->rs2ImageLock.unlock();
+	
 	rs2ImageLock.unlock();
 }
 
 bool RealsenseEngine::queueIMUSample()
 {
-	rs2::frameset frameset = p.wait_for_frames();
+	//rs2::frameset frameset = p.wait_for_frames();
 
-	rs2::motion_frame gyro_frame = frameset.first_or_default(RS2_STREAM_GYRO);
-	rs2::motion_frame accel_frame = frameset.first_or_default(RS2_STREAM_ACCEL);
+	//rs2::motion_frame gyro_frame = frameset.first_or_default(RS2_STREAM_GYRO);
+	//rs2::motion_frame accel_frame = frameset.first_or_default(RS2_STREAM_ACCEL);
 
-	if (!gyro_frame || !accel_frame) {
+	camera::RealsenseCamera* camera = static_cast<camera::RealsenseCamera*>(camera::CameraManager::getInstance().getCamera());
+
+	rs2_vector gyro_sample = camera->gyro_sample;
+	rs2_vector accel_sample = camera->accel_sample;
+
+	if (!camera->imuSuccess) {
 		return false;
 	}
 
-	rs2_vector gyro_sample = gyro_frame.get_motion_data();
-	rs2_vector accel_sample = accel_frame.get_motion_data();
+	//if (!gyro_frame || !accel_frame) {
+	//	return false;
+	//}
+
+	//rs2_vector gyro_sample = gyro_frame.get_motion_data();
+	//rs2_vector accel_sample = accel_frame.get_motion_data();
 
 	gyroSampleQueue.push_back(point3D{ gyro_sample.x, gyro_sample.y, gyro_sample.z });
 	accSampleQueue.push_back(point3D{ accel_sample.x, accel_sample.y, accel_sample.z });
@@ -408,7 +430,8 @@ void RealsenseEngine::computeNormalizedDepthImage(const cv::Mat depthToColorImag
 
 QVector3D RealsenseEngine::query3DPoint(int x, int y, cv::Mat depthToColorImage)
 {
-	rs2_intrinsics const intrin = p.get_active_profile().get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>().get_intrinsics();
+	camera::RealsenseCamera* camera = static_cast<camera::RealsenseCamera*>(camera::CameraManager::getInstance().getCamera());
+	rs2_intrinsics intrin = camera->intrinsics_depth;
 	float point[3];
 	float pixel[2]{ static_cast<float>(x), static_cast<float>(y) };
 	ushort depth = depthToColorImage.at<ushort>(y, x);

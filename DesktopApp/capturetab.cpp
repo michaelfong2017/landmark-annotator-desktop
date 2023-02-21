@@ -463,9 +463,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		//KinectEngine::getInstance().readColorAndDepthImages(color, depth);
 
 
-		if (!RealsenseEngine::getInstance().isDeviceOpened()) {
-			return;
-		}
+		//if (!RealsenseEngine::getInstance().isDeviceOpened()) {
+		//	return;
+		//}
 
 		RealsenseEngine::getInstance().captureImages();
 		cv::Mat color, depth;

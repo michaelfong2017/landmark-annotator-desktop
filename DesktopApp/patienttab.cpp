@@ -28,26 +28,26 @@ PatientTab::PatientTab(DesktopApp* parent)
         qDebug() << "captureNewButton clicked";
 
 
-        if (!RealsenseEngine::getInstance().isDeviceConnected()) {
-            TwoLinesDialog dialog;
-            dialog.setLine1("Kinect device cannot be opened!");
-            dialog.setLine2("Please check it and try again.");
-            dialog.exec();
-            return;
-        }
+        //if (!RealsenseEngine::getInstance().isDeviceConnected()) {
+        //    TwoLinesDialog dialog;
+        //    dialog.setLine1("Kinect device cannot be opened!");
+        //    dialog.setLine2("Please check it and try again.");
+        //    dialog.exec();
+        //    return;
+        //}
 
-        if (!RealsenseEngine::getInstance().isDeviceOpened()) {
-            RealsenseEngine::getInstance().configDevice();
-            bool isSuccess = RealsenseEngine::getInstance().openDevice();
+        //if (!RealsenseEngine::getInstance().isDeviceOpened()) {
+        //    RealsenseEngine::getInstance().configDevice();
+        //    bool isSuccess = RealsenseEngine::getInstance().openDevice();
 
-            if (!isSuccess) {
-                TwoLinesDialog dialog;
-                dialog.setLine1("Kinect device cannot be opened!");
-                dialog.setLine2("Please check it and try again.");
-                dialog.exec();
-                return;
-            }
-        }
+        //    if (!isSuccess) {
+        //        TwoLinesDialog dialog;
+        //        dialog.setLine1("Kinect device cannot be opened!");
+        //        dialog.setLine2("Please check it and try again.");
+        //        dialog.exec();
+        //        return;
+        //    }
+        //}
 
 
         //if (!KinectEngine::getInstance().isDeviceConnected()) {

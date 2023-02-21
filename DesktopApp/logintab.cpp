@@ -1,6 +1,8 @@
 ﻿#include "logintab.h"
 #include "librealsense2/rs.hpp"
 #include <QtUiTools/quiloader.h>
+#include <cameramanager.h>
+#include <realsensecamera.h>
 
 LoginTab::LoginTab(DesktopApp* parent)
 {
@@ -279,26 +281,27 @@ void LoginTab::startOfflineMode() {
 	//qDebug() << "The camera is facing an object " << dist_to_center << " meters away \r";
 	// Test realsense2 END
 
-	if (!RealsenseEngine::getInstance().isDeviceConnected()) {
-		TwoLinesDialog dialog;
-		dialog.setLine1("Kinect device cannot be opened!");
-		dialog.setLine2("Please check it and try again.");
-		dialog.exec();
-		return;
-	}
+	//if (!RealsenseEngine::getInstance().isDeviceConnected()) {
+	//	TwoLinesDialog dialog;
+	//	dialog.setLine1("Kinect device cannot be opened!");
+	//	dialog.setLine2("Please check it and try again.");
+	//	dialog.exec();
+	//	return;
+	//}
 
-	if (!RealsenseEngine::getInstance().isDeviceOpened()) {
-		RealsenseEngine::getInstance().configDevice();
-		bool isSuccess = RealsenseEngine::getInstance().openDevice();
+	//if (!RealsenseEngine::getInstance().isDeviceOpened()) {
+	//	RealsenseEngine::getInstance().configDevice();
+	//	bool isSuccess = RealsenseEngine::getInstance().openDevice();
 
-		if (!isSuccess) {
-			TwoLinesDialog dialog;
-			dialog.setLine1("Kinect device cannot be opened!");
-			dialog.setLine2("Please check it and try again.");
-			dialog.exec();
-			return;
-		}
-	}
+	//	if (!isSuccess) {
+	//		TwoLinesDialog dialog;
+	//		dialog.setLine1("Kinect device cannot be opened!");
+	//		dialog.setLine2("Please check it and try again.");
+	//		dialog.exec();
+	//		return;
+	//	}
+	//}
+
 
 	//if (!KinectEngine::getInstance().isDeviceConnected()) {
 	//	TwoLinesDialog dialog;

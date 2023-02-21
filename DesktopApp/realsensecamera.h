@@ -23,12 +23,23 @@ namespace camera {
 	public:
 		RealsenseCamera();
 		~RealsenseCamera();
+
+		/** Start using the frames below */
+		QReadWriteLock rs2ImageLock;
+		rs2::frame_queue queue_color;
+		rs2::frame_queue queue_depth;
+		rs2_vector gyro_sample;
+		rs2_vector accel_sample;
+		bool imuSuccess;
+
+		rs2_intrinsics intrinsics_depth;
+
 	private:
 		friend class CameraManager;
 		// Realsense configuration structure, it will define streams that need to be opened
 		rs2::config cfg;
 		// Our pipeline, main object used by realsense to handle streams
-		rs2::pipeline pipe;
+		rs2::pipeline p;
 		// Frames returned by our pipeline, they will be packed in this structure
 		rs2::frameset frames;
 
@@ -39,9 +50,7 @@ namespace camera {
 		void open() override;
 		void close() override;
 
-	signals:
-		// A signal sent by our class to notify that there are frames that need to be processed
-		void framesReady(QImage frameRGB, QImage frameDepth);
+		/** Start using the frames below */
 	};
 
 	QImage realsenseFrameToQImage(const rs2::frame& f);

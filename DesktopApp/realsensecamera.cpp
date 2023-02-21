@@ -14,7 +14,7 @@ namespace camera {
 		while (camera_running_)
 		{
 			// Wait for frames and get them as soon as they are ready
-			//frames = pipe.wait_for_frames();
+			//frames = p.wait_for_frames();
 
 			//// Let's get our depth frame
 			//rs2::depth_frame depth = frames.get_depth_frame();
@@ -29,13 +29,34 @@ namespace camera {
 			//emit framesReady(q_color, q_depth);
 
 			// Test
-			rs2::frameset frames = pipe.wait_for_frames();
-			rs2::depth_frame depth = frames.get_depth_frame();
-			float width = depth.get_width();
-			float height = depth.get_height();
-			float dist_to_center = depth.get_distance(width / 2, height / 2);
-			qDebug() << "The camera is facing an object " << dist_to_center << " meters away \r";
+			//rs2::frameset frames = p.wait_for_frames();
+			//rs2::depth_frame depth = frames.get_depth_frame();
+			//float width = depth.get_width();
+			//float height = depth.get_height();
+			//float dist_to_center = depth.get_distance(width / 2, height / 2);
+			//qDebug() << "The camera is facing an object " << dist_to_center << " meters away \r";
 			// Test END
+
+			rs2::frameset frames = p.wait_for_frames();
+
+			rs2ImageLock.lockForWrite();
+			//colorFrame = frames.get_color_frame();
+			//depthFrame = frames.get_depth_frame();
+			queue_color.enqueue(frames.get_color_frame());
+			queue_depth.enqueue(frames.get_depth_frame());
+			rs2ImageLock.unlock();
+
+			rs2::motion_frame gyro_frame = frames.first_or_default(RS2_STREAM_GYRO);
+			rs2::motion_frame accel_frame = frames.first_or_default(RS2_STREAM_ACCEL);
+
+			if (gyro_frame && accel_frame) {
+				gyro_sample = gyro_frame.get_motion_data();
+				accel_sample = accel_frame.get_motion_data();
+				imuSuccess = true;
+			}
+			else {
+				imuSuccess = false;
+			}
 		}
 	}
 
@@ -51,14 +72,18 @@ namespace camera {
 
 	void RealsenseCamera::open()
 	{
-		// Enable depth stream with given resolution. Pixel will have a bit depth of 16 bit
+		cfg.enable_stream(RS2_STREAM_COLOR, config_->color_width, config_->color_height, RS2_FORMAT_BGRA8, config_->fps);
 		cfg.enable_stream(RS2_STREAM_DEPTH, config_->depth_width, config_->depth_height, RS2_FORMAT_Z16, config_->fps);
-
-		// Enable RGB stream as frames with 3 channel of 8 bit
-		cfg.enable_stream(RS2_STREAM_COLOR, config_->color_width, config_->color_height, RS2_FORMAT_RGB8, config_->fps);
+		cfg.enable_stream(RS2_STREAM_INFRARED, 1, config_->color_width, config_->color_height, RS2_FORMAT_Y8, config_->fps);
+		cfg.enable_stream(RS2_STREAM_INFRARED, 2, config_->color_width, config_->color_height, RS2_FORMAT_Y8, config_->fps);
 
 		// Start our pipeline
-		pipe.start(cfg);
+		p.start(cfg);
+
+		queue_color = rs2::frame_queue(1);
+		queue_depth = rs2::frame_queue(1);
+
+		intrinsics_depth = p.get_active_profile().get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>().get_intrinsics();
 
 		camera_running_ = true;
 	}
