@@ -83,12 +83,7 @@ void RealsenseEngine::captureImages()
 	camera::RealsenseCamera* camera = static_cast<camera::RealsenseCamera*>(camera::CameraManager::getInstance().getCamera());
 	
 	camera->rs2ImageLock.lockForRead();
-	if (camera->queue_color.poll_for_frame(&colorFrame)) {
-		this->colorFrame = colorFrame;
-	}
-	if (camera->queue_depth.poll_for_frame(&depthFrame)) {
-		this->depthFrame = depthFrame;
-	}
+	camera->queue_frameset.poll_for_frame(&this->frames);
 	camera->rs2ImageLock.unlock();
 	
 	rs2ImageLock.unlock();
@@ -127,22 +122,32 @@ void RealsenseEngine::readAllImages(cv::Mat& colorImage, cv::Mat& depthImage, cv
 {
 	this->rs2ImageLock.lockForRead();
 	// Shallow copy
-	rs2::frame colorFrame = this->colorFrame;
-	rs2::frame depthFrame = this->depthFrame;
+	rs2::frame colorFrame = this->frames.get_color_frame();
+	rs2::frame depthFrame = this->frames.get_depth_frame();
+
+	// colorToDepth image is not used but still obtained here
+	rs2::align align_to_depth(RS2_STREAM_DEPTH);
+	rs2::frameset aligned_to_depth_frames = align_to_depth.process(this->frames);
+	rs2::frame colorToDepthFrame = aligned_to_depth_frames.get_color_frame();
+
+	rs2::align align_to_color(RS2_STREAM_COLOR);
+	rs2::frameset aligned_to_color_frames = align_to_color.process(this->frames);
+	rs2::frame depthToColorFrame = aligned_to_color_frames.get_depth_frame();
+
 	this->rs2ImageLock.unlock();
 
 	readColorImage(colorImage, colorFrame);
 	readDepthImage(depthImage, depthFrame);
-	readColorToDepthImage(colorToDepthImage, colorFrame);
-	readDepthToColorImage(depthToColorImage, depthFrame);
+	readColorToDepthImage(colorToDepthImage, colorToDepthFrame);
+	readDepthToColorImage(depthToColorImage, depthToColorFrame);
 }
 
 void RealsenseEngine::readColorAndDepthImages(cv::Mat& colorImage, cv::Mat& depthImage)
 {
 	this->rs2ImageLock.lockForRead();
 	// Shallow copy
-	rs2::frame colorFrame = this->colorFrame;
-	rs2::frame depthFrame = this->depthFrame;
+	rs2::frame colorFrame = this->frames.get_color_frame();
+	rs2::frame depthFrame = this->frames.get_depth_frame();
 	this->rs2ImageLock.unlock();
 
 	readColorImage(colorImage, colorFrame);
@@ -152,7 +157,7 @@ void RealsenseEngine::readColorAndDepthImages(cv::Mat& colorImage, cv::Mat& dept
 void RealsenseEngine::readColorImage(cv::Mat& colorImage, rs2::frame colorFrame)
 {
 	// Shallow copy
-	rs2::frame _colorFrame = this->colorFrame;
+	rs2::frame _colorFrame = this->frames.get_color_frame();
 
 	if (colorFrame != NULL) {
 		_colorFrame = colorFrame;
@@ -176,7 +181,7 @@ void RealsenseEngine::readColorImage(cv::Mat& colorImage, rs2::frame colorFrame)
 void RealsenseEngine::readDepthImage(cv::Mat& depthImage, rs2::frame depthFrame)
 {
 	// Shallow copy
-	rs2::frame _depthFrame = this->depthFrame;
+	rs2::frame _depthFrame = this->frames.get_depth_frame();
 
 	if (depthFrame != NULL) {
 		_depthFrame = depthFrame;
@@ -211,8 +216,8 @@ void RealsenseEngine::readPointCloudImage(cv::Mat& xyzImage)
 {
 	this->rs2ImageLock.lockForRead();
 	// Shallow copy
-	rs2::frame colorFrame = this->colorFrame;
-	rs2::frame depthFrame = this->depthFrame;
+	rs2::frame colorFrame = this->frames.get_color_frame();
+	rs2::frame depthFrame = this->frames.get_depth_frame();
 	this->rs2ImageLock.unlock();
 
 	rs2::pointcloud pc;

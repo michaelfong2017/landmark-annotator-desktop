@@ -42,8 +42,7 @@ namespace camera {
 			rs2ImageLock.lockForWrite();
 			//colorFrame = frames.get_color_frame();
 			//depthFrame = frames.get_depth_frame();
-			queue_color.enqueue(frames.get_color_frame());
-			queue_depth.enqueue(frames.get_depth_frame());
+			queue_frameset.enqueue(frames);
 			rs2ImageLock.unlock();
 
 			rs2::motion_frame gyro_frame = frames.first_or_default(RS2_STREAM_GYRO);
@@ -80,8 +79,7 @@ namespace camera {
 		// Start our pipeline
 		p.start(cfg);
 
-		queue_color = rs2::frame_queue(1);
-		queue_depth = rs2::frame_queue(1);
+		queue_frameset = rs2::frame_queue(1);
 
 		intrinsics_depth = p.get_active_profile().get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>().get_intrinsics();
 

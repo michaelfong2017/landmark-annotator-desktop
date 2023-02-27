@@ -26,8 +26,7 @@ namespace camera {
 
 		/** Start using the frames below */
 		QReadWriteLock rs2ImageLock;
-		rs2::frame_queue queue_color;
-		rs2::frame_queue queue_depth;
+		rs2::frame_queue queue_frameset;
 		rs2_vector gyro_sample;
 		rs2_vector accel_sample;
 		bool imuSuccess;

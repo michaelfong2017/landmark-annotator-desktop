@@ -265,6 +265,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->imageType = getImageTypeFromDescription(this->imageName);
 		RealsenseEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
+		//cv::imwrite("test_captured_color.png", this->capturedColorImage);
+		//cv::imwrite("test_captured_depth.png", this->capturedDepthImage);
+		//cv::imwrite("test_captured_color_to_depth.png", this->capturedColorToDepthImage);
+		//cv::imwrite("test_captured_depth_to_color.png", this->capturedDepthToColorImage);
+
 		// Shallow copy
 		/*cv::Mat color = this->capturedColorImage;
 		cv::Mat depth = this->capturedDepthImage;

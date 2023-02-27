@@ -83,8 +83,7 @@ private:
 
     QReadWriteLock rs2ImageLock;
 
-    rs2::frame depthFrame;
-    rs2::frame colorFrame;
+    rs2::frameset frames;
 
     std::deque<point3D> gyroSampleQueue;
     std::deque<point3D> accSampleQueue;
