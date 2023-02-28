@@ -2,6 +2,7 @@
 #include "saveimagedialog.h"
 #include "kinectengine.h"
 #include "realsenseengine.h"
+#include "cameramanager.h"
 #include <Windows.h>
 #include "uploadrequest.h"
 #include "types.h"
@@ -188,6 +189,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 	QObject::connect(this->parent->ui.importButton, &QPushButton::clicked, [this]() {
 		qDebug() << "Import button clicked";
 
+		camera::Config* cameraConfig = camera::CameraManager::getInstance().getConfig();
+
 		QString patientFolderPath = this->getParent()->savePath.absolutePath();
 
 		// After realsense camera is opened, native file dialog will freeze the application
@@ -228,7 +231,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		if (this->PointCloudPNG.dims == 0) {
 			//this->PointCloudPNG = cv::Mat::ones(1080, 1920, CV_16SC4);
-			this->PointCloudPNG = cv::Mat::ones(720, 1280, CV_16SC4);
+			this->PointCloudPNG = cv::Mat::ones(cameraConfig->color_height, cameraConfig->color_width, CV_16SC4);
 			this->hasPointCloud = false;
 		}
 		else {
@@ -255,6 +258,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		if (this->isUploading) {
 			return;
 		}
+
+		camera::Config* cameraConfig = camera::CameraManager::getInstance().getConfig();
 
 		/** UI */
 		disableButtonsForUploading();
@@ -295,7 +300,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		}
 		else {
 			//this->PointCloudPNG = cv::Mat::ones(1080, 1920, CV_16SC4);
-			this->PointCloudPNG = cv::Mat::ones(720, 1280, CV_16SC4);
+			this->PointCloudPNG = cv::Mat::ones(cameraConfig->color_height, cameraConfig->color_width, CV_16SC4);
 			this->hasPointCloud = false;
 		}
 
@@ -307,10 +312,11 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		/* Cropping all images to 800 * 1080 START*/
 		/* Cropping all images to 534 * 720 START*/
-		//float widthOfPatientBack = 800;
-		float widthOfPatientBack = 534;
+		//int widthOfPatientBack = 800;
+		int widthOfPatientBack = (int)(cameraConfig->color_height * 20.0 / 27.0 / 2.0 + 0.5) * 2;
+		// All divisible by 2
 		//cv::Rect rect((COLOR_IMAGE_WIDTH / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 1080);
-		cv::Rect rect((COLOR_IMAGE_WIDTH_REALSENSE / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 720);
+		cv::Rect rect((cameraConfig->color_width / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, cameraConfig->color_height);
 		this->capturedColorImage = this->capturedColorImage(rect);
 		this->capturedDepthToColorImage = this->capturedDepthToColorImage(rect);
 		this->RANSACImage = this->RANSACImage(rect);
@@ -472,6 +478,8 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		//	return;
 		//}
 
+		camera::Config* cameraConfig = camera::CameraManager::getInstance().getConfig();
+
 		RealsenseEngine::getInstance().captureImages();
 		cv::Mat color, depth;
 		RealsenseEngine::getInstance().readColorAndDepthImages(color, depth);
@@ -483,7 +491,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		QImage qColor = convertColorCVToQImage(color);
 
 		// Crop left and right
-		qColor = qColor.copy(cropPerSide, 0, COLOR_IMAGE_WIDTH_REALSENSE - 2 * cropPerSide, COLOR_IMAGE_HEIGHT_REALSENSE);
+		qColor = qColor.copy(cropPerSide, 0, cameraConfig->color_width - 2 * cropPerSide, cameraConfig->color_height);
 		// Crop left and right END
 
 		QImage qDepth = convertDepthCVToColorizedQImage(depth);
