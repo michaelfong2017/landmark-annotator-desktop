@@ -188,16 +188,7 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 		// per unit is now (5000/255) mm = 19.6 mm
 		depthMapToColorImage.convertTo(depthMapToColorImage, CV_8U, 255.0 / 5000.0, 0.0);
 
-		// get picture center point depth
-		int midX = depthMapToColorImage.cols / 2;
-		int midY = depthMapToColorImage.rows / 2;
-		uchar midDepth = depthMapToColorImage.at<uchar>(midY, midX);
-
-		qDebug() << "Mid Point Depth: " << midDepth;
-		if (midDepth == 0) {
-			// do something else if mid point depth is 0
-			qDebug() << "Use closest point";
-		}
+		uchar midDepth = findClosestNonZeroDepth(depthMapToColorImage, depthMapToColorImage.cols, depthMapToColorImage.rows);
 
 		float lowerBound = 5.0; // 1 = 20mm, 5 = 1cm
 		float upperBound = 7.5; // 15 = 2cm

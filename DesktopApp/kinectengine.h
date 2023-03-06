@@ -94,6 +94,8 @@ QImage convertColorToDepthCVToQImage(cv::Mat);
 QImage convertDepthToColorCVToQImage(cv::Mat);
 QImage convertDepthToColorCVToColorizedQImage(cv::Mat);
 QImage convertDepthToColorCVToColorizedQImageDetailed(cv::Mat);
+uchar findClosestNonZeroDepth(cv::Mat &cvImage, int midY, int midX);
+bool allNearbyHasDepthValue(int distance, cv::Mat& cvImage, int targetY, int targetX, int cols, int rows);
 void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb);
 
 #endif

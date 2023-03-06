@@ -508,16 +508,7 @@ QImage convertDepthToColorCVToColorizedQImageDetailed(cv::Mat cvImage) {
 	// per unit is now (5000/255) mm = 19.6 mm
 	cvImage.convertTo(cvImage, CV_8U, 255.0 / 5000.0, 0.0);
 
-	// get picture center point depth
-	int midX = cvImage.cols / 2;
-	int midY = cvImage.rows / 2;
-	uchar midDepth = cvImage.at<uchar>(midY, midX);
-
-	qDebug() << "Mid Point Depth: " << midDepth;
-	if (midDepth == 0) {
-		// do something else if mid point depth is 0
-		qDebug() << "Use closest point";
-	}
+	uchar midDepth = findClosestNonZeroDepth(cvImage, cvImage.cols, cvImage.rows);
 
 	float lowerBound = 5.0; // 1 = 20mm, 5 = 1cm
 	float upperBound = 7.5; // 15 = 2cm
@@ -582,6 +573,135 @@ QImage convertDepthToColorCVToColorizedQImageDetailed(cv::Mat cvImage) {
 	return qImage;
 }
 
+uchar findClosestNonZeroDepth(cv::Mat& cvImage, int cols, int rows)
+{
+	// get picture center point depth
+	int midX = cols / 2;
+	int midY = rows / 2;
+	uchar midDepth = cvImage.at<uchar>(midY, midX);
+	qDebug() << "First Mid Point Depth: " << midDepth << ", dx: " << 0 << ", dy: " << 0;
+
+	int distance = 0;
+	int dx = 0;
+	int dy = 0;
+
+	int NEARBY_DISTANCE = 60;
+	int STEP = 3;
+
+	while (midDepth == 0) {
+		// do something else if mid point depth is 0
+		//qDebug() << "Use closest point";
+		distance += STEP;
+		// right side
+		if (midDepth == 0) {
+			dx = distance;
+			for (int dy = -1 * (distance - 1); dy <= distance - 1; dy += STEP) {
+				if (midX + dx >= cvImage.cols || midX + dx < 0) {
+					continue;
+				}
+				if (midY + dy >= cvImage.rows || midY + dy < 0) {
+					continue;
+				}
+				if (!allNearbyHasDepthValue(NEARBY_DISTANCE, cvImage, midY + dy, midX + dx, cols, rows)) {
+					//qDebug() << "Some nearby depth is 0, dx: " << dx << ", dy: " << dy;
+					continue;
+				}
+				midDepth = cvImage.at<uchar>(midY + dy, midX + dx);
+				//qDebug() << "Trying Mid Point Depth: " << midDepth << ", dx: " << dx << ", dy: " << dy;
+				if (midDepth != 0) {
+					break;
+				}
+			}
+		}
+
+		// left side
+		if (midDepth == 0) {
+			dx = -1 * distance;
+			for (int dy = -1 * (distance - 1); dy <= distance - 1; dy += STEP) {
+				if (midX + dx >= cvImage.cols || midX + dx < 0) {
+					continue;
+				}
+				if (midY + dy >= cvImage.rows || midY + dy < 0) {
+					continue;
+				}
+				if (!allNearbyHasDepthValue(NEARBY_DISTANCE, cvImage, midY + dy, midX + dx, cols, rows)) {
+					//qDebug() << "Some nearby depth is 0, dx: " << dx << ", dy: " << dy;
+					continue;
+				}
+				midDepth = cvImage.at<uchar>(midY + dy, midX + dx);
+				//qDebug() << "Trying Mid Point Depth: " << midDepth << ", dx: " << dx << ", dy: " << dy;
+				if (midDepth != 0) {
+					break;
+				}
+			}
+		}
+
+		// bottom side
+		if (midDepth == 0) {
+			dy = distance;
+			for (int dx = -1 * (distance - 1); dx <= distance - 1; dx += STEP) {
+				if (midX + dx >= cvImage.cols || midX + dx < 0) {
+					continue;
+				}
+				if (midY + dy >= cvImage.rows || midY + dy < 0) {
+					continue;
+				}
+				if (!allNearbyHasDepthValue(NEARBY_DISTANCE, cvImage, midY + dy, midX + dx, cols, rows)) {
+					//qDebug() << "Some nearby depth is 0, dx: " << dx << ", dy: " << dy;
+					continue;
+				}
+				midDepth = cvImage.at<uchar>(midY + dy, midX + dx);
+				//qDebug() << "Trying Mid Point Depth: " << midDepth << ", dx: " << dx << ", dy: " << dy;
+				if (midDepth != 0) {
+					break;
+				}
+			}
+		}
+
+		// top side
+		if (midDepth == 0) {
+			dy = -1 * distance;
+			for (int dx = -1 * (distance - 1); dx <= distance - 1; dx += STEP) {
+				if (midX + dx >= cvImage.cols || midX + dx < 0) {
+					continue;
+				}
+				if (midY + dy >= cvImage.rows || midY + dy < 0) {
+					continue;
+				}
+				if (!allNearbyHasDepthValue(NEARBY_DISTANCE, cvImage, midY + dy, midX + dx, cols, rows)) {
+					//qDebug() << "Some nearby depth is 0, dx: " << dx << ", dy: " << dy;
+					continue;
+				}
+				midDepth = cvImage.at<uchar>(midY + dy, midX + dx);
+				//qDebug() << "Trying Mid Point Depth: " << midDepth << ", dx: " << dx << ", dy: " << dy;
+				if (midDepth != 0) {
+					break;
+				}
+			}
+		}
+	}
+
+	qDebug() << "Final Mid Point Depth: " << midDepth << ", dx: " << dx << ", dy: " << dy;
+
+	return midDepth;
+}
+
+bool allNearbyHasDepthValue(int distance, cv::Mat& cvImage, int targetY, int targetX, int cols, int rows) {
+	for (int dy = targetY - distance; dy <= targetY + distance; ++dy) {
+		for (int dx = targetX - distance; dx <= targetX + distance; ++dx) {
+			if (targetX + dx >= cvImage.cols || targetX + dx < 0) {
+				continue;
+			}
+			if (targetY + dy >= cvImage.rows || targetY + dy < 0) {
+				continue;
+			}
+			if (cvImage.at<uchar>(targetY + dy, targetX + dx) == 0) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
 
 void colorizeDepth(const cv::Mat& gray, cv::Mat& rgb)
 {
