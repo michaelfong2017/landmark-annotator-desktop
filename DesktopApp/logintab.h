@@ -26,4 +26,6 @@ private:
 
 };
 
+void testCameras();
+
 #endif

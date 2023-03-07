@@ -20,6 +20,10 @@ namespace camera {
 		Camera* getCamera();
 		void setCamera(Model model);
 		Config* getConfig();
+		bool isCameraRunning();
+		// Return true if successfully open camera or camera is already running
+		bool autoSelectAndOpenCamera();
+		void testCameras();
 
 	private:
 		CameraManager();

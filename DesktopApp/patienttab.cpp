@@ -1,6 +1,7 @@
 #include "patienttab.h"
 #include "capturetab.h"
 #include "realsenseengine.h"
+#include "cameramanager.h"
 
 PatientTab::PatientTab(DesktopApp* parent)
 {
@@ -70,6 +71,8 @@ PatientTab::PatientTab(DesktopApp* parent)
         //        return;
         //    }
         //}
+
+        camera::CameraManager::getInstance().autoSelectAndOpenCamera();
 
         // need to clear list
         this->parent->captureTab->clearCaptureHistories();

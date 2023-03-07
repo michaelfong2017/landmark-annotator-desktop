@@ -327,6 +327,8 @@ void LoginTab::startOfflineMode() {
 	// NO NEED to clear capture histories
 	////
 
+	camera::CameraManager::getInstance().autoSelectAndOpenCamera();
+
 	// Disable all tabs except capture tab in offline mode
 	this->parent->ui.tabWidget->setTabEnabled(TabIndex::CAPTURETAB, true);
 	this->parent->ui.tabWidget->setTabEnabled(TabIndex::PATIENTLISTTAB, false);

@@ -57,10 +57,10 @@ int main(int argc, char *argv[])
     //TranslationHelper::getInstance().useSimplifiedChineseTranslator();
 
     // Test implementing Strategy pattern and multiple inheritance
-    camera::CameraManager::getInstance().setCamera(camera::Model::REALSENSE);
-    camera::CameraManager::getInstance().getCamera()->open();
-    camera::CameraManager::getInstance().getCamera()->startThread();
-    qDebug() << endl << "width is " << camera::CameraManager::getInstance().getConfig()->color_width << endl;
+    //camera::CameraManager::getInstance().setCamera(camera::Model::REALSENSE);
+    //camera::CameraManager::getInstance().getCamera()->open();
+    //camera::CameraManager::getInstance().getCamera()->startThread();
+    //qDebug() << endl << "width is " << camera::CameraManager::getInstance().getConfig()->color_width << endl;
     //camera::CameraManager::getInstance().getCamera()->stopThread();
 
     //camera::CameraManager::getInstance().setCamera(camera::Model::KINECT);

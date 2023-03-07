@@ -51,6 +51,7 @@ namespace camera {
 			if (gyro_frame && accel_frame) {
 				gyro_sample = gyro_frame.get_motion_data();
 				accel_sample = accel_frame.get_motion_data();
+				// TODO find out why imu is never successful (never enter here)
 				imuSuccess = true;
 			}
 			else {
