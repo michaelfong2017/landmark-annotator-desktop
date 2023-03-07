@@ -56,6 +56,9 @@ bool KinectEngine::openDevice()
 		return false;
 	}
 
+	// Debug calibration
+	k4a_calibration_intrinsic_parameters_t intrin = calibration.depth_camera_calibration.intrinsics.parameters;
+
 	// Start cameras
 	if (K4A_RESULT_SUCCEEDED != k4a_device_start_cameras(device, &config))
 	{
