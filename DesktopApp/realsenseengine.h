@@ -73,7 +73,7 @@ public:
 
     cv::Mat readCVImageFromFile(std::wstring filename);
     void writeIntrinsicsToFile(rs2_intrinsics &intrin);
-    void readIntrinsicsFromFile(rs2_intrinsics &intrin, std::string path);
+    void readIntrinsicsFromFile(std::string path);
 
 private:
     RealsenseEngine();
@@ -100,6 +100,8 @@ private:
     //k4a_image_t k4aDepthImage;
     //std::deque<k4a_float3_t> gyroSampleQueue;
     //std::deque<k4a_float3_t> accSampleQueue;
+
+    rs2_intrinsics intrin;
 };
 
 //QImage convertColorCVToQImage(cv::Mat);

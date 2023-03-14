@@ -167,19 +167,7 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 		qCritical() << "Cropped image must have dimensions either 800x1080 or 534x720, but now is not.";
 	}
 
-	//if (depthMapToColorImage.cols == 800 && depthMapToColorImage.rows == 1080) {
-	//	BlankImage = cv::Mat(1080, 1920, CV_16UC1);
-	//	destRoi = BlankImage(cv::Rect(560, 0, 800, 1080));
-	//	query3DOffsetX = 560;
-	//}
-	//else if (depthMapToColorImage.cols == 534 && depthMapToColorImage.rows == 720) {
-	//	BlankImage = cv::Mat(720, 1280, CV_16UC1);
-	//	destRoi = BlankImage(cv::Rect(373, 0, 534, 720));
-	//	query3DOffsetX = 373;
-	//}
-	//else {
-	//	qCritical() << "Cropped image must have dimensions either 800x1080 or 534x720, but now is not.";
-	//}
+	RealsenseEngine::getInstance().readIntrinsicsFromFile("intrinsics_realsense.txt");
 
 	depthMapToColorImage.copyTo(destRoi);
 	this->recalculatedFullResolutionDepthImage = BlankImage;

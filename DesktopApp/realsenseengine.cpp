@@ -444,10 +444,7 @@ QVector3D RealsenseEngine::query3DPoint(int x, int y, cv::Mat depthToColorImage)
 
 	//writeIntrinsicsToFile(intrin);
 
-	rs2_intrinsics intrin;
-	readIntrinsicsFromFile(intrin, "intrinsics_realsense.txt");
-
-	rs2_deproject_pixel_to_point(point, &intrin, pixel, depth);
+	rs2_deproject_pixel_to_point(point, &this->intrin, pixel, depth);
 	// 52685 means no depth value in the depth image
 	return QVector3D(point[0], point[1], point[2] == 52685 ? 0 : point[2]);
 }
@@ -474,7 +471,7 @@ void RealsenseEngine::writeIntrinsicsToFile(rs2_intrinsics &intrin)
 	}
 }
 
-void RealsenseEngine::readIntrinsicsFromFile(rs2_intrinsics &intrin, std::string path)
+void RealsenseEngine::readIntrinsicsFromFile(std::string path)
 {
 	std::ifstream f(path);
 	if (f.is_open()) {
