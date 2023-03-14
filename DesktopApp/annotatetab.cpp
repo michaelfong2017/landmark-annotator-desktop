@@ -146,12 +146,26 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 	cv::Mat BlankImage; 
 	cv::Mat destRoi;
 
-	camera::Config* cameraConfig = camera::CameraManager::getInstance().getConfig();
-	int widthOfPatientBack = (int)(cameraConfig->color_height * 20.0 / 27.0 / 2.0 + 0.5) * 2;
-	int widthOffset = (cameraConfig->color_width - widthOfPatientBack) / 2;
-	BlankImage = cv::Mat(cameraConfig->color_height, cameraConfig->color_width, CV_16UC1);
-	destRoi = BlankImage(cv::Rect(widthOffset, 0, widthOfPatientBack, cameraConfig->color_height));
-	query3DOffsetX = widthOffset;
+	//camera::Config* cameraConfig = camera::CameraManager::getInstance().getConfig();
+	//int widthOfPatientBack = (int)(cameraConfig->color_height * 20.0 / 27.0 / 2.0 + 0.5) * 2;
+	//int widthOffset = (cameraConfig->color_width - widthOfPatientBack) / 2;
+	//BlankImage = cv::Mat(cameraConfig->color_height, cameraConfig->color_width, CV_16UC1);
+	//destRoi = BlankImage(cv::Rect(widthOffset, 0, widthOfPatientBack, cameraConfig->color_height));
+	//query3DOffsetX = widthOffset;
+
+	if (depthMapToColorImage.cols == 800 && depthMapToColorImage.rows == 1080) {
+		BlankImage = cv::Mat(1080, 1920, CV_16UC1);
+		destRoi = BlankImage(cv::Rect(560, 0, 800, 1080));
+		query3DOffsetX = 560;
+	}
+	else if (depthMapToColorImage.cols == 534 && depthMapToColorImage.rows == 720) {
+		BlankImage = cv::Mat(720, 1280, CV_16UC1);
+		destRoi = BlankImage(cv::Rect(373, 0, 534, 720));
+		query3DOffsetX = 373;
+	}
+	else {
+		qCritical() << "Cropped image must have dimensions either 800x1080 or 534x720, but now is not.";
+	}
 
 	//if (depthMapToColorImage.cols == 800 && depthMapToColorImage.rows == 1080) {
 	//	BlankImage = cv::Mat(1080, 1920, CV_16UC1);

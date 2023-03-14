@@ -4,6 +4,7 @@
 #include "helper.h"
 #include "cameramanager.h"
 #include "realsensecamera.h"
+#include <fstream>
 
 RealsenseEngine::RealsenseEngine() : QWidget() {
 }
@@ -435,12 +436,89 @@ void RealsenseEngine::computeNormalizedDepthImage(const cv::Mat depthToColorImag
 
 QVector3D RealsenseEngine::query3DPoint(int x, int y, cv::Mat depthToColorImage)
 {
-	camera::RealsenseCamera* camera = static_cast<camera::RealsenseCamera*>(camera::CameraManager::getInstance().getCamera());
-	rs2_intrinsics intrin = camera->intrinsics_depth;
+	//camera::RealsenseCamera* camera = static_cast<camera::RealsenseCamera*>(camera::CameraManager::getInstance().getCamera());
+	//rs2_intrinsics intrin = camera->intrinsics_depth;
 	float point[3];
 	float pixel[2]{ static_cast<float>(x), static_cast<float>(y) };
 	ushort depth = depthToColorImage.at<ushort>(y, x);
+
+	//writeIntrinsicsToFile(intrin);
+
+	rs2_intrinsics intrin;
+	readIntrinsicsFromFile(intrin, "intrinsics_realsense.txt");
+
 	rs2_deproject_pixel_to_point(point, &intrin, pixel, depth);
 	// 52685 means no depth value in the depth image
 	return QVector3D(point[0], point[1], point[2] == 52685 ? 0 : point[2]);
+}
+
+void RealsenseEngine::writeIntrinsicsToFile(rs2_intrinsics &intrin)
+{
+	std::ofstream fw("intrinsics_realsense.txt", std::ofstream::out);
+	if (fw.is_open())
+	{
+		fw << "width: " << intrin.width << std::endl;
+		fw << "height: " << intrin.height << std::endl;
+		fw << "model: " << intrin.model << std::endl;
+		if (intrin.model == RS2_DISTORTION_BROWN_CONRADY) {
+			fw << "[k1, k2, p1, p2, k3]: " << "[" << intrin.coeffs[0] << ", " << intrin.coeffs[1] << ", " << intrin.coeffs[2] << ", " << intrin.coeffs[3] << ", " << intrin.coeffs[4] << "]" << std::endl;
+		}
+		else if (intrin.model == RS2_DISTORTION_FTHETA) {
+			fw << "[k1, k2, k3, k4, 0]: " << "[" << intrin.coeffs[0] << ", " << intrin.coeffs[1] << ", " << intrin.coeffs[2] << ", " << intrin.coeffs[3] << ", " << intrin.coeffs[4] << "]" << std::endl;
+		}
+		fw << "fx: " << intrin.fx << std::endl;
+		fw << "fy: " << intrin.fy << std::endl;
+		fw << "ppx: " << intrin.ppx << std::endl;
+		fw << "ppy: " << intrin.ppy << std::endl;
+		fw.close();
+	}
+}
+
+void RealsenseEngine::readIntrinsicsFromFile(rs2_intrinsics &intrin, std::string path)
+{
+	std::ifstream f(path);
+	if (f.is_open()) {
+		std::string line;
+		while (std::getline(f, line)) {
+			size_t colon = line.find(":");
+			std::string key = line.substr(0, colon);
+			std::string value = line.substr(colon + 2, line.size());
+			if (key == "width") {
+				intrin.width = std::stoi(value);
+			}
+			else if (key == "height") {
+				intrin.height = std::stoi(value);
+			}
+			else if (key == "model") {
+				if (value == "Brown Conrady") {
+					intrin.model = RS2_DISTORTION_BROWN_CONRADY;
+				}
+				// TODO other model type
+			}
+			// RS2_DISTORTION_BROWN_CONRADY
+			else if (key == "[k1, k2, p1, p2, k3]") {
+				// TODO read from value
+				// currently hardcode
+				intrin.coeffs[0] = 0.0f;
+				intrin.coeffs[1] = 0.0f;
+				intrin.coeffs[2] = 0.0f;
+				intrin.coeffs[3] = 0.0f;
+				intrin.coeffs[4] = 0.0f;
+			}
+			// TODO other model type
+			else if (key == "fx") {
+				intrin.fx = std::stof(value);
+			}
+			else if (key == "fy") {
+				intrin.fy = std::stof(value);
+			}
+			else if (key == "ppx") {
+				intrin.ppx = std::stof(value);
+			}
+			else if (key == "ppy") {
+				intrin.ppy = std::stof(value);
+			}
+		}
+		f.close();
+	}
 }

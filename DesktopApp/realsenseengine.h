@@ -72,6 +72,8 @@ public:
     /** Calculate plane equation and distance between plane and 3D point END */
 
     cv::Mat readCVImageFromFile(std::wstring filename);
+    void writeIntrinsicsToFile(rs2_intrinsics &intrin);
+    void readIntrinsicsFromFile(rs2_intrinsics &intrin, std::string path);
 
 private:
     RealsenseEngine();

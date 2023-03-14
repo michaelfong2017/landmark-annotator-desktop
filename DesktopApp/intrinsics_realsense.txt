@@ -1,0 +1,8 @@
+width: 1280
+height: 720
+model: Brown Conrady
+[k1, k2, p1, p2, k3]: [0, 0, 0, 0, 0]
+fx: 646.321
+fy: 646.321
+ppx: 644.702
+ppy: 360.136
