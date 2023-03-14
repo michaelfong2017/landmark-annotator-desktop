@@ -57,7 +57,8 @@ bool KinectEngine::openDevice()
 		return false;
 	}
 
-	writeCalibrationToFile(calibration);
+	// Running once is enough
+	//writeCalibrationToFile(calibration);
 
 	// Debug calibration
 	k4a_calibration_intrinsic_parameters_t intrin = calibration.depth_camera_calibration.intrinsics.parameters;
@@ -949,24 +950,77 @@ cv::Mat KinectEngine::readCVImageFromFile(std::wstring filename)
 
 void KinectEngine::writeCalibrationToFile(k4a_calibration_t& calibration)
 {
-	//std::ofstream fw("intrinsics_kinect.txt", std::ofstream::out);
-	//if (fw.is_open())
-	//{
-	//	fw << "color_extrinsics_rotation: " << calibration.color_camera_calibration.extrinsics.rotation[0] << std::endl;
-	//	fw << "height: " << intrin.height << std::endl;
-	//	fw << "model: " << intrin.model << std::endl;
-	//	if (intrin.model == RS2_DISTORTION_BROWN_CONRADY) {
-	//		fw << "[k1, k2, p1, p2, k3]: " << "[" << intrin.coeffs[0] << ", " << intrin.coeffs[1] << ", " << intrin.coeffs[2] << ", " << intrin.coeffs[3] << ", " << intrin.coeffs[4] << "]" << std::endl;
-	//	}
-	//	else if (intrin.model == RS2_DISTORTION_FTHETA) {
-	//		fw << "[k1, k2, k3, k4, 0]: " << "[" << intrin.coeffs[0] << ", " << intrin.coeffs[1] << ", " << intrin.coeffs[2] << ", " << intrin.coeffs[3] << ", " << intrin.coeffs[4] << "]" << std::endl;
-	//	}
-	//	fw << "fx: " << intrin.fx << std::endl;
-	//	fw << "fy: " << intrin.fy << std::endl;
-	//	fw << "ppx: " << intrin.ppx << std::endl;
-	//	fw << "ppy: " << intrin.ppy << std::endl;
-	//	fw.close();
-	//}
+	std::ofstream fw("intrinsics_kinect.txt", std::ofstream::out);
+	if (fw.is_open())
+	{
+		// color camera
+		fw << "color_extrinsics_rotation: " << std::endl;
+		for (int i = 0; i < 9; ++i) {
+			fw << calibration.color_camera_calibration.extrinsics.rotation[i] << std::endl;
+		}
+
+		fw << "color_extrinsics_translation: " << std::endl;
+		for (int i = 0; i < 3; ++i) {
+			fw << calibration.color_camera_calibration.extrinsics.translation[i] << std::endl;
+		}
+
+		fw << "color_intrinsics_param: " << std::endl;
+		for (int i = 0; i < 15; ++i) {
+			fw << calibration.color_camera_calibration.intrinsics.parameters.v[i] << std::endl;
+		}
+
+		fw << "color_intrinsics_param_count: " << calibration.color_camera_calibration.intrinsics.parameter_count << std::endl;
+		fw << "color_intrinsics_type: " << calibration.color_camera_calibration.intrinsics.type << std::endl;
+		fw << "color_intrinsics_metric_radius: " << calibration.color_camera_calibration.metric_radius << std::endl;
+		fw << "color_intrinsics_resolution_height: " << calibration.color_camera_calibration.resolution_height << std::endl;
+		fw << "color_intrinsics_resolution_width: " << calibration.color_camera_calibration.resolution_width << std::endl;
+		//
+
+		fw << "color_resolution: " << calibration.color_resolution << std::endl;
+
+		// depth camera
+		fw << "depth_extrinsics_rotation: " << std::endl;
+		for (int i = 0; i < 9; ++i) {
+			fw << calibration.depth_camera_calibration.extrinsics.rotation[i] << std::endl;
+		}
+
+		fw << "depth_extrinsics_translation: " << std::endl;
+		for (int i = 0; i < 3; ++i) {
+			fw << calibration.depth_camera_calibration.extrinsics.translation[i] << std::endl;
+		}
+
+		fw << "depth_intrinsics_param: " << std::endl;
+		for (int i = 0; i < 15; ++i) {
+			fw << calibration.depth_camera_calibration.intrinsics.parameters.v[i] << std::endl;
+		}
+
+		fw << "depth_intrinsics_param_count: " << calibration.depth_camera_calibration.intrinsics.parameter_count << std::endl;
+		fw << "depth_intrinsics_type: " << calibration.depth_camera_calibration.intrinsics.type << std::endl;
+		fw << "depth_intrinsics_metric_radius: " << calibration.depth_camera_calibration.metric_radius << std::endl;
+		fw << "depth_intrinsics_resolution_height: " << calibration.depth_camera_calibration.resolution_height << std::endl;
+		fw << "depth_intrinsics_resolution_width: " << calibration.depth_camera_calibration.resolution_width << std::endl;
+		//
+
+		fw << "depth_mode: " << calibration.depth_mode << std::endl;
+
+		// extrinsics
+		for (int p = 0; p < 4; ++p) {
+			for (int q = 0; q < 4; ++q) {
+				fw << "extrinsics[" << p << "][" << q << "]: " << std::endl;
+				fw << "rotation: " << std::endl;
+				for (int i = 0; i < 9; ++i) {
+					fw << calibration.extrinsics[p][q].rotation[i] << std::endl;
+				}
+				fw << "translation: " << std::endl;
+				for (int i = 0; i < 3; ++i) {
+					fw << calibration.extrinsics[p][q].translation[i] << std::endl;
+				}
+				fw << std::endl;
+			}
+		}
+
+		fw.close();
+	}
 }
 
 void KinectEngine::readIntrinsicsFromFile(std::string path)

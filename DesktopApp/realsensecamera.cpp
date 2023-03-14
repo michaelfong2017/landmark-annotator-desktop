@@ -86,7 +86,7 @@ namespace camera {
 		intrinsics_color = p.get_active_profile().get_stream(RS2_STREAM_COLOR).as<rs2::video_stream_profile>().get_intrinsics();
 
 		// Running once is enough
-		RealsenseEngine::getInstance().writeIntrinsicsToFile(intrinsics_color);
+		//RealsenseEngine::getInstance().writeIntrinsicsToFile(intrinsics_color);
 
 		camera_running_ = true;
 	}
