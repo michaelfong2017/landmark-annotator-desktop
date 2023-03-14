@@ -72,6 +72,9 @@ public:
 
     cv::Mat readCVImageFromFile(std::wstring filename);
 
+    void writeCalibrationToFile(k4a_calibration_t& calibration);
+    void readIntrinsicsFromFile(std::string path);
+
 private:
     KinectEngine();
 

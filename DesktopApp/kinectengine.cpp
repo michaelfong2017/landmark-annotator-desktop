@@ -2,6 +2,7 @@
 #include <QtWidgets/QWidget>
 #include <k4a/k4a.hpp>
 #include "stdafx.h"
+#include <fstream>
 
 KinectEngine::KinectEngine() : QWidget() {
 }
@@ -55,6 +56,8 @@ bool KinectEngine::openDevice()
 		k4a_device_close(device);
 		return false;
 	}
+
+	writeCalibrationToFile(calibration);
 
 	// Debug calibration
 	k4a_calibration_intrinsic_parameters_t intrin = calibration.depth_camera_calibration.intrinsics.parameters;
@@ -942,4 +945,79 @@ cv::Mat KinectEngine::readCVImageFromFile(std::wstring filename)
 	delete[] buf;
 	fclose(fp);
 	return img;
+}
+
+void KinectEngine::writeCalibrationToFile(k4a_calibration_t& calibration)
+{
+	//std::ofstream fw("intrinsics_kinect.txt", std::ofstream::out);
+	//if (fw.is_open())
+	//{
+	//	fw << "color_extrinsics_rotation: " << calibration.color_camera_calibration.extrinsics.rotation[0] << std::endl;
+	//	fw << "height: " << intrin.height << std::endl;
+	//	fw << "model: " << intrin.model << std::endl;
+	//	if (intrin.model == RS2_DISTORTION_BROWN_CONRADY) {
+	//		fw << "[k1, k2, p1, p2, k3]: " << "[" << intrin.coeffs[0] << ", " << intrin.coeffs[1] << ", " << intrin.coeffs[2] << ", " << intrin.coeffs[3] << ", " << intrin.coeffs[4] << "]" << std::endl;
+	//	}
+	//	else if (intrin.model == RS2_DISTORTION_FTHETA) {
+	//		fw << "[k1, k2, k3, k4, 0]: " << "[" << intrin.coeffs[0] << ", " << intrin.coeffs[1] << ", " << intrin.coeffs[2] << ", " << intrin.coeffs[3] << ", " << intrin.coeffs[4] << "]" << std::endl;
+	//	}
+	//	fw << "fx: " << intrin.fx << std::endl;
+	//	fw << "fy: " << intrin.fy << std::endl;
+	//	fw << "ppx: " << intrin.ppx << std::endl;
+	//	fw << "ppy: " << intrin.ppy << std::endl;
+	//	fw.close();
+	//}
+}
+
+void KinectEngine::readIntrinsicsFromFile(std::string path)
+{
+	//std::ifstream f(path);
+	//if (f.is_open()) {
+	//	std::string line;
+	//	while (std::getline(f, line)) {
+	//		size_t colon = line.find(":");
+	//		std::string key = line.substr(0, colon);
+	//		std::string value = line.substr(colon + 2, line.size());
+	//		if (key == "width") {
+	//			intrin.width = std::stoi(value);
+	//		}
+	//		else if (key == "height") {
+	//			intrin.height = std::stoi(value);
+	//		}
+	//		else if (key == "model") {
+	//			if (value == "Brown Conrady") {
+	//				intrin.model = RS2_DISTORTION_BROWN_CONRADY;
+	//			}
+	//			// TODO other model type
+	//		}
+	//		// RS2_DISTORTION_BROWN_CONRADY
+	//		else if (key == "[k1, k2, p1, p2, k3]") {
+	//			// TODO read from value
+	//			// currently hardcode
+	//			intrin.coeffs[0] = 0.0f;
+	//			intrin.coeffs[1] = 0.0f;
+	//			intrin.coeffs[2] = 0.0f;
+	//			intrin.coeffs[3] = 0.0f;
+	//			intrin.coeffs[4] = 0.0f;
+	//		}
+	//		// TODO other model type
+	//		else if (key == "fx") {
+	//			intrin.fx = std::stof(value);
+	//		}
+	//		else if (key == "fy") {
+	//			intrin.fy = std::stof(value);
+	//		}
+	//		else if (key == "ppx") {
+	//			intrin.ppx = std::stof(value);
+	//		}
+	//		else if (key == "ppy") {
+	//			intrin.ppy = std::stof(value);
+	//		}
+	//	}
+	//	f.close();
+	//}
+
+	// HARDCODE
+	calibration.color_resolution = K4A_COLOR_RESOLUTION_1080P;
+	calibration.depth_mode = K4A_DEPTH_MODE_NFOV_UNBINNED;
 }

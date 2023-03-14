@@ -1,4 +1,5 @@
 #include "realsensecamera.h"
+#include "realsenseengine.h"
 
 namespace camera {
 	RealsenseCamera::RealsenseCamera()
@@ -82,7 +83,10 @@ namespace camera {
 
 		queue_frameset = rs2::frame_queue(1);
 
-		intrinsics_depth = p.get_active_profile().get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>().get_intrinsics();
+		intrinsics_color = p.get_active_profile().get_stream(RS2_STREAM_COLOR).as<rs2::video_stream_profile>().get_intrinsics();
+
+		// Running once is enough
+		RealsenseEngine::getInstance().writeIntrinsicsToFile(intrinsics_color);
 
 		camera_running_ = true;
 	}

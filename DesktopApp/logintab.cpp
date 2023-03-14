@@ -331,7 +331,7 @@ void LoginTab::startOfflineMode() {
 
 	// Debug calibration
 	camera::RealsenseCamera* camera = static_cast<camera::RealsenseCamera*>(camera::CameraManager::getInstance().getCamera());
-	rs2_intrinsics intrin = camera->intrinsics_depth;
+	rs2_intrinsics intrin = camera->intrinsics_color;
 
 	// Disable all tabs except capture tab in offline mode
 	this->parent->ui.tabWidget->setTabEnabled(TabIndex::CAPTURETAB, true);

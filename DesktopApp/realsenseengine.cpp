@@ -437,12 +437,10 @@ void RealsenseEngine::computeNormalizedDepthImage(const cv::Mat depthToColorImag
 QVector3D RealsenseEngine::query3DPoint(int x, int y, cv::Mat depthToColorImage)
 {
 	//camera::RealsenseCamera* camera = static_cast<camera::RealsenseCamera*>(camera::CameraManager::getInstance().getCamera());
-	//rs2_intrinsics intrin = camera->intrinsics_depth;
+	//rs2_intrinsics intrin = camera->intrinsics_color;
 	float point[3];
 	float pixel[2]{ static_cast<float>(x), static_cast<float>(y) };
 	ushort depth = depthToColorImage.at<ushort>(y, x);
-
-	//writeIntrinsicsToFile(intrin);
 
 	rs2_deproject_pixel_to_point(point, &this->intrin, pixel, depth);
 	// 52685 means no depth value in the depth image
@@ -451,13 +449,13 @@ QVector3D RealsenseEngine::query3DPoint(int x, int y, cv::Mat depthToColorImage)
 
 void RealsenseEngine::writeIntrinsicsToFile(rs2_intrinsics &intrin)
 {
-	std::ofstream fw("intrinsics_realsense.txt", std::ofstream::out);
+	std::ofstream fw("intrinsics_realsense_color.txt", std::ofstream::out);
 	if (fw.is_open())
 	{
 		fw << "width: " << intrin.width << std::endl;
 		fw << "height: " << intrin.height << std::endl;
 		fw << "model: " << intrin.model << std::endl;
-		if (intrin.model == RS2_DISTORTION_BROWN_CONRADY) {
+		if (intrin.model == RS2_DISTORTION_BROWN_CONRADY || intrin.model == RS2_DISTORTION_INVERSE_BROWN_CONRADY) {
 			fw << "[k1, k2, p1, p2, k3]: " << "[" << intrin.coeffs[0] << ", " << intrin.coeffs[1] << ", " << intrin.coeffs[2] << ", " << intrin.coeffs[3] << ", " << intrin.coeffs[4] << "]" << std::endl;
 		}
 		else if (intrin.model == RS2_DISTORTION_FTHETA) {
@@ -489,6 +487,9 @@ void RealsenseEngine::readIntrinsicsFromFile(std::string path)
 			else if (key == "model") {
 				if (value == "Brown Conrady") {
 					intrin.model = RS2_DISTORTION_BROWN_CONRADY;
+				}
+				else if (value == "Inverse Brown Conrady") {
+					intrin.model = RS2_DISTORTION_INVERSE_BROWN_CONRADY;
 				}
 				// TODO other model type
 			}

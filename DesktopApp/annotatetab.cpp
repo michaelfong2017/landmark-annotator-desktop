@@ -167,7 +167,7 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 		qCritical() << "Cropped image must have dimensions either 800x1080 or 534x720, but now is not.";
 	}
 
-	RealsenseEngine::getInstance().readIntrinsicsFromFile("intrinsics_realsense.txt");
+	RealsenseEngine::getInstance().readIntrinsicsFromFile("intrinsics_realsense_color.txt");
 
 	depthMapToColorImage.copyTo(destRoi);
 	this->recalculatedFullResolutionDepthImage = BlankImage;
