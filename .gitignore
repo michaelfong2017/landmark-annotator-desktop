@@ -8,5 +8,6 @@
 .vs/
 DesktopApp/x64/
 *.png
+!/DesktopApp/resources/*
 *.vcxproj.user
 *.pdf

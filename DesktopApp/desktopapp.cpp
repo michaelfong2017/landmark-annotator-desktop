@@ -99,6 +99,7 @@ DesktopApp::DesktopApp(QWidget* parent)
 			break;
 		case TabIndex::CAPTURETAB:
 			// current tab is captureTab
+			this->captureTab->onLanguageChanged();
 			this->captureTab->timer->start(0);
 			break;
 		case TabIndex::ANNOTATETAB:
