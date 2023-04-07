@@ -217,7 +217,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		QString depthSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_depth.png");
 		QString colorToDepthSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_color_aligned.png");
 		QString depthToColorSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_depth_aligned.png");
-		QString fourChannelPNGSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_four_channel.png");
+		//QString fourChannelPNGSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_four_channel.png");
 		QString pointCloudPNGSavePath = QDir(chosenFolder).filePath(filenamePrefix + "_point_cloud.png");
 
 		this->creationTime = filenamePrefix;
@@ -226,12 +226,21 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->capturedDepthImage = KinectEngine::getInstance().readCVImageFromFile(depthSavePath.toStdWString());
 		this->capturedColorToDepthImage = KinectEngine::getInstance().readCVImageFromFile(colorToDepthSavePath.toStdWString());
 		this->capturedDepthToColorImage = KinectEngine::getInstance().readCVImageFromFile(depthToColorSavePath.toStdWString());
-		this->FourChannelPNG = KinectEngine::getInstance().readCVImageFromFile(fourChannelPNGSavePath.toStdWString());
+		//this->FourChannelPNG = KinectEngine::getInstance().readCVImageFromFile(fourChannelPNGSavePath.toStdWString());
 		this->PointCloudPNG = KinectEngine::getInstance().readCVImageFromFile(pointCloudPNGSavePath.toStdWString());
 
 		if (this->PointCloudPNG.dims == 0) {
 			//this->PointCloudPNG = cv::Mat::ones(1080, 1920, CV_16SC4);
 			this->PointCloudPNG = cv::Mat::ones(cameraConfig->color_height, cameraConfig->color_width, CV_16SC4);
+			/* Cropping PointCloudPNG to 800 * 1080 START*/
+			/* Cropping PointCloudPNG to 534 * 720 START*/
+			//int widthOfPatientBack = 800;
+			int widthOfPatientBack = (int)(cameraConfig->color_height * 20.0 / 27.0 / 2.0 + 0.5) * 2;
+			// All divisible by 2
+			//cv::Rect rect((COLOR_IMAGE_WIDTH / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, 1080);
+			cv::Rect rect((cameraConfig->color_width / 2) - (widthOfPatientBack / 2), 0, widthOfPatientBack, cameraConfig->color_height);
+			this->PointCloudPNG = this->PointCloudPNG(rect);
+			/* Cropping PointCloudPNG to 800 * 1080 END*/
 			this->hasPointCloud = false;
 		}
 		else {
@@ -242,8 +251,48 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->capturedDepthImage.convertTo(this->capturedDepthImage, CV_16UC1);
 		cv::cvtColor(this->capturedColorToDepthImage, this->capturedColorToDepthImage, cv::COLOR_BGR2BGRA);
 		this->capturedDepthToColorImage.convertTo(this->capturedDepthToColorImage, CV_16UC1);
-		cv::cvtColor(this->FourChannelPNG, this->FourChannelPNG, cv::COLOR_BGR2BGRA);
 		this->PointCloudPNG.convertTo(this->PointCloudPNG, CV_16SC4);
+
+		RealsenseEngine::getInstance().computeNormalizedDepthImage(this->capturedDepthToColorImage, this->RANSACImage);
+		/* Convert to the special 4 channels image and upload START*/
+		cv::Mat color3 = this->capturedColorImage;
+		std::vector<cv::Mat>channelsForColor2(3);
+		cv::split(color3, channelsForColor2);
+
+		cv::Mat depthToColor3 = this->capturedDepthToColorImage;
+		std::vector<cv::Mat>channelsForDepth1(1);
+		cv::split(depthToColor3, channelsForDepth1);
+
+		cv::Mat normalizedDepthToColor = this->RANSACImage;
+		std::vector<cv::Mat>channelsForDepth2(1);
+		cv::split(normalizedDepthToColor, channelsForDepth2);
+
+		int w = this->capturedColorImage.cols;
+		int h = this->capturedColorImage.rows;
+
+		FourChannelPNG = cv::Mat::ones(h, w, CV_16UC4);
+		std::vector<cv::Mat>channels3(4);
+		cv::split(FourChannelPNG, channels3);
+
+		qDebug() << "this->capturedColorImage" << this->capturedColorImage.cols;
+		qDebug() << "depthToColor3" << depthToColor3.cols;
+		qDebug() << "normalizedDepthToColor" << normalizedDepthToColor.cols;
+
+		// channelsForColor2 = BGR
+		for (int i = 0; i < w * h; i++) {
+			channels3[0].at<uint16_t>(i) = (channelsForColor2[2].at<uint8_t>(i) << 8) | channelsForColor2[1].at<uint8_t>(i);
+			channels3[1].at<uint16_t>(i) = (channelsForColor2[0].at<uint8_t>(i) << 8);
+		}
+		channels3[2] = channelsForDepth1[0];
+		channels3[3] = channelsForDepth2[0];
+
+		cv::merge(channels3, FourChannelPNG);
+
+		qDebug() << "Merging FourChannelPNG completed: "
+			<< FourChannelPNG.cols << ", "
+			<< FourChannelPNG.rows << ", "
+			<< FourChannelPNG.channels();
+		/* Convert to the special 4 channels image and upload END */
 
 
 		afterSensorImagesAcquired();
