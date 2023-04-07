@@ -282,6 +282,10 @@ void RealsenseEngine::computeNormalizedDepthImage(const cv::Mat depthToColorImag
 	int IgnoreLeftAndRightPixel = 150;
 	int IgnoreMiddlePixel = 150;
 
+	// 565 and 715 for Realsense
+	int MIN = depthToColorImage.cols / 2 - 75;
+	int MAX = depthToColorImage.cols / 2 + 75;
+
 	while (iterationCount <= k) {
 
 		inlierCount = 0;
@@ -293,7 +297,8 @@ void RealsenseEngine::computeNormalizedDepthImage(const cv::Mat depthToColorImag
 			if (PointOne[0] < IgnoreLeftAndRightPixel && PointOne[0] > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
 				continue;
 			}
-			if (PointOne[0] > 565 && PointOne[0] < 715) {
+
+			if (PointOne[0] > MIN && PointOne[0] < MAX) {
 				continue;
 			}
 			QVector3D vector3D_1 = RealsenseEngine::getInstance().query3DPoint(PointOne[0], PointOne[1], depthToColorImage);
@@ -312,7 +317,7 @@ void RealsenseEngine::computeNormalizedDepthImage(const cv::Mat depthToColorImag
 			if (PointTwo[0] < IgnoreLeftAndRightPixel && PointTwo[0] > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
 				continue;
 			}
-			if (PointTwo[0] > 565 && PointTwo[0] < 715) {
+			if (PointTwo[0] > MIN && PointTwo[0] < MAX) {
 				continue;
 			}
 			QVector3D vector3D_2 = RealsenseEngine::getInstance().query3DPoint(PointTwo[0], PointTwo[1], depthToColorImage);
@@ -332,7 +337,7 @@ void RealsenseEngine::computeNormalizedDepthImage(const cv::Mat depthToColorImag
 			if (PointThree[0] < IgnoreLeftAndRightPixel && PointThree[0] > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
 				continue;
 			}
-			if (PointThree[0] > 565 && PointThree[0] < 715) {
+			if (PointThree[0] > MIN && PointThree[0] < MAX) {
 				continue;
 			}
 			QVector3D vector3D_3 = RealsenseEngine::getInstance().query3DPoint(PointThree[0], PointThree[1], depthToColorImage);
@@ -367,7 +372,7 @@ void RealsenseEngine::computeNormalizedDepthImage(const cv::Mat depthToColorImag
 
 		for (int y = 0; y < depthToColorImage.rows; y += 2) {
 			for (int x = 0; x < depthToColorImage.cols; x += 2) {
-				if (x > 565 && x < 715) {
+				if (x > MIN && x < MAX) {
 					continue;
 				}
 				if (x < IgnoreLeftAndRightPixel || x > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
