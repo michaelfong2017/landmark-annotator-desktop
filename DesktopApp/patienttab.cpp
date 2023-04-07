@@ -511,19 +511,6 @@ void PatientTab::onDownloadImage(QNetworkReply* reply) {
         }
     }
 
-    if (!KinectEngine::getInstance().isDeviceOpened()) {
-        KinectEngine::getInstance().configDevice();
-        bool isSuccess = KinectEngine::getInstance().openDevice();
-
-        if (!isSuccess) {
-            TwoLinesDialog dialog;
-            dialog.setLine1("Kinect device cannot be opened!");
-            dialog.setLine2("Please check it and try again.");
-            dialog.exec();
-            return;
-        }
-    }
-
     isDownloading = false;
 
     /** Progress bar UI */
