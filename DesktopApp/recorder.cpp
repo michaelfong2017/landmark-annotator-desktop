@@ -1,6 +1,7 @@
 #include "recorder.h"
 #include "kinectengine.h"
 #include "realsenseengine.h"
+#include "cameramanager.h"
 
 Recorder::Recorder(DesktopApp* parent) {
 	this->isRecording = false;
@@ -32,13 +33,13 @@ void Recorder::prepareRecorder() {
 
 	// Initialize opencv VideoWriter
 	cv::Size colorSize(
-		COLOR_IMAGE_WIDTH_REALSENSE,
-		COLOR_IMAGE_HEIGHT_REALSENSE
+		camera::CameraManager::getInstance().getConfig()->color_width,
+		camera::CameraManager::getInstance().getConfig()->color_height
 	);
 
 	cv::Size depthSize(
-		DEPTH_IMAGE_WIDTH_REALSENSE,
-		DEPTH_IMAGE_HEIGHT_REALSENSE
+		camera::CameraManager::getInstance().getConfig()->depth_width,
+		camera::CameraManager::getInstance().getConfig()->depth_height
 	);
 
 	/** Handle Chinese name when saving video */
@@ -50,14 +51,14 @@ void Recorder::prepareRecorder() {
 	this->colorVideoWriter = new cv::VideoWriter(
 		tempColorOutputFilename.toStdString(),
 		cv::VideoWriter::fourcc('H', '2', '6', '4'),
-		VIDEOWRITER_FPS,
+		camera::CameraManager::getInstance().getConfig()->fps,
 		colorSize
 	);
 
 	this->depthVideoWriter = new cv::VideoWriter(
 		tempDepthOutputFilename.toStdString(),
 		cv::VideoWriter::fourcc('H', '2', '6', '4'),
-		VIDEOWRITER_FPS,
+		camera::CameraManager::getInstance().getConfig()->fps,
 		depthSize
 	);
 
