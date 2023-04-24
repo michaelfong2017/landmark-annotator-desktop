@@ -70,6 +70,8 @@ public:
     float findDistanceBetween3DPointAndPlane(float x1, float y1, float z1, float a, float b, float c, float d);
     /** Calculate plane equation and distance between plane and 3D point END */
 
+    void computeNormalizedDepthImage(const cv::Mat depthToColorImage, cv::Mat& out);
+
     cv::Mat readCVImageFromFile(std::wstring filename);
 
     void writeCalibrationToFile(k4a_calibration_t& calibration);

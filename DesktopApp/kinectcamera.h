@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "camera.h"
 #include <k4a/k4a.hpp>
+#include "kinectengine.h"
+#include "realsenseengine.h"
 
 namespace camera {
 	struct KinectConfig : Config {
@@ -31,6 +33,18 @@ namespace camera {
 		void stopThread() override;
 		void open() override;
 		void close() override;
+
+		/** Functions that both realsense and kinect have */
+		void computeNormalizedDepthImage(const cv::Mat depthToColorImage, cv::Mat& out) override;
+		QVector3D query3DPoint(int x, int y, cv::Mat depthToColorImage) override;
+		void readPointCloudImage(cv::Mat& xyzImage) override;
+		void readAllImages(cv::Mat& colorImage, cv::Mat& depthImage, cv::Mat& colorToDepthImage, cv::Mat& depthToColorImage) override;
+		void captureImages() override;
+		void readColorAndDepthImages(cv::Mat& colorImage, cv::Mat& depthImage) override;
+		bool queueIMUSample() override;
+		std::deque<point3D> getGyroSampleQueue() override;
+		std::deque<point3D> getAccSampleQueue() override;
+		/** Functions that both realsense and kinect have END */
 
 	signals:
 		// A signal sent by our class to notify that there are frames that need to be processed

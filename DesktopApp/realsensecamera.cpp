@@ -95,6 +95,51 @@ namespace camera {
 	{
 	}
 
+	void RealsenseCamera::computeNormalizedDepthImage(const cv::Mat depthToColorImage, cv::Mat& out)
+	{
+		RealsenseEngine::getInstance().computeNormalizedDepthImage(depthToColorImage, out);
+	}
+
+	QVector3D RealsenseCamera::query3DPoint(int x, int y, cv::Mat depthToColorImage)
+	{
+		return RealsenseEngine::getInstance().query3DPoint(x, y, depthToColorImage);
+	}
+
+	void RealsenseCamera::readPointCloudImage(cv::Mat& xyzImage)
+	{
+		RealsenseEngine::getInstance().readPointCloudImage(xyzImage);
+	}
+
+	void RealsenseCamera::readAllImages(cv::Mat& colorImage, cv::Mat& depthImage, cv::Mat& colorToDepthImage, cv::Mat& depthToColorImage)
+	{
+		RealsenseEngine::getInstance().readAllImages(colorImage, depthImage, colorToDepthImage, depthToColorImage);
+	}
+
+	void RealsenseCamera::captureImages()
+	{
+		RealsenseEngine::getInstance().captureImages();
+	}
+
+	void RealsenseCamera::readColorAndDepthImages(cv::Mat& colorImage, cv::Mat& depthImage)
+	{
+		RealsenseEngine::getInstance().readColorAndDepthImages(colorImage, depthImage);
+	}
+
+	bool RealsenseCamera::queueIMUSample()
+	{
+		return RealsenseEngine::getInstance().queueIMUSample();
+	}
+
+	std::deque<point3D> RealsenseCamera::getGyroSampleQueue()
+	{
+		return RealsenseEngine::getInstance().getGyroSampleQueue();
+	}
+
+	std::deque<point3D> RealsenseCamera::getAccSampleQueue()
+	{
+		return RealsenseEngine::getInstance().getAccSampleQueue();
+	}
+
 	QImage realsenseFrameToQImage(const rs2::frame& f)
 	{
 		auto vf = f.as<rs2::video_frame>();

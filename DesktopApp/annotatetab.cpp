@@ -157,11 +157,13 @@ void AnnotateTab::reloadCurrentImage(QImage colorImageLeft, cv::Mat depthMapToCo
 		BlankImage = cv::Mat(1080, 1920, CV_16UC1);
 		destRoi = BlankImage(cv::Rect(560, 0, 800, 1080));
 		query3DOffsetX = 560;
+		camera::CameraManager::getInstance().setCamera(camera::Model::KINECT);
 	}
 	else if (depthMapToColorImage.cols == 534 && depthMapToColorImage.rows == 720) {
 		BlankImage = cv::Mat(720, 1280, CV_16UC1);
 		destRoi = BlankImage(cv::Rect(373, 0, 534, 720));
 		query3DOffsetX = 373;
+		camera::CameraManager::getInstance().setCamera(camera::Model::REALSENSE);
 	}
 	else {
 		qCritical() << "Cropped image must have dimensions either 800x1080 or 534x720, but now is not.";
@@ -261,7 +263,7 @@ void AnnotateTab::resizeAndDrawAnnotations() {
 		x *= this->scalingFactorForRight;
 		y *= this->scalingFactorForRight;
 		//QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, this->depthToColorImage);
-		QVector3D vector3D = RealsenseEngine::getInstance().query3DPoint(x + this->query3DOffsetX, y, this->recalculatedFullResolutionDepthImage);
+		QVector3D vector3D = camera::CameraManager::getInstance().getCamera()->query3DPoint(x + this->query3DOffsetX, y, this->recalculatedFullResolutionDepthImage);
 
 
 		if (this->annotations3D.find(it.first) == this->annotations3D.end()) {

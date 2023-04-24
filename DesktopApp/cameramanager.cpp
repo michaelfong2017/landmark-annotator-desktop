@@ -60,9 +60,7 @@ namespace camera {
 		if (kinectConnected) {
 			// Select kinect
 			qDebug() << "Kinect camera is selected";
-			// TODO implement kinectcamera.cpp and select kinect
-			camera::CameraManager::getInstance().setCamera(camera::Model::REALSENSE);
-			//camera::CameraManager::getInstance().setCamera(camera::Model::KINECT);
+			camera::CameraManager::getInstance().setCamera(camera::Model::KINECT);
 			camera::CameraManager::getInstance().getCamera()->open();
 			camera::CameraManager::getInstance().getCamera()->startThread();
 			qDebug() << "Color width is " << camera::CameraManager::getInstance().getConfig()->color_width;

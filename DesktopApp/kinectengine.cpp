@@ -927,6 +927,188 @@ float KinectEngine::findDistanceBetween3DPointAndPlane(
 	return d / e;
 }
 
+void KinectEngine::computeNormalizedDepthImage(const cv::Mat depthToColorImage, cv::Mat& out)
+{
+	// RANSAC
+	int k = 6;
+	int threshold = 15;
+
+	int iterationCount = 0;
+	int inlierCount = 0;
+
+	int MaxInlierCount = -1;
+	float PlaneA, PlaneB, PlaneC, PlaneD;
+	float BestPointOne[2];
+	float BestPointTwo[2];
+	float BestPointThree[2];
+
+	float a, b, c, d;
+	float PointOne[2];
+	float PointTwo[2];
+	float PointThree[2];
+
+	srand((unsigned)time(0));
+
+	int IgnoreLeftAndRightPixel = 150;
+	int IgnoreMiddlePixel = 150;
+
+	// 565 and 715 for Realsense
+	int MIN = depthToColorImage.cols / 2 - 75;
+	int MAX = depthToColorImage.cols / 2 + 75;
+
+	while (iterationCount <= k) {
+
+		inlierCount = 0;
+
+		// First point
+		while (true) {
+			PointOne[0] = rand() % depthToColorImage.cols;
+			PointOne[1] = rand() % depthToColorImage.rows;
+			if (PointOne[0] < IgnoreLeftAndRightPixel && PointOne[0] > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
+				continue;
+			}
+
+			if (PointOne[0] > MIN && PointOne[0] < MAX) {
+				continue;
+			}
+			QVector3D vector3D_1 = KinectEngine::getInstance().query3DPoint(PointOne[0], PointOne[1], depthToColorImage);
+			if (vector3D_1.x() == 0.0f && vector3D_1.y() == 0.0f && vector3D_1.z() == 0.0f) {
+				continue;
+			}
+			else {
+				break;
+			}
+		}
+
+		// Second point
+		while (true) {
+			PointTwo[0] = rand() % depthToColorImage.cols;
+			PointTwo[1] = rand() % depthToColorImage.rows;
+			if (PointTwo[0] < IgnoreLeftAndRightPixel && PointTwo[0] > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
+				continue;
+			}
+			if (PointTwo[0] > MIN && PointTwo[0] < MAX) {
+				continue;
+			}
+			QVector3D vector3D_2 = KinectEngine::getInstance().query3DPoint(PointTwo[0], PointTwo[1], depthToColorImage);
+			if (vector3D_2.x() == 0.0f && vector3D_2.y() == 0.0f && vector3D_2.z() == 0.0f) {
+				continue;
+			}
+			if (sqrt(pow(PointTwo[0] - PointOne[0], 2) + pow(PointTwo[1] - PointOne[1], 2) * 1.0) <= 100) {
+				continue;
+			}
+			break;
+		}
+
+		// Third point
+		while (true) {
+			PointThree[0] = rand() % depthToColorImage.cols;
+			PointThree[1] = rand() % depthToColorImage.rows;
+			if (PointThree[0] < IgnoreLeftAndRightPixel && PointThree[0] > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
+				continue;
+			}
+			if (PointThree[0] > MIN && PointThree[0] < MAX) {
+				continue;
+			}
+			QVector3D vector3D_3 = KinectEngine::getInstance().query3DPoint(PointThree[0], PointThree[1], depthToColorImage);
+			if (vector3D_3.x() == 0.0f && vector3D_3.y() == 0.0f && vector3D_3.z() == 0.0f) {
+				continue;
+			}
+			if (sqrt(pow(PointThree[0] - PointOne[0], 2) + pow(PointThree[1] - PointOne[1], 2) * 1.0) <= 100) {
+				continue;
+			}
+			if (sqrt(pow(PointThree[0] - PointTwo[0], 2) + pow(PointThree[1] - PointTwo[1], 2) * 1.0) <= 100) {
+				continue;
+			}
+			break;
+		}
+
+		QVector3D vector3D_1 = KinectEngine::getInstance().query3DPoint(PointOne[0], PointOne[1], depthToColorImage);
+		QVector3D vector3D_2 = KinectEngine::getInstance().query3DPoint(PointTwo[0], PointTwo[1], depthToColorImage);
+		QVector3D vector3D_3 = KinectEngine::getInstance().query3DPoint(PointThree[0], PointThree[1], depthToColorImage);
+
+		float* abcd;
+		abcd = KinectEngine::getInstance().findPlaneEquationCoefficients(
+			vector3D_1.x(), vector3D_1.y(), vector3D_1.z(),
+			vector3D_2.x(), vector3D_2.y(), vector3D_2.z(),
+			vector3D_3.x(), vector3D_3.y(), vector3D_3.z()
+		);
+		a = abcd[0];
+		b = abcd[1];
+		c = abcd[2];
+		d = abcd[3];
+		/*qDebug() << "Equation of plane is " << a << " x + " << b
+			<< " y + " << c << " z + " << d << " = 0.";*/
+
+		for (int y = 0; y < depthToColorImage.rows; y += 2) {
+			for (int x = 0; x < depthToColorImage.cols; x += 2) {
+				if (x > MIN && x < MAX) {
+					continue;
+				}
+				if (x < IgnoreLeftAndRightPixel || x > depthToColorImage.cols - IgnoreLeftAndRightPixel) {
+					continue;
+				}
+				QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, depthToColorImage);
+				if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
+					continue;
+				}
+
+				float distance = KinectEngine::getInstance().findDistanceBetween3DPointAndPlane(vector3D.x(), vector3D.y(), vector3D.z(), a, b, c, d);
+				if (distance <= threshold) {
+					inlierCount++;
+				}
+			}
+		}
+
+		if (inlierCount > MaxInlierCount) {
+			PlaneA = a;
+			PlaneB = b;
+			PlaneC = c;
+			PlaneD = d;
+			BestPointOne[0] = PointOne[0];
+			BestPointOne[1] = PointOne[1];
+			BestPointTwo[0] = PointTwo[0];
+			BestPointTwo[1] = PointTwo[1];
+			BestPointThree[0] = PointThree[0];
+			BestPointThree[1] = PointThree[1];
+
+			MaxInlierCount = inlierCount;
+		}
+
+		iterationCount++;
+		//qDebug() << "Inliers: " << inlierCount;
+
+	}
+	//qDebug() << "Max Inliers: " << MaxInlierCount;
+
+	// computer actual image
+	out = cv::Mat::zeros(depthToColorImage.rows, depthToColorImage.cols, CV_16UC1);
+	float maxDistance = 0.0f;
+	for (int y = 0; y < depthToColorImage.rows; y++) {
+		for (int x = 0; x < depthToColorImage.cols; x++) {
+
+			QVector3D vector3D = KinectEngine::getInstance().query3DPoint(x, y, depthToColorImage);
+
+			if (vector3D.x() == 0.0f && vector3D.y() == 0.0f && vector3D.z() == 0.0f) {
+				out.at<uint16_t>(y, x) = 0.0f;
+				continue;
+			}
+
+			float distance = KinectEngine::getInstance().findDistanceBetween3DPointAndPlane(vector3D.x(), vector3D.y(), vector3D.z(), PlaneA, PlaneB, PlaneC, PlaneD);
+			out.at<uint16_t>(y, x) = distance;
+			/*if (distance <= threshold) {
+				out.at<uint16_t>(y, x) = 5000;
+			}*/
+			if (distance > maxDistance) {
+				maxDistance = distance;
+			}
+		}
+	}
+	//out.at<uint16_t>(BestPointOne[1], BestPointOne[0]) = 5000;
+	//out.at<uint16_t>(BestPointTwo[1], BestPointTwo[0]) = 5000;
+	//out.at<uint16_t>(BestPointThree[1], BestPointThree[0]) = 5000;
+}
+
 cv::Mat KinectEngine::readCVImageFromFile(std::wstring filename)
 {
 	const wchar_t* widecstr = filename.c_str();

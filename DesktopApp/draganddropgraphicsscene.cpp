@@ -2,6 +2,7 @@
 #include "annotatetab.h"
 #include "kinectengine.h"
 #include "realsenseengine.h"
+#include "cameramanager.h"
 
 DragAndDropGraphicsScene::DragAndDropGraphicsScene( AnnotateTab* annotateTab, ImageType imageType) {
 
@@ -151,7 +152,7 @@ void DragAndDropGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent* event) {
 		y *= *this->annotateTab->getScalingFactor();
 		qDebug() << "Check: " << x << ". " << y;
 
-		QVector3D vector3D = RealsenseEngine::getInstance().query3DPoint(x, y, this->annotateTab->getDepthToColorImage());
+		QVector3D vector3D = camera::CameraManager::getInstance().getCamera()->query3DPoint(x, y, this->annotateTab->getDepthToColorImage());
 		
 		(*this->annotateTab->getAnnotations3D())[this->pointKey].setX(vector3D.x());
 		(*this->annotateTab->getAnnotations3D())[this->pointKey].setY(vector3D.y());

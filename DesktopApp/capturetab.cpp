@@ -253,7 +253,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->capturedDepthToColorImage.convertTo(this->capturedDepthToColorImage, CV_16UC1);
 		this->PointCloudPNG.convertTo(this->PointCloudPNG, CV_16SC4);
 
-		RealsenseEngine::getInstance().computeNormalizedDepthImage(this->capturedDepthToColorImage, this->RANSACImage);
+		camera::CameraManager::getInstance().getCamera()->computeNormalizedDepthImage(this->capturedDepthToColorImage, this->RANSACImage);
 		/* Convert to the special 4 channels image and upload START*/
 		cv::Mat color3 = this->capturedColorImage;
 		std::vector<cv::Mat>channelsForColor2(3);
@@ -317,7 +317,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		this->imageName = this->parent->ui.imageTypeComboBox->currentText();
 		this->imageType = getImageTypeFromDescription(this->imageName);
-		RealsenseEngine::getInstance().readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
+		camera::CameraManager::getInstance().getCamera()->readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
 		//cv::imwrite("test_captured_color.png", this->capturedColorImage);
 		//cv::imwrite("test_captured_depth.png", this->capturedDepthImage);
@@ -353,7 +353,7 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 			this->hasPointCloud = false;
 		}
 
-		RealsenseEngine::getInstance().computeNormalizedDepthImage(this->capturedDepthToColorImage, this->RANSACImage);
+		camera::CameraManager::getInstance().getCamera()->computeNormalizedDepthImage(this->capturedDepthToColorImage, this->RANSACImage);
 
 		this->parent->ui.saveButtonCaptureTab->setEnabled(true);
 		this->parent->ui.annotateButtonCaptureTab->setEnabled(true);
@@ -529,12 +529,13 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 
 		camera::Config* cameraConfig = camera::CameraManager::getInstance().getConfig();
 
-		RealsenseEngine::getInstance().captureImages();
+		camera::CameraManager::getInstance().getCamera()->captureImages();
 		cv::Mat color, depth;
-		RealsenseEngine::getInstance().readColorAndDepthImages(color, depth);
+		camera::CameraManager::getInstance().getCamera()->readColorAndDepthImages(color, depth);
 
 
-		int cropPerSide = KinectEngine::getInstance().COLOR_IMAGE_CROP_WIDTH_PER_SIDE;
+		//int cropPerSide = KinectEngine::getInstance().COLOR_IMAGE_CROP_WIDTH_PER_SIDE;
+		int cropPerSide = 0;
 
 		
 		QImage qColor = convertColorCVToQImage(color);
@@ -656,9 +657,9 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		//std::deque<point3D> accSampleQueue = KinectEngine::getInstance().getAccSampleQueue();
 
 
-		bool queueIMUSuccess = RealsenseEngine::getInstance().queueIMUSample();
-		std::deque<point3D> gyroSampleQueue = RealsenseEngine::getInstance().getGyroSampleQueue();
-		std::deque<point3D> accSampleQueue = RealsenseEngine::getInstance().getAccSampleQueue();
+		bool queueIMUSuccess = camera::CameraManager::getInstance().getCamera()->queueIMUSample();
+		std::deque<point3D> gyroSampleQueue = camera::CameraManager::getInstance().getCamera()->getGyroSampleQueue();
+		std::deque<point3D> accSampleQueue = camera::CameraManager::getInstance().getCamera()->getAccSampleQueue();
 
 
 		if (queueIMUSuccess && !gyroSampleQueue.empty() && !accSampleQueue.empty()) {
@@ -1292,7 +1293,7 @@ void CaptureTab::setCaptureFilepath(QString captureFilepath) { this->captureFile
 cv::Mat CaptureTab::computePointCloudFromDepth() {
 
 	cv::Mat temp;
-	RealsenseEngine::getInstance().readPointCloudImage(temp);
+	camera::CameraManager::getInstance().getCamera()->readPointCloudImage(temp);
 	temp.convertTo(temp, CV_16UC4);
 	return temp; // For Realsense, return early
 

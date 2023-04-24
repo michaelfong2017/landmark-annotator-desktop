@@ -24,6 +24,18 @@ namespace camera {
 		RealsenseCamera();
 		~RealsenseCamera();
 
+		/** Functions that both realsense and kinect have */
+		void computeNormalizedDepthImage(const cv::Mat depthToColorImage, cv::Mat& out) override;
+		QVector3D query3DPoint(int x, int y, cv::Mat depthToColorImage) override;
+		void readPointCloudImage(cv::Mat& xyzImage) override;
+		void readAllImages(cv::Mat& colorImage, cv::Mat& depthImage, cv::Mat& colorToDepthImage, cv::Mat& depthToColorImage) override;
+		void captureImages() override;
+		void readColorAndDepthImages(cv::Mat& colorImage, cv::Mat& depthImage) override;
+		bool queueIMUSample() override;
+		std::deque<point3D> getGyroSampleQueue() override;
+		std::deque<point3D> getAccSampleQueue() override;
+		/** Functions that both realsense and kinect have END */
+
 		/** Start using the frames below */
 		QReadWriteLock rs2ImageLock;
 		rs2::frame_queue queue_frameset;
