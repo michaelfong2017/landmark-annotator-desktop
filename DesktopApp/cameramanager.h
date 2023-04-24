@@ -18,7 +18,9 @@ namespace camera {
 		~CameraManager();
 
 		Camera* getCamera();
+		Camera* getCameraForIntrinsics();
 		void setCamera(Model model);
+		void setCameraForIntrinsics(Model model);
 		Config* getConfig();
 		bool isCameraRunning();
 		// Return true if successfully open camera or camera is already running
@@ -28,6 +30,7 @@ namespace camera {
 	private:
 		CameraManager();
 		Camera* camera_;
+		Camera* camera_for_intrinsics_;
 	};
 }
 

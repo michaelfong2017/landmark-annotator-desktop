@@ -9,10 +9,20 @@ namespace camera {
 	{
 		return camera_;
 	}
+	Camera* CameraManager::getCameraForIntrinsics()
+	{
+		return camera_for_intrinsics_;
+	}
 	void CameraManager::setCamera(Model model)
 	{
 		if (model == Model::KINECT) camera_ = new KinectCamera;
 		else if (model == Model::REALSENSE) camera_ = new RealsenseCamera;
+		else qCritical() << "qCritical - Camera model must be either KINECT or REALSENSE!";
+	}
+	void CameraManager::setCameraForIntrinsics(Model model)
+	{
+		if (model == Model::KINECT) camera_for_intrinsics_ = new KinectCamera;
+		else if (model == Model::REALSENSE) camera_for_intrinsics_ = new RealsenseCamera;
 		else qCritical() << "qCritical - Camera model must be either KINECT or REALSENSE!";
 	}
 	Config* CameraManager::getConfig()
