@@ -29,6 +29,7 @@ namespace camera {
 		virtual bool queueIMUSample() = 0;
 		virtual std::deque<point3D> getGyroSampleQueue() = 0;
 		virtual std::deque<point3D> getAccSampleQueue() = 0;
+		virtual void readIntrinsicsFromFile(std::string path) = 0;
 		/** Functions that both realsense and kinect have END */
 	protected:
 		Camera() : camera_running_(false),

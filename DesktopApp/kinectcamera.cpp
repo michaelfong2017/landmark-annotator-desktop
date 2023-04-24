@@ -92,4 +92,9 @@ namespace camera {
 	{
 		return KinectEngine::getInstance().getAccSampleQueue();
 	}
+
+	void KinectCamera::readIntrinsicsFromFile(std::string path)
+	{
+		KinectEngine::getInstance().readIntrinsicsFromFile(path);
+	}
 }

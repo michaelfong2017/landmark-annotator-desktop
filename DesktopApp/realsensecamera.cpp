@@ -140,6 +140,11 @@ namespace camera {
 		return RealsenseEngine::getInstance().getAccSampleQueue();
 	}
 
+	void RealsenseCamera::readIntrinsicsFromFile(std::string path)
+	{
+		RealsenseEngine::getInstance().readIntrinsicsFromFile(path);
+	}
+
 	QImage realsenseFrameToQImage(const rs2::frame& f)
 	{
 		auto vf = f.as<rs2::video_frame>();

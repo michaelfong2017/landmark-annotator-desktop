@@ -44,6 +44,7 @@ namespace camera {
 		bool queueIMUSample() override;
 		std::deque<point3D> getGyroSampleQueue() override;
 		std::deque<point3D> getAccSampleQueue() override;
+		void readIntrinsicsFromFile(std::string path) override;
 		/** Functions that both realsense and kinect have END */
 
 	signals:

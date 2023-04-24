@@ -95,12 +95,12 @@ void KinectEngine::configDevice()
 	config.camera_fps = K4A_FRAMES_PER_SECOND_30;
 	config.color_format = K4A_IMAGE_FORMAT_COLOR_BGRA32;
 	switch (COLOR_IMAGE_WIDTH) {
-		case 1920:
-			config.color_resolution = K4A_COLOR_RESOLUTION_1080P;
-			break;
-		case 1280:
-			config.color_resolution = K4A_COLOR_RESOLUTION_720P;
-			break;
+	case 1920:
+		config.color_resolution = K4A_COLOR_RESOLUTION_1080P;
+		break;
+	case 1280:
+		config.color_resolution = K4A_COLOR_RESOLUTION_720P;
+		break;
 	}
 	config.depth_mode = K4A_DEPTH_MODE_NFOV_UNBINNED;
 	config.depth_delay_off_color_usec = 0;
@@ -384,7 +384,7 @@ void KinectEngine::readPointCloudImage(cv::Mat& xyzImage)
 		xyzImage = cv::Mat{};
 		return;
 	}
-	
+
 	int width = k4a_image_get_width_pixels(alignedDepthImage);
 	int height = k4a_image_get_height_pixels(alignedDepthImage);
 	int stride = k4a_image_get_stride_bytes(alignedDepthImage);
@@ -418,7 +418,7 @@ void KinectEngine::readPointCloudImage(cv::Mat& xyzImage)
 			k4a_float3_t position = {
 				static_cast<float>(pointCloudImageBuffer[3 * pixelIndex + 0]),
 				static_cast<float>(pointCloudImageBuffer[3 * pixelIndex + 1]),
-				static_cast<float>(pointCloudImageBuffer[3 * pixelIndex + 2]) 
+				static_cast<float>(pointCloudImageBuffer[3 * pixelIndex + 2])
 			};
 			pointCloudImageBuffer[3 * pixelIndex + 0] = pointCloudImageBuffer[3 * pixelIndex + 0] + 32768;
 			pointCloudImageBuffer[3 * pixelIndex + 1] = pointCloudImageBuffer[3 * pixelIndex + 1] + 32768;
@@ -430,7 +430,7 @@ void KinectEngine::readPointCloudImage(cv::Mat& xyzImage)
 	// .clone() is necessary
 	//xyzImage = cv::Mat(k4a_image_get_height_pixels(pcdImage), k4a_image_get_width_pixels(pcdImage), CV_16UC3, k4a_image_get_buffer(pcdImage), cv::Mat::AUTO_STEP).clone();
 	xyzImage = cv::Mat(k4a_image_get_height_pixels(pcdImage), k4a_image_get_width_pixels(pcdImage), CV_16UC3, k4a_image_get_buffer(pcdImage), cv::Mat::AUTO_STEP).clone();
-	
+
 	k4a_transformation_destroy(transformationHandle);
 	k4a_image_release(alignedDepthImage);
 	k4a_image_release(pcdImage);
@@ -779,10 +779,10 @@ QVector3D KinectEngine::query3DPoint(int x, int y, cv::Mat depthToColorImage)
 {
 	ushort d = depthToColorImage.at<ushort>(y, x);
 
-	k4a_calibration_t calibration;
-	if (k4a_device_get_calibration(this->device, this->config.depth_mode, this->config.color_resolution, &calibration) != K4A_RESULT_SUCCEEDED) {
-		return QVector3D(0, 0, 0);
-	}
+	//k4a_calibration_t calibration;
+	//if (k4a_device_get_calibration(this->device, this->config.depth_mode, this->config.color_resolution, &calibration) != K4A_RESULT_SUCCEEDED) {
+	//	return QVector3D(0, 0, 0);
+	//}
 
 	k4a_float2_t p;
 	p.xy.x = (float)x;
@@ -855,7 +855,7 @@ float* KinectEngine::findPlaneEquationCoefficients(cv::Mat depthToColorImage) {
 			qDebug() << "countOfDepth[0] = " << countOfDepth[0];
 		}
 		else {
-			qDebug() << "countOfDepth[" << (i-1)*SIZE_OF_INTERVALS + 1 << " - " << i*SIZE_OF_INTERVALS << "] = " << countOfDepth[i];
+			qDebug() << "countOfDepth[" << (i - 1) * SIZE_OF_INTERVALS + 1 << " - " << i * SIZE_OF_INTERVALS << "] = " << countOfDepth[i];
 		}
 	}
 	/**
@@ -890,7 +890,7 @@ float* KinectEngine::findPlaneEquationCoefficients(cv::Mat depthToColorImage) {
 
 // https://www.youtube.com/watch?v=rL9UXzZYYo4&ab_channel=TheOrganicChemistryTutor
 float* KinectEngine::findPlaneEquationCoefficients(
-	float x1, float y1,	float z1, 
+	float x1, float y1, float z1,
 	float x2, float y2, float z2,
 	float x3, float y3, float z3)
 {
@@ -916,7 +916,7 @@ float* KinectEngine::findPlaneEquationCoefficients(
 
 // https://www.cuemath.com/geometry/distance-between-point-and-plane/
 float KinectEngine::findDistanceBetween3DPointAndPlane(
-	float x1, float y1,	float z1, 
+	float x1, float y1, float z1,
 	float a, float b, float c,
 	float d) {
 	d = fabs((a * x1 + b * y1 +
@@ -1207,53 +1207,360 @@ void KinectEngine::writeCalibrationToFile(k4a_calibration_t& calibration)
 
 void KinectEngine::readIntrinsicsFromFile(std::string path)
 {
-	//std::ifstream f(path);
-	//if (f.is_open()) {
-	//	std::string line;
-	//	while (std::getline(f, line)) {
-	//		size_t colon = line.find(":");
-	//		std::string key = line.substr(0, colon);
-	//		std::string value = line.substr(colon + 2, line.size());
-	//		if (key == "width") {
-	//			intrin.width = std::stoi(value);
-	//		}
-	//		else if (key == "height") {
-	//			intrin.height = std::stoi(value);
-	//		}
-	//		else if (key == "model") {
-	//			if (value == "Brown Conrady") {
-	//				intrin.model = RS2_DISTORTION_BROWN_CONRADY;
-	//			}
-	//			// TODO other model type
-	//		}
-	//		// RS2_DISTORTION_BROWN_CONRADY
-	//		else if (key == "[k1, k2, p1, p2, k3]") {
-	//			// TODO read from value
-	//			// currently hardcode
-	//			intrin.coeffs[0] = 0.0f;
-	//			intrin.coeffs[1] = 0.0f;
-	//			intrin.coeffs[2] = 0.0f;
-	//			intrin.coeffs[3] = 0.0f;
-	//			intrin.coeffs[4] = 0.0f;
-	//		}
-	//		// TODO other model type
-	//		else if (key == "fx") {
-	//			intrin.fx = std::stof(value);
-	//		}
-	//		else if (key == "fy") {
-	//			intrin.fy = std::stof(value);
-	//		}
-	//		else if (key == "ppx") {
-	//			intrin.ppx = std::stof(value);
-	//		}
-	//		else if (key == "ppy") {
-	//			intrin.ppy = std::stof(value);
-	//		}
-	//	}
-	//	f.close();
-	//}
-
-	// HARDCODE
+	// HARDCODE (same as reading from intrinsics_kinect.txt)
 	calibration.color_resolution = K4A_COLOR_RESOLUTION_1080P;
-	calibration.depth_mode = K4A_DEPTH_MODE_NFOV_UNBINNED;
+
+	{
+		// color camera
+		_k4a_calibration_extrinsics_t extrinsics;
+		extrinsics.rotation[0] = 0.999983f;
+		extrinsics.rotation[1] = 0.00585299f;
+		extrinsics.rotation[2] = -0.000753369f;
+		extrinsics.rotation[3] = -0.00577472f;
+		extrinsics.rotation[4] = 0.996828f;
+		extrinsics.rotation[5] = 0.0793804f;
+		extrinsics.rotation[6] = 0.00121559f;
+		extrinsics.rotation[7] = -0.0793747f;
+		extrinsics.rotation[8] = 0.996844f;
+		extrinsics.translation[0] = -32.0571f;
+		extrinsics.translation[1] = -2.21997f;
+		extrinsics.translation[2] = 3.94995f;
+		_k4a_calibration_intrinsics_t intrinsics;
+		intrinsics.parameters.v[0] = 959.033f;
+		intrinsics.parameters.v[1] = 549.389f;
+		intrinsics.parameters.v[2] = 909.969f;
+		intrinsics.parameters.v[3] = 909.339f;
+		intrinsics.parameters.v[4] = 0.70917f;
+		intrinsics.parameters.v[5] = -2.86673f;
+		intrinsics.parameters.v[6] = 1.62618f;
+		intrinsics.parameters.v[7] = 0.588996f;
+		intrinsics.parameters.v[8] = -2.70083f;
+		intrinsics.parameters.v[9] = 1.55868f;
+		intrinsics.parameters.v[10] = 0.0f;
+		intrinsics.parameters.v[11] = 0.0f;
+		intrinsics.parameters.v[12] = -0.000397904f;
+		intrinsics.parameters.v[13] = 0.000974435f;
+		intrinsics.parameters.v[14] = 0.0f;
+		intrinsics.parameters.param.cx = intrinsics.parameters.v[0];
+		intrinsics.parameters.param.cy = intrinsics.parameters.v[1];
+		intrinsics.parameters.param.fx = intrinsics.parameters.v[2];
+		intrinsics.parameters.param.fy = intrinsics.parameters.v[3];
+		intrinsics.parameters.param.k1 = intrinsics.parameters.v[4];
+		intrinsics.parameters.param.k2 = intrinsics.parameters.v[5];
+		intrinsics.parameters.param.k3 = intrinsics.parameters.v[6];
+		intrinsics.parameters.param.k4 = intrinsics.parameters.v[7];
+		intrinsics.parameters.param.k5 = intrinsics.parameters.v[8];
+		intrinsics.parameters.param.k6 = intrinsics.parameters.v[9];
+		intrinsics.parameters.param.codx = intrinsics.parameters.v[10];
+		intrinsics.parameters.param.cody = intrinsics.parameters.v[11];
+		intrinsics.parameters.param.p2 = intrinsics.parameters.v[12];
+		intrinsics.parameters.param.p1 = intrinsics.parameters.v[13];
+		intrinsics.parameters.param.metric_radius = intrinsics.parameters.v[14];
+		intrinsics.parameter_count = 14;
+		intrinsics.type = K4A_CALIBRATION_LENS_DISTORTION_MODEL_BROWN_CONRADY;
+
+		calibration.color_camera_calibration.extrinsics = extrinsics;
+		calibration.color_camera_calibration.intrinsics = intrinsics;
+		calibration.color_camera_calibration.metric_radius = 1.7f;
+		calibration.color_camera_calibration.resolution_height = 1080;
+		calibration.color_camera_calibration.resolution_width = 1920;
+		calibration.color_resolution = K4A_COLOR_RESOLUTION_1080P;
+	}
+
+	{
+		// depth camera
+		_k4a_calibration_extrinsics_t extrinsics;
+		extrinsics.rotation[0] = 1.0f;
+		extrinsics.rotation[1] = 0.0f;
+		extrinsics.rotation[2] = 0.0f;
+		extrinsics.rotation[3] = 0.0f;
+		extrinsics.rotation[4] = 1.0f;
+		extrinsics.rotation[5] = 0.0f;
+		extrinsics.rotation[6] = 0.0f;
+		extrinsics.rotation[7] = 0.0f;
+		extrinsics.rotation[8] = 1.0f;
+		extrinsics.translation[0] = 0.0f;
+		extrinsics.translation[1] = 0.0f;
+		extrinsics.translation[2] = 0.0f;
+		_k4a_calibration_intrinsics_t intrinsics;
+		intrinsics.parameters.v[0] = 322.074f;
+		intrinsics.parameters.v[1] = 354.181f;
+		intrinsics.parameters.v[2] = 504.296f;
+		intrinsics.parameters.v[3] = 504.304f;
+		intrinsics.parameters.v[4] = 3.40328f;
+		intrinsics.parameters.v[5] = 2.33724f;
+		intrinsics.parameters.v[6] = 0.125497f;
+		intrinsics.parameters.v[7] = 3.73403f;
+		intrinsics.parameters.v[8] = 3.45251f;
+		intrinsics.parameters.v[9] = 0.652264f;
+		intrinsics.parameters.v[10] = 0.0f;
+		intrinsics.parameters.v[11] = 0.0f;
+		intrinsics.parameters.v[12] = 0.0000413194f;
+		intrinsics.parameters.v[13] = 0.0000122039f;
+		intrinsics.parameters.v[14] = 0.0f;
+		intrinsics.parameters.param.cx = intrinsics.parameters.v[0];
+		intrinsics.parameters.param.cy = intrinsics.parameters.v[1];
+		intrinsics.parameters.param.fx = intrinsics.parameters.v[2];
+		intrinsics.parameters.param.fy = intrinsics.parameters.v[3];
+		intrinsics.parameters.param.k1 = intrinsics.parameters.v[4];
+		intrinsics.parameters.param.k2 = intrinsics.parameters.v[5];
+		intrinsics.parameters.param.k3 = intrinsics.parameters.v[6];
+		intrinsics.parameters.param.k4 = intrinsics.parameters.v[7];
+		intrinsics.parameters.param.k5 = intrinsics.parameters.v[8];
+		intrinsics.parameters.param.k6 = intrinsics.parameters.v[9];
+		intrinsics.parameters.param.codx = intrinsics.parameters.v[10];
+		intrinsics.parameters.param.cody = intrinsics.parameters.v[11];
+		intrinsics.parameters.param.p2 = intrinsics.parameters.v[12];
+		intrinsics.parameters.param.p1 = intrinsics.parameters.v[13];
+		intrinsics.parameters.param.metric_radius = intrinsics.parameters.v[14];
+		intrinsics.parameter_count = 14;
+		intrinsics.type = K4A_CALIBRATION_LENS_DISTORTION_MODEL_BROWN_CONRADY;
+
+		calibration.depth_camera_calibration.extrinsics = extrinsics;
+		calibration.depth_camera_calibration.intrinsics = intrinsics;
+		calibration.depth_camera_calibration.metric_radius = 1.74f;
+		calibration.depth_camera_calibration.resolution_height = 576;
+		calibration.depth_camera_calibration.resolution_width = 640;
+		calibration.depth_mode = K4A_DEPTH_MODE_NFOV_UNBINNED;
+	}
+
+	{
+		calibration.extrinsics[0][0].rotation[0] = 1.0f;
+		calibration.extrinsics[0][0].rotation[1] = 0.0f;
+		calibration.extrinsics[0][0].rotation[2] = 0.0f;
+		calibration.extrinsics[0][0].rotation[3] = 0.0f;
+		calibration.extrinsics[0][0].rotation[4] = 1.0f;
+		calibration.extrinsics[0][0].rotation[5] = 0.0f;
+		calibration.extrinsics[0][0].rotation[6] = 0.0f;
+		calibration.extrinsics[0][0].rotation[7] = 0.0f;
+		calibration.extrinsics[0][0].rotation[8] = 1.0f;
+		calibration.extrinsics[0][0].translation[0] = 0.0f;
+		calibration.extrinsics[0][0].translation[1] = 0.0f;
+		calibration.extrinsics[0][0].translation[2] = 0.0f;
+	}
+
+	{
+		calibration.extrinsics[0][1].rotation[0] = 0.999983f;
+		calibration.extrinsics[0][1].rotation[1] = 0.00585299f;
+		calibration.extrinsics[0][1].rotation[2] = -0.000753369f;
+		calibration.extrinsics[0][1].rotation[3] = -0.00577472f;
+		calibration.extrinsics[0][1].rotation[4] = 0.996828f;
+		calibration.extrinsics[0][1].rotation[5] = 0.0793804f;
+		calibration.extrinsics[0][1].rotation[6] = 0.00121559f;
+		calibration.extrinsics[0][1].rotation[7] = -0.0793747f;
+		calibration.extrinsics[0][1].rotation[8] = 0.996844f;
+		calibration.extrinsics[0][1].translation[0] = -32.0571f;
+		calibration.extrinsics[0][1].translation[1] = -2.21997f;
+		calibration.extrinsics[0][1].translation[2] = 3.94995f;
+	}
+
+	{
+		calibration.extrinsics[0][2].rotation[0] = 5.3255e-05f;
+		calibration.extrinsics[0][2].rotation[1] = 0.107066f;
+		calibration.extrinsics[0][2].rotation[2] = -0.994252f;
+		calibration.extrinsics[0][2].rotation[3] = -0.999952f;
+		calibration.extrinsics[0][2].rotation[4] = -0.00974179f;
+		calibration.extrinsics[0][2].rotation[5] = -0.00110261f;
+		calibration.extrinsics[0][2].rotation[6] = -0.00980385f;
+		calibration.extrinsics[0][2].rotation[7] = 0.994204f;
+		calibration.extrinsics[0][2].rotation[8] = 0.10706f;
+		calibration.extrinsics[0][2].translation[0] = 0.0f;
+		calibration.extrinsics[0][2].translation[1] = 0.0f;
+		calibration.extrinsics[0][2].translation[2] = 0.0f;
+	}
+
+	{
+		calibration.extrinsics[0][3].rotation[0] = 0.00440682f;
+		calibration.extrinsics[0][3].rotation[1] = 0.104693f;
+		calibration.extrinsics[0][3].rotation[2] = -0.994495f;
+		calibration.extrinsics[0][3].rotation[3] = -0.999976f;
+		calibration.extrinsics[0][3].rotation[4] = -0.00477878f;
+		calibration.extrinsics[0][3].rotation[5] = -0.00493418f;
+		calibration.extrinsics[0][3].rotation[6] = -0.00526905f;
+		calibration.extrinsics[0][3].rotation[7] = 0.994493f;
+		calibration.extrinsics[0][3].rotation[8] = 0.10467f;
+		calibration.extrinsics[0][3].translation[0] = -50.9456f;
+		calibration.extrinsics[0][3].translation[1] = 3.34612f;
+		calibration.extrinsics[0][3].translation[2] = 1.42621f;
+	}
+
+	{
+		calibration.extrinsics[1][0].rotation[0] = 0.999983f;
+		calibration.extrinsics[1][0].rotation[1] = -0.00577472f;
+		calibration.extrinsics[1][0].rotation[2] = 0.00121559f;
+		calibration.extrinsics[1][0].rotation[3] = 0.00585299f;
+		calibration.extrinsics[1][0].rotation[4] = 0.996828f;
+		calibration.extrinsics[1][0].rotation[5] = -0.0793747f;
+		calibration.extrinsics[1][0].rotation[6] = -0.000753369f;
+		calibration.extrinsics[1][0].rotation[7] = 0.0793804f;
+		calibration.extrinsics[1][0].rotation[8] = 0.996844f;
+		calibration.extrinsics[1][0].translation[0] = 32.0389f;
+		calibration.extrinsics[1][0].translation[1] = 2.71409f;
+		calibration.extrinsics[1][0].translation[2] = -3.78541f;
+	}
+
+	{
+		calibration.extrinsics[1][1].rotation[0] = 1.0f;
+		calibration.extrinsics[1][1].rotation[1] = -2.40107e-10f;
+		calibration.extrinsics[1][1].rotation[2] = -5.82077e-11f;
+		calibration.extrinsics[1][1].rotation[3] = -2.40107e-10f;
+		calibration.extrinsics[1][1].rotation[4] = 1.0f;
+		calibration.extrinsics[1][1].rotation[5] = 0.0f;
+		calibration.extrinsics[1][1].rotation[6] = -5.82077e-11f;
+		calibration.extrinsics[1][1].rotation[7] = 0.0f;
+		calibration.extrinsics[1][1].rotation[8] = 1.0f;
+		calibration.extrinsics[1][1].translation[0] = 0.0f;
+		calibration.extrinsics[1][1].translation[1] = 2.38419e-07f;
+		calibration.extrinsics[1][1].translation[2] = 0.0f;
+	}
+
+	{
+		calibration.extrinsics[1][2].rotation[0] = 0.00142895f;
+		calibration.extrinsics[1][2].rotation[1] = 0.0278021f;
+		calibration.extrinsics[1][2].rotation[2] = -0.999612f;
+		calibration.extrinsics[1][2].rotation[3] = -0.999991f;
+		calibration.extrinsics[1][2].rotation[4] = -0.00402398f;
+		calibration.extrinsics[1][2].rotation[5] = -0.00154141f;
+		calibration.extrinsics[1][2].rotation[6] = -0.00406527f;
+		calibration.extrinsics[1][2].rotation[7] = 0.999605f;
+		calibration.extrinsics[1][2].rotation[8] = 0.027796f;
+		calibration.extrinsics[1][2].translation[0] = 4.05594f;
+		calibration.extrinsics[1][2].translation[1] = -32.0597f;
+		calibration.extrinsics[1][2].translation[2] = 1.97898f;
+	}
+
+	{
+		calibration.extrinsics[1][3].rotation[0] = 0.00576873f;
+		calibration.extrinsics[1][3].rotation[1] = 0.0253922f;
+		calibration.extrinsics[1][3].rotation[2] = -0.999661f;
+		calibration.extrinsics[1][3].rotation[3] = -0.999983f;
+		calibration.extrinsics[1][3].rotation[4] = 0.000619282f;
+		calibration.extrinsics[1][3].rotation[5] = -0.00575486f;
+		calibration.extrinsics[1][3].rotation[6] = 0.000472943f;
+		calibration.extrinsics[1][3].rotation[7] = 0.999677f;
+		calibration.extrinsics[1][3].rotation[8] = 0.0253953f;
+		calibration.extrinsics[1][3].translation[0] = -46.7557f;
+		calibration.extrinsics[1][3].translation[1] = -28.6864f;
+		calibration.extrinsics[1][3].translation[2] = 3.56031f;
+	}
+
+	{
+		calibration.extrinsics[2][0].rotation[0] = 5.3255e-05f;
+		calibration.extrinsics[2][0].rotation[1] = -0.999952f;
+		calibration.extrinsics[2][0].rotation[2] = -0.00980385f;
+		calibration.extrinsics[2][0].rotation[3] = 0.107066f;
+		calibration.extrinsics[2][0].rotation[4] = -0.00974179f;
+		calibration.extrinsics[2][0].rotation[5] = 0.994204f;
+		calibration.extrinsics[2][0].rotation[6] = -0.994252f;
+		calibration.extrinsics[2][0].rotation[7] = -0.00110261f;
+		calibration.extrinsics[2][0].rotation[8] = 0.10706f;
+		calibration.extrinsics[2][0].translation[0] = 0.0f;
+		calibration.extrinsics[2][0].translation[1] = 0.0f;
+		calibration.extrinsics[2][0].translation[2] = 0.0f;
+	}
+
+	{
+		calibration.extrinsics[2][1].rotation[0] = 0.00142895f;
+		calibration.extrinsics[2][1].rotation[1] = -0.999991f;
+		calibration.extrinsics[2][1].rotation[2] = -0.00406527f;
+		calibration.extrinsics[2][1].rotation[3] = 0.0278021f;
+		calibration.extrinsics[2][1].rotation[4] = -0.00402398f;
+		calibration.extrinsics[2][1].rotation[5] = 0.999605f;
+		calibration.extrinsics[2][1].rotation[6] = -0.999612f;
+		calibration.extrinsics[2][1].rotation[7] = -0.00154141f;
+		calibration.extrinsics[2][1].rotation[8] = 0.027796f;
+		calibration.extrinsics[2][1].translation[0] = -32.0571f;
+		calibration.extrinsics[2][1].translation[1] = -2.21997f;
+		calibration.extrinsics[2][1].translation[2] = 3.94995f;
+	}
+
+	{
+		calibration.extrinsics[2][2].rotation[0] = 1.0f;
+		calibration.extrinsics[2][2].rotation[1] = 0.0f;
+		calibration.extrinsics[2][2].rotation[2] = 7.45058e-09f;
+		calibration.extrinsics[2][2].rotation[3] = 0.0f;
+		calibration.extrinsics[2][2].rotation[4] = 1.0f;
+		calibration.extrinsics[2][2].rotation[5] = -4.51109e-10f;
+		calibration.extrinsics[2][2].rotation[6] = 7.45058e-09f;
+		calibration.extrinsics[2][2].rotation[7] = -4.51109e-10f;
+		calibration.extrinsics[2][2].rotation[8] = 1.0f;
+		calibration.extrinsics[2][2].translation[0] = 0.0f;
+		calibration.extrinsics[2][2].translation[1] = 0.0f;
+		calibration.extrinsics[2][2].translation[2] = 0.0f;
+	}
+
+	{
+		calibration.extrinsics[2][3].rotation[0] = 0.999988f;
+		calibration.extrinsics[2][3].rotation[1] = -0.00432997f;
+		calibration.extrinsics[2][3].rotation[2] = -0.00242788f;
+		calibration.extrinsics[2][3].rotation[3] = 0.00434092f;
+		calibration.extrinsics[2][3].rotation[4] = 0.99998f;
+		calibration.extrinsics[2][3].rotation[5] = 0.00452428f;
+		calibration.extrinsics[2][3].rotation[6] = 0.00240824f;
+		calibration.extrinsics[2][3].rotation[7] = -0.00453476f;
+		calibration.extrinsics[2][3].rotation[8] = 0.999987f;
+		calibration.extrinsics[2][3].translation[0] = -50.9456f;
+		calibration.extrinsics[2][3].translation[1] = 3.34612f;
+		calibration.extrinsics[2][3].translation[2] = 1.42621f;
+	}
+
+	{
+		calibration.extrinsics[3][0].rotation[0] = 0.00440682f;
+		calibration.extrinsics[3][0].rotation[1] = -0.999976f;
+		calibration.extrinsics[3][0].rotation[2] = -0.00526905f;
+		calibration.extrinsics[3][0].rotation[3] = 0.104693f;
+		calibration.extrinsics[3][0].rotation[4] = -0.00477878f;
+		calibration.extrinsics[3][0].rotation[5] = 0.994493f;
+		calibration.extrinsics[3][0].rotation[6] = -0.994495f;
+		calibration.extrinsics[3][0].rotation[7] = -0.00493418f;
+		calibration.extrinsics[3][0].rotation[8] = 0.10467f;
+		calibration.extrinsics[3][0].translation[0] = 3.57807f;
+		calibration.extrinsics[3][0].translation[1] = 3.9313f;
+		calibration.extrinsics[3][0].translation[2] = -50.7979f;
+	}
+
+	{
+		calibration.extrinsics[3][1].rotation[0] = 0.00576873f;
+		calibration.extrinsics[3][1].rotation[1] = -0.999983f;
+		calibration.extrinsics[3][1].rotation[2] = 0.000472943f;
+		calibration.extrinsics[3][1].rotation[3] = 0.0253922f;
+		calibration.extrinsics[3][1].rotation[4] = 0.000619282f;
+		calibration.extrinsics[3][1].rotation[5] = 0.999677f;
+		calibration.extrinsics[3][1].rotation[6] = -0.999661f;
+		calibration.extrinsics[3][1].rotation[7] = -0.00575486f;
+		calibration.extrinsics[3][1].rotation[8] = 0.0253953f;
+		calibration.extrinsics[3][1].translation[0] = -28.4178f;
+		calibration.extrinsics[3][1].translation[1] = -2.35417f;
+		calibration.extrinsics[3][1].translation[2] = -46.9954f;
+	}
+
+	{
+		calibration.extrinsics[3][2].rotation[0] = 0.999988f;
+		calibration.extrinsics[3][2].rotation[1] = 0.00434092f;
+		calibration.extrinsics[3][2].rotation[2] = 0.00240824f;
+		calibration.extrinsics[3][2].rotation[3] = -0.00432997f;
+		calibration.extrinsics[3][2].rotation[4] = 0.99998f;
+		calibration.extrinsics[3][2].rotation[5] = -0.00453476f;
+		calibration.extrinsics[3][2].rotation[6] = -0.00242788f;
+		calibration.extrinsics[3][2].rotation[7] = 0.00452428f;
+		calibration.extrinsics[3][2].rotation[8] = 0.999987f;
+		calibration.extrinsics[3][2].translation[0] = 50.927f;
+		calibration.extrinsics[3][2].translation[1] = -3.56018f;
+		calibration.extrinsics[3][2].translation[2] = -1.56502f;
+	}
+
+	{
+		calibration.extrinsics[3][3].rotation[0] = 1.0f;
+		calibration.extrinsics[3][3].rotation[1] = 0.0f;
+		calibration.extrinsics[3][3].rotation[2] = 0.0f;
+		calibration.extrinsics[3][3].rotation[3] = 0.0f;
+		calibration.extrinsics[3][3].rotation[4] = 1.0f;
+		calibration.extrinsics[3][3].rotation[5] = 0.0f;
+		calibration.extrinsics[3][3].rotation[6] = 0.0f;
+		calibration.extrinsics[3][3].rotation[7] = 0.0f;
+		calibration.extrinsics[3][3].rotation[8] = 1.0f;
+		calibration.extrinsics[3][3].translation[0] = 3.8147e-06f;
+		calibration.extrinsics[3][3].translation[1] = 0.0f;
+		calibration.extrinsics[3][3].translation[2] = -3.57628e-07f;
+	}
 }
