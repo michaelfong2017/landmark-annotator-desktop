@@ -70,7 +70,26 @@ VC++ Directories:
 - Linker -> Input
 `Additional Dependencies` -> edit -> add `$(SolutionDir)packages\Intel RealSense SDK 2.0\lib\x64\realsense2.lib`
 
-# Visual Studio Creating Qt Translation Files
+# 6. Download necessary tools for Orbbec, and link OrbbecSDK_C_C++_v1.5.7_20230307_7093b5158_win_x64_release to Visual Studio 2019
+- For the depth camera Astra+, use OrbbecSDK instead of AstraSDK since AstraSDK maintenance has been stopped.
+
+Please download Orbbec Viewer 1.5, Orbbec SDK 1.5 for Windows and Orbbec Camera Driver for Windows from `https://www.orbbec.com/developers/orbbec-sdk/`:
+1. [Orbbec Viewer 1.5](https://dl.orbbec3d.com/dist/orbbecsdk/1.5.7/OrbbecViewer_1.5.7_Windows.zip)
+2. [Orbbec SDK 1.5 for Windows](https://dl.orbbec3d.com/dist/orbbecsdk/1.5.7/OrbbecSDK_1.5.7_Windows.zip)
+3. [Orbbec Camera Driver for Windows](https://dl.orbbec3d.com/dist/drivers/win32/astra-win32-driver-4.3.0.20.zip)
+
+Then, install the driver, test with Orbbec Viewer and link the SDK for your C++ project.
+
+## Link OrbbecSDK_C_C++_v1.5.7_20230307_7093b5158_win_x64_release to Visual Studio 2019
+For both Debug and Release:
+
+VC++ Directories:  
+- `Include Directories` -> edit -> add `$(SolutionDir)packages\OrbbecSDK_C_C++_v1.5.7_20230307_7093b5158_win_x64_release\SDK\include`  
+- `Library Directories` -> edit -> add `$(SolutionDir)packages\OrbbecSDK_C_C++_v1.5.7_20230307_7093b5158_win_x64_release\SDK\lib`
+- Linker -> Input
+`Additional Dependencies` -> edit -> add `$(SolutionDir)packages\OrbbecSDK_C_C++_v1.5.7_20230307_7093b5158_win_x64_release\SDK\lib\OrbbecSDK.lib`
+
+# 7. Visual Studio Creating Qt Translation Files
 - https://doc-snapshots.qt.io/vstools-dev/qtvstools-translation-files.html
 
 ## Create translation file
