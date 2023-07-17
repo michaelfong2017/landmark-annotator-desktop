@@ -4,7 +4,7 @@
 #include <camera.h>
 
 namespace camera {
-	enum class Model { KINECT, REALSENSE };
+	enum class Model { KINECT, REALSENSE, ASTRA };
 	class CameraManager
 	{
 	public:

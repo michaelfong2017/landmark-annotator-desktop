@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     //qDebug() << endl << "width is " << camera::CameraManager::getInstance().getConfig()->color_width << endl;
     // Test implementing Strategy pattern and multiple inheritance END
 
-    orbbecTest();
+    //orbbecTest();
 
     MainWindow w;
     w.show();

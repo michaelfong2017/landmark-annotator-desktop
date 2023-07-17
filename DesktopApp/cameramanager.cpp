@@ -3,6 +3,8 @@
 #include "realsensecamera.h"
 #include "kinectengine.h"
 #include "realsenseengine.h"
+#include "astracamera.h"
+#include "astraengine.h"
 
 namespace camera {
 	Camera* CameraManager::getCamera()
@@ -17,13 +19,15 @@ namespace camera {
 	{
 		if (model == Model::KINECT) camera_ = new KinectCamera;
 		else if (model == Model::REALSENSE) camera_ = new RealsenseCamera;
-		else qCritical() << "qCritical - Camera model must be either KINECT or REALSENSE!";
+		else if (model == Model::ASTRA) camera_ = new AstraCamera;
+		else qCritical() << "qCritical - Camera model must be either KINECT or REALSENSE or ASTRA!";
 	}
 	void CameraManager::setCameraForIntrinsics(Model model)
 	{
 		if (model == Model::KINECT) camera_for_intrinsics_ = new KinectCamera;
 		else if (model == Model::REALSENSE) camera_for_intrinsics_ = new RealsenseCamera;
-		else qCritical() << "qCritical - Camera model must be either KINECT or REALSENSE!";
+		else if (model == Model::ASTRA) camera_for_intrinsics_ = new AstraCamera;
+		else qCritical() << "qCritical - Camera model must be either KINECT or REALSENSE or ASTRA!";
 	}
 	Config* CameraManager::getConfig()
 	{
@@ -43,6 +47,47 @@ namespace camera {
 	{}
 
 	bool CameraManager::autoSelectAndOpenCamera() {
+		// TODO [astra] TEST to be removed
+		// TEST ASTRA
+		if (camera::CameraManager::getInstance().isCameraRunning()) {
+			qDebug() << "Camera is already running";
+			return true;
+		}
+		else {
+			qDebug() << "Camera is not running";
+		}
+
+		bool astraConnected = AstraEngine::getInstance().isDeviceConnected();
+		if (astraConnected) {
+			qDebug() << "Astra is connected";
+		}
+		else {
+			qDebug() << "Astra is not connected";
+		}
+
+		if (astraConnected) {
+			// Select astra
+			qDebug() << "Astra camera is selected";
+			camera::CameraManager::getInstance().setCamera(camera::Model::ASTRA);
+			camera::CameraManager::getInstance().getCamera()->open();
+			camera::CameraManager::getInstance().getCamera()->startThread();
+			qDebug() << "Color width is " << camera::CameraManager::getInstance().getConfig()->color_width;
+			qDebug() << "Color height is " << camera::CameraManager::getInstance().getConfig()->color_height;
+			qDebug() << "Depth width is " << camera::CameraManager::getInstance().getConfig()->depth_width;
+			qDebug() << "Depth height is " << camera::CameraManager::getInstance().getConfig()->depth_height;
+			qDebug() << "Fps is " << camera::CameraManager::getInstance().getConfig()->fps;
+		}
+
+		if (camera::CameraManager::getInstance().isCameraRunning()) {
+			qDebug() << "Camera is opened and running successfully";
+			return true;
+		}
+		else {
+			qDebug() << "Camera is not running as expected";
+			return false;
+		}
+		// TEST END
+
 		bool isCameraRunning = camera::CameraManager::getInstance().isCameraRunning();
 		if (isCameraRunning) {
 			qDebug() << "Camera is already running";
@@ -58,7 +103,7 @@ namespace camera {
 			qDebug() << "Kinect is connected";
 		}
 		else {
-			qDebug() << "Kinected is not connected";
+			qDebug() << "Kinect is not connected";
 		}
 		if (realsenseConnected) {
 			qDebug() << "Realsense is connected";
@@ -110,7 +155,7 @@ namespace camera {
 			qDebug() << "Kinect is connected";
 		}
 		else {
-			qDebug() << "Kinected is not connected";
+			qDebug() << "Kinect is not connected";
 		}
 		if (realsenseConnected) {
 			qDebug() << "Realsense is connected";

@@ -118,6 +118,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="annotatetab.cpp" />
+    <ClCompile Include="astracamera.cpp" />
+    <ClCompile Include="astraengine.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="cameramanager.cpp" />
     <ClCompile Include="capturetab.cpp" />
@@ -179,6 +181,8 @@
     <QtMoc Include="annotatetab.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="astracamera.h" />
+    <QtMoc Include="astraengine.h" />
     <ClInclude Include="window.h" />
     <QtMoc Include="kinectengine.h" />
     <QtMoc Include="logintab.h" />

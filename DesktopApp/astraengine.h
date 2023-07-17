@@ -1,21 +1,24 @@
-#ifndef REALSENSEENGINE_H
-#define REALSENSEENGINE_H
+#ifndef ASTRAENGINE_H
+#define ASTRAENGINE_H
 
 #include <QtWidgets/QWidget>
 #include "stdafx.h"
-#include "librealsense2/rs.hpp"
+#include <libobsensor/ObSensor.hpp>
+#include "libobsensor/hpp/Pipeline.hpp"
+#include "libobsensor/hpp/Error.hpp"
 #include "types.h"
+#include "librealsense2/rs.hpp"
 
 #define VIDEOWRITER_FPS 30
-#define COLOR_IMAGE_WIDTH_REALSENSE 1280
-#define COLOR_IMAGE_HEIGHT_REALSENSE 720 
-#define DEPTH_IMAGE_WIDTH_REALSENSE 1280
-#define DEPTH_IMAGE_HEIGHT_REALSENSE 720
+#define COLOR_IMAGE_WIDTH_ASTRA 1920
+#define COLOR_IMAGE_HEIGHT_ASTRA 1080 
+#define DEPTH_IMAGE_WIDTH_ASTRA 640
+#define DEPTH_IMAGE_HEIGHT_ASTRA 480
 
 #define MAX_GYROSCOPE_QUEUE_SIZE 30
 #define MAX_ACCELEROMETER_QUEUE_SIZE 30
 
-class RealsenseEngine : public QWidget
+class AstraEngine : public QWidget
 {
     Q_OBJECT
 
@@ -24,14 +27,14 @@ public:
     //int COLOR_IMAGE_CROP_WIDTH_PER_SIDE = (COLOR_IMAGE_WIDTH_REALSENSE - COLOR_IMAGE_HEIGHT_REALSENSE) / 2;
     int COLOR_IMAGE_CROP_WIDTH_PER_SIDE = 0;
 
-    static RealsenseEngine& getInstance() {
-        static RealsenseEngine instance;
+    static AstraEngine& getInstance() {
+        static AstraEngine instance;
         return instance;
     }
 
-    RealsenseEngine(RealsenseEngine const&) = delete;
+    AstraEngine(AstraEngine const&) = delete;
 
-    void operator=(RealsenseEngine const&) = delete;
+    void operator=(AstraEngine const&) = delete;
 
     void clear();
 
@@ -45,10 +48,10 @@ public:
     bool queueIMUSample();
     void readAllImages(cv::Mat& colorImage, cv::Mat& depthImage, cv::Mat& colorToDepthImage, cv::Mat& depthToColorImage);
     void readColorAndDepthImages(cv::Mat& colorImage, cv::Mat& depthImage);
-    void readColorImage(cv::Mat& colorImage, rs2::frame colorFrame = NULL);
-    void readDepthImage(cv::Mat& depthImage, rs2::frame depthFrame = NULL);
-    void readColorToDepthImage(cv::Mat& colorToDepthImage, rs2::frame colorFrame = NULL);
-    void readDepthToColorImage(cv::Mat& depthToColorImage, rs2::frame depthFrame = NULL);
+    void readColorImage(cv::Mat& colorImage, std::shared_ptr<ob::ColorFrame> colorFrame = NULL);
+    void readDepthImage(cv::Mat& depthImage, std::shared_ptr<ob::DepthFrame> depthFrame = NULL);
+    void readColorToDepthImage(cv::Mat& colorToDepthImage, std::shared_ptr<ob::ColorFrame> colorFrame = NULL);
+    void readDepthToColorImage(cv::Mat& depthToColorImage, std::shared_ptr<ob::DepthFrame> depthFrame = NULL);
     void readPointCloudImage(cv::Mat& xyzImage);
     std::deque<point3D> getGyroSampleQueue();
     std::deque<point3D> getAccSampleQueue();
@@ -72,21 +75,16 @@ public:
     /** Calculate plane equation and distance between plane and 3D point END */
 
     cv::Mat readCVImageFromFile(std::wstring filename);
-    void writeIntrinsicsToFile(rs2_intrinsics &intrin);
+    void writeIntrinsicsToFile(rs2_intrinsics& intrin);
     void readIntrinsicsFromFile(std::string path);
 
 private:
-    RealsenseEngine();
+    AstraEngine();
 
     bool deviceOpenedBefore = false;
 
-    // p, cfg, and rs2ImageLock are legacy and useless although still being referenced
-    rs2::pipeline p;
-    rs2::config cfg;
-
-    QReadWriteLock rs2ImageLock;
-
-    rs2::frameset frames;
+    std::shared_ptr<ob::FrameSet> frames;
+    QReadWriteLock framesLock;
 
     std::deque<point3D> gyroSampleQueue;
     std::deque<point3D> accSampleQueue;
@@ -102,7 +100,7 @@ private:
     //std::deque<k4a_float3_t> gyroSampleQueue;
     //std::deque<k4a_float3_t> accSampleQueue;
 
-    rs2_intrinsics intrin;
+    //rs2_intrinsics intrin;
 };
 
 //QImage convertColorCVToQImage(cv::Mat);

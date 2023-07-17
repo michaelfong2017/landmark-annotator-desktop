@@ -47,6 +47,7 @@ bool RealsenseEngine::isDeviceOpened()
 	}
 }
 
+// Legacy and useless although still being referenced
 bool RealsenseEngine::openDevice()
 {
 	p.start(cfg);
@@ -55,6 +56,7 @@ bool RealsenseEngine::openDevice()
 	return true;
 }
 
+// Legacy and useless although still being referenced
 void RealsenseEngine::closeDevice()
 {
 	// TODO

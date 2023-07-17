@@ -100,6 +100,12 @@
     <ClCompile Include="kinectcamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="astraengine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="astracamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="capturehistory.h">
@@ -213,6 +219,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="realsensecamera.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="astracamera.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="astraengine.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

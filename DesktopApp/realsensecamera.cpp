@@ -93,6 +93,7 @@ namespace camera {
 
 	void RealsenseCamera::close()
 	{
+		// TODO
 	}
 
 	void RealsenseCamera::computeNormalizedDepthImage(const cv::Mat depthToColorImage, cv::Mat& out)
