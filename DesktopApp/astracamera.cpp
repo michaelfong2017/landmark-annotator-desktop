@@ -18,11 +18,7 @@ namespace camera {
 			std::shared_ptr<ob::FrameSet> frameSet = p.waitForFrames(100);
 
 			frameSetLock.lockForWrite();
-			// Ensure that the size of the queue is at most 1
-			if (!frameSetQueue.empty()) {
-				frameSetQueue.pop();
-			}
-			frameSetQueue.push(std::move(frameSet));
+			this->frameSet = frameSet;
 			frameSetLock.unlock();
 		}
 	}

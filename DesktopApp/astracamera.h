@@ -40,7 +40,7 @@ namespace camera {
 		/** Functions that both realsense and kinect have END */
 
 		/** Start using the frames below */
-		std::queue<std::shared_ptr<ob::FrameSet>> frameSetQueue;
+		std::shared_ptr<ob::FrameSet> frameSet;
 		QReadWriteLock frameSetLock;
 
 		bool imuSuccess = false;

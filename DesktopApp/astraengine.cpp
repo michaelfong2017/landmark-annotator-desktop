@@ -106,11 +106,10 @@ void AstraEngine::captureImages()
 	camera::AstraCamera* camera = static_cast<camera::AstraCamera*>(camera::CameraManager::getInstance().getCamera());
 
 	camera->frameSetLock.lockForRead();
-	if (!camera->frameSetQueue.empty()) {
+	if (!camera->frameSet == NULL) {
 		framesLock.lockForWrite();
-		frames = std::move(camera->frameSetQueue.front());
+		frames = camera->frameSet;
 		framesLock.unlock();
-		camera->frameSetQueue.pop();
 	}
 	camera->frameSetLock.unlock();
 	qDebug() << "frames: " << frames.get();
