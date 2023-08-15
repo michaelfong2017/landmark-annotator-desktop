@@ -319,14 +319,48 @@ CaptureTab::CaptureTab(DesktopApp* parent)
 		this->imageType = getImageTypeFromDescription(this->imageName);
 		camera::CameraManager::getInstance().getCamera()->readAllImages(this->capturedColorImage, this->capturedDepthImage, this->capturedColorToDepthImage, this->capturedDepthToColorImage);
 		
-		if (!capturedColorImage.empty()) {
-			cv::imwrite("test_captured_color.png", this->capturedColorImage);
-		}
-		if (!capturedDepthImage.empty()) {
-			cv::imwrite("test_captured_depth.png", this->capturedDepthImage);
-		}
+		//if (!capturedColorImage.empty()) {
+		//	cv::imwrite("test_captured_color.png", this->capturedColorImage);
+		//}
+		//if (!capturedDepthImage.empty()) {
+		//	cv::imwrite("test_captured_depth.png", this->capturedDepthImage);
+		//}
 		//cv::imwrite("test_captured_color_to_depth.png", this->capturedColorToDepthImage);
 		//cv::imwrite("test_captured_depth_to_color.png", this->capturedDepthToColorImage);
+
+		// TODO [astra] continue development below instead of saving images
+		QString dateTimeString = Helper::getCurrentDateTimeString();
+
+		QString visitFolderPath = Helper::getVisitFolderPath(this->parent->savePath);
+		QString colorSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_color.png"));
+		QString depthSavePath = QDir(visitFolderPath).filePath(QString::fromStdString(dateTimeString.toStdString() + "_depth.png"));
+
+		qDebug() << "colorSavePath: " << colorSavePath;
+		qDebug() << "depthSavePath: " << depthSavePath;
+
+		bool colorWriteSuccess = false;
+		bool depthWriteSuccess = false;
+
+		QImageWriter writer1(colorSavePath);
+		QImageWriter writer2(depthSavePath);
+
+		{
+			QImage img((uchar*)this->getCapturedColorImage().data,
+				this->getCapturedColorImage().cols,
+				this->getCapturedColorImage().rows,
+				this->getCapturedColorImage().step,
+				QImage::Format_RGB32);
+			colorWriteSuccess = writer1.write(img);
+		}
+
+		{
+			QImage img((uchar*)this->getCapturedDepthImage().data,
+				this->getCapturedDepthImage().cols,
+				this->getCapturedDepthImage().rows,
+				QImage::Format_Grayscale16);
+			depthWriteSuccess = writer2.write(img);
+		}
+		return;
 
 		// Shallow copy
 		/*cv::Mat color = this->capturedColorImage;
